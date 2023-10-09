@@ -10,7 +10,9 @@
 #include "Enemies.h"
 #include "Skill.h" 
 
-CombatState::CombatState() : State::State(){
+CombatState::CombatState(std::vector<std::shared_ptr<Enemies>> enemiesArray) 
+: State::State(),
+enemiesArray(enemiesArray){
 } 
 
 CombatState::~CombatState(){}
@@ -50,7 +52,7 @@ void CombatState::LoadAssets(){
         skillArrayDjinn.push_back(std::make_shared<Skill>(*ui, Skill::SKILL1));
         skillArrayDjinn.push_back(std::make_shared<Skill>(*ui, Skill::SKILL3));
 
-
+ 
 
     UI* ui_behaviour = new UI(*ui, skillArrayNormal, skillArrayDjinn); 
     ui->AddComponent((std::shared_ptr<UI>)ui_behaviour);
@@ -69,15 +71,18 @@ void CombatState::LoadAssets(){
     AddObject(daughter);
 
     //============================ Enemies ========================================
-    GameObject *enemy1 = new GameObject(ENEMIES_POS1);
-    Enemies* enemy1_behaviour= new Enemies(*enemy1);
-    enemy1->AddComponent((std::shared_ptr<Enemies>)enemy1_behaviour); 
-    AddObject(enemy1);
+    for (int i = enemiesArray.size() - 1; i >= 0; i--) {
+        int offsetArray = enemiesArray.size() - i - 1;
+        GameObject* enemy = new GameObject(ENEMIES_POS1.x + 200 * offsetArray, ENEMIES_POS1.y);
+        // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
+        Enemies::EnemyId enemyId = enemiesArray[i]->GetId();
+ 
+        Enemies* enemy_behaviour = new Enemies(*enemy, enemyId);
+        enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
+        Game::GetInstance().GetCurrentState().AddObject(enemy);
+    }
 
-    GameObject *enemy2 = new GameObject(ENEMIES_POS1.x + 300, ENEMIES_POS1.y);
-    Enemies* enemy2_behaviour= new Enemies(*enemy2);
-    enemy2->AddComponent((std::shared_ptr<Enemies>)enemy2_behaviour); 
-    AddObject(enemy2);
+ 
 }
 
 void CombatState::Render(){

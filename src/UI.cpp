@@ -29,8 +29,8 @@ void UI::Start() {
     int ofsArrayIn = 0; // offset distance between normal and Djinn array
 
     for (int i = SkillNormalArray.size() - 1; i >= 0; i--) {
-        int offsetArray = SkillNormalArray.size() - i;
-        GameObject* normalSkill = new GameObject(150 * offsetArray + 100, RESOLUTION_HEIGHT * 2/3 + 75);
+        int offsetArray = SkillNormalArray.size() - i - 1;
+        GameObject* normalSkill = new GameObject(150 * offsetArray + 200, RESOLUTION_HEIGHT * 2/3 + 75);
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Skill::SkillId skillId = SkillNormalArray[i]->GetId();
 
@@ -38,12 +38,12 @@ void UI::Start() {
         normalSkill->AddComponent(std::shared_ptr<Skill>(skill_behaviour));
         Game::GetInstance().GetCurrentState().AddObject(normalSkill);
         if(i >= 0){
-            ofsArrayIn = 150 * offsetArray + 100;
+            ofsArrayIn = 150 * offsetArray + 300;
         }
     }
 
      for (int i = SkillDjinArray.size() - 1; i >= 0; i--) {
-        offsetArray = SkillDjinArray.size() - i;
+        offsetArray = SkillDjinArray.size() - i - 1;
         GameObject* normalSkill = new GameObject(ofsArrayIn + 150 * offsetArray + 100, RESOLUTION_HEIGHT * 2/3 + 75);
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Skill::SkillId skillId = SkillDjinArray[i]->GetId();

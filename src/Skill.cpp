@@ -4,86 +4,89 @@
 #include "InputManager.h"
 #include "Game.h"
 
+Skill* Skill::selectedSkill = nullptr;
 
-Skill::Skill(GameObject &associated, SkillId id)
-    : Component::Component(associated), 
+std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
+
+Skill::Skill(GameObject& associated, SkillId id)
+    : Component::Component(associated),
     id(id),
-    readerSkill(nullptr){
-    // Add other initialization here
+    readerSkill(nullptr) {
 }
 
-void Skill::Start() { 
-    std::string spriteSkill; // Declare spriteSkill 
+void Skill::Start() {
+    std::string spriteSkill;
+    // Use skillInfoMap para obter informações da habilidade com base na ID
+    const SkillInfo& skillInfo = skillInfoMap[id];
 
-    switch (id) {
-        case SkillId::SKILL1: 
-            spriteSkill = SKILL1_SPRITE;
-            textSkill = TEXT_SKILL1; 
-            break; // Use "break" para sair do switch após cada case
- 
-        case SkillId::SKILL2: 
-            spriteSkill = SKILL2_SPRITE;
-            textSkill = TEXT_SKILL2;
-            break; // Use "break" para sair do switch após cada case
-        case SkillId::SKILL3:  
-            spriteSkill = SKILL3_SPRITE;
-            textSkill = TEXT_SKILL3;
-            break; // Use "break" para sair do switch após cada case
- 
-        case SkillId::SKILL4: 
-            spriteSkill = SKILL4_SPRITE;
-            textSkill = TEXT_SKILL4;
-            break; // Use "break" para sair do switch após cada case    
-    }
+    spriteSkill = skillInfo.iconPath;
+    textSkill = skillInfo.name;
 
-
-    Sprite *skillSprite = new Sprite(associated, spriteSkill); // or SKILL2_SPRITE depending on the skill
+    Sprite* skillSprite = new Sprite(associated, spriteSkill);
     skillSprite->SetScale(0.2, 0.2);
-    associated.AddComponent(std::shared_ptr<Sprite>(skillSprite)); 
+    associated.AddComponent(std::shared_ptr<Sprite>(skillSprite));
 }
 
-Skill::~Skill()
-{  
-     
-} 
- 
+Skill::~Skill() {
+}
+
 void Skill::Update(float dt) {
-    // Verify how long the mouse is on Skill and, after a cooldown, open the comment box
     Vec2 mousePos(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
     skillClickTimer.Update(dt);
-    
+
     if (associated.box.Contains(mousePos.x, mousePos.y)) {
         if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
             std::weak_ptr<GameObject> weak_skillRef = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
-            if (!readerSkill) { 
-                // Create the readerSkill if it doesn't exist
+            if (!readerSkill) {
                 readerSkill = new GameObject(associated.box.x, associated.box.y);
                 Reader* readerSkill_behaviour = new Reader(*readerSkill, weak_skillRef, textSkill);
                 readerSkill->AddComponent(std::shared_ptr<Reader>(readerSkill_behaviour));
                 Game::GetInstance().GetCurrentState().AddObject(readerSkill);
             }
+
+            if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON)) {
+                if (selectedSkill != nullptr && selectedSkill != this) {
+                    std::cout <<"Decelecionado" << selectedSkill << std::endl;
+                    selectedSkill->Deselect();
+                }
+                
+                selectedSkill = this;
+                std::cout <<"Selecionado" << selectedSkill << std::endl;
+            }
         }
     } else {
-        skillClickTimer.Restart();  
+        skillClickTimer.Restart();
         if (readerSkill) {
-            readerSkill->RequestDelete(); // Delete the readerSkill if it exists
-            readerSkill = nullptr; // Set it to nullptr to avoid further usage
+            readerSkill->RequestDelete();
+            readerSkill = nullptr;
         }
     }
 }
 
-    
-
-void Skill::Render()
-{ 
-}
- 
-Skill::SkillId Skill::GetId(){
-    return id; 
+void Skill::Deselect() {
+    selectedSkill = nullptr;
+    if (readerSkill != nullptr) {
+        readerSkill->RequestDelete();
+        readerSkill = nullptr;
+    }
 }
 
-bool Skill::Is(std::string type){
+void Skill::Render() {
+}
+
+Skill::SkillId Skill::GetId() {
+    return id;
+}
+
+bool Skill::Is(std::string type) {
     return (type == "Skill");
 }
 
+void Skill::InitializeSkillInfoMap() {
+    // Populate the map with skill information during initialization.
+    skillInfoMap[SKILL1] = {10, {"tag1", "tag2"}, TEXT_SKILL1, SKILL1_SPRITE};
+    skillInfoMap[SKILL2] = {10, {"tag1", "tag2"}, TEXT_SKILL2, SKILL2_SPRITE};
+    skillInfoMap[SKILL3] = {10, {"tag1", "tag2"}, TEXT_SKILL3, SKILL3_SPRITE};
+    skillInfoMap[SKILL4] = {10, {"tag1", "tag2"}, TEXT_SKILL4, SKILL4_SPRITE};
+}

@@ -117,11 +117,15 @@ dep/Skill.d bin/Skill.o: src/Skill.cpp include/Skill.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\shared_ptr_atomic.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\atomic_base.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\backward\auto_ptr.h \
- include/GameObject.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_bvector.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\vector.tcc \
- include/Rect.h include/Vec2.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
+ include/GameObject.h include/Rect.h include/Vec2.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\math.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\cmath c:\mingw\include\math.h \
  include/Component.h include/Sound.h include/SDL_include.h \
@@ -449,8 +453,6 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\atomic_base.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\backward\auto_ptr.h:
 
-include/GameObject.h:
-
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:
@@ -458,6 +460,16 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_bvector.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\vector.tcc:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h:
+
+include/GameObject.h:
 
 include/Rect.h:
 

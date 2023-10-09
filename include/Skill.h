@@ -2,12 +2,16 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <string>
+#include <map>
 
 #include "GameObject.h"
 #include "Component.h"
 #include "Sound.h"
 #include "Sprite.h"
 #include "Time.h"
+
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiDjinnSkill.png"
@@ -25,31 +29,47 @@
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
 #define SKILL_CLICK_COOLDOWN 0.05
-//==================================================================
+//===================================================
 
-class Skill : public Component{
-
-  public:
-    enum SkillId{
-        SKILL1, 
+class Skill : public Component {
+public:
+    enum SkillId {
+        SKILL1,
         SKILL2,
-        SKILL3, 
-        SKILL4
-    }; 
+        SKILL3,
+        SKILL4,
+        INVALID_SKILL
+    };
+    
+    struct SkillInfo {
+        int damage;
+        std::vector<std::string> tags;
+        std::string name;
+        std::string iconPath;
+    };
 
-
-    Skill(GameObject &associated, SkillId id);
+    Skill(GameObject& associated, SkillId id);
     ~Skill();
-    void Start();                                    
+
+    void Start();
     void Update(float dt);
     void Render();
     bool Is(std::string type);
 
     SkillId GetId();
+    static Skill* selectedSkill;
 
-  private:
+    void Deselect();
+    
+    
+
+    static std::map<SkillId, SkillInfo> skillInfoMap; 
+
+    static void InitializeSkillInfoMap();
+
+private:
     SkillId id;
     Timer skillClickTimer;
     GameObject* readerSkill;
-    std::string textSkill = ""; 
+    std::string textSkill = "";
 };

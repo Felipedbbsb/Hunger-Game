@@ -2,6 +2,8 @@
 #include <SDL2/SDL.h>
 #include "Game.h"
 #include "CombatState.h"
+#include "Enemies.h"
+#include "Skill.h"
 
 #include <iostream>
 #include <exception>
@@ -11,7 +13,19 @@ int main(int argc, char** argv) {
         // ======================== Game happens here ===============================
         Game& game = Game::GetInstance();
 
-        CombatState* initialState = new CombatState();
+        // Populate the map with skill information during initialization.
+        Skill::InitializeSkillInfoMap();
+
+        // ==========Enemies array==============
+        GameObject *enemy = new GameObject();
+        std::vector<std::shared_ptr<Enemies>> enemiesArray;
+        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY1));
+        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY2));
+        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY3));
+        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY4));
+
+        CombatState* initialState = new CombatState(enemiesArray); // Pass the enemiesArray
+        
         game.Push(initialState);
 
         game.Run();
