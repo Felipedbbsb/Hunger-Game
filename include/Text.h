@@ -6,7 +6,7 @@
 #define BACKGROUND_COLOR {0, 255, 0, 0}
 
 #include <iostream>
-#include <vector>
+#include <vector> 
 #include <memory>
 #include "SDL_include.h"
 #include "Component.h"
@@ -38,8 +38,8 @@ public:
 private:
     struct TextLine {
         SDL_Texture* texture;
-        int width;  // Line width
-        int height; // Line height
+        int width;  // Largura da linha
+        int height; // Altura da linha
     };
 
     void RemakeTexture();
@@ -57,9 +57,6 @@ private:
     int blinkPeriod;
     Timer blinkTimer;
     std::vector<TextLine> lines;
-    
-    void ProcessTextWithTags();
-    SDL_Color ParseColorTag(const std::string& tagContent);
 };
 
 #endif // TEXT_H

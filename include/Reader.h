@@ -11,11 +11,7 @@
 #define TEXT_SKILL_FONT "assets/font/Play-Regular.ttf"
 #define TEXT_SKILL_FONT_COLOR {200, 200, 200, 0} // Red Green Blue Alpha
 
-#define TEXT_SKILL "     Ataque pika  \n\n Beijo na <color=#FF0000>boca</color> "
 
-
-
- 
 
 #define TEXT_SKILL_SIZE 15
 #define READER_SPRITE "assets/img/UI/uiSkillReader.png"
@@ -23,7 +19,10 @@
 class Reader : public Component{
 
     public:
-        Reader(GameObject &associated, std::weak_ptr<GameObject> skillRef);
+        Reader(GameObject &associated, 
+                std::weak_ptr<GameObject> skillRef,
+                std::string textSkill);
+
         ~Reader();
         void Update(float dt);
         void Render();
@@ -34,5 +33,6 @@ class Reader : public Component{
 
     private:
         std::weak_ptr<GameObject> skillRef; 
-        GameObject* textSkill;
+        GameObject* textSkillObj;
+        std::string textSkill;
 };

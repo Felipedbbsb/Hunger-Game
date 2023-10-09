@@ -10,13 +10,13 @@
 
 
 
-#define DAUGHTER_SPRITE "assets/img/daughter/daughterIdle.png"
+#define ENEMEY1_SPRITE "assets/img/enemies/enemyChickIdle.png"
 
-class Daughter : public Component{
+class Enemies : public Component{
 
   public:
-    Daughter(GameObject &associated);
-    ~Daughter();
+    Enemies(GameObject &associated);
+    ~Enemies();
     void Update(float dt);
     void Render();
     void Start();

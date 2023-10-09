@@ -15,7 +15,6 @@ Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle
       color(color),
       blinkPeriod(blinkPeriod) {
     font = TTF_OpenFont(fontFile.c_str(), fontSize);
-    ProcessTextWithTags(); // Process the tags when defining the text
     RemakeTexture();
 }
 
@@ -36,27 +35,26 @@ void Text::Update(float dt) {
 
 void Text::Render() {
     if (blinkTimer.Get() <= blinkPeriod / 2) {
-        int yOffset = 0; // Control vertical offset between lines
-        for (size_t i = 0; i < lines.size(); ++i) {
-            SDL_Rect clipRect = {0, 0, lines[i].width, lines[i].height};
+        int yOffset = 0; // Controla o deslocamento vertical entre as linhas
+        for (const auto& line : lines) {
+            SDL_Rect clipRect = {0, 0, line.width, line.height};
             SDL_Rect dst = {static_cast<int>(associated.box.x + Camera::pos.x),
                             static_cast<int>(associated.box.y + Camera::pos.y + yOffset),
-                            lines[i].width,
-                            lines[i].height};
+                            line.width,
+                            line.height};
 
             int RENDER_FAIL;
-            RENDER_FAIL = SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), lines[i].texture, &clipRect, &dst, associated.angleDeg, nullptr, SDL_FLIP_NONE);
+            RENDER_FAIL = SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), line.texture, &clipRect, &dst, associated.angleDeg, nullptr, SDL_FLIP_NONE);
             if (RENDER_FAIL != 0) {
                 std::cout << "Text: fail to render " << SDL_GetError() << std::endl;
             }
-            yOffset += lines[i].height; // Adjust vertical offset for the next line
+            yOffset += line.height; // Ajusta o deslocamento vertical para a próxima linha
         }
     }
 }
 
 void Text::SetText(std::string text) {
     this->text = text;
-    ProcessTextWithTags(); // Process the tags when defining the text
     RemakeTexture();
 }
 
@@ -84,7 +82,7 @@ void Text::RemakeTexture() {
         font = Resources::GetFont(fontFile, fontSize);
     }
 
-    // Split the text into multiple lines based on the maximum allowed width
+    // Divida o texto em várias linhas com base no tamanho máximo permitido
     lines.clear();
     std::istringstream iss(text);
     std::string line;
@@ -108,9 +106,9 @@ void Text::RemakeTexture() {
         lines.push_back(textLine);
     }
 
-    // Calculate the total height of the rendered lines and set the associated box height
+    // Calcule a altura total das linhas renderizadas e defina a altura da caixa associada
     int totalHeight = 0;
-    int maxWidth = 0; // Maximum width among the lines
+    int maxWidth = 0; // Largura máxima entre as linhas
     for (const auto& line : lines) {
         totalHeight += line.height;
         if (line.width > maxWidth) {
@@ -157,67 +155,3 @@ SDL_Texture* Text::RenderBlendedText(const std::string& text, SDL_Color color) {
 bool Text::Is(std::string type) {
     return (type == "Text");
 }
-
-void Text::ProcessTextWithTags() {
-    std::string processedText = text;
-    std::string startTag = "<color=";
-    std::string endTag = "</color>";
-    std::size_t startPos = 0;
-
-    // Vetor para armazenar cores processadas
-    std::vector<SDL_Color> processedColors;
-
-    while ((startPos = processedText.find(startTag, startPos)) != std::string::npos) {
-        std::size_t endPos = processedText.find(endTag, startPos);
-        if (endPos != std::string::npos) {
-            std::string tagContent = processedText.substr(startPos + startTag.length(), endPos - (startPos + startTag.length()));
-
-            // Parse the color from the tag content
-            SDL_Color tagColor = ParseColorTag(tagContent);
-
-            // Adicione a cor processada ao vetor
-            processedColors.push_back(tagColor);
-
-            // Move a posição passada para a próxima tag
-            startPos = endPos + endTag.length();
-        } else {
-            // Handle error or log a message indicating that there's a mismatched tag
-            std::cerr << "Error: Mismatched color tags in the text." << std::endl;
-            break;
-        }
-    }
-
-    // Use as cores processadas ao renderizar o texto
-    for (size_t i = 0; i < lines.size() && i < processedColors.size(); ++i) {
-        SDL_SetTextureColorMod(lines[i].texture, processedColors[i].r, processedColors[i].g, processedColors[i].b);
-    }
-
-    // Set the processed text
-    text = processedText;
-}
-
-
-
-SDL_Color Text::ParseColorTag(const std::string& tagContent) {
-    SDL_Color parsedColor = color; // Inicializa com a cor atual
-
-    // Verifique se a tagContent começa com "#" e possui 6 caracteres para representar a cor hexadecimal
-    if (tagContent.size() == 6 && tagContent[0] == '#') {
-        // Extrai os valores RGB da tagContent
-        std::istringstream stream(tagContent.substr(1)); // Ignora o "#" inicial
-        unsigned int r, g, b;
-        stream >> std::hex >> r >> g >> b;
-
-        // Se a extração for bem-sucedida, configure os componentes de cor
-        if (!stream.fail()) {
-            parsedColor.r = r;
-            parsedColor.g = g;
-            parsedColor.b = b;
-        }
-    }
-
-    return parsedColor;
-}
-
-
-

@@ -10,7 +10,7 @@
 
 
 
-#define MOTHER_SPRITE "assets/img/Mom/momIdle.png"
+#define MOTHER_SPRITE "assets/img/mom/momIdle.png"
 
 class Mother : public Component{
 

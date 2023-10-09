@@ -1,7 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include "Game.h"
-#include "TitleState.h"
+#include "CombatState.h"
 
 #include <iostream>
 #include <exception>
@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
         // ======================== Game happens here ===============================
         Game& game = Game::GetInstance();
 
-        TitleState* initialState = new TitleState();
+        CombatState* initialState = new CombatState();
         game.Push(initialState);
 
         game.Run();

@@ -205,8 +205,8 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Sound.h \
- C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h include/Mother.h \
- include/Daughter.h
+ C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
+ include/Mother.h include/Daughter.h include/Enemies.h
 
 include/TitleState.h:
 
@@ -712,6 +712,10 @@ C:/SDL2/include/SDL2/SDL_mixer.h:
 
 include/Skill.h:
 
+c:\mingw\include\time.h:
+
 include/Mother.h:
 
 include/Daughter.h:
+
+include/Enemies.h:

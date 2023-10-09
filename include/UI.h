@@ -19,7 +19,8 @@ class UI : public Component{
 
   public:
     UI(GameObject &associated,
-       std::vector<std::shared_ptr<Skill>> SkillNormalArray);
+       std::vector<std::shared_ptr<Skill>> SkillNormalArray,
+       std::vector<std::shared_ptr<Skill>> SkillDjinArray);
 
     ~UI();
     void Update(float dt);
@@ -34,7 +35,7 @@ class UI : public Component{
   private:
     std::vector<std::shared_ptr<Skill>> SkillNormalArray;
     //int nSkillNormal;
-    //std::vector<std::weak_ptr<GameObject>> SkillDjinArray;
+    std::vector<std::shared_ptr<Skill>> SkillDjinArray;
     //int nSkillDjinn;
 
     

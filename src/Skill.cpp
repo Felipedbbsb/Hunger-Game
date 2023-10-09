@@ -4,25 +4,36 @@
 #include "InputManager.h"
 #include "Game.h"
 
-// speed já está sendo inicializado pelo construtor de Vec2
+
 Skill::Skill(GameObject &associated, SkillId id)
     : Component::Component(associated), 
     id(id),
     readerSkill(nullptr){
-    // Add sprite or other initialization here
+    // Add other initialization here
 }
 
 void Skill::Start() { 
-    std::string spriteSkill; // Declare spriteSkill aqui fora do switch
+    std::string spriteSkill; // Declare spriteSkill 
 
     switch (id) {
-        case SkillId::SKILL1: // Use ":" aqui em vez de "{"
+        case SkillId::SKILL1: 
             spriteSkill = SKILL1_SPRITE;
+            textSkill = TEXT_SKILL1; 
             break; // Use "break" para sair do switch após cada case
  
-        case SkillId::SKILL2: // Use ":" aqui em vez de "{"
+        case SkillId::SKILL2: 
             spriteSkill = SKILL2_SPRITE;
+            textSkill = TEXT_SKILL2;
             break; // Use "break" para sair do switch após cada case
+        case SkillId::SKILL3:  
+            spriteSkill = SKILL3_SPRITE;
+            textSkill = TEXT_SKILL3;
+            break; // Use "break" para sair do switch após cada case
+ 
+        case SkillId::SKILL4: 
+            spriteSkill = SKILL4_SPRITE;
+            textSkill = TEXT_SKILL4;
+            break; // Use "break" para sair do switch após cada case    
     }
 
 
@@ -48,7 +59,7 @@ void Skill::Update(float dt) {
             if (!readerSkill) { 
                 // Create the readerSkill if it doesn't exist
                 readerSkill = new GameObject(associated.box.x, associated.box.y);
-                Reader* readerSkill_behaviour = new Reader(*readerSkill, weak_skillRef);
+                Reader* readerSkill_behaviour = new Reader(*readerSkill, weak_skillRef, textSkill);
                 readerSkill->AddComponent(std::shared_ptr<Reader>(readerSkill_behaviour));
                 Game::GetInstance().GetCurrentState().AddObject(readerSkill);
             }

@@ -1,7 +1,6 @@
 #include "Daughter.h"
 
 
-// speed já está sendo inicializado pelo construtor de Vec2
 Daughter::Daughter(GameObject &associated) : Component::Component(associated){
     // Add  sprite
     Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE);
@@ -13,7 +12,7 @@ void Daughter::Start()
 {
     
 }
-
+ 
 Daughter::~Daughter()
 {
     
