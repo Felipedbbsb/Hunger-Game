@@ -15,16 +15,16 @@
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiDjinnSkill.png"
-#define TEXT_SKILL1 "     Ataque pika  \n \n Beijo na boca "
+#define TEXT_SKILL1 "     Ataque pika  \n \n Beijo na boca \n 10 damage "
 
 #define SKILL2_SPRITE "assets/img/UI/uiNormalSkill.png"
-#define TEXT_SKILL2 "     Ataque paia  \n \n Inimigo faz \n 10 polichinelos "
+#define TEXT_SKILL2 "     Ataque paia  \n \n Inimigo faz \n 10 polichinelos \n 20 damage "
 
 #define SKILL3_SPRITE "assets/img/UI/uiDjinnSkill.png"
-#define TEXT_SKILL3 "     Defesa top  \n \n É os guri "
+#define TEXT_SKILL3 "     Defesa top  \n \n É os guri \n 10 damage "
 
 #define SKILL4_SPRITE "assets/img/UI/uiNormalSkill.png"
-#define TEXT_SKILL4 "     Defesa pika  \n \n Torcedor do vasco "
+#define TEXT_SKILL4 "     Defesa pika  \n \n Torcedor do vasco \n 20 damage "
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
@@ -58,6 +58,7 @@ public:
 
     SkillId GetId();
     static Skill* selectedSkill;
+
 
     void Deselect();
     

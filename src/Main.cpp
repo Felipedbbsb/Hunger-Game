@@ -16,6 +16,9 @@ int main(int argc, char** argv) {
         // Populate the map with skill information during initialization.
         Skill::InitializeSkillInfoMap();
 
+        // Populate the map with enemies information during initialization.
+        Enemies::InitializeEnemyInfoMap();
+
         // ==========Enemies array==============
         GameObject *enemy = new GameObject();
         std::vector<std::shared_ptr<Enemies>> enemiesArray;

@@ -47,12 +47,14 @@ void Skill::Update(float dt) {
 
             if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON)) {
                 if (selectedSkill != nullptr && selectedSkill != this) {
-                    std::cout <<"Decelecionado" << selectedSkill << std::endl;
+                    
+                    Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
+
+                    
                     selectedSkill->Deselect();
                 }
-                
-                selectedSkill = this;
-                std::cout <<"Selecionado" << selectedSkill << std::endl;
+                selectedSkill = this; 
+                //std::cout <<"Selecionado" << selectedSkill << std::endl;
             }
         }
     } else {
@@ -63,6 +65,7 @@ void Skill::Update(float dt) {
         }
     }
 }
+
 
 void Skill::Deselect() {
     selectedSkill = nullptr;
@@ -84,7 +87,16 @@ bool Skill::Is(std::string type) {
 }
 
 void Skill::InitializeSkillInfoMap() {
+    //struct SkillInfo {
+    //    damage; 
+    //    tags;
+    //    name;
+    //    iconPath;
+    //};
     // Populate the map with skill information during initialization.
+    //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
+    //                              tempSkillInfo.damage to catch damage by the id
+
     skillInfoMap[SKILL1] = {10, {"tag1", "tag2"}, TEXT_SKILL1, SKILL1_SPRITE};
     skillInfoMap[SKILL2] = {10, {"tag1", "tag2"}, TEXT_SKILL2, SKILL2_SPRITE};
     skillInfoMap[SKILL3] = {10, {"tag1", "tag2"}, TEXT_SKILL3, SKILL3_SPRITE};
