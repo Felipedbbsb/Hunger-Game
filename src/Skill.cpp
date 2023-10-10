@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include "InputManager.h"
 #include "Game.h"
-
+ 
 Skill* Skill::selectedSkill = nullptr;
 
 std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
@@ -64,7 +64,7 @@ void Skill::Update(float dt) {
             readerSkill = nullptr;
         }
     }
-}
+} 
 
 
 void Skill::Deselect() {
