@@ -7,7 +7,7 @@
 
 class LifeBar : public Component {
 public:
-    LifeBar(GameObject& associated, int hpMax, int hpCurrent);
+    LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth);
     ~LifeBar();
 
     void Update(float dt);
@@ -21,8 +21,10 @@ private:
     int hpCurrent;
     SDL_Color barColor;
     SDL_Rect lifeBarRect;
+     // Adicione uma instância de LifeBar como membro
 
-    const int lifeBarWidth = 100; // Width of the life bar
+    
+    int lifeBarWidth = 100; // Width of the life bar
     const int lifeBarHeight = 10; // Height of the life bar
 
     void UpdateLifeBarRect();

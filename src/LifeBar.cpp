@@ -1,8 +1,8 @@
 #include "LifeBar.h"
 #include "Game.h"
 
-LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent)
-    : Component(associated), hpMax(hpMax), hpCurrent(hpCurrent) {
+LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth )
+    : Component(associated), hpMax(hpMax), hpCurrent(hpCurrent), lifeBarWidth(lifeBarWidth) {
     barColor = {255, 0, 0, 255}; // Red color (RGBA)
     UpdateLifeBarRect();
 }
@@ -32,7 +32,7 @@ bool LifeBar::Is(std::string type) {
 
 void LifeBar::SetCurrentHP(int hpCurrent) {
     this->hpCurrent = hpCurrent;
-    UpdateLifeBarRect();
+    UpdateLifeBarRect(); 
 }
 
 void LifeBar::UpdateLifeBarRect() {

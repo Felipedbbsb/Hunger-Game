@@ -123,7 +123,7 @@ dep/LifeBar.d bin/LifeBar.o: src/LifeBar.cpp include/LifeBar.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\backward\auto_ptr.h \
  include/Vec2.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\math.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\cmath c:\mingw\include\math.h \
- include/SDL_include.h include/Game.h C:/SDL2/include/SDL2/SDL.h \
+ include/SDL_include.h C:/SDL2/include/SDL2/SDL.h \
  C:/SDL2/include/SDL2/SDL_main.h C:/SDL2/include/SDL2/SDL_stdinc.h \
  C:/SDL2/include/SDL2/SDL_config.h C:/SDL2/include/SDL2/SDL_platform.h \
  C:/SDL2/include/SDL2/begin_code.h C:/SDL2/include/SDL2/close_code.h \
@@ -184,7 +184,7 @@ dep/LifeBar.d bin/LifeBar.o: src/LifeBar.cpp include/LifeBar.h \
  C:/SDL2/include/SDL2/SDL_shape.h C:/SDL2/include/SDL2/SDL_system.h \
  C:/SDL2/include/SDL2/SDL_timer.h C:/SDL2/include/SDL2/SDL_version.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
- C:/SDL2/include/SDL2/SDL_ttf.h C:/SDL2/include/SDL2/SDL.h \
+ include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h C:/SDL2/include/SDL2/SDL.h \
  include/State.h include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
@@ -468,8 +468,6 @@ c:\mingw\include\math.h:
 
 include/SDL_include.h:
 
-include/Game.h:
-
 C:/SDL2/include/SDL2/SDL.h:
 
 C:/SDL2/include/SDL2/SDL_main.h:
@@ -641,6 +639,8 @@ C:/SDL2/include/SDL2/SDL_version.h:
 C:/SDL2/include/SDL2/SDL_locale.h:
 
 C:/SDL2/include/SDL2/SDL_misc.h:
+
+include/Game.h:
 
 C:/SDL2/include/SDL2/SDL_ttf.h:
 

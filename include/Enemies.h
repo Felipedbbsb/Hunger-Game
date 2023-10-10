@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "Sprite.h"
+#include "LifeBar.h"
 
 #define ENEMY1_SPRITE "assets/img/enemies/enemyChickIdle.png"
 #define ENEMY2_SPRITE "assets/img/enemies/enemyDogIdle.png"
@@ -48,7 +49,7 @@ public:
 
 private:
     EnemyId id;
-
+    LifeBar* lifeBarEnemy;
     // Map to store enemy information
     static std::map<EnemyId, EnemyInfo> enemyInfoMap;
 };
