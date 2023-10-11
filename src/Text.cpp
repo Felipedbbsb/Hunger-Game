@@ -74,13 +74,14 @@ void Text::SetFontSize(int fontSize) {
 }
 
 void Text::RemakeTexture() {
+    std::cout << "Loading done! ("  << ")" << std::endl;
     if (texture != nullptr) {
         SDL_DestroyTexture(texture);
     }
+    std::cout << "Loading done! ("  << ")" << std::endl;
+    std::cout << "Loading done! ("  << ")" << std::endl;
+    font = Resources::GetFont(fontFile, fontSize);
 
-    if (font == nullptr) {
-        font = Resources::GetFont(fontFile, fontSize);
-    }
 
     // Divida o texto em várias linhas com base no tamanho máximo permitido
     lines.clear();
