@@ -194,9 +194,13 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  C:/SDL2/include/SDL2/SDL_timer.h C:/SDL2/include/SDL2/SDL_version.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h include/Enemies.h include/Sound.h \
- C:/SDL2/include/SDL2/SDL_mixer.h include/Game.h \
- C:/SDL2/include/SDL2/SDL_ttf.h include/InputManager.h \
+ include/Timer.h include/Enemies.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
+ include/LifeBar.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -207,8 +211,8 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
- include/Skill.h c:\mingw\include\time.h include/Mother.h \
- include/Daughter.h
+ include/Sound.h C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h \
+ c:\mingw\include\time.h include/Mother.h include/Daughter.h
 
 include/CombatState.h:
 
@@ -678,9 +682,15 @@ include/Timer.h:
 
 include/Enemies.h:
 
-include/Sound.h:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map:
 
-C:/SDL2/include/SDL2/SDL_mixer.h:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h:
+
+include/LifeBar.h:
 
 include/Game.h:
 
@@ -713,6 +723,10 @@ include/Camera.h:
 include/Text.h:
 
 include/UI.h:
+
+include/Sound.h:
+
+C:/SDL2/include/SDL2/SDL_mixer.h:
 
 include/Skill.h:
 
