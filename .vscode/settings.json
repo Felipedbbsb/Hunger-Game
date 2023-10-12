@@ -69,6 +69,7 @@
         "xutility": "cpp",
         "map": "cpp",
         "xtree": "cpp",
-        "gameobject.h": "c"
+        "gameobject.h": "c",
+        "component.h": "c"
     }
 }

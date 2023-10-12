@@ -77,7 +77,7 @@ void CombatState::LoadAssets(){
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Enemies::EnemyId enemyId = enemiesArray[i]->GetId();
  
-        Enemies* enemy_behaviour = new Enemies(*enemy, enemyId);
+        Enemies* enemy_behaviour = new Enemies(*enemy, enemyId, enemiesArray);
         enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
         Game::GetInstance().GetCurrentState().AddObject(enemy);
     }

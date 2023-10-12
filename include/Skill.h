@@ -15,16 +15,21 @@
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiDjinnSkill.png"
-#define TEXT_SKILL1 "     Ataque pika  \n \n Beijo na boca \n 10 damage "
+#define NAME_SKILL1 "     Ataque pika  "
+#define INFO_SKILL1 "Beijo na boca \n 5 damage all \n Apply Vulenerable and Weak "
 
 #define SKILL2_SPRITE "assets/img/UI/uiNormalSkill.png"
-#define TEXT_SKILL2 "     Ataque paia  \n \n Inimigo faz \n 10 polichinelos \n 20 damage "
+#define NAME_SKILL2 "     Ataque paia  "
+#define INFO_SKILL2 "Inimigo faz \n 10 polichinelos \n 20 damage\n Apply Rampage"
 
 #define SKILL3_SPRITE "assets/img/UI/uiDjinnSkill.png"
-#define TEXT_SKILL3 "     Defesa top  \n \n É os guri \n 10 damage "
+#define NAME_SKILL3 "     Defesa top  "
+#define INFO_SKILL3 "Eh os guri \n 10 damage \nApply Resilience"
 
 #define SKILL4_SPRITE "assets/img/UI/uiNormalSkill.png"
-#define TEXT_SKILL4 "     Defesa pika  \n \n Torcedor do vasco \n 20 damage "
+#define NAME_SKILL4 "     Defesa pika  "
+#define INFO_SKILL4 "Torcedor do vasco \n 20 damage"
+
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
@@ -32,45 +37,72 @@
 //===================================================
 
 class Skill : public Component {
-public:
-    enum SkillId {
-        SKILL1,
-        SKILL2,
-        SKILL3,
-        SKILL4,
-        INVALID_SKILL
-    };
-    
-    struct SkillInfo {
-        int damage;
-        std::vector<std::string> tags;
-        std::string name;
-        std::string iconPath;
-    };
+    public:
+        enum SkillId {
+            SKILL1,
+            SKILL2,
+            SKILL3,
+            SKILL4,
+            INVALID_SKILL
+        };
+        
+        enum AttackType {
+            ATTACK_INDIVIDUAL,
+            ATTACK_ALL,
 
-    Skill(GameObject& associated, SkillId id);
-    ~Skill();
+            DEFENSE_INDIVIDUAL,
+            DEFENSE_ALL,
 
-    void Start();
-    void Update(float dt);
-    void Render();
-    bool Is(std::string type);
+            BUFF_INDIVIDUAL,
+            BUFF_ALL,
+            
+            DEBUFF_INDIVIDUAL,
+            DEBUFF_ALL
+        };
 
-    SkillId GetId();
-    static Skill* selectedSkill;
+        enum SkillsTags {
+            REVENGE, //Reflete 30% do dano de volta no atacante
+            RESILIENCE, //Reduz o dano recebido em 50%
+            DODGE, //50% de chance de evitar todo o dano do próximo golpe
+            ADRENALINE,//Ganha +1AP no começo do próximo turno para cada stack de adrenaline
+            PROVOKE,//Força os inimigos a atacarem este alvo
+            VULNERABLE,//Aumenta o dano recebido em 50%
+            WEAK,//Reduz o seu dano em 50%
+            RAMPAGE,//Aumenta seu dano em 50%
+            PROTECTED//Não pode ser alvejado
+        };
+
+        struct SkillInfo {
+            int damage;
+            std::vector<SkillsTags> tags;
+            std::string name;
+            std::string info;
+            std::string iconPath;
+            AttackType attackType;
+        };
 
 
-    void Deselect();
-    
-    
 
-    static std::map<SkillId, SkillInfo> skillInfoMap; 
+        Skill(GameObject& associated, SkillId id);
+        ~Skill();
 
-    static void InitializeSkillInfoMap();
+        void Start();
+        void Update(float dt);
+        void Render();
+        bool Is(std::string type);
 
-private:
-    SkillId id;
-    Timer skillClickTimer;
-    GameObject* readerSkill;
-    std::string textSkill = "";
+        SkillId GetId();
+        static Skill* selectedSkill;
+
+        void Deselect();
+
+        static std::map<SkillId, SkillInfo> skillInfoMap; 
+
+        static void InitializeSkillInfoMap();
+
+    private:
+        SkillId id;
+        Timer skillClickTimer;
+        GameObject* readerSkill;
+        std::string textSkill = "";
 };

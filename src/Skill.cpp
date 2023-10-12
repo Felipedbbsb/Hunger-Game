@@ -20,7 +20,7 @@ void Skill::Start() {
     const SkillInfo& skillInfo = skillInfoMap[id];
 
     spriteSkill = skillInfo.iconPath;
-    textSkill = skillInfo.name;
+    textSkill = skillInfo.info;
 
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
     skillSprite->SetScale(0.2, 0.2);
@@ -62,7 +62,7 @@ void Skill::Update(float dt) {
         if (readerSkill) {
             readerSkill->RequestDelete();
             readerSkill = nullptr;
-        }
+        } 
     }
 } 
 
@@ -70,7 +70,7 @@ void Skill::Update(float dt) {
 void Skill::Deselect() {
     selectedSkill = nullptr;
     if (readerSkill != nullptr) {
-        readerSkill->RequestDelete();
+        readerSkill->RequestDelete(); 
         readerSkill = nullptr;
     }
 }
@@ -97,8 +97,10 @@ void Skill::InitializeSkillInfoMap() {
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
 
-    skillInfoMap[SKILL1] = {10, {"tag1", "tag2"}, TEXT_SKILL1, SKILL1_SPRITE};
-    skillInfoMap[SKILL2] = {10, {"tag1", "tag2"}, TEXT_SKILL2, SKILL2_SPRITE};
-    skillInfoMap[SKILL3] = {10, {"tag1", "tag2"}, TEXT_SKILL3, SKILL3_SPRITE};
-    skillInfoMap[SKILL4] = {10, {"tag1", "tag2"}, TEXT_SKILL4, SKILL4_SPRITE};
+    skillInfoMap[SKILL1] = {5, {VULNERABLE, WEAK}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL};
+    skillInfoMap[SKILL2] = {20, {RAMPAGE}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL};
+    skillInfoMap[SKILL3] = {10, {RESILIENCE}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL};
+    skillInfoMap[SKILL4] = {20, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, DEFENSE_ALL};
+
 }
+ 

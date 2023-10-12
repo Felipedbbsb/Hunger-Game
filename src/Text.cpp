@@ -74,12 +74,9 @@ void Text::SetFontSize(int fontSize) {
 }
 
 void Text::RemakeTexture() {
-    std::cout << "Loading done! ("  << ")" << std::endl;
     if (texture != nullptr) {
         SDL_DestroyTexture(texture);
     }
-    std::cout << "Loading done! ("  << ")" << std::endl;
-    std::cout << "Loading done! ("  << ")" << std::endl;
     font = Resources::GetFont(fontFile, fontSize);
 
 
