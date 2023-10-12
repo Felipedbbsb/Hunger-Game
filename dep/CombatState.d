@@ -199,8 +199,9 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
- include/LifeBar.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
- include/InputManager.h \
+ include/LifeBar.h include/Skill.h include/Sound.h \
+ C:/SDL2/include/SDL2/SDL_mixer.h c:\mingw\include\time.h include/Game.h \
+ C:/SDL2/include/SDL2/SDL_ttf.h include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -211,8 +212,7 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
- include/Sound.h C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h \
- c:\mingw\include\time.h include/Mother.h include/Daughter.h
+ include/Mother.h include/Daughter.h
 
 include/CombatState.h:
 
@@ -692,6 +692,14 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h:
 
 include/LifeBar.h:
 
+include/Skill.h:
+
+include/Sound.h:
+
+C:/SDL2/include/SDL2/SDL_mixer.h:
+
+c:\mingw\include\time.h:
+
 include/Game.h:
 
 C:/SDL2/include/SDL2/SDL_ttf.h:
@@ -723,14 +731,6 @@ include/Camera.h:
 include/Text.h:
 
 include/UI.h:
-
-include/Sound.h:
-
-C:/SDL2/include/SDL2/SDL_mixer.h:
-
-include/Skill.h:
-
-c:\mingw\include\time.h:
 
 include/Mother.h:
 

@@ -10,7 +10,7 @@ std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
 
 Skill::Skill(GameObject& associated, SkillId id)
     : Component::Component(associated),
-    id(id),
+    id(id), 
     readerSkill(nullptr) {
 }
 
@@ -44,7 +44,6 @@ void Skill::Update(float dt) {
                 readerSkill->AddComponent(std::shared_ptr<Reader>(readerSkill_behaviour));
                 Game::GetInstance().GetCurrentState().AddObject(readerSkill);
             }
-
             if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON)) {
                 if (selectedSkill != nullptr && selectedSkill != this) {
                     

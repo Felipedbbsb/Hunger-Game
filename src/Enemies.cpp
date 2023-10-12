@@ -61,7 +61,6 @@ void Enemies::Update(float dt) {
     else {      
         DeleteEnemyIndicator();// Delete the enemy indicator if it exists
     }
-    
     // Deselect the skill on right mouse button press
     if (inputManager.MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill != nullptr) {
         selectedSkill->Deselect();
@@ -76,7 +75,6 @@ void Enemies::Update(float dt) {
     // Update the enemy's HP bar
     lifeBarEnemy->SetCurrentHP(enemyInfo.hp);
 
-    
     RenderTags();
 } 
  
@@ -126,31 +124,37 @@ void Enemies::ApplySkillToAllEnemies(int damage) {
     }
 }
 
-void Enemies::RenderTags(){ 
+void Enemies::RenderTags() {
     if (tags.empty()) {
-        const float tagSpacing = 50.0f;
+        float tagSpacing = 50.0f;
         Enemies::EnemyInfo& enemyInfo = Enemies::enemyInfoMap[id];
-
-        // Iterar pelas tags do inimigo e criar objetos de tag para cada uma
         float currentX = associated.box.x;
-        std::string spriteTag;
+
         for (auto tag : enemyInfo.tags) {
-            auto tagObject = std::make_shared<GameObject>();
-            switch(tag){
-                case Skill::SkillsTags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
+            std::string spriteTag;
+
+            switch (tag) {
                 case Skill::SkillsTags::RESILIENCE: spriteTag = TAG_RESILIENCE_SPRITE; break;
+                case Skill::SkillsTags::DODGE: spriteTag = TAG_DODGE_SPRITE; break;
+                case Skill::SkillsTags::PROVOKE: spriteTag = TAG_PROVOKE_SPRITE; break;
+                case Skill::SkillsTags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
+                case Skill::SkillsTags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
+                case Skill::SkillsTags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
+                case Skill::SkillsTags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
             }
-            Sprite* tag_spr = new Sprite(*tagObject, spriteTag);
+
+            // Crie um objeto tag com um Sprite usando std::make_shared
+            auto tagObject = std::make_shared<GameObject>();
+            auto tag_spr = std::make_shared<Sprite>(*tagObject, spriteTag);
             tag_spr->SetScale(0.1, 0.1);
-            tagObject->AddComponent(std::make_shared<Sprite>(*tag_spr));
+            tagObject->AddComponent(tag_spr);
             tagObject->box.x = currentX;
             tagObject->box.y = associated.box.y + associated.box.h;
             tags.push_back(tagObject);
-            Game::GetInstance().GetCurrentState().AddObject(tagObject.get()); // Use .get() para obter o ponteiro bruto
+            Game::GetInstance().GetCurrentState().AddObject(tagObject.get());
             currentX += tagSpacing;
-        }    
-    }  
-
+        }
+    }
 }
 
 void Enemies::Render() {
@@ -171,6 +175,6 @@ void Enemies::InitializeEnemyInfoMap() {
     // Populate the map with enemy information during initialization.
     enemyInfoMap[ENEMY1] = { 10, {Skill::SkillsTags::VULNERABLE}, "Enemy 1", ENEMY1_SPRITE };
     enemyInfoMap[ENEMY2] = { 20, {Skill::SkillsTags::RESILIENCE, Skill::SkillsTags::VULNERABLE}, "Enemy 2", ENEMY2_SPRITE };
-    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE };
-    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE };
+    enemyInfoMap[ENEMY3] = { 30, {Skill::SkillsTags::DODGE}, "Enemy 1", ENEMY3_SPRITE };
+    enemyInfoMap[ENEMY4] = { 100, {Skill::SkillsTags::RAMPAGE, Skill::SkillsTags::WEAK}, "Enemy 2", ENEMY4_SPRITE };
 }

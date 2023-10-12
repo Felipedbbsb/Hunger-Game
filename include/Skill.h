@@ -33,7 +33,7 @@
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
-#define SKILL_CLICK_COOLDOWN 0.05
+#define SKILL_CLICK_COOLDOWN 0.1
 //===================================================
 
 class Skill : public Component {
@@ -61,10 +61,8 @@ class Skill : public Component {
         };
 
         enum SkillsTags {
-            REVENGE, //Reflete 30% do dano de volta no atacante
             RESILIENCE, //Reduz o dano recebido em 50%
             DODGE, //50% de chance de evitar todo o dano do próximo golpe
-            ADRENALINE,//Ganha +1AP no começo do próximo turno para cada stack de adrenaline
             PROVOKE,//Força os inimigos a atacarem este alvo
             VULNERABLE,//Aumenta o dano recebido em 50%
             WEAK,//Reduz o seu dano em 50%
