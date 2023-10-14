@@ -198,12 +198,18 @@ dep/Enemies.d bin/Enemies.o: src/Enemies.cpp include/Enemies.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h \
- include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h include/State.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
+ include/Tag.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/State.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\deque \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits
 
 include/Enemies.h:
 
@@ -685,6 +691,8 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h:
 
+include/Tag.h:
+
 include/Game.h:
 
 C:/SDL2/include/SDL2/SDL_ttf.h:
@@ -700,3 +708,15 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:

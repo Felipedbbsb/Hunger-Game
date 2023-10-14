@@ -19,14 +19,8 @@
 #define ENEMY3_SPRITE "assets/img/enemies/enemyGhoulIdle.png"
 #define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
 
-#define TAG_RESILIENCE_SPRITE "assets/img/UI/uiIconResilience.png"
-#define TAG_DODGE_SPRITE "assets/img/UI/uiIconDodge.png"
-#define TAG_PROVOKE_SPRITE "assets/img/UI/uiIconProvoke.png"
-#define TAG_VULNERABLE_SPRITE "assets/img/UI/uiIconVulnerable.png"
-#define TAG_WEAK_SPRITE "assets/img/UI/uiIconWeak.png"
-#define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"
-#define TAG_PROTECTED_SPRITE "assets/img/UI/uiIconProtected.png"
 
+#define TAGS_SPACING 50.0f
 
 class Enemies : public Component {
     public:
@@ -36,8 +30,6 @@ class Enemies : public Component {
             ENEMY3,
             ENEMY4
         };
-
-
 
         // Structure to store enemy information
         struct EnemyInfo {
@@ -49,9 +41,8 @@ class Enemies : public Component {
 
 
         Enemies(GameObject& associated, 
-                EnemyId id, 
-                std::vector<std::shared_ptr<Enemies>> enemiesArray);
-
+                EnemyId id);
+ 
         ~Enemies();
         void Update(float dt);
         void Render();
@@ -62,22 +53,35 @@ class Enemies : public Component {
 
         void CreateEnemyIndicator();
         void DeleteEnemyIndicator();
-        void ApplySkillToEnemy( EnemyId enemyId);
-        void ApplySkillToAllEnemies(int damage);
+        void ApplySkillToEnemy(EnemyId enemyId);
+        void ApplySkillToSingleEnemy(  Skill::SkillInfo& skillInfo);
+        void ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags);
+        void ApplyTags(std::vector<Skill::SkillsTags> skillTags);
+        void AddObjTag(Skill::SkillsTags tag);
 
-        void RenderTags();
-
-        EnemyId GetId();
+        EnemyId GetId(); 
 
         // Function to initialize enemy information
         static void InitializeEnemyInfoMap();
 
-        GameObject* enemyIndicator; 
-        std::vector<std::shared_ptr<GameObject>> tags;
+
+        GameObject* enemyIndicator;  
+
+        static std::vector<std::shared_ptr<Enemies>> enemiesArray;
+
     private:
         EnemyId id;
         LifeBar* lifeBarEnemy;
 
-        std::vector<std::shared_ptr<Enemies>> enemiesArray; // Used for attacks involving more then one target
+        int tagSpaceCount;
+
+        int hp;
+        std::vector<Skill::SkillsTags> tags;
+        std::string name;
+        std::string iconPath;
+
+        std::vector<std::shared_ptr<GameObject>> enemytags;
+
+         // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
 };

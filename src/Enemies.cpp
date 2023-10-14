@@ -2,81 +2,102 @@
 #include "InputManager.h"
 #include "Skill.h" // Include the Skill header to access selectedSkill and SkillInfo
 #include "LifeBar.h"
+#include "Tag.h"
 #include "Game.h"
-
+#include <algorithm> 
 // Initialize the static enemyInfoMap
 std::map<Enemies::EnemyId, Enemies::EnemyInfo> Enemies::enemyInfoMap;
 
-std::vector<std::shared_ptr<GameObject>> tags;
+std::vector<std::shared_ptr<Enemies>> Enemies::enemiesArray;
+
+std::vector<std::shared_ptr<GameObject>> enemytags;
 
 
-Enemies::Enemies(GameObject& associated, EnemyId id, std::vector<std::shared_ptr<Enemies>> enemiesArray)
+ 
+Enemies::Enemies(GameObject& associated, EnemyId id)
     : Component::Component(associated), 
     enemyIndicator(nullptr),
-    id(id),
+    id(id), 
     lifeBarEnemy(nullptr),
-    enemiesArray(enemiesArray){
+    tagSpaceCount(0)
+    { 
+
+        EnemyInfo& enemyInfo = enemyInfoMap[id];
+        hp = enemyInfo.hp;
+        tags = enemyInfo.tags;
+        name = enemyInfo.name;
+        iconPath = enemyInfo.iconPath;
+
+        auto sharedThis = std::shared_ptr<Enemies>(this);
+        // Adicione o std::shared_ptr ao vetor de inimigos
+        enemiesArray.push_back(sharedThis);
+
 }
-
+ 
 void Enemies::Start() {
-    std::string spriteEnemy;
-    // Use enemyInfoMap para obter informações do inimigo com base na ID
-    const EnemyInfo& enemyInfo = enemyInfoMap[id];
-
-    spriteEnemy = enemyInfo.iconPath; 
-
-    // Adicione o sprite do inimigo 
-    Sprite* enemies_spr = new Sprite(associated, spriteEnemy);
+    Sprite* enemies_spr = new Sprite(associated, iconPath);
     enemies_spr->SetScale(0.15, 0.15);
     associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr));
 
-    // Inicialize a LifeBar
-    lifeBarEnemy = new LifeBar(associated, enemyInfo.hp, enemyInfo.hp, associated.box.w);
+    lifeBarEnemy = new LifeBar(associated, hp, hp, associated.box.w);
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarEnemy));
 
+    //If enemies starts with tags
+    for (auto tag : tags) {
+            AddObjTag(tag);
+        }
 }
 
 Enemies::~Enemies() { 
+    std::cout << "teste" << std::endl; 
+    for (auto& tag : enemytags) {
+        if (!tag->IsDead()) {
+            tag->RequestDelete();
+        }
+    }
+    enemytags.clear();
 }
 
 void Enemies::Update(float dt) {
-    auto& inputManager = InputManager::GetInstance();// Get the input manager instanc
+    auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
-    auto& enemyInfo = enemyInfoMap[id];// Get the enemy's information
-    
-    auto selectedSkill = Skill::selectedSkill;// Get the selected skill
+    auto selectedSkill = Skill::selectedSkill;
 
-    // Check if the enemy's HP is zero or below and request deletion
-    if (enemyInfo.hp <= 0) {
+     // Check if the enemy's HP is zero or below and request deletion
+    if (hp <= 0) {
+        DeleteEnemyIndicator();
+        for (auto& tag : enemytags) {
+            if (!tag->IsDead()) {
+                tag->RequestDelete();
+            }
+        }
         associated.RequestDelete();
-    }
-
+    } 
+    
     // Check if a skill is selected
-    if (selectedSkill != nullptr) {
+    else if (selectedSkill) {
         if (enemyIndicator == nullptr) {
             CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist
         }
     } 
-    else {      
+    
+    else {
         DeleteEnemyIndicator();// Delete the enemy indicator if it exists
     }
-    // Deselect the skill on right mouse button press
-    if (inputManager.MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill != nullptr) {
+
+    // Check if the mouse is over the enemy and left mouse button is pressed
+    if (inputManager.MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill) {
         selectedSkill->Deselect();
     }
 
     // Check if the mouse is over the enemy and left mouse button is pressed
-    if (associated.box.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
-        if (selectedSkill != nullptr) {
-            ApplySkillToEnemy(id);
-        }
+    if (associated.box.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
+        ApplySkillToEnemy(id);
     }
-    // Update the enemy's HP bar
-    lifeBarEnemy->SetCurrentHP(enemyInfo.hp);
 
-    RenderTags();
-} 
+    lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+}
  
 
 void Enemies::CreateEnemyIndicator() {
@@ -101,60 +122,57 @@ void Enemies::DeleteEnemyIndicator() {
 void Enemies::ApplySkillToEnemy(EnemyId enemyId) {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-    
 
     if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL) {
-        ApplySkillToAllEnemies(tempSkillInfo.damage);
+        //ApplySkillToAllEnemies(tempSkillInfo.damage, tempSkillInfo.tags);
+        ApplySkillToSingleEnemy(tempSkillInfo);
     } else {
-        auto& enemyInfo = Enemies::enemyInfoMap[enemyId];
-        enemyInfo.hp -= tempSkillInfo.damage;
+        ApplySkillToSingleEnemy(tempSkillInfo);
     }
 
     selectedSkill->Deselect();
+} 
+ 
+void Enemies::ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags) {
+    //for (auto& enemy : enemiesArray) {
+    //    auto enemyId = enemy->GetId();
+    //    auto selectedSkill = Skill::selectedSkill;
+    //    Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+
+    //    if (Enemies::enemyInfoMap.find(enemyId) != Enemies::enemyInfoMap.end()) {
+   //         auto& enemyInfo = Enemies::enemyInfoMap[enemyId];
+    //        ApplySkillToSingleEnemy(enemyInfo, tempSkillInfo);
+    //    }
+    //}
 }
 
-void Enemies::ApplySkillToAllEnemies(int damage) {
-    for (auto& enemy : enemiesArray) {
-        Enemies::EnemyId enemyId = enemy->GetId();
-
-        if (Enemies::enemyInfoMap.find(enemyId) != Enemies::enemyInfoMap.end()) {
-            Enemies::EnemyInfo& enemyInfo = Enemies::enemyInfoMap[enemyId];
-            enemyInfo.hp -= damage;
-        }
-    }
+void Enemies::ApplySkillToSingleEnemy( Skill::SkillInfo& skillInfo) {
+    hp -= skillInfo.damage;
+    ApplyTags(skillInfo.tags);
 }
 
-void Enemies::RenderTags() {
-    if (tags.empty()) {
-        float tagSpacing = 50.0f;
-        Enemies::EnemyInfo& enemyInfo = Enemies::enemyInfoMap[id];
-        float currentX = associated.box.x;
-
-        for (auto tag : enemyInfo.tags) {
-            std::string spriteTag;
-
-            switch (tag) {
-                case Skill::SkillsTags::RESILIENCE: spriteTag = TAG_RESILIENCE_SPRITE; break;
-                case Skill::SkillsTags::DODGE: spriteTag = TAG_DODGE_SPRITE; break;
-                case Skill::SkillsTags::PROVOKE: spriteTag = TAG_PROVOKE_SPRITE; break;
-                case Skill::SkillsTags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
-                case Skill::SkillsTags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
-                case Skill::SkillsTags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
-                case Skill::SkillsTags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
-            }
-
-            // Crie um objeto tag com um Sprite usando std::make_shared
-            auto tagObject = std::make_shared<GameObject>();
-            auto tag_spr = std::make_shared<Sprite>(*tagObject, spriteTag);
-            tag_spr->SetScale(0.1, 0.1);
-            tagObject->AddComponent(tag_spr);
-            tagObject->box.x = currentX;
-            tagObject->box.y = associated.box.y + associated.box.h;
-            tags.push_back(tagObject);
-            Game::GetInstance().GetCurrentState().AddObject(tagObject.get());
-            currentX += tagSpacing;
-        }
+void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
+    for (auto& tag : skillTags) {
+        tags.push_back(tag);
+        AddObjTag(tag);
     }
+    
+}
+
+
+void Enemies::AddObjTag(Skill::SkillsTags tag){ 
+    auto tagObject = std::make_shared<GameObject>();
+    auto tag_behaviour = std::make_shared<Tag>(*tagObject, tag);
+    tagObject->AddComponent(tag_behaviour);
+
+    tagObject->box.x = associated.box.x + TAGS_SPACING * tagSpaceCount;
+    tagObject->box.y = associated.box.y + associated.box.h;
+    Game::GetInstance().GetCurrentState().AddObject(tagObject.get());
+
+    tagSpaceCount += 1;
+    enemytags.push_back(tagObject);
+    std::cout << "render" << std::endl;
+        
 }
 
 void Enemies::Render() {

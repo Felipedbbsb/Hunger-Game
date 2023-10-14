@@ -53,7 +53,6 @@ void Skill::Update(float dt) {
                     selectedSkill->Deselect();
                 }
                 selectedSkill = this; 
-                //std::cout <<"Selecionado" << selectedSkill << std::endl;
             }
         }
     } else {
