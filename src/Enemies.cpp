@@ -31,6 +31,7 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
         auto sharedThis = std::shared_ptr<Enemies>(this);
         // Adicione o std::shared_ptr ao vetor de inimigos
         enemiesArray.push_back(sharedThis);
+        
 
 }
  
@@ -45,17 +46,26 @@ void Enemies::Start() {
     //If enemies starts with tags
     for (auto tag : tags) {
             AddObjTag(tag);
-        }
+    }
 }
 
 Enemies::~Enemies() { 
     std::cout << "teste" << std::endl; 
-    for (auto& tag : enemytags) {
-        if (!tag->IsDead()) {
-            tag->RequestDelete();
+
+    DeleteEnemyIndicator();
+
+    std::cout << "teste2" << std::endl; 
+    for (auto it = enemytags.begin(); it != enemytags.end(); /* no increment here */) {
+        if (!(*it)->IsDead()) {
+            (*it)->RequestDelete();
+            it = enemytags.erase(it);
+        } else {
+            ++it;
         }
     }
-    enemytags.clear();
+    std::cout << "teste3" << std::endl; 
+    associated.RequestDelete();
+    std::cout << "teste4" << std::endl; 
 }
 
 void Enemies::Update(float dt) {
@@ -63,7 +73,7 @@ void Enemies::Update(float dt) {
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     auto selectedSkill = Skill::selectedSkill;
-
+    std::cout << enemiesArray.size() << std::endl; 
      // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         DeleteEnemyIndicator();
@@ -72,7 +82,13 @@ void Enemies::Update(float dt) {
                 tag->RequestDelete();
             }
         }
+        std::cout << "change"<<enemiesArray.size() << std::endl; 
+        // Remova o objeto atual da matriz enemiesArray
+        
+        
         associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
     } 
     
     // Check if a skill is selected
@@ -93,7 +109,7 @@ void Enemies::Update(float dt) {
 
     // Check if the mouse is over the enemy and left mouse button is pressed
     if (associated.box.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
-        ApplySkillToEnemy(id);
+        ApplySkillToEnemy();
     }
 
     lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
@@ -119,44 +135,39 @@ void Enemies::DeleteEnemyIndicator() {
 }
 
 
-void Enemies::ApplySkillToEnemy(EnemyId enemyId) {
+void Enemies::ApplySkillToEnemy() {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
 
     if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL) {
-        //ApplySkillToAllEnemies(tempSkillInfo.damage, tempSkillInfo.tags);
-        ApplySkillToSingleEnemy(tempSkillInfo);
+        ApplySkillToAllEnemies(tempSkillInfo.damage, tempSkillInfo.tags);
     } else {
         ApplySkillToSingleEnemy(tempSkillInfo);
     }
 
     selectedSkill->Deselect();
-} 
- 
-void Enemies::ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags) {
-    //for (auto& enemy : enemiesArray) {
-    //    auto enemyId = enemy->GetId();
-    //    auto selectedSkill = Skill::selectedSkill;
-    //    Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-
-    //    if (Enemies::enemyInfoMap.find(enemyId) != Enemies::enemyInfoMap.end()) {
-   //         auto& enemyInfo = Enemies::enemyInfoMap[enemyId];
-    //        ApplySkillToSingleEnemy(enemyInfo, tempSkillInfo);
-    //    }
-    //}
 }
 
-void Enemies::ApplySkillToSingleEnemy( Skill::SkillInfo& skillInfo) {
+void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
     hp -= skillInfo.damage;
     ApplyTags(skillInfo.tags);
+}
+
+void Enemies::ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags) {
+    for (auto& enemy : enemiesArray) {
+        enemy->hp -= damage;
+        enemy->ApplyTags(skillTags);
+    }
+    //enemiesArray.clear();
 }
 
 void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
     for (auto& tag : skillTags) {
         tags.push_back(tag);
         AddObjTag(tag);
+        
     }
-    
+
 }
 
 
@@ -191,7 +202,7 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 10, {Skill::SkillsTags::VULNERABLE}, "Enemy 1", ENEMY1_SPRITE };
+    enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE };
     enemyInfoMap[ENEMY2] = { 20, {Skill::SkillsTags::RESILIENCE, Skill::SkillsTags::VULNERABLE}, "Enemy 2", ENEMY2_SPRITE };
     enemyInfoMap[ENEMY3] = { 30, {Skill::SkillsTags::DODGE}, "Enemy 1", ENEMY3_SPRITE };
     enemyInfoMap[ENEMY4] = { 100, {Skill::SkillsTags::RAMPAGE, Skill::SkillsTags::WEAK}, "Enemy 2", ENEMY4_SPRITE };

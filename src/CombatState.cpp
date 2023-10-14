@@ -10,7 +10,7 @@
 #include "Enemies.h"
 #include "Skill.h" 
 
-CombatState::CombatState(std::vector<std::shared_ptr<Enemies>> enemiesArray) 
+CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray) 
 : State::State(),
 enemiesArray(enemiesArray){
 } 
@@ -75,9 +75,7 @@ void CombatState::LoadAssets(){
         int offsetArray = enemiesArray.size() - i - 1;
         GameObject* enemy = new GameObject(ENEMIES_POS1.x + 200 * offsetArray, ENEMIES_POS1.y);
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
-        Enemies::EnemyId enemyId = enemiesArray[i]->GetId();
- 
-        Enemies* enemy_behaviour = new Enemies(*enemy, enemyId);
+        Enemies* enemy_behaviour = new Enemies(*enemy, enemiesArray[i]);
         enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
         Game::GetInstance().GetCurrentState().AddObject(enemy);
     }

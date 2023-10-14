@@ -53,7 +53,7 @@ class Enemies : public Component {
 
         void CreateEnemyIndicator();
         void DeleteEnemyIndicator();
-        void ApplySkillToEnemy(EnemyId enemyId);
+        void ApplySkillToEnemy();
         void ApplySkillToSingleEnemy(  Skill::SkillInfo& skillInfo);
         void ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags);
         void ApplyTags(std::vector<Skill::SkillsTags> skillTags);
@@ -84,4 +84,6 @@ class Enemies : public Component {
 
          // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
+
+        friend class State;
 };

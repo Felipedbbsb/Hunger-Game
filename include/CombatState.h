@@ -22,7 +22,7 @@
 
 class CombatState : public State{
     public:
-        CombatState(std::vector<std::shared_ptr<Enemies>> enemiesArray);
+        CombatState(std::vector<Enemies::EnemyId>);
         ~CombatState();
         void LoadAssets();
         void Update(float dt);
@@ -31,6 +31,8 @@ class CombatState : public State{
         void Pause();
         void Resume();
 
+        
+
     private:
-        std::vector<std::shared_ptr<Enemies>> enemiesArray;    
+        std::vector<Enemies::EnemyId> enemiesArray;    
 };

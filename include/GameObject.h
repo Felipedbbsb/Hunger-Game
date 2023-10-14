@@ -28,7 +28,7 @@ class GameObject{
     Rect box;
     void NotifyCollision(GameObject& other);
 
-
+    
     double GetAngleRad();
 
   private:

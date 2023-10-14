@@ -20,14 +20,13 @@ int main(int argc, char** argv) {
         Enemies::InitializeEnemyInfoMap();
 
         // ==========Enemies array==============
-        GameObject *enemy = new GameObject();
-        std::vector<std::shared_ptr<Enemies>> enemiesArray;
-        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY1));
-        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY2));
-        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY3));
-        enemiesArray.push_back(std::make_shared<Enemies>(*enemy, Enemies::ENEMY3));
+        std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
+                                                       Enemies::ENEMY2, 
+                                                       Enemies::ENEMY3, 
+                                                       Enemies::ENEMY3 };
 
         CombatState* initialState = new CombatState(enemiesArray); // Pass the enemiesArray
+
         
         game.Push(initialState);
 
