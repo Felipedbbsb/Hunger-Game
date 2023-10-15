@@ -22,18 +22,19 @@ class Tag : public Component{
 
     public:
         Tag(GameObject &associated, 
-                Skill::SkillsTags tag);
+                Skill::SkillsTags tag, 
+                std::weak_ptr<GameObject> enemyRef);
 
         ~Tag();
         void Update(float dt);
-        void Render();
+        void Render(); 
         void Start();
         void Pause();
         void Resume();
         bool Is(std::string type);
 
     private:
-        std::weak_ptr<GameObject> skillRef; 
+        std::weak_ptr<GameObject> enemyRef; 
         GameObject* textSkillObj;
         std::string textSkill;
 };

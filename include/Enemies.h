@@ -47,7 +47,7 @@ class Enemies : public Component {
         void Update(float dt);
         void Render();
         void Start();
-        void Pause();
+        void Pause(); 
         void Resume();
         bool Is(std::string type); 
 
@@ -55,7 +55,7 @@ class Enemies : public Component {
         void DeleteEnemyIndicator();
         void ApplySkillToEnemy();
         void ApplySkillToSingleEnemy(  Skill::SkillInfo& skillInfo);
-        void ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags);
+        void ApplySkillToAllEnemies();
         void ApplyTags(std::vector<Skill::SkillsTags> skillTags);
         void AddObjTag(Skill::SkillsTags tag);
 
@@ -68,7 +68,8 @@ class Enemies : public Component {
         GameObject* enemyIndicator;  
 
         static std::vector<std::shared_ptr<Enemies>> enemiesArray;
-
+        static int enemiesCount;
+        static int SkillAllenemies;
     private:
         EnemyId id;
         LifeBar* lifeBarEnemy;
@@ -80,10 +81,10 @@ class Enemies : public Component {
         std::string name;
         std::string iconPath;
 
-        std::vector<std::shared_ptr<GameObject>> enemytags;
-
+        std::vector<std::weak_ptr<GameObject>> enemytags;
+        
+ 
          // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
 
-        friend class State;
 };

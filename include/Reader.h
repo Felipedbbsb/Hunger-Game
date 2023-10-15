@@ -19,8 +19,7 @@
 class Reader : public Component{
 
     public:
-        Reader(GameObject &associated, 
-                std::weak_ptr<GameObject> skillRef,
+        Reader(GameObject &associated,
                 std::string textSkill);
 
         ~Reader();
@@ -31,8 +30,7 @@ class Reader : public Component{
         void Resume();
         bool Is(std::string type);
 
-    private:
-        std::weak_ptr<GameObject> skillRef; 
+    private: 
         GameObject* textSkillObj;
         std::string textSkill;
 };

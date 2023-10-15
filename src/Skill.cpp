@@ -21,7 +21,7 @@ void Skill::Start() {
 
     spriteSkill = skillInfo.iconPath;
     textSkill = skillInfo.info;
-
+ 
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
     skillSprite->SetScale(0.2, 0.2);
     associated.AddComponent(std::shared_ptr<Sprite>(skillSprite));
@@ -36,11 +36,11 @@ void Skill::Update(float dt) {
 
     if (associated.box.Contains(mousePos.x, mousePos.y)) {
         if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
-            std::weak_ptr<GameObject> weak_skillRef = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
+            //std::weak_ptr<GameObject> weak_skillRef = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
             if (!readerSkill) {
                 readerSkill = new GameObject(associated.box.x, associated.box.y);
-                Reader* readerSkill_behaviour = new Reader(*readerSkill, weak_skillRef, textSkill);
+                Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
                 readerSkill->AddComponent(std::shared_ptr<Reader>(readerSkill_behaviour));
                 Game::GetInstance().GetCurrentState().AddObject(readerSkill);
             }
@@ -49,7 +49,7 @@ void Skill::Update(float dt) {
                     
                     Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
 
-                    
+                     
                     selectedSkill->Deselect();
                 }
                 selectedSkill = this; 

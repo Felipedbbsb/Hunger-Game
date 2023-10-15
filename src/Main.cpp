@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
         std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
                                                        Enemies::ENEMY2, 
                                                        Enemies::ENEMY3, 
-                                                       Enemies::ENEMY3 };
+                                                       Enemies::ENEMY4 };
 
         CombatState* initialState = new CombatState(enemiesArray); // Pass the enemiesArray
 

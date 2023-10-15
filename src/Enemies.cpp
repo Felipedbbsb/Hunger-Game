@@ -10,15 +10,15 @@ std::map<Enemies::EnemyId, Enemies::EnemyInfo> Enemies::enemyInfoMap;
 
 std::vector<std::shared_ptr<Enemies>> Enemies::enemiesArray;
 
-std::vector<std::shared_ptr<GameObject>> enemytags;
+int Enemies::enemiesCount = 0;
 
-
+int Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
  
 Enemies::Enemies(GameObject& associated, EnemyId id)
     : Component::Component(associated), 
     enemyIndicator(nullptr),
     id(id), 
-    lifeBarEnemy(nullptr),
+    lifeBarEnemy(nullptr), 
     tagSpaceCount(0)
     { 
 
@@ -28,9 +28,17 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
 
-        auto sharedThis = std::shared_ptr<Enemies>(this);
-        // Adicione o std::shared_ptr ao vetor de inimigos
+         // Create a shared pointer for the current Enemies object
+        std::shared_ptr<Enemies> sharedThis = std::shared_ptr<Enemies>(this);
+
+        // Create a weak pointer from the shared pointer and add it to the enemiesArray
+        std::weak_ptr<Enemies> weakThis = sharedThis;
         enemiesArray.push_back(sharedThis);
+
+        //one more enemy
+        enemiesCount += 1;
+
+        
         
 
 }
@@ -50,22 +58,14 @@ void Enemies::Start() {
 }
 
 Enemies::~Enemies() { 
-    std::cout << "teste" << std::endl; 
+    for (int i = enemytags.size() - 1; i >= 0; i--) { //remove enemies tags
+            enemytags.erase(enemytags.begin() + i);
+        }
 
     DeleteEnemyIndicator();
+    enemiesCount -= 1;
 
-    std::cout << "teste2" << std::endl; 
-    for (auto it = enemytags.begin(); it != enemytags.end(); /* no increment here */) {
-        if (!(*it)->IsDead()) {
-            (*it)->RequestDelete();
-            it = enemytags.erase(it);
-        } else {
-            ++it;
-        }
-    }
-    std::cout << "teste3" << std::endl; 
-    associated.RequestDelete();
-    std::cout << "teste4" << std::endl; 
+
 }
 
 void Enemies::Update(float dt) {
@@ -73,19 +73,21 @@ void Enemies::Update(float dt) {
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     auto selectedSkill = Skill::selectedSkill;
-    std::cout << enemiesArray.size() << std::endl; 
-     // Check if the enemy's HP is zero or below and request deletion
+
+    //Iterator for all skill types, counts number of left enemies to receive skill
+    if(SkillAllenemies > 0){
+        Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+        ApplySkillToSingleEnemy(tempSkillInfo);
+        
+        SkillAllenemies -= 1; //less one enemy to receive skill
+        if(SkillAllenemies == 0){ //no more enemies
+            selectedSkill->Deselect();
+        }
+    }
+
+    // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         DeleteEnemyIndicator();
-        for (auto& tag : enemytags) {
-            if (!tag->IsDead()) {
-                tag->RequestDelete();
-            }
-        }
-        std::cout << "change"<<enemiesArray.size() << std::endl; 
-        // Remova o objeto atual da matriz enemiesArray
-        
-        
         associated.RequestDelete();
         return; // Early exit if the enemy is no longer alive
 
@@ -140,12 +142,13 @@ void Enemies::ApplySkillToEnemy() {
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
 
     if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL) {
-        ApplySkillToAllEnemies(tempSkillInfo.damage, tempSkillInfo.tags);
+        ApplySkillToAllEnemies();
     } else {
         ApplySkillToSingleEnemy(tempSkillInfo);
+        selectedSkill->Deselect();
     }
 
-    selectedSkill->Deselect();
+    
 }
 
 void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
@@ -153,36 +156,31 @@ void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
     ApplyTags(skillInfo.tags);
 }
 
-void Enemies::ApplySkillToAllEnemies(int damage, std::vector<Skill::SkillsTags>& skillTags) {
-    for (auto& enemy : enemiesArray) {
-        enemy->hp -= damage;
-        enemy->ApplyTags(skillTags);
-    }
-    //enemiesArray.clear();
+void Enemies::ApplySkillToAllEnemies() {
+    SkillAllenemies = enemiesCount;
 }
 
 void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
     for (auto& tag : skillTags) {
         tags.push_back(tag);
         AddObjTag(tag);
-        
     }
-
 }
 
 
 void Enemies::AddObjTag(Skill::SkillsTags tag){ 
-    auto tagObject = std::make_shared<GameObject>();
-    auto tag_behaviour = std::make_shared<Tag>(*tagObject, tag);
-    tagObject->AddComponent(tag_behaviour);
+    std::weak_ptr<GameObject> go_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
+
+    GameObject* tagObject = new GameObject();
+    Tag* tag_behaviour = new Tag(*tagObject, tag, go_enemy);
+    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
     tagObject->box.x = associated.box.x + TAGS_SPACING * tagSpaceCount;
     tagObject->box.y = associated.box.y + associated.box.h;
-    Game::GetInstance().GetCurrentState().AddObject(tagObject.get());
+    std::weak_ptr<GameObject> go_tag = Game::GetInstance().GetCurrentState().AddObject(tagObject);
 
     tagSpaceCount += 1;
-    enemytags.push_back(tagObject);
-    std::cout << "render" << std::endl;
+    enemytags.push_back(go_tag);
         
 }
 
