@@ -1,14 +1,14 @@
 #include "LifeBar.h"
 #include "Game.h"
 
-LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth )
-    : Component(associated), hpMax(hpMax), hpCurrent(hpCurrent), lifeBarWidth(lifeBarWidth) {
+LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx )
+    : Component(associated), hpMax(hpMax), hpCurrent(hpCurrent), lifeBarWidth(lifeBarWidth), posx(posx) {
     barColor = {255, 0, 0, 255}; // Red color (RGBA)
     UpdateLifeBarRect();
 }
 
 LifeBar::~LifeBar() {}
-
+ 
 void LifeBar::Update(float dt) {
 }
 
@@ -37,7 +37,7 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
 
 void LifeBar::UpdateLifeBarRect() {
     // Calculate the position and dimensions of the life bar rectangle
-    lifeBarRect.x = static_cast<int>(associated.box.x);
+    lifeBarRect.x = static_cast<int>(posx);
     lifeBarRect.y = static_cast<int>(associated.box.y - lifeBarHeight - 5); // Place it above the GameObject
     lifeBarRect.w = lifeBarWidth;
     lifeBarRect.h = lifeBarHeight;

@@ -10,6 +10,7 @@
 #include "Sprite.h"
 #include "LifeBar.h"
 #include "Skill.h"
+#include "Rect.h"
 
 #define ENEMY_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
 
@@ -20,7 +21,8 @@
 #define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
 
 
-#define TAGS_SPACING 50.0f
+#define TAGS_SPACING 35.0f
+
 
 class Enemies : public Component {
     public:
@@ -70,19 +72,23 @@ class Enemies : public Component {
         static std::vector<std::shared_ptr<Enemies>> enemiesArray;
         static int enemiesCount;
         static int SkillAllenemies;
+    
     private:
         EnemyId id;
         LifeBar* lifeBarEnemy;
+        Rect enemyHitbox;
 
         int tagSpaceCount;
 
+        //Enemie stats
         int hp;
         std::vector<Skill::SkillsTags> tags;
         std::string name;
         std::string iconPath;
 
-        std::vector<std::weak_ptr<GameObject>> enemytags;
+        std::vector<std::weak_ptr<GameObject>> enemytags;//only used for destructor
         
+        std::map<Skill::SkillsTags, int> tagCountMap; // Map to track tag counts, separated from enemytags
  
          // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information

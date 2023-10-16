@@ -7,7 +7,7 @@
 
 class LifeBar : public Component {
 public:
-    LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth);
+    LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx);
     ~LifeBar();
 
     void Update(float dt);
@@ -26,6 +26,7 @@ private:
     
     int lifeBarWidth = 100; // Width of the life bar
     const int lifeBarHeight = 10; // Height of the life bar
-
+    int posx;
+    
     void UpdateLifeBarRect();
 };

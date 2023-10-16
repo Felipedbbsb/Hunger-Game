@@ -209,7 +209,7 @@ dep/Enemies.d bin/Enemies.o: src/Enemies.cpp include/Enemies.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Camera.h
 
 include/Enemies.h:
 
@@ -720,3 +720,5 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
+
+include/Camera.h:

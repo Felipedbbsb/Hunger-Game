@@ -20,7 +20,7 @@ enemyRef(enemyRef)
         } 
         
         Sprite* tag_spr = new Sprite(associated, spriteTag);
-        tag_spr->SetScale(0.1, 0.1);
+        tag_spr->SetScale(0.07, 0.07);
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
     }
     else{

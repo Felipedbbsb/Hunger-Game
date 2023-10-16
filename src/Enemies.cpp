@@ -5,6 +5,14 @@
 #include "Tag.h"
 #include "Game.h"
 #include <algorithm> 
+
+#ifdef DEBUG
+#include "Camera.h"
+#include "Game.h"
+
+#include <SDL2/SDL.h>
+#endif //DEBUG
+
 // Initialize the static enemyInfoMap
 std::map<Enemies::EnemyId, Enemies::EnemyInfo> Enemies::enemyInfoMap;
 
@@ -28,33 +36,33 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
 
-         // Create a shared pointer for the current Enemies object
+        // Create a shared pointer for the current Enemies object
         std::shared_ptr<Enemies> sharedThis = std::shared_ptr<Enemies>(this);
 
         // Create a weak pointer from the shared pointer and add it to the enemiesArray
         std::weak_ptr<Enemies> weakThis = sharedThis;
         enemiesArray.push_back(sharedThis);
-
-        //one more enemy
-        enemiesCount += 1;
-
-        
-        
-
+    
+        enemiesCount += 1;    //one more enemy 
 }
  
 void Enemies::Start() {
     Sprite* enemies_spr = new Sprite(associated, iconPath);
-    enemies_spr->SetScale(0.15, 0.15);
+    enemies_spr->SetScale(0.25, 0.25);
     associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr));
+    associated.box.y -= associated.box.h;
 
-    lifeBarEnemy = new LifeBar(associated, hp, hp, associated.box.w);
+    //===================================Hitbox==================================
+    enemyHitbox = Rect(associated.box.x, associated.box.y, 130, associated.box.h);
+
+    associated.box.x -= (associated.box.w - enemyHitbox.w )/2;
+
+    lifeBarEnemy = new LifeBar(associated, hp, hp, enemyHitbox.w, enemyHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarEnemy));
 
     //If enemies starts with tags
-    for (auto tag : tags) {
-            AddObjTag(tag);
-    }
+    ApplyTags(tags);
+
 }
 
 Enemies::~Enemies() { 
@@ -64,8 +72,6 @@ Enemies::~Enemies() {
 
     DeleteEnemyIndicator();
     enemiesCount -= 1;
-
-
 }
 
 void Enemies::Update(float dt) {
@@ -110,20 +116,19 @@ void Enemies::Update(float dt) {
     }
 
     // Check if the mouse is over the enemy and left mouse button is pressed
-    if (associated.box.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
+    if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
         ApplySkillToEnemy();
     }
 
     lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
 }
  
-
 void Enemies::CreateEnemyIndicator() {
-    enemyIndicator = new GameObject(associated.box.x, associated.box.y + associated.box.h);
+    enemyIndicator = new GameObject(enemyHitbox.x, enemyHitbox.y + enemyHitbox.h);
     Sprite* enemyIndicator_spr = new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
 
     // Scale the enemy indicator
-    float percentageEnemyWidth = associated.box.w / enemyIndicator->box.w;
+    float percentageEnemyWidth = enemyHitbox.w / enemyIndicator->box.w;
     enemyIndicator_spr->SetScale(percentageEnemyWidth, 0.2);
     enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
@@ -136,7 +141,6 @@ void Enemies::DeleteEnemyIndicator() {
     }
 }
 
-
 void Enemies::ApplySkillToEnemy() {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
@@ -147,8 +151,6 @@ void Enemies::ApplySkillToEnemy() {
         ApplySkillToSingleEnemy(tempSkillInfo);
         selectedSkill->Deselect();
     }
-
-    
 }
 
 void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
@@ -162,12 +164,20 @@ void Enemies::ApplySkillToAllEnemies() {
 
 void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
     for (auto& tag : skillTags) {
-        tags.push_back(tag);
-        AddObjTag(tag);
+        if (tagCountMap.find(tag) != tagCountMap.end()) {
+                // A tag já existe, incrementa o contador
+                tagCountMap[tag]++;
+            } else {
+                // A tag não existe no mapa, adiciona com contador 1
+                tagCountMap[tag] = 1;
+                tags.push_back(tag);
+                AddObjTag(tag);
+                
+            }
+            std::cout << "Tag adicionada: " << tag << " (Quantidade: " << tagCountMap[tag] << ")" << std::endl;
     }
 }
-
-
+ 
 void Enemies::AddObjTag(Skill::SkillsTags tag){ 
     std::weak_ptr<GameObject> go_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
@@ -175,17 +185,35 @@ void Enemies::AddObjTag(Skill::SkillsTags tag){
     Tag* tag_behaviour = new Tag(*tagObject, tag, go_enemy);
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
-    tagObject->box.x = associated.box.x + TAGS_SPACING * tagSpaceCount;
-    tagObject->box.y = associated.box.y + associated.box.h;
+    tagObject->box.x = enemyHitbox.x + TAGS_SPACING * tagSpaceCount;
+    tagObject->box.y = enemyHitbox.y + enemyHitbox.h;
     std::weak_ptr<GameObject> go_tag = Game::GetInstance().GetCurrentState().AddObject(tagObject);
 
     tagSpaceCount += 1;
-    enemytags.push_back(go_tag);
-        
+    enemytags.push_back(go_tag); 
 }
 
 void Enemies::Render() {
-    
+    #ifdef DEBUG
+    Vec2 center(enemyHitbox.GetCenter());
+    SDL_Point points[5];
+
+    Vec2 point = (Vec2(enemyHitbox.x, enemyHitbox.y) - center).RotateVector(associated.angleDeg / (180 / 3.14159265359)) + center + Camera::pos;
+    points[0] = {(int)point.x, (int)point.y};
+    points[4] = {(int)point.x, (int)point.y};
+
+    point = (Vec2(enemyHitbox.x + enemyHitbox.w, enemyHitbox.y) - center).RotateVector(associated.angleDeg / (180 / 3.14159265359)) + center + Camera::pos;
+    points[1] = {(int)point.x, (int)point.y};
+
+    point = (Vec2(enemyHitbox.x + enemyHitbox.w, enemyHitbox.y + enemyHitbox.h) - center).RotateVector(associated.angleDeg / (180 / 3.14159265359)) + center + Camera::pos;
+    points[2] = {(int)point.x, (int)point.y};
+
+    point = (Vec2(enemyHitbox.x, enemyHitbox.y + enemyHitbox.h) - center).RotateVector(associated.angleDeg / (180 / 3.14159265359)) + center + Camera::pos;
+    points[3] = {(int)point.x, (int)point.y};
+
+    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawLines(Game::GetInstance().GetRenderer(), points, 5);
+#endif // DEBUG
 }
 
 

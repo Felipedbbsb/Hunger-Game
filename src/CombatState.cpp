@@ -14,7 +14,7 @@ CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray)
 : State::State(),
 enemiesArray(enemiesArray){
 } 
-
+  
 CombatState::~CombatState(){}
 
 void CombatState::Update(float dt){   
@@ -80,10 +80,9 @@ void CombatState::LoadAssets(){
         Game::GetInstance().GetCurrentState().AddObject(enemy);
     }
 
- 
 }
 
-void CombatState::Render(){
+void CombatState::Render(){     
     RenderArray();
 }
 

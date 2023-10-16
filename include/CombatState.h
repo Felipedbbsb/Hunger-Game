@@ -7,8 +7,9 @@
 //=========================Positions============================
 #define MOTHER_POS Vec2(500.0, (RESOLUTION_HEIGHT) * 2/3 - 375.0)
 #define DAUGHTER_POS Vec2(200, RESOLUTION_HEIGHT * 2/3 - 300)
-#define ENEMIES_POS1 Vec2(1100, RESOLUTION_HEIGHT * 2/3 - 200)//enemies separeted by x, pos1 only sets the first in the array
+#define ENEMIES_POS1 Vec2(1100, RESOLUTION_HEIGHT * 2/3 + OBJECT_STATS_OFFSET)//enemies separeted by x, pos1 only sets the first in the array
 
+#define OBJECT_STATS_OFFSET -50
 
 #include <iostream>
 #include <memory>
