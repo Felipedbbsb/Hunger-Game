@@ -55,7 +55,7 @@ void CombatState::LoadAssets(){
  
 
     UI* ui_behaviour = new UI(*ui, skillArrayNormal, skillArrayDjinn); 
-    ui->AddComponent((std::shared_ptr<UI>)ui_behaviour);
+    ui->AddComponent((std::shared_ptr<UI>)ui_behaviour); 
     AddObject(ui);
 
     //============================ Mother ========================================

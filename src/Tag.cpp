@@ -22,7 +22,6 @@ readerTag(nullptr)
         } 
         
         Sprite* tag_spr = new Sprite(associated, spriteTag);
-        tag_spr->SetScale(0.07, 0.07);
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
     }
     else{
@@ -58,7 +57,7 @@ void Tag::Update(float dt){
 
     
 
-}
+} 
 
 void Tag::UpdateQuantity(int newQuantity) {
     quantity = newQuantity;

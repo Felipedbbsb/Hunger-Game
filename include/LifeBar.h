@@ -5,6 +5,8 @@
 #include "SDL_include.h"
 #include <SDL2/SDL.h>
 
+#define LIFEBAROFFSET 20
+
 class LifeBar : public Component {
 public:
     LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx);

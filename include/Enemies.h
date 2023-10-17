@@ -21,7 +21,6 @@
 #define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
 
 
-#define TAGS_SPACING 35.0f
 
 
 class Enemies : public Component {

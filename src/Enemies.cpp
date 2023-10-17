@@ -35,7 +35,7 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
         tags = enemyInfo.tags;
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
-
+ 
         // Create a shared pointer for the current Enemies object
         std::shared_ptr<Enemies> sharedThis = std::shared_ptr<Enemies>(this);
 
@@ -47,9 +47,8 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
 }
  
 void Enemies::Start() {
-    Sprite* enemies_spr = new Sprite(associated, iconPath);
-    enemies_spr->SetScale(0.25, 0.25);
-    associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr));
+    Sprite* enemies_spr = new Sprite(associated, iconPath); 
+    associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr)); 
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
@@ -57,6 +56,7 @@ void Enemies::Start() {
 
     associated.box.x -= (associated.box.w - enemyHitbox.w )/2;
 
+    //==================================LifeBar====================================
     lifeBarEnemy = new LifeBar(associated, hp, hp, enemyHitbox.w, enemyHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarEnemy));
 
@@ -129,7 +129,7 @@ void Enemies::CreateEnemyIndicator() {
 
     // Scale the enemy indicator
     float percentageEnemyWidth = enemyHitbox.w / enemyIndicator->box.w;
-    enemyIndicator_spr->SetScale(percentageEnemyWidth, 0.2);
+    enemyIndicator_spr->SetScale(percentageEnemyWidth, 1);
     enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }
@@ -167,21 +167,16 @@ void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
         if (tagCountMap.find(tag) != tagCountMap.end()) {
                 // A tag já existe, incrementa o contador
                 tagCountMap[tag]++;
-                std::cout << " aaaa" << std::endl;
                 for (auto& weak_tag : enemytags) {
                     auto tagGameObject = weak_tag.lock();  // Obtenha o objeto GameObject
                     if (tagGameObject) {
-                        std::cout << " aaaa1" << std::endl;
                         // Tente recuperar o componente "Tag"
                         auto tagComponent = tagGameObject->GetComponent("Tag");
                         auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);;
                         if (tagComponentPtr) {
-                            std::cout << " aaaa2" << std::endl;
                             // Agora, você pode acessar a propriedade "tag" do componente "Tag"
                             if (tagComponentPtr->GetTag() == tag) {
-                                std::cout << " aaaa3" << std::endl;
                                 tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
-                                std::cout << " aaaa4" << std::endl;
                             }
                         }
                     } 
@@ -205,8 +200,8 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Skill::SkillsTags tag){
     Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, 1);
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
-    tagObject->box.x = enemyHitbox.x + TAGS_SPACING * tagSpaceCount;
-    tagObject->box.y = enemyHitbox.y + enemyHitbox.h;
+    tagObject->box.x = enemyHitbox.x + TAGS_SPACING_X * tagSpaceCount;
+    tagObject->box.y = enemyHitbox.y + enemyHitbox.h + TAGS_SPACING_Y;
     std::weak_ptr<GameObject> go_tag = Game::GetInstance().GetCurrentState().AddObject(tagObject);
 
     tagSpaceCount += 1;

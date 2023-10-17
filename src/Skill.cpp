@@ -23,7 +23,6 @@ void Skill::Start() {
     textSkill = skillInfo.info;
  
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
-    skillSprite->SetScale(0.2, 0.2);
     associated.AddComponent(std::shared_ptr<Sprite>(skillSprite));
 }
 

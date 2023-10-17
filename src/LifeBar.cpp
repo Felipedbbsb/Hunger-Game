@@ -29,7 +29,7 @@ void LifeBar::Render() {
 bool LifeBar::Is(std::string type) {
     return (type == "LifeBar");
 }
-
+ 
 void LifeBar::SetCurrentHP(int hpCurrent) {
     this->hpCurrent = hpCurrent;
     UpdateLifeBarRect(); 
@@ -38,7 +38,7 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
 void LifeBar::UpdateLifeBarRect() {
     // Calculate the position and dimensions of the life bar rectangle
     lifeBarRect.x = static_cast<int>(posx);
-    lifeBarRect.y = static_cast<int>(associated.box.y - lifeBarHeight - 5); // Place it above the GameObject
+    lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET); // Place it above the GameObject
     lifeBarRect.w = lifeBarWidth;
     lifeBarRect.h = lifeBarHeight;
 }

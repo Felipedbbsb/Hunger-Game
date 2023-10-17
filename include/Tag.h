@@ -18,6 +18,9 @@
 #define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"
 #define TAG_PROTECTED_SPRITE "assets/img/UI/uiIconProtected.png"
 
+#define TAGS_SPACING_X 20.0f
+#define TAGS_SPACING_Y 35.0f
+
 class Tag : public Component{
 
     public:
