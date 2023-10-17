@@ -23,18 +23,30 @@ class Tag : public Component{
     public:
         Tag(GameObject &associated, 
                 Skill::SkillsTags tag, 
-                std::weak_ptr<GameObject> enemyRef);
+                std::weak_ptr<GameObject> enemyRef,
+                int quantity);
 
         ~Tag();
         void Update(float dt);
+        void UpdateQuantity(int newQuantity);
         void Render(); 
         void Start();
         void Pause();
         void Resume();
         bool Is(std::string type);
 
+        Skill::SkillsTags GetTag();
+
+        void ShowReader();
+        void HideReader();
+        std::string GetTagMessage();
+        std::string GetTagName();
+
     private:
         std::weak_ptr<GameObject> enemyRef; 
+        int quantity;
+        Skill::SkillsTags tag;
         GameObject* textSkillObj;
         std::string textSkill;
+        GameObject* readerTag;
 };

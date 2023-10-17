@@ -167,22 +167,42 @@ void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
         if (tagCountMap.find(tag) != tagCountMap.end()) {
                 // A tag já existe, incrementa o contador
                 tagCountMap[tag]++;
+                std::cout << " aaaa" << std::endl;
+                for (auto& weak_tag : enemytags) {
+                    auto tagGameObject = weak_tag.lock();  // Obtenha o objeto GameObject
+                    if (tagGameObject) {
+                        std::cout << " aaaa1" << std::endl;
+                        // Tente recuperar o componente "Tag"
+                        auto tagComponent = tagGameObject->GetComponent("Tag");
+                        auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);;
+                        if (tagComponentPtr) {
+                            std::cout << " aaaa2" << std::endl;
+                            // Agora, você pode acessar a propriedade "tag" do componente "Tag"
+                            if (tagComponentPtr->GetTag() == tag) {
+                                std::cout << " aaaa3" << std::endl;
+                                tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
+                                std::cout << " aaaa4" << std::endl;
+                            }
+                        }
+                    } 
+                }
             } else {
                 // A tag não existe no mapa, adiciona com contador 1
                 tagCountMap[tag] = 1;
                 tags.push_back(tag);
-                AddObjTag(tag);
+                auto go_tag = AddObjTag(tag);
                 
             }
-            std::cout << "Tag adicionada: " << tag << " (Quantidade: " << tagCountMap[tag] << ")" << std::endl;
+
+        
     }
 }
  
-void Enemies::AddObjTag(Skill::SkillsTags tag){ 
-    std::weak_ptr<GameObject> go_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
+std::weak_ptr<GameObject>  Enemies::AddObjTag(Skill::SkillsTags tag){ 
+    std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, go_enemy);
+    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, 1);
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
     tagObject->box.x = enemyHitbox.x + TAGS_SPACING * tagSpaceCount;
@@ -190,7 +210,9 @@ void Enemies::AddObjTag(Skill::SkillsTags tag){
     std::weak_ptr<GameObject> go_tag = Game::GetInstance().GetCurrentState().AddObject(tagObject);
 
     tagSpaceCount += 1;
-    enemytags.push_back(go_tag); 
+    enemytags.push_back(go_tag);  
+
+    return go_tag;
 }
 
 void Enemies::Render() {

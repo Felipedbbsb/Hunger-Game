@@ -59,7 +59,7 @@ class Enemies : public Component {
         void ApplySkillToSingleEnemy(  Skill::SkillInfo& skillInfo);
         void ApplySkillToAllEnemies();
         void ApplyTags(std::vector<Skill::SkillsTags> skillTags);
-        void AddObjTag(Skill::SkillsTags tag);
+        std::weak_ptr<GameObject>  AddObjTag(Skill::SkillsTags tag);
 
         EnemyId GetId(); 
 
