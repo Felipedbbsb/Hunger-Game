@@ -14,7 +14,7 @@ textSkill(textSkill)
     associated.AddComponent(std::shared_ptr<Sprite>(reader_spr)); 
     
 } 
- 
+  
 void Reader::Start() {     
     // Create textSkillObj  
  
@@ -23,6 +23,8 @@ void Reader::Start() {
     textSkillObj->AddComponent(std::shared_ptr<Component>(textSkillObjString)); 
     textSkillObj->box.x = associated.box.x + 10;
     textSkillObj->box.y = associated.box.y + 10;
+
+
     Game::GetInstance().GetCurrentState().AddObject(textSkillObj); 
 }  
  

@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "Reader.h"
 #include "text.h"
-
+#include <cmath>
 LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx )
     : Component(associated), 
     hpMax(hpMax),
@@ -11,7 +11,7 @@ LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWi
     lifeBarWidth(lifeBarWidth),
     hpReader(nullptr)
     {
-    barColor = {255, 0, 0, 255}; // Red color (RGBA)
+    barColor = {150, 15, 15, 255}; // Red color (RGBA)
     UpdateLifeBarRect();
 }
 
@@ -31,17 +31,55 @@ void LifeBar::Update(float dt) {
 
 void LifeBar::Render() {
     SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
+    // Calculates the radius of the semicircles based on half the height of the bar
+    int semicircleRadius = lifeBarRect.h / 2;
 
+    
+    // Calculate the centers of semicircles
+    int leftSemicircleCenterX = lifeBarRect.x + semicircleRadius;
+    int rightSemicircleCenterX = lifeBarRect.x + lifeBarRect.w - semicircleRadius;
+    int semicircleCenterY = lifeBarRect.y + lifeBarRect.h / 2;
+
+    // Sets the color of the semicircles based on the difference between hpMax and hpCurrent
+    SDL_Color rightSemicircleColor = (hpMax == hpCurrent) ? barColor : SDL_Color{100, 100, 100, 255};
+
+    // Render the semicircles at the ends of the health bar
+    RenderSemicircle(renderer, leftSemicircleCenterX, semicircleCenterY, -semicircleRadius, barColor);
+    RenderSemicircle(renderer, rightSemicircleCenterX, semicircleCenterY, semicircleRadius, rightSemicircleColor);
+
+    
     // Render the background of the life bar (empty portion)
     SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255); // Gray color (RGBA)
     SDL_RenderFillRect(renderer, &lifeBarRect);
 
-    // Render the filled portion of the life bar
+    // Render the filled part of the health bar
     SDL_SetRenderDrawColor(renderer, barColor.r, barColor.g, barColor.b, barColor.a);
     SDL_Rect filledRect = lifeBarRect;
     filledRect.w = static_cast<int>(static_cast<float>(hpCurrent) / hpMax * lifeBarWidth);
-    SDL_RenderFillRect(renderer, &filledRect);
-    
+    SDL_RenderFillRect(renderer, &filledRect); 
+      
+}
+
+void LifeBar::RenderSemicircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color) {
+    int numSegments = 180; 
+
+    float angleStep = M_PI / numSegments; // Ângle
+
+    int centerX = x + radius;
+    int centerY = y;
+
+    // semicirle
+    for (int i = 0; i <= numSegments / 2; i++) {
+        float angle = angleStep * i;
+        int x1 = static_cast<int>(centerX + radius * std::cos(angle));
+        int y1 = static_cast<int>(centerY - radius * std::sin(angle));
+        int x2 = static_cast<int>(centerX + radius * std::cos(-angle));
+        int y2 = static_cast<int>(centerY - radius * std::sin(-angle));
+
+
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+        SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+    }
 }
 
 bool LifeBar::Is(std::string type) {
@@ -57,7 +95,7 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
 void LifeBar::hpReaderRender() { 
     if (hpReader != nullptr){ 
         hpReader->RequestDelete();
-        hpReader = nullptr; 
+        hpReader = nullptr;  
     }  
     //Creates Reader for hp
     //position middle of hp bar
@@ -70,7 +108,7 @@ void LifeBar::hpReaderRender() {
                                                       TEXT_LIFEBAR_FONT_COLOR,
                                                       0); 
  
-    hpReader->box.x += (lifeBarRect.w - hpReader->box.w)/2;                                               
+    hpReader->box.x += (lifeBarRect.w - hpReader->box.w)/2;                                                
     hpReader->box.y += (lifeBarRect.h - hpReader->box.h)/2 - 1;     
 
     hpReader->AddComponent(std::shared_ptr<Text>(hpReader_behaviour));
