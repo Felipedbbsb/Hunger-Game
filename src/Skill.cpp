@@ -35,8 +35,6 @@ void Skill::Update(float dt) {
 
     if (associated.box.Contains(mousePos.x, mousePos.y)) {
         if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
-            //std::weak_ptr<GameObject> weak_skillRef = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
-
             if (!readerSkill) {
                 readerSkill = new GameObject(associated.box.x, associated.box.y);
                 Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);

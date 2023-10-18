@@ -13,7 +13,7 @@
 
 
 
-#define TEXT_SKILL_SIZE 15
+#define TEXT_SKILL_SIZE 5 
 #define READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
 class Reader : public Component{

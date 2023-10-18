@@ -63,6 +63,8 @@ void Enemies::Start() {
     //If enemies starts with tags
     ApplyTags(tags);
 
+    lifeBarEnemy->SetCurrentHP(hp); 
+
 }
 
 Enemies::~Enemies() { 
@@ -120,7 +122,6 @@ void Enemies::Update(float dt) {
         ApplySkillToEnemy();
     }
 
-    lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
 }
  
 void Enemies::CreateEnemyIndicator() {
@@ -156,6 +157,7 @@ void Enemies::ApplySkillToEnemy() {
 void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
     hp -= skillInfo.damage;
     ApplyTags(skillInfo.tags);
+    lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
 }
 
 void Enemies::ApplySkillToAllEnemies() {

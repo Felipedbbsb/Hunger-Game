@@ -4,6 +4,12 @@
 #include "GameObject.h"
 #include "SDL_include.h"
 #include <SDL2/SDL.h>
+#include "Reader.h"
+
+#define TEXT_LIFEBAR_FONT "assets/font/Play-Regular.ttf"
+#define TEXT_LIFEBAR_FONT_COLOR {255, 255, 255, 0} // Red Green Blue Alpha
+
+#define TEXT_LIFEBAR_SIZE 20
 
 #define LIFEBAROFFSET 20
 
@@ -12,11 +18,15 @@ public:
     LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx);
     ~LifeBar();
 
+    void Start();
     void Update(float dt);
     void Render();
+    
     bool Is(std::string type);
 
+    void hpReaderRender();
     void SetCurrentHP(int hpCurrent);
+  
 
 private:
     int hpMax;
@@ -25,10 +35,11 @@ private:
     SDL_Rect lifeBarRect;
      // Adicione uma instância de LifeBar como membro
 
-    
-    int lifeBarWidth = 100; // Width of the life bar
-    const int lifeBarHeight = 10; // Height of the life bar
     int posx;
+    int lifeBarWidth; // Width of the life bar
+    const int lifeBarHeight = 8; // Height of the life bar
     
     void UpdateLifeBarRect();
+
+    GameObject* hpReader;
 };

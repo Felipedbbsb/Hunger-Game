@@ -191,8 +191,8 @@ dep/Enemies.d bin/Enemies.o: src/Enemies.cpp include/Enemies.h \
  C:/SDL2/include/SDL2/SDL_timer.h C:/SDL2/include/SDL2/SDL_version.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h include/LifeBar.h include/Skill.h include/Sound.h \
- C:/SDL2/include/SDL2/SDL_mixer.h c:\mingw\include\time.h \
+ include/Timer.h include/LifeBar.h include/Reader.h include/Sound.h \
+ C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
  include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
@@ -673,11 +673,13 @@ include/Timer.h:
 
 include/LifeBar.h:
 
-include/Skill.h:
+include/Reader.h:
 
 include/Sound.h:
 
 C:/SDL2/include/SDL2/SDL_mixer.h:
+
+include/Skill.h:
 
 c:\mingw\include\time.h:
 

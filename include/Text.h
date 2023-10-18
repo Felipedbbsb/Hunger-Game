@@ -4,6 +4,7 @@
 #define INCLUDE_SDL
 #define INCLUDE_SDL_TTF
 #define BACKGROUND_COLOR {0, 255, 0, 0}
+#define OUTLINE_COLOR {142, 11, 11, 0}
 
 #include <iostream>
 #include <vector> 
@@ -15,7 +16,7 @@
 
 class Text : public Component {
 public:
-    enum TextStyle { SOLID, SHADED, BLENDED };
+    enum TextStyle { SOLID, SHADED, BLENDED, OUTLINE };
 
     Text(GameObject& associated,
          std::string fontFile,
@@ -46,7 +47,8 @@ private:
     SDL_Texture* RenderSolidText(const std::string& text, SDL_Color color);
     SDL_Texture* RenderShadedText(const std::string& text, SDL_Color color);
     SDL_Texture* RenderBlendedText(const std::string& text, SDL_Color color);
-
+    SDL_Texture* RenderTextWithOutline(const std::string& text, SDL_Color textColor, SDL_Color outlineColor);
+    
     TTF_Font* font;
     SDL_Texture* texture;
     std::string text;

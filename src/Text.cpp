@@ -93,10 +93,14 @@ void Text::RemakeTexture() {
             }
             case SHADED: {
                 textLine.texture = RenderShadedText(line, color);
-                break;
+                break; 
             }
             case BLENDED: {
-                textLine.texture = RenderBlendedText(line, color);
+                textLine.texture = RenderBlendedText(line, color);  
+                break; 
+            }
+            case OUTLINE: {
+                textLine.texture = RenderTextWithOutline(line, color, OUTLINE_COLOR);
                 break;
             }
         }
@@ -116,6 +120,32 @@ void Text::RemakeTexture() {
     associated.box.h = totalHeight;
     associated.box.w = maxWidth;
 }
+
+SDL_Texture* Text::RenderTextWithOutline(const std::string& text, SDL_Color textColor, SDL_Color outlineColor) {
+    SDL_Surface* textSurface = TTF_RenderText_Blended(font, text.c_str(), textColor);
+
+    // Defina o tamanho da borda (outline) para 5
+    TTF_SetFontOutline(font, 2);
+    SDL_Surface* outlineSurface = TTF_RenderText_Blended(font, text.c_str(), outlineColor);
+ 
+    if (textSurface == nullptr || outlineSurface == nullptr) {
+        return nullptr; 
+    }
+
+    // Combine text and outline surfaces
+    SDL_Rect rect = {1, 1, textSurface->w, textSurface->h};
+    SDL_BlitSurface(textSurface, nullptr, outlineSurface, &rect);
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(Game::GetInstance().GetRenderer(), outlineSurface);
+    SDL_FreeSurface(textSurface);
+    SDL_FreeSurface(outlineSurface);
+
+    // Restaure o tamanho da borda para 0 após a renderização
+    TTF_SetFontOutline(font, 0);
+
+    return texture;
+}
+
 
 SDL_Texture* Text::RenderSolidText(const std::string& text, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
