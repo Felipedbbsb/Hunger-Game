@@ -38,6 +38,9 @@ class Sprite : public Component{
     void SetFrameTime(float frameTime);
     void SetSelfDestruct(float frameTime);
 
+    void SetAlpha(float alpha);
+    float GetAlpha();
+ 
   private:
     SDL_Texture *texture;
     int width;
@@ -52,4 +55,6 @@ class Sprite : public Component{
 
     Timer selfDestructCount;
     float secondsToSelfDestruct;
+
+    float alpha;
 };

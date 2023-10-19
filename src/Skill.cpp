@@ -47,7 +47,6 @@ void Skill::Update(float dt) {
                     
                     Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
 
-                     
                     selectedSkill->Deselect();
                 }
                 selectedSkill = this; 

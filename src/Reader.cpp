@@ -10,9 +10,7 @@ textSkill(textSkill)
 {   
      // Adicione um sprite
     Sprite *reader_spr = new Sprite(associated, READER_SPRITE);
-    reader_spr->SetScale(0.25, 0.25);
-    associated.AddComponent(std::shared_ptr<Sprite>(reader_spr)); 
-    
+    associated.AddComponent(std::shared_ptr<Sprite>(reader_spr));    
 } 
   
 void Reader::Start() {     

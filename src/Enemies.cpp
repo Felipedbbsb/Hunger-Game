@@ -146,6 +146,7 @@ void Enemies::CreateEnemyIndicator() {
     float percentageEnemyWidth = enemyHitbox.w / enemyIndicator->box.w;
     enemyIndicator_spr->SetScale(percentageEnemyWidth, 1);
     enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
+   std::cout << enemyIndicator_spr->GetAlpha() << std::endl;
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }
 
