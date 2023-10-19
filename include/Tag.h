@@ -55,11 +55,13 @@ class Tag : public Component{
 
         Tag::Tags GetTag();
 
+        void AcivateTag(std::string sprite);
         void ShowReader();
         void HideReader();
         std::string GetTagMessage();
         std::string GetTagName();
-
+        std::string GetTagSprite(Tag::Tags tag);
+         
     private:
         std::weak_ptr<GameObject> enemyRef; 
         int quantity;
@@ -67,5 +69,6 @@ class Tag : public Component{
         GameObject* textSkillObj;
         std::string textSkill;
         GameObject* readerTag;
-        Sprite* bigTag; 
+        std::shared_ptr<Sprite> bigTag;
+        
 };

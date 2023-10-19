@@ -173,9 +173,11 @@ void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
     if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
         float tagMultiplier = 1; //multiplier without tags
         if (HasTag(Tag::Tags::RESILIENCE)){
+            ActivateTag(Tag::Tags::RESILIENCE);
             tagMultiplier -= 0.5; 
         }
         if (HasTag(Tag::Tags::VULNERABLE)){
+            ActivateTag(Tag::Tags::VULNERABLE);
             tagMultiplier += 0.5; 
         }
 
@@ -223,6 +225,25 @@ void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
     }
 }
  
+
+void Enemies::ActivateTag(Tag::Tags tag){
+    for (auto& weak_tag : enemytags) {
+        auto tagGameObject = weak_tag.lock();  // Get the GameObject
+        if (tagGameObject) {
+            // Try to retrieve the "Tag" component 
+            auto tagComponent = tagGameObject->GetComponent("Tag");
+            auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);
+            if (tagComponentPtr) {
+                // Now, you can access the "tag" property of the "Tag" component
+                if (tagComponentPtr->GetTag() == tag) {
+                    tagComponentPtr->AcivateTag(tagComponentPtr->GetTagSprite(tag));
+                }
+            }
+        }
+    }
+}
+
+
 std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){ 
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 

@@ -10,22 +10,14 @@ quantity(quantity),
 tag(tag),
 readerTag(nullptr),
 bigTag(nullptr) 
-{   if (enemyRef.lock()){
-        std::string spriteTag;
-        switch (tag) {
-            case Tag::Tags::RESILIENCE: spriteTag = TAG_RESILIENCE_SPRITE; break;
-            case Tag::Tags::DODGE: spriteTag = TAG_DODGE_SPRITE; break;
-            case Tag::Tags::PROVOKE: spriteTag = TAG_PROVOKE_SPRITE; break;
-            case Tag::Tags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
-            case Tag::Tags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
-            case Tag::Tags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
-            case Tag::Tags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
-        } 
+{   
+    if (enemyRef.lock()){
         
-        Sprite* tag_spr = new Sprite(associated, spriteTag);
+        Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
 
-
+        AcivateTag(GetTagSprite(tag));
+        
     }
     else{
         associated.RequestDelete();
@@ -60,12 +52,42 @@ void Tag::Update(float dt){
 
     
 
+    // If bigtag exists, shrink it size until its equal diminua sua escala
+    if (bigTag != nullptr) {
+        bigTag->SetScale(bigTag->GetScale().x - 1.5f * dt, bigTag->GetScale().y - 1.5f * dt);
+        // When same size 
+        if (bigTag->GetScale().x <= 1) {
+            associated.RemoveComponent(bigTag);
+            bigTag = nullptr;
+        }
+    }       
 } 
 
-void Tag::UpdateQuantity(int newQuantity) {
-    quantity = newQuantity;
+std::string Tag::GetTagSprite(Tag::Tags tag){
+    std::string spriteTag;
+        switch (tag) {
+            case Tag::Tags::RESILIENCE: spriteTag = TAG_RESILIENCE_SPRITE; break;
+            case Tag::Tags::DODGE: spriteTag = TAG_DODGE_SPRITE; break;
+            case Tag::Tags::PROVOKE: spriteTag = TAG_PROVOKE_SPRITE; break;
+            case Tag::Tags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
+            case Tag::Tags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
+            case Tag::Tags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
+            case Tag::Tags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
+        }
+    return spriteTag ;   
 }
 
+void Tag::AcivateTag(std::string sprite){
+    bigTag = std::make_shared<Sprite>(associated, sprite);
+        bigTag->SetScale(2.5, 2.5); //  two times bigger
+        bigTag->SetAlpha(175); // APLHA
+        associated.AddComponent(bigTag); 
+}
+
+void Tag::UpdateQuantity(int newQuantity) { 
+    quantity = newQuantity;
+}
+ 
 Tag::Tags Tag::GetTag(){
     return tag;
 }

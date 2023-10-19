@@ -60,6 +60,7 @@ class Enemies : public Component {
         void ApplyTags(std::vector<Tag::Tags> skillTags);
         std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
         bool HasTag(Tag::Tags tagToCheck);
+        void ActivateTag(Tag::Tags tag); 
 
         EnemyId GetId(); 
 
