@@ -111,8 +111,40 @@ void Tag::HideReader() {
 
 std::string Tag::GetTagMessage() {
     std::string tagName = GetTagName();
-    std::string message = tagName + " (" + std::to_string(quantity) + " Turns)";
+    std::string message = tagName + " (" + std::to_string(quantity) + " Turns) \n" + GetTagInfo();
     return message; 
+}
+
+std::string Tag::GetTagInfo() {
+    std::string tagName;
+
+    switch (tag) {
+        case Tags::RESILIENCE:
+            tagName = "Resilience";
+            break;
+        case Tags::DODGE:
+            tagName = "Dodge";
+            break;
+        case Tags::PROVOKE:
+            tagName = "Provoke";
+            break;
+        case Tags::VULNERABLE:
+            tagName = "Vulnerable";
+            break;
+        case Tags::WEAK:
+            tagName = "Weak";
+            break;
+        case Tags::RAMPAGE:
+            tagName = "Rampage";
+            break;
+        case Tags::PROTECTED: 
+            tagName = "Protected";
+            break;
+        default:
+            tagName = "Unknown";
+    }
+
+    return tagName;
 }
 
 

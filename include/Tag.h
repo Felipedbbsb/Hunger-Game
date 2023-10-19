@@ -61,6 +61,7 @@ class Tag : public Component{
         std::string GetTagMessage();
         std::string GetTagName();
         std::string GetTagSprite(Tag::Tags tag);
+        std::string GetTagInfo();
          
     private:
         std::weak_ptr<GameObject> enemyRef; 

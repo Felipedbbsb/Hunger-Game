@@ -10,8 +10,10 @@
 #include "Component.h"
 #include "Sound.h"
 #include "Sprite.h"
-
+#include "Vec2.h"
 #include "Skill.h"
+
+#define AP_POS Vec2( 75, RESOLUTION_HEIGHT * 2/3 + 50) 
 
 #define UI_SCREEN_SPRITE "assets/img/UI/uiBottomScreen.png"
 

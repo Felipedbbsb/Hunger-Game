@@ -92,10 +92,10 @@ void Skill::InitializeSkillInfoMap() {
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
 
-    skillInfoMap[SKILL1] = {5, {Tag::Tags::DODGE}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL};
-    skillInfoMap[SKILL2] = {20, {Tag::Tags::WEAK}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL};
-    skillInfoMap[SKILL3] = {10, {Tag::Tags::VULNERABLE}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL};
-    skillInfoMap[SKILL4] = {20, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, DEFENSE_ALL};
+    skillInfoMap[SKILL1] = {5, {Tag::Tags::VULNERABLE}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL};
+    skillInfoMap[SKILL2] = {20, {Tag::Tags::RESILIENCE}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL};
+    skillInfoMap[SKILL3] = {5, {Tag::Tags::DODGE}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL};
+    skillInfoMap[SKILL4] = {5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, DEFENSE_ALL};
 
 }
-    
+     

@@ -306,9 +306,9 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE };
+    enemyInfoMap[ENEMY1] = { 10, {Tag::Tags::PROVOKE}, "Enemy 1", ENEMY1_SPRITE };
     enemyInfoMap[ENEMY2] = { 20, {Tag::Tags::VULNERABLE}, "Enemy 2", ENEMY2_SPRITE };
     enemyInfoMap[ENEMY3] = { 30, {Tag::Tags::RESILIENCE}, "Enemy 1", ENEMY3_SPRITE };
-    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::PROVOKE, Tag::Tags::WEAK}, "Enemy 2", ENEMY4_SPRITE };
+    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::PROVOKE}, "Enemy 2", ENEMY4_SPRITE };
 }
  

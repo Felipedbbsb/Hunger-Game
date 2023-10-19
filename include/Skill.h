@@ -17,19 +17,19 @@
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiSkillDjinn.png"
 #define NAME_SKILL1 "     Ataque pika  "
-#define INFO_SKILL1 "Beijo na boca \n 5 damage all \n Apply Vulenerable and Weak "
+#define INFO_SKILL1 "5 damage all \n Apply Vulenerable "
 
 #define SKILL2_SPRITE "assets/img/UI/uiSkillNormal.png"
 #define NAME_SKILL2 "     Ataque paia  "
-#define INFO_SKILL2 "Inimigo faz \n 10 polichinelos \n 20 damage\n Apply Rampage"
+#define INFO_SKILL2 "20 damage\n Apply Resilience"
 
 #define SKILL3_SPRITE "assets/img/UI/uiSkillDjinn.png"
 #define NAME_SKILL3 "     Defesa top  "
-#define INFO_SKILL3 "Eh os guri \n 10 damage \nApply Resilience"
+#define INFO_SKILL3 "5 damage \nApply Dodge"
 
 #define SKILL4_SPRITE "assets/img/UI/uiSkillNormal.png"
 #define NAME_SKILL4 "     Defesa pika  "
-#define INFO_SKILL4 "Torcedor do vasco \n 20 damage"
+#define INFO_SKILL4 "5 damage"
 
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
