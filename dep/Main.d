@@ -207,7 +207,8 @@ dep/Main.d bin/Main.o: src/Main.cpp C:/SDL2/include/SDL2/SDL.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
  include/LifeBar.h include/Reader.h include/Sound.h \
- C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h
+ C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
+ include/Tag.h
 
 C:/SDL2/include/SDL2/SDL.h:
 
@@ -720,3 +721,5 @@ C:/SDL2/include/SDL2/SDL_mixer.h:
 include/Skill.h:
 
 c:\mingw\include\time.h:
+
+include/Tag.h:

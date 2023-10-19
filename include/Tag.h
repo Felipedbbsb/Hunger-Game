@@ -8,7 +8,6 @@
 #include "Sound.h"
 #include "Sprite.h"
 
-#include "Skill.h"
 
 #define TAG_RESILIENCE_SPRITE "assets/img/UI/uiIconResilience.png"
 #define TAG_DODGE_SPRITE "assets/img/UI/uiIconDodge.png"
@@ -21,13 +20,29 @@
 #define TAGS_SPACING_X 20.0f
 #define TAGS_SPACING_Y 35.0f
 
+
 class Tag : public Component{
 
     public:
+
+ 
+        enum Tags {
+            RESILIENCE, //Reduz o dano recebido em 50% (DONE)
+            WEAK,//Reduz o seu dano em 50%
+            RAMPAGE,//Aumenta seu dano em 50% 
+            VULNERABLE,//Aumenta o dano recebido em 50% (DONE)
+            PROVOKE,//Força os inimigos a atacarem este alvo (DONE)
+            DODGE, //50% de chance de evitar todo o dano do próximo golpe
+            PROTECTED//Não pode ser alvejado
+        };
+
         Tag(GameObject &associated, 
-                Skill::SkillsTags tag, 
+                Tags tag, 
                 std::weak_ptr<GameObject> enemyRef,
                 int quantity);
+        
+        
+
 
         ~Tag();
         void Update(float dt);
@@ -38,7 +53,7 @@ class Tag : public Component{
         void Resume();
         bool Is(std::string type);
 
-        Skill::SkillsTags GetTag();
+        Tag::Tags GetTag();
 
         void ShowReader();
         void HideReader();
@@ -48,8 +63,9 @@ class Tag : public Component{
     private:
         std::weak_ptr<GameObject> enemyRef; 
         int quantity;
-        Skill::SkillsTags tag;
+        Tags tag;
         GameObject* textSkillObj;
         std::string textSkill;
         GameObject* readerTag;
+        Sprite* bigTag; 
 };

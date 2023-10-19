@@ -3,26 +3,29 @@
 #include "Game.h"
 #include "Reader.h"
 
-Tag::Tag(GameObject &associated, Skill::SkillsTags tag, std::weak_ptr<GameObject> enemyRef, int quantity)
+Tag::Tag(GameObject &associated, Tags tag, std::weak_ptr<GameObject> enemyRef, int quantity)
 : Component::Component(associated),
 enemyRef(enemyRef),
-quantity(quantity),
+quantity(quantity), 
 tag(tag),
-readerTag(nullptr)
+readerTag(nullptr),
+bigTag(nullptr) 
 {   if (enemyRef.lock()){
         std::string spriteTag;
         switch (tag) {
-            case Skill::SkillsTags::RESILIENCE: spriteTag = TAG_RESILIENCE_SPRITE; break;
-            case Skill::SkillsTags::DODGE: spriteTag = TAG_DODGE_SPRITE; break;
-            case Skill::SkillsTags::PROVOKE: spriteTag = TAG_PROVOKE_SPRITE; break;
-            case Skill::SkillsTags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
-            case Skill::SkillsTags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
-            case Skill::SkillsTags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
-            case Skill::SkillsTags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
+            case Tag::Tags::RESILIENCE: spriteTag = TAG_RESILIENCE_SPRITE; break;
+            case Tag::Tags::DODGE: spriteTag = TAG_DODGE_SPRITE; break;
+            case Tag::Tags::PROVOKE: spriteTag = TAG_PROVOKE_SPRITE; break;
+            case Tag::Tags::VULNERABLE: spriteTag = TAG_VULNERABLE_SPRITE; break;
+            case Tag::Tags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
+            case Tag::Tags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
+            case Tag::Tags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
         } 
         
         Sprite* tag_spr = new Sprite(associated, spriteTag);
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
+
+
     }
     else{
         associated.RequestDelete();
@@ -63,7 +66,7 @@ void Tag::UpdateQuantity(int newQuantity) {
     quantity = newQuantity;
 }
 
-Skill::SkillsTags Tag::GetTag(){
+Tag::Tags Tag::GetTag(){
     return tag;
 }
 
@@ -75,8 +78,6 @@ void Tag::ShowReader(){
         Game::GetInstance().GetCurrentState().AddObject(readerTag);
     }
 }
-
-
 
 void Tag::HideReader() {
     if (readerTag!= nullptr) {
@@ -97,25 +98,25 @@ std::string Tag::GetTagName() {
     std::string tagName;
 
     switch (tag) {
-        case Skill::SkillsTags::RESILIENCE:
+        case Tags::RESILIENCE:
             tagName = "Resilience";
             break;
-        case Skill::SkillsTags::DODGE:
+        case Tags::DODGE:
             tagName = "Dodge";
             break;
-        case Skill::SkillsTags::PROVOKE:
+        case Tags::PROVOKE:
             tagName = "Provoke";
             break;
-        case Skill::SkillsTags::VULNERABLE:
+        case Tags::VULNERABLE:
             tagName = "Vulnerable";
             break;
-        case Skill::SkillsTags::WEAK:
+        case Tags::WEAK:
             tagName = "Weak";
             break;
-        case Skill::SkillsTags::RAMPAGE:
+        case Tags::RAMPAGE:
             tagName = "Rampage";
             break;
-        case Skill::SkillsTags::PROTECTED: 
+        case Tags::PROTECTED: 
             tagName = "Protected";
             break;
         default:

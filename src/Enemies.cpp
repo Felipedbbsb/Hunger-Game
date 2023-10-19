@@ -21,6 +21,8 @@ std::vector<std::shared_ptr<Enemies>> Enemies::enemiesArray;
 int Enemies::enemiesCount = 0;
 
 int Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
+
+int Enemies::provokedEnemies = 0;//how many left enemies has provoke
  
 Enemies::Enemies(GameObject& associated, EnemyId id)
     : Component::Component(associated), 
@@ -28,7 +30,7 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     id(id), 
     lifeBarEnemy(nullptr), 
     tagSpaceCount(0)
-    { 
+    {  
 
         EnemyInfo& enemyInfo = enemyInfoMap[id];
         hp = enemyInfo.hp;
@@ -72,7 +74,12 @@ Enemies::~Enemies() {
             enemytags.erase(enemytags.begin() + i);
         }
 
+    if(HasTag(Tag::Tags::PROVOKE)){
+        provokedEnemies -= 1;
+    }
+
     DeleteEnemyIndicator();
+
     enemiesCount -= 1;
 }
 
@@ -85,7 +92,9 @@ void Enemies::Update(float dt) {
     //Iterator for all skill types, counts number of left enemies to receive skill
     if(SkillAllenemies > 0){
         Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-        ApplySkillToSingleEnemy(tempSkillInfo);
+        //if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
+            ApplySkillToSingleEnemy(tempSkillInfo);
+        //}
         
         SkillAllenemies -= 1; //less one enemy to receive skill
         if(SkillAllenemies == 0){ //no more enemies
@@ -102,10 +111,11 @@ void Enemies::Update(float dt) {
     } 
     
     // Check if a skill is selected
+
     else if (selectedSkill) {
-        if (enemyIndicator == nullptr) {
-            CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist
-        }
+        if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
+            CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
+        }                          // and if any enemie has provoke
     } 
     
     else {
@@ -119,7 +129,11 @@ void Enemies::Update(float dt) {
 
     // Check if the mouse is over the enemy and left mouse button is pressed
     if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
-        ApplySkillToEnemy();
+        if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
+            //checks if any enemie has provoke
+            ApplySkillToEnemy();  
+        }
+        
     }
 
 }
@@ -155,47 +169,60 @@ void Enemies::ApplySkillToEnemy() {
 }
 
 void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
-    hp -= skillInfo.damage;
-    ApplyTags(skillInfo.tags);
-    lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+    if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
+        float tagMultiplier = 1; //multiplier without tags
+        if (HasTag(Tag::Tags::RESILIENCE)){
+            tagMultiplier -= 0.5; 
+        }
+        if (HasTag(Tag::Tags::VULNERABLE)){
+            tagMultiplier += 0.5; 
+        }
+
+        hp -= skillInfo.damage * tagMultiplier;
+        ApplyTags(skillInfo.tags);
+        lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+    }    
 }
 
 void Enemies::ApplySkillToAllEnemies() {
     SkillAllenemies = enemiesCount;
 }
 
-void Enemies::ApplyTags(std::vector<Skill::SkillsTags> skillTags) {
+void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
         if (tagCountMap.find(tag) != tagCountMap.end()) {
-                // A tag já existe, incrementa o contador
-                tagCountMap[tag]++;
-                for (auto& weak_tag : enemytags) {
-                    auto tagGameObject = weak_tag.lock();  // Obtenha o objeto GameObject
-                    if (tagGameObject) {
-                        // Tente recuperar o componente "Tag"
-                        auto tagComponent = tagGameObject->GetComponent("Tag");
-                        auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);;
-                        if (tagComponentPtr) {
-                            // Agora, você pode acessar a propriedade "tag" do componente "Tag"
-                            if (tagComponentPtr->GetTag() == tag) {
-                                tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
-                            }
-                        }
-                    } 
-                }
-            } else {
-                // A tag não existe no mapa, adiciona com contador 1
-                tagCountMap[tag] = 1;
-                tags.push_back(tag);
-                auto go_tag = AddObjTag(tag);
-                
-            }
+            // The tag already exists, increment the counter
+            tagCountMap[tag]++;
 
-        
+            // Iterate over the list of weak_ptr to the tag GameObjects
+            for (auto& weak_tag : enemytags) {
+                auto tagGameObject = weak_tag.lock();  // Get the GameObject
+                if (tagGameObject) {
+                    // Try to retrieve the "Tag" component
+                    auto tagComponent = tagGameObject->GetComponent("Tag");
+                    auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);
+                    if (tagComponentPtr) {
+                        // Now, you can access the "tag" property of the "Tag" component
+                        if (tagComponentPtr->GetTag() == tag) {
+                            tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
+                        }
+                    }
+                }
+            }
+        } else {
+            // The tag doesn't exist in the map, add it with a counter of 1
+            tagCountMap[tag] = 1;
+            tags.push_back(tag);
+            auto go_tag = AddObjTag(tag);
+            
+            if(tag == Tag::Tags::PROVOKE){
+                provokedEnemies++;
+            }
+        }
     }
 }
  
-std::weak_ptr<GameObject>  Enemies::AddObjTag(Skill::SkillsTags tag){ 
+std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){ 
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
@@ -210,6 +237,16 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Skill::SkillsTags tag){
     enemytags.push_back(go_tag);  
 
     return go_tag;
+}
+
+bool Enemies::HasTag(Tag::Tags tagToCheck) {
+    // Go through the enemy's tag list and check if the desired tag is present.
+    for (const auto& tag : tags) {
+        if (tag == tagToCheck) {
+            return true; // tag is present
+        }
+    }
+    return false; // tag isnt present.
 }
 
 void Enemies::Render() {
@@ -248,7 +285,8 @@ bool Enemies::Is(std::string type) {
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
     enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE };
-    enemyInfoMap[ENEMY2] = { 20, {Skill::SkillsTags::RESILIENCE, Skill::SkillsTags::VULNERABLE}, "Enemy 2", ENEMY2_SPRITE };
-    enemyInfoMap[ENEMY3] = { 30, {Skill::SkillsTags::DODGE}, "Enemy 1", ENEMY3_SPRITE };
-    enemyInfoMap[ENEMY4] = { 100, {Skill::SkillsTags::RAMPAGE, Skill::SkillsTags::WEAK}, "Enemy 2", ENEMY4_SPRITE };
+    enemyInfoMap[ENEMY2] = { 20, {Tag::Tags::VULNERABLE}, "Enemy 2", ENEMY2_SPRITE };
+    enemyInfoMap[ENEMY3] = { 30, {Tag::Tags::RESILIENCE}, "Enemy 1", ENEMY3_SPRITE };
+    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::PROVOKE, Tag::Tags::WEAK}, "Enemy 2", ENEMY4_SPRITE };
 }
+ 

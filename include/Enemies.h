@@ -35,7 +35,7 @@ class Enemies : public Component {
         // Structure to store enemy information
         struct EnemyInfo {
             int hp;
-            std::vector<Skill::SkillsTags> tags;
+            std::vector<Tag::Tags> tags;
             std::string name;
             std::string iconPath;
         };
@@ -57,8 +57,9 @@ class Enemies : public Component {
         void ApplySkillToEnemy();
         void ApplySkillToSingleEnemy(  Skill::SkillInfo& skillInfo);
         void ApplySkillToAllEnemies();
-        void ApplyTags(std::vector<Skill::SkillsTags> skillTags);
-        std::weak_ptr<GameObject>  AddObjTag(Skill::SkillsTags tag);
+        void ApplyTags(std::vector<Tag::Tags> skillTags);
+        std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
+        bool HasTag(Tag::Tags tagToCheck);
 
         EnemyId GetId(); 
 
@@ -71,6 +72,7 @@ class Enemies : public Component {
         static std::vector<std::shared_ptr<Enemies>> enemiesArray;
         static int enemiesCount;
         static int SkillAllenemies;
+        static int provokedEnemies;
     
     private:
         EnemyId id;
@@ -81,13 +83,13 @@ class Enemies : public Component {
 
         //Enemie stats
         int hp;
-        std::vector<Skill::SkillsTags> tags;
+        std::vector<Tag::Tags> tags;
         std::string name;
         std::string iconPath;
 
         std::vector<std::weak_ptr<GameObject>> enemytags;//only used for destructor
         
-        std::map<Skill::SkillsTags, int> tagCountMap; // Map to track tag counts, separated from enemytags
+        std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from enemytags
  
          // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information

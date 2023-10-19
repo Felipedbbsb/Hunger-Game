@@ -11,6 +11,7 @@
 #include "Sound.h"
 #include "Sprite.h"
 #include "Time.h"
+#include "Tag.h" 
 
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
@@ -36,6 +37,7 @@
 #define SKILL_CLICK_COOLDOWN 0.1
 //===================================================
 
+
 class Skill : public Component {
     public:
         enum SkillId {
@@ -60,19 +62,11 @@ class Skill : public Component {
             DEBUFF_ALL
         };
 
-        enum SkillsTags {
-            RESILIENCE, //Reduz o dano recebido em 50%
-            DODGE, //50% de chance de evitar todo o dano do próximo golpe
-            PROVOKE,//Força os inimigos a atacarem este alvo
-            VULNERABLE,//Aumenta o dano recebido em 50%
-            WEAK,//Reduz o seu dano em 50%
-            RAMPAGE,//Aumenta seu dano em 50%
-            PROTECTED//Não pode ser alvejado
-        };
+
 
         struct SkillInfo {
             int damage;
-            std::vector<SkillsTags> tags;
+            std::vector<Tag::Tags> tags;
             std::string name;
             std::string info;
             std::string iconPath;
