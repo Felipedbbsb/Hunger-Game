@@ -262,7 +262,7 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
 }
 
 bool Enemies::HasTag(Tag::Tags tagToCheck) {
-    // Go through the enemy's tag list and check if the desired tag is present.
+    // Go through the enemy's tag list and check if the desired tag is present. 
     for (const auto& tag : tags) {
         if (tag == tagToCheck) {
             return true; // tag is present

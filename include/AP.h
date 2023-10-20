@@ -16,6 +16,7 @@
 
 #define AP_FULL_SPRITE "assets/img/UI/uiApFull.png"
 #define AP_EMPTY_SPRITE "assets/img/UI/uiApEmpty.png"
+#define AP_MIRROR_SPRITE "assets/img/UI/uiApMirror.png"
 
 class AP : public Component {
     public:
@@ -28,6 +29,8 @@ class AP : public Component {
         void MirrorAPCount(int mirrorAPCount);
 
         bool Is(std::string type);
+
+        static std::vector<std::shared_ptr<GameObject>> apArray;
 
     private:
         void UpdateVisualRepresentation();
