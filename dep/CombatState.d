@@ -201,7 +201,7 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
  include/LifeBar.h include/Reader.h include/Sound.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
- include/Tag.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/Tag.h include/AP.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
  include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
@@ -704,6 +704,8 @@ include/Skill.h:
 c:\mingw\include\time.h:
 
 include/Tag.h:
+
+include/AP.h:
 
 include/Game.h:
 

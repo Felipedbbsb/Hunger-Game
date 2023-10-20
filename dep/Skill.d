@@ -192,8 +192,8 @@ dep/Skill.d bin/Skill.o: src/Skill.cpp include/Skill.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h c:\mingw\include\time.h include/Tag.h include/Reader.h \
- include/Camera.h include/InputManager.h \
+ include/Timer.h c:\mingw\include\time.h include/Tag.h include/AP.h \
+ include/Reader.h include/Camera.h include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -672,6 +672,8 @@ include/Timer.h:
 c:\mingw\include\time.h:
 
 include/Tag.h:
+
+include/AP.h:
 
 include/Reader.h:
 

@@ -21,8 +21,8 @@ class UI : public Component{
 
   public:
     UI(GameObject &associated,
-       std::vector<std::shared_ptr<Skill>> SkillNormalArray,
-       std::vector<std::shared_ptr<Skill>> SkillDjinArray);
+       std::vector<Skill::SkillId> SkillNormalArray,
+       std::vector<Skill::SkillId> SkillDjinArray);
 
     ~UI();
     void Update(float dt);
@@ -32,14 +32,14 @@ class UI : public Component{
     void Resume();
     bool Is(std::string type);
 
-    void AddSkill(std::shared_ptr<Skill> skill);
+    void AddSkill(Skill::SkillId skill);
 
   private:
-    std::vector<std::shared_ptr<Skill>> SkillNormalArray;
+    std::vector<Skill::SkillId> SkillNormalArray;
     //int nSkillNormal;
-    std::vector<std::shared_ptr<Skill>> SkillDjinArray;
+    std::vector<Skill::SkillId> SkillDjinArray;
     //int nSkillDjinn;
 
     
 
-};
+}; 

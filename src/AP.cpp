@@ -7,13 +7,13 @@
 
 std::vector<std::shared_ptr<GameObject>> AP::apArray;
 
+int AP::apCount = AP_QUANTITY;
 
 AP::AP(GameObject &associated)
-: Component::Component(associated),
-apCount(2)
+: Component::Component(associated)
 
 {   
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < AP_QUANTITY; ++i) {
         std::shared_ptr<GameObject> apObj = std::make_shared<GameObject>(associated.box.x, associated.box.y); // Use shared_ptr
         apObj->box.y += i * AP_VERTICAL_SPACING;
 
@@ -39,8 +39,6 @@ AP::~AP(){
 } 
 
 void AP::Update(float dt){  
-    MirrorAPCount(1);
-    //SetAPCount(3);
 }
 
 void AP::Render(){
@@ -49,12 +47,12 @@ void AP::Render(){
 void AP::SetAPCount(int newAPCount) {
     if (newAPCount >= 0 && newAPCount <= 3) {
         apCount = newAPCount;
-        UpdateVisualRepresentation();
     }
+    UpdateVisualRepresentation();
 }
 
 void AP::UpdateVisualRepresentation() {
-    int index = 3;
+    int index = AP_QUANTITY;
     for (auto& apGameObject :apArray) {
         if (apGameObject) {
         // Try to retrieve the "Sprite" component
@@ -74,7 +72,7 @@ void AP::UpdateVisualRepresentation() {
 
 void AP::MirrorAPCount(int mirrorAPCount) {
     int fullCount = mirrorAPCount; // Calculate the number of full sprites
-    int index = 3;
+    int index = AP_QUANTITY; 
     
     for (auto& apGameObject : apArray) {
         if (apGameObject) {
@@ -85,8 +83,9 @@ void AP::MirrorAPCount(int mirrorAPCount) {
                 apGameObject->RemoveComponent(spriteComponentPtr);
             }
 
-            std::string spritePath = (apCount < index) ? AP_EMPTY_SPRITE : AP_FULL_SPRITE;
-            spritePath = (fullCount < index) ? AP_MIRROR_SPRITE : spritePath;
+            std::string spritePath = (fullCount < index) ? AP_MIRROR_SPRITE : AP_FULL_SPRITE;
+            spritePath = (apCount < index) ? AP_EMPTY_SPRITE : spritePath;
+            
             std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apGameObject, spritePath);
             apGameObject->AddComponent(ap_spr);
             index--;

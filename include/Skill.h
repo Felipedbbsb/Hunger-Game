@@ -12,7 +12,7 @@
 #include "Sprite.h"
 #include "Time.h"
 #include "Tag.h" 
-
+#include "AP.h" 
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiSkillDjinn.png"
@@ -65,17 +65,19 @@ class Skill : public Component {
 
 
         struct SkillInfo {
+            int apCost;
             int damage;
             std::vector<Tag::Tags> tags;
             std::string name;
             std::string info;
             std::string iconPath;
             AttackType attackType;
+
         };
 
 
 
-        Skill(GameObject& associated, SkillId id);
+        Skill(GameObject& associated, SkillId id, AP* ap);
         ~Skill();
 
         void Start();
@@ -97,4 +99,5 @@ class Skill : public Component {
         Timer skillClickTimer;
         GameObject* readerSkill;
         std::string textSkill = "";
+        AP* apInstance;
 };

@@ -43,14 +43,14 @@ void CombatState::LoadAssets(){
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
 
         //Adding skills
-        std::vector<std::shared_ptr<Skill>> skillArrayNormal;
-        skillArrayNormal.push_back(std::make_shared<Skill>(*ui, Skill::SKILL2));
-        skillArrayNormal.push_back(std::make_shared<Skill>(*ui, Skill::SKILL4));
-        skillArrayNormal.push_back(std::make_shared<Skill>(*ui, Skill::SKILL2));
+        std::vector<Skill::SkillId> skillArrayNormal;
+        skillArrayNormal.push_back(Skill::SKILL2);
+        skillArrayNormal.push_back(Skill::SKILL4);
+        skillArrayNormal.push_back(Skill::SKILL2);
         
-        std::vector<std::shared_ptr<Skill>> skillArrayDjinn;
-        skillArrayDjinn.push_back(std::make_shared<Skill>(*ui, Skill::SKILL1));
-        skillArrayDjinn.push_back(std::make_shared<Skill>(*ui, Skill::SKILL3));
+        std::vector<Skill::SkillId> skillArrayDjinn;
+        skillArrayDjinn.push_back(Skill::SKILL1);
+        skillArrayDjinn.push_back(Skill::SKILL3);
 
  
 

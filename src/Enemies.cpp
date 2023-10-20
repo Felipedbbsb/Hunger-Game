@@ -4,6 +4,7 @@
 #include "LifeBar.h"
 #include "Tag.h"
 #include "Game.h"
+#include "AP.h" 
 #include <algorithm> 
 
 #ifdef DEBUG
@@ -98,6 +99,7 @@ void Enemies::Update(float dt) {
         
         SkillAllenemies -= 1; //less one enemy to receive skill
         if(SkillAllenemies == 0){ //no more enemies
+            AP::apCount -= tempSkillInfo.apCost;
             selectedSkill->Deselect();
         }
     }
@@ -122,10 +124,6 @@ void Enemies::Update(float dt) {
         DeleteEnemyIndicator();// Delete the enemy indicator if it exists
     }
 
-    // Check if the mouse is over the enemy and left mouse button is pressed
-    if (inputManager.MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill) {
-        selectedSkill->Deselect();
-    }
 
     // Check if the mouse is over the enemy and left mouse button is pressed
     if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
@@ -165,6 +163,7 @@ void Enemies::ApplySkillToEnemy() {
         ApplySkillToAllEnemies();
     } else {
         ApplySkillToSingleEnemy(tempSkillInfo);
+        AP::apCount -= tempSkillInfo.apCost;
         selectedSkill->Deselect();
     }
 }
