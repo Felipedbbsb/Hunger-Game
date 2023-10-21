@@ -62,17 +62,24 @@ class Skill : public Component {
             DEBUFF_ALL
         };
 
-
+        enum TargetType {
+            MOTHER,
+            DAUGHTER,
+            IRRELEVANT
+        };
 
         struct SkillInfo {
             int apCost;
             int damage;
             std::vector<Tag::Tags> tags;
+            int damageBack;
+            std::vector<Tag::Tags> tagsBack;
             std::string name;
             std::string info;
             std::string iconPath;
             AttackType attackType;
-
+            AttackType attackTypeBack;
+            TargetType targetTypeBack;
         };
 
 
@@ -86,9 +93,14 @@ class Skill : public Component {
         bool Is(std::string type);
 
         SkillId GetId();
+
         static Skill* selectedSkill;
+        
+        static Skill* skillBackToMother;
 
         void Deselect();
+        void DeselectBack(TargetType targetTypeBack);
+        void SkillBack(TargetType targetTypeBack);
 
         static std::map<SkillId, SkillInfo> skillInfoMap; 
 

@@ -6,7 +6,9 @@
 #include "Tag.h"
 #include "AP.h"
  
-Skill* Skill::selectedSkill = nullptr;
+Skill* Skill::selectedSkill = nullptr; //generic 
+
+Skill* Skill::skillBackToMother = nullptr; //back effects
 
 std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
 
@@ -33,6 +35,26 @@ Skill::~Skill() {
 }
 
 void Skill::Update(float dt) {
+
+    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
+    bool available = (AP::apCount >= tempSkillInfo.apCost);
+
+    auto spriteComponent = associated.GetComponent("Sprite");
+    auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+
+    if (spriteComponentPtr) {
+        if (!available) {
+            // Apply the desaturation effect
+            spriteComponentPtr->SetDesaturation(true);
+        } else {
+            // Ensure the sprite is not desaturated
+            spriteComponentPtr->SetDesaturation(false);
+        }
+    }    
+
+
+
+
     Vec2 mousePos(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
     skillClickTimer.Update(dt);
 
@@ -66,16 +88,8 @@ void Skill::Update(float dt) {
                 } else {
                     selectedSkill->Deselect();
                 }
-
-
             }
-
-            
-
         }
-
-    
-
     } else {
         skillClickTimer.Restart();
         if (readerSkill) {
@@ -97,23 +111,24 @@ void Skill::Deselect() {
     apInstance->SetAPCount(AP::apCount);
 }
 
-void Skill::Render() {
-    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
-    bool available = (AP::apCount >= tempSkillInfo.apCost);
 
-    if (!available) {
-        // Apply the desaturation effect
-        auto spriteComponent = associated.GetComponent("Sprite");
-        if (spriteComponent) {
-            //spriteComponent->SetDesaturation(true);
-        }
-    } else {
-        // Ensure the sprite is not desaturated
-        auto spriteComponent = associated.GetComponent("Sprite");
-        if (spriteComponent) {
-            //spriteComponent->SetDesaturation(false);
-        }
+
+//Rebound skill
+void Skill::SkillBack(TargetType targetTypeBack){
+    if(targetTypeBack == TargetType::MOTHER){
+        skillBackToMother = selectedSkill;
     }
+    
+}
+
+void Skill::DeselectBack(TargetType targetTypeBack) {
+    if(targetTypeBack == TargetType::MOTHER){
+        skillBackToMother = nullptr;
+    }
+}
+
+void Skill::Render() {
+    
 }
 
 Skill::SkillId Skill::GetId() {
@@ -129,17 +144,17 @@ void Skill::InitializeSkillInfoMap() {
     //    ap cost;     
     //    damage; 
     //    tags;
-    //    name;
+    //    name; 
     //    iconPath;
     //};
     // Populate the map with skill information during initialization.
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
 
-    skillInfoMap[SKILL1] = {2, 5, {Tag::Tags::VULNERABLE}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL};
-    skillInfoMap[SKILL2] = {3, 20, {Tag::Tags::RESILIENCE}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL};
-    skillInfoMap[SKILL3] = {1, 5, {Tag::Tags::DODGE}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL};
-    skillInfoMap[SKILL4] = {1, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, DEFENSE_ALL};
+    skillInfoMap[SKILL1] = {2, 5, {Tag::Tags::VULNERABLE}, 0, {},  NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL, ATTACK_ALL, IRRELEVANT};
+    skillInfoMap[SKILL2] = {3, 20, {Tag::Tags::RESILIENCE}, 0, {},  NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL, ATTACK_ALL, IRRELEVANT };
+    skillInfoMap[SKILL3] = {1, 5, {Tag::Tags::DODGE}, 0, {},  NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL, ATTACK_ALL, IRRELEVANT };
+    skillInfoMap[SKILL4] = {1, 5, {}, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, DEFENSE_ALL, ATTACK_ALL, MOTHER} ;
 
 }
       

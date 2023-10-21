@@ -100,6 +100,7 @@ void Enemies::Update(float dt) {
         SkillAllenemies -= 1; //less one enemy to receive skill
         if(SkillAllenemies == 0){ //no more enemies
             AP::apCount -= tempSkillInfo.apCost;
+            selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
             selectedSkill->Deselect();
         }
     }
@@ -164,6 +165,7 @@ void Enemies::ApplySkillToEnemy() {
     } else {
         ApplySkillToSingleEnemy(tempSkillInfo);
         AP::apCount -= tempSkillInfo.apCost;
+        selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
         selectedSkill->Deselect();
     }
 }

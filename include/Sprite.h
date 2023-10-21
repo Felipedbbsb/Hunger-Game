@@ -40,7 +40,10 @@ class Sprite : public Component{
 
     void SetAlpha(float alpha);
     float GetAlpha();
- 
+
+    void SetDesaturation(bool desaturate);
+    
+    void DesaturateTexture(SDL_Texture* texture);
   private:
     SDL_Texture *texture;
     int width;
@@ -57,4 +60,5 @@ class Sprite : public Component{
     float secondsToSelfDestruct;
 
     float alpha;
+    bool isDesaturated;
 };

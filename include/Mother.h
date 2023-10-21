@@ -27,10 +27,14 @@ class Mother : public Component{
     void Resume();
     bool Is(std::string type);
 
+    void ApllySkillToMother(Skill::SkillInfo& skillInfo);
+    bool HasTag(Tag::Tags tagToCheck);
+
 private:
     LifeBar* lifeBarMother;
     Rect motherHitbox;
 
     int hp;
+    std::vector<Tag::Tags> tags;
 
 };

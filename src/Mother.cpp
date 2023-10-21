@@ -1,4 +1,5 @@
 #include "Mother.h"
+#include "GameData.h"
 
 #ifdef DEBUG
 #include "Camera.h"
@@ -38,7 +39,49 @@ Mother::~Mother()
 
 void Mother::Update(float dt)
 {   
+    auto& inputManager = InputManager::GetInstance();
+    Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
+
+    auto skillBack = Skill::skillBackToMother;
     
+    if(GameData::playerTurn == true){
+        if (skillBack != nullptr) {
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
+            ApllySkillToMother(tempSkillInfo);
+            skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
+        }
+    }    
+
+
+
+}
+
+
+void Mother::ApllySkillToMother(Skill::SkillInfo& skillInfo) {
+        float tagMultiplier = 1; //multiplier without tags
+        if (HasTag(Tag::Tags::RESILIENCE)){
+            //ActivateTag(Tag::Tags::RESILIENCE);
+            tagMultiplier -= 0.5; 
+        }
+        if (HasTag(Tag::Tags::VULNERABLE)){
+            //ActivateTag(Tag::Tags::VULNERABLE);
+            tagMultiplier += 0.5; 
+        }
+
+        hp -= skillInfo.damage * tagMultiplier;
+        //ApplyTags(skillInfo.tags);
+        lifeBarMother->SetCurrentHP(hp);  // Update the enemy's HP bar
+ 
+}
+
+bool Mother::HasTag(Tag::Tags tagToCheck) {
+    // Go through the enemy's tag list and check if the desired tag is present. 
+    for (const auto& tag : tags) {
+        if (tag == tagToCheck) {
+            return true; // tag is present
+        }
+    }
+    return false; // tag isnt present.
 }
 
 void Mother::Render()
