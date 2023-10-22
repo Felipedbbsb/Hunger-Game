@@ -44,13 +44,13 @@ void CombatState::LoadAssets(){
 
         //Adding skills
         std::vector<Skill::SkillId> skillArrayNormal;
-        skillArrayNormal.push_back(Skill::SKILL2);
-        skillArrayNormal.push_back(Skill::SKILL4);
-        skillArrayNormal.push_back(Skill::SKILL2);
+        skillArrayNormal.push_back(Skill::Helmbreaker);
+        skillArrayNormal.push_back(Skill::Rockabye);
+        skillArrayNormal.push_back(Skill::Stinger);
+        skillArrayNormal.push_back(Skill::HnS);
         
         std::vector<Skill::SkillId> skillArrayDjinn;
-        skillArrayDjinn.push_back(Skill::SKILL1);
-        skillArrayDjinn.push_back(Skill::SKILL3);
+        skillArrayDjinn.push_back(Skill::InstantRegret);
 
  
 

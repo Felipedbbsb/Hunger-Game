@@ -28,11 +28,20 @@ class Mother : public Component{
     bool Is(std::string type);
 
     void ApllySkillToMother(Skill::SkillInfo& skillInfo);
+    void ApplyTags(std::vector<Tag::Tags> skillTags);
+    std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
     bool HasTag(Tag::Tags tagToCheck);
+    void ActivateTag(Tag::Tags tag); 
 
 private:
     LifeBar* lifeBarMother;
     Rect motherHitbox;
+
+    int tagSpaceCount;
+
+    std::vector<std::weak_ptr<GameObject>> mothertags;//only used for destructor
+
+    std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
     int hp;
     std::vector<Tag::Tags> tags;

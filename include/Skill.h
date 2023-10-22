@@ -31,6 +31,33 @@
 #define NAME_SKILL4 "     Defesa pika  "
 #define INFO_SKILL4 "5 damage"
 
+//NS = Name Skill
+//I  = Info
+//SPR = Sprite
+
+//MOTHER SKILLS
+#define NS_Helmbreaker "Helmbreaker"
+#define I_Helmbreaker "Deal 3 damage; \nApply 2 Vulnerable."
+#define SPR_Helmbreaker "assets/img/UI/uiSkillNormal.png"
+
+#define NS_Rockabye "Rockabye"
+#define I_Rockabye "Apply 1 Resilience \n to your daughter."
+#define SPR_Rockabye "assets/img/UI/uiSkillNormal.png"
+
+#define NS_Stinger "Stinger"
+#define I_Stinger "Deal 5 Damage \n to all enemies; \n Expose your daughter."
+#define SPR_Stinger "assets/img/UI/uiSkillNormal.png"
+
+//Daughter
+#define NS_HnS "Hide and Seek"
+#define I_HnS "Apply 1 Dodge \n and 1 Vulnerable \n to Mother; \n Protect Daughter "
+#define SPR_HnS "assets/img/UI/uiSkillNormal.png"
+
+//Djinn
+#define NS_InstantRegret "Instant Regret"
+#define I_InstantRegret "Deal 15 damage; \n Expose your daughter; \n Apply 1 Vulnerable to your daughter; \n Lose 7HP"
+#define SPR_InstantRegret "assets/img/UI/uiSkillDjinn.png"
+
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
@@ -45,6 +72,15 @@ class Skill : public Component {
             SKILL2,
             SKILL3,
             SKILL4,
+            
+            Helmbreaker,
+            Rockabye,
+            Stinger,
+
+            HnS,
+
+            InstantRegret,
+
             INVALID_SKILL
         };
         
@@ -59,13 +95,15 @@ class Skill : public Component {
             BUFF_ALL,
             
             DEBUFF_INDIVIDUAL,
-            DEBUFF_ALL
+            DEBUFF_ALL,
+
+            NONE
         };
 
         enum TargetType {
             MOTHER,
-            DAUGHTER,
-            IRRELEVANT
+            DAUGHTER, 
+            IRR //irrelevant
         };
 
         struct SkillInfo {
@@ -78,11 +116,12 @@ class Skill : public Component {
             std::string info;
             std::string iconPath;
             AttackType attackType;
+            TargetType targetTypeAttacker; //who is attacking
             AttackType attackTypeBack;
             TargetType targetTypeBack;
         };
 
-
+ 
 
         Skill(GameObject& associated, SkillId id, AP* ap);
         ~Skill();
@@ -97,6 +136,8 @@ class Skill : public Component {
         static Skill* selectedSkill;
         
         static Skill* skillBackToMother;
+
+        static Skill* skillBackToDaughter;
 
         void Deselect();
         void DeselectBack(TargetType targetTypeBack);

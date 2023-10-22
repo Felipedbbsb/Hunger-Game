@@ -5,6 +5,7 @@
 #include "Tag.h"
 #include "Game.h"
 #include "AP.h" 
+#include "GameData.h" 
 #include <algorithm> 
 
 #ifdef DEBUG
@@ -66,14 +67,14 @@ void Enemies::Start() {
     //If enemies starts with tags
     ApplyTags(tags);
 
-    lifeBarEnemy->SetCurrentHP(hp); 
+    //lifeBarEnemy->SetCurrentHP(hp); 
 
 }
 
 Enemies::~Enemies() { 
     for (int i = enemytags.size() - 1; i >= 0; i--) { //remove enemies tags
             enemytags.erase(enemytags.begin() + i);
-        }
+    }
 
     if(HasTag(Tag::Tags::PROVOKE)){
         provokedEnemies -= 1;
@@ -90,6 +91,9 @@ void Enemies::Update(float dt) {
 
     auto selectedSkill = Skill::selectedSkill;
 
+
+
+
     //Iterator for all skill types, counts number of left enemies to receive skill
     if(SkillAllenemies > 0){
         Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
@@ -105,6 +109,11 @@ void Enemies::Update(float dt) {
         }
     }
 
+
+
+
+
+
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         DeleteEnemyIndicator();
@@ -113,27 +122,53 @@ void Enemies::Update(float dt) {
 
     } 
     
-    // Check if a skill is selected
 
-    else if (selectedSkill) {
-        if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
-            CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
-        }                          // and if any enemie has provoke
-    } 
+
+
     
-    else {
-        DeleteEnemyIndicator();// Delete the enemy indicator if it exists
-    }
+    //PLAYER TURN
+    if(GameData::playerTurn == true){
 
 
-    // Check if the mouse is over the enemy and left mouse button is pressed
-    if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON) && selectedSkill) {
-        if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
-            //checks if any enemie has provoke
-            ApplySkillToEnemy();  
+        //=============================Attacked skill sector=============================
+        //Sector to manipulate interections involving enemies being attacked
+        if (selectedSkill) {// Check if a skill is selected
+
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+            if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL ){
+                if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
+                    CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
+                }       // and if any enemie has provoke
+
+                // Check if the mouse is over the enemy and left mouse button is pressed
+                if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
+                        //checks if any enemie has provoke
+                        ApplySkillToEnemy();  
+                    }
+                } 
+            } 
+            else{
+                DeleteEnemyIndicator();// Delete the enemy indicator if it exists skill type not attack
+            }                               
+        }else {
+            DeleteEnemyIndicator();// Delete the enemy indicator if it exists
         }
-        
+
+        //=============================Skill defense sector==============================
+        //TODO SKILL BUFF DEFENSE
+
     }
+
+    //ENEMY TURN
+    else{
+
+        //=============================Skill back sector=================================
+        //Sector to manipulate interections involving enemies being attacked
+
+    }
+
+    
 
 }
  
