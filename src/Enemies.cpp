@@ -92,8 +92,6 @@ void Enemies::Update(float dt) {
     auto selectedSkill = Skill::selectedSkill;
 
 
-
-
     //Iterator for all skill types, counts number of left enemies to receive skill
     if(SkillAllenemies > 0){
         Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
@@ -110,10 +108,6 @@ void Enemies::Update(float dt) {
     }
 
 
-
-
-
-
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         DeleteEnemyIndicator();
@@ -123,14 +117,14 @@ void Enemies::Update(float dt) {
     } 
     
 
+    //----Intention manager----
 
 
-    
     //PLAYER TURN
     if(GameData::playerTurn == true){
 
 
-        //=============================Attacked skill sector=============================
+        //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving enemies being attacked
         if (selectedSkill) {// Check if a skill is selected
 
@@ -155,7 +149,7 @@ void Enemies::Update(float dt) {
             DeleteEnemyIndicator();// Delete the enemy indicator if it exists
         }
 
-        //=============================Skill defense sector==============================
+        //=============================Skill buff sector==============================
         //TODO SKILL BUFF DEFENSE
 
     }
@@ -180,7 +174,6 @@ void Enemies::CreateEnemyIndicator() {
     float percentageEnemyWidth = enemyHitbox.w / enemyIndicator->box.w;
     enemyIndicator_spr->SetScale(percentageEnemyWidth, 1);
     enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
-   std::cout << enemyIndicator_spr->GetAlpha() << std::endl;
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }
 

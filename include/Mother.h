@@ -13,6 +13,10 @@
 #include "Skill.h"
 #include "Rect.h"
 
+#define MOTHER_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
+
+#define MOTHER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
+
 #define MOTHER_SPRITE "assets/img/mom/momIdle.png"
 
 class Mother : public Component{
@@ -27,11 +31,18 @@ class Mother : public Component{
     void Resume();
     bool Is(std::string type);
 
-    void ApllySkillToMother(int damage, std::vector<Tag::Tags> tags);
+    void CreateIndicator();
+    void DeleteIndicator();
+    void CreateIntention();
+    void DeleteIntention();
+    void ApplySkillToMother(int damage, std::vector<Tag::Tags> tags);
     void ApplyTags(std::vector<Tag::Tags> skillTags);
     std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
     bool HasTag(Tag::Tags tagToCheck);
     void ActivateTag(Tag::Tags tag); 
+
+    GameObject* indicator;   
+    GameObject* intention; 
 
 private:
     LifeBar* lifeBarMother;

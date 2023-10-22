@@ -10,10 +10,12 @@
 
 Daughter::Daughter(GameObject &associated) : 
 Component::Component(associated),
-lifeBarDaughter(nullptr){
+indicator(nullptr),
+lifeBarDaughter(nullptr),
+tagSpaceCount(0){
     // Add  sprite
     hp = 25;
-    tags = {Tag::Tags::DODGE};
+    tags = {};
 }
 
 void Daughter::Start() 
@@ -51,9 +53,8 @@ void Daughter::Update(float dt)
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
+    auto selectedSkill = Skill::selectedSkill;
     auto skillBack = Skill::skillBackToDaughter;
-
-
 
     // Check if the enemy's HP is zero or below and request deletion
     //if (hp <= 0) {
@@ -62,30 +63,76 @@ void Daughter::Update(float dt)
     //    return; // Early exit if the enemy is no longer alive
     //} 
 
+
+    //----Intention manager----
+
+
     //ENEMY TURN
     if(GameData::playerTurn == false){
-        //=============================Attacked skill sector=============================
+        //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving daughter being attacked
 
 
-        //=============================Skill defense sector==============================
-        //TODO SKILL BUFF DEFENSE
+    
     }
 
     //PLAYER TURN
     else{
+        //=============================Skill buff sector==============================
+         if (selectedSkill) {// Check if a skill is selected
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+            if(tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL ){
+                if(tempSkillInfo.targetTypeAttacker != Skill::TargetType::DAUGHTER){ //With its mother who caste probably the buff is for the daughter
+                    if (indicator == nullptr){
+                        CreateIndicator(); // Create an indicator if it doesn't exist
+                    }
+
+                    // Check if the mouse is over the enemy and left mouse button is pressed
+                    //TODO case of being buff_all
+                    if (daughterHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                        AP::apCount -= tempSkillInfo.apCost;
+                        ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
+                        selectedSkill->Deselect();  
+                    } 
+                }
+            }
+            else{
+                DeleteIndicator();// Delete the  indicator if it exists skill type not buff
+            }                               
+        }else {
+            DeleteIndicator();// Delete the  indicator if it exists
+        }    
+
         //=============================Skill back sector=================================
         //Sector to manipulate interections involving enemies being attacked
 
         if (skillBack != nullptr) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApllySkillToDaughter(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+            ApplySkillToDaughter(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
 }
 
-void Daughter::ApllySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
+void Daughter::CreateIndicator() {
+    indicator = new GameObject(daughterHitbox.x, daughterHitbox.y + daughterHitbox.h);
+    Sprite* indicator_spr = new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
+
+    // Scale the enemy indicator
+    float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
+    indicator_spr->SetScale(percentageEnemyWidth, 1);
+    indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
+    Game::GetInstance().GetCurrentState().AddObject(indicator);
+}
+
+void Daughter::DeleteIndicator() {
+    if (indicator != nullptr) {
+        indicator->RequestDelete();
+        indicator = nullptr;
+    }
+}
+
+void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
         if (HasTag(Tag::Tags::RESILIENCE)){
             ActivateTag(Tag::Tags::RESILIENCE);

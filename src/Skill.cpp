@@ -171,7 +171,7 @@ void Skill::InitializeSkillInfoMap() {
     skillInfoMap[Helmbreaker] = {2,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
 
     //Rockabye (2AP): Apply 1 Resilience to your daughter.
-    skillInfoMap[Rockabye] =  {2,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          BUFF_INDIVIDUAL, DAUGHTER };
+    skillInfoMap[Rockabye] =  {2,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
 
     //Stinger (2AP): Deal 5 Damage to all enemies; Expose your daughter.
     skillInfoMap[Stinger] =  {2,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
@@ -182,7 +182,7 @@ void Skill::InitializeSkillInfoMap() {
 
     //-----------DJINN SKILLS--------
     //Instant Regret (3AP): Deal 15 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
-    skillInfoMap[InstantRegret] = {3,      15, {},     7, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, DAUGHTER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+    skillInfoMap[InstantRegret] = {3,      15, {},     7, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
 
 
 } 

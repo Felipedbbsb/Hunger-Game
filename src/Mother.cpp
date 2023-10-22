@@ -11,6 +11,8 @@
 // speed já está sendo inicializado pelo construtor de Vec2
 Mother::Mother(GameObject &associated) : 
 Component::Component(associated),
+indicator(nullptr),
+intention(nullptr),
 lifeBarMother(nullptr),
 tagSpaceCount(0){
 
@@ -44,7 +46,9 @@ Mother::~Mother()
     for (int i = mothertags.size() - 1; i >= 0; i--) { //remove enemies tags
             mothertags.erase(mothertags.begin() + i);
     }
-    
+
+    DeleteIndicator();
+    DeleteIntention();
 } 
 
 void Mother::Update(float dt)
@@ -52,6 +56,7 @@ void Mother::Update(float dt)
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
+    auto selectedSkill = Skill::selectedSkill;
     auto skillBack = Skill::skillBackToMother;
 
 
@@ -64,34 +69,110 @@ void Mother::Update(float dt)
     //} 
 
 
-
+    //--------------Intention manager------------------
+    //Shows who wants to attack
+    if (selectedSkill) {
+        Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+        if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
+            if(intention == nullptr){
+                CreateIntention();
+            }
+            
+        }
+        else{
+            DeleteIntention();
+        }
+    }
+    else{
+       DeleteIntention(); 
+    }
 
 
     //ENEMY TURN
     if(GameData::playerTurn == false){
-        //=============================Attacked skill sector=============================
+        //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
+        
 
 
-        //=============================Skill defense sector==============================
-        //TODO SKILL BUFF DEFENSE
+
     }
 
     //PLAYER TURN
     else{
+        //=============================Skill buff sector==============================
+        if (selectedSkill) {// Check if a skill is selected
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+            if(tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL ){
+                if(tempSkillInfo.targetTypeAttacker != Skill::TargetType::MOTHER){ //With its mother who caste probably the buff is for the daughter
+                    if (indicator == nullptr){
+                        CreateIndicator(); // Create an indicator if it doesn't exist
+                    }
+
+                    // Check if the mouse is over the enemy and left mouse button is pressed
+                    //TODO case of being buff_all
+                    if (motherHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                        AP::apCount -= tempSkillInfo.apCost;
+                        ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
+                        selectedSkill->Deselect();  
+                    } 
+                }
+            }
+            else{
+                DeleteIndicator();// Delete the  indicator if it exists skill type not buff
+            }                               
+        }else {
+            DeleteIndicator();// Delete the  indicator if it exists
+        }    
+
+        
         //=============================Skill back sector=================================
         //Sector to manipulate interections involving enemies being attacked
 
         if (skillBack != nullptr) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApllySkillToMother(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+            ApplySkillToMother(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
 }
 
 
-void Mother::ApllySkillToMother(int damage, std::vector<Tag::Tags> tags) {
+void Mother::CreateIndicator() {
+    indicator = new GameObject(motherHitbox.x, motherHitbox.y + motherHitbox.h);
+    Sprite* indicator_spr = new Sprite(*indicator, MOTHER_INDICATOR_SPRITE);
+
+    // Scale the enemy indicator
+    float percentageEnemyWidth = motherHitbox.w / indicator->box.w;
+    indicator_spr->SetScale(percentageEnemyWidth, 1);
+    indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
+    Game::GetInstance().GetCurrentState().AddObject(indicator);
+}
+
+void Mother::DeleteIndicator() {
+    if (indicator != nullptr) {
+        indicator->RequestDelete();
+        indicator = nullptr;
+    }
+}
+
+void Mother::CreateIntention() {
+    intention = new GameObject(motherHitbox.x+ motherHitbox.w/2, motherHitbox.y);
+    Sprite* intention_spr = new Sprite(*intention, MOTHER_INTENTON_SPRITE);
+    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    intention->box.x -= intention->box.w/2;
+    intention->box.y -= intention->box.h/2;
+    Game::GetInstance().GetCurrentState().AddObject(intention);
+}
+
+void Mother::DeleteIntention() {
+    if (intention != nullptr) {
+        intention->RequestDelete();
+        intention = nullptr;
+    }
+}
+
+void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
         if (HasTag(Tag::Tags::RESILIENCE)){
             ActivateTag(Tag::Tags::RESILIENCE);
