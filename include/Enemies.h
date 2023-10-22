@@ -55,7 +55,7 @@ class Enemies : public Component {
         void CreateEnemyIndicator();
         void DeleteEnemyIndicator();
         void ApplySkillToEnemy();
-        void ApplySkillToSingleEnemy(  Skill::SkillInfo& skillInfo);
+        void ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags);
         void ApplySkillToAllEnemies();
         void ApplyTags(std::vector<Tag::Tags> skillTags);
         std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);

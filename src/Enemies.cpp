@@ -98,7 +98,7 @@ void Enemies::Update(float dt) {
     if(SkillAllenemies > 0){
         Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
         //if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
-            ApplySkillToSingleEnemy(tempSkillInfo);
+            ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
         //}
         
         SkillAllenemies -= 1; //less one enemy to receive skill
@@ -198,14 +198,14 @@ void Enemies::ApplySkillToEnemy() {
     if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL) {
         ApplySkillToAllEnemies();
     } else {
-        ApplySkillToSingleEnemy(tempSkillInfo);
+        ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
         AP::apCount -= tempSkillInfo.apCost;
         selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
         selectedSkill->Deselect();
     }
 }
 
-void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
+void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
     if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
         float tagMultiplier = 1; //multiplier without tags
         if (HasTag(Tag::Tags::RESILIENCE)){
@@ -217,8 +217,8 @@ void Enemies::ApplySkillToSingleEnemy(Skill::SkillInfo& skillInfo) {
             tagMultiplier += 0.5; 
         }
 
-        hp -= skillInfo.damage * tagMultiplier;
-        ApplyTags(skillInfo.tags);
+        hp -= damage * tagMultiplier;
+        ApplyTags(tags);
         lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
     }    
 }

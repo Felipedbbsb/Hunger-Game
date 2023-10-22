@@ -65,7 +65,7 @@ void Mother::Update(float dt)
 
 
 
-    
+
 
     //ENEMY TURN
     if(GameData::playerTurn == false){
@@ -84,14 +84,14 @@ void Mother::Update(float dt)
 
         if (skillBack != nullptr) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApllySkillToMother(tempSkillInfo);
+            ApllySkillToMother(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
 }
 
 
-void Mother::ApllySkillToMother(Skill::SkillInfo& skillInfo) {
+void Mother::ApllySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
         if (HasTag(Tag::Tags::RESILIENCE)){
             ActivateTag(Tag::Tags::RESILIENCE);
@@ -102,8 +102,8 @@ void Mother::ApllySkillToMother(Skill::SkillInfo& skillInfo) {
             tagMultiplier += 0.5; 
         }
 
-        hp -= skillInfo.damage * tagMultiplier;
-        ApplyTags(skillInfo.tags);
+        hp -= damage * tagMultiplier;
+        ApplyTags(tags);
         lifeBarMother->SetCurrentHP(hp);  // Update the enemy's HP bar
  
 }

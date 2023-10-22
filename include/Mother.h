@@ -27,7 +27,7 @@ class Mother : public Component{
     void Resume();
     bool Is(std::string type);
 
-    void ApllySkillToMother(Skill::SkillInfo& skillInfo);
+    void ApllySkillToMother(int damage, std::vector<Tag::Tags> tags);
     void ApplyTags(std::vector<Tag::Tags> skillTags);
     std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
     bool HasTag(Tag::Tags tagToCheck);

@@ -28,11 +28,23 @@ class Daughter : public Component{
     void Resume();
     bool Is(std::string type);
 
+    void ApllySkillToDaughter(int damage, std::vector<Tag::Tags> tags);
+    void ApplyTags(std::vector<Tag::Tags> skillTags);
+    std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
+    bool HasTag(Tag::Tags tagToCheck);
+    void ActivateTag(Tag::Tags tag); 
+
 private:
   LifeBar* lifeBarDaughter;
   Rect daughterHitbox;
 
-  int hp;
+  int tagSpaceCount;
 
+  std::vector<std::weak_ptr<GameObject>> daughtertags;//only used for destructor
+
+  std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
+
+  int hp;
+  std::vector<Tag::Tags> tags;
 
 };
