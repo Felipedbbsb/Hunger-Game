@@ -1,10 +1,11 @@
 #include "Mother.h"
 #include "GameData.h"
 #include "Enemies.h"
-
-#ifdef DEBUG
 #include "Camera.h"
 #include "Game.h"
+
+
+#ifdef DEBUG
 
 #include <SDL2/SDL.h>
 #endif //DEBUG

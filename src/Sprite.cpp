@@ -66,6 +66,10 @@ void Sprite::Render() {
     if (isDesaturated) {
         SDL_SetTextureColorMod(texture, 100, 100, 100); // Set color modulation to black
     } 
+    else {
+        // Reset the color modulation to white (no desaturation)
+        SDL_SetTextureColorMod(texture, 255, 255, 255);
+    }
 
     // Renderiza a textura normalmente
     RENDER_FAIL = SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstLoc, associated.angleDeg, nullptr, SDL_FLIP_NONE);

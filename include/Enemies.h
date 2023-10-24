@@ -11,9 +11,11 @@
 #include "LifeBar.h"
 #include "Skill.h"
 #include "Rect.h"
+#include "Timer.h"
 
 #define ENEMY_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
 
+#define ENEMY_INTENTON_SPRITE "assets/img/UI/uiIntentionEnemy.png"
 
 #define ENEMY1_SPRITE "assets/img/enemies/enemyChickIdle.png"
 #define ENEMY2_SPRITE "assets/img/enemies/enemyDogIdle.png"
@@ -21,7 +23,7 @@
 #define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
 
 
-
+#define INTENTION_COOLDOWN 1.5
 
 class Enemies : public Component {
     public:
@@ -55,6 +57,7 @@ class Enemies : public Component {
 
         void CreateEnemyIndicator();
         void DeleteEnemyIndicator();
+        
         void ApplySkillToEnemy();
         void ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags);
         void ApplySkillToAllEnemies();
@@ -70,6 +73,7 @@ class Enemies : public Component {
 
 
         GameObject* enemyIndicator;  
+        GameObject* intention; 
 
         static std::vector<std::shared_ptr<Enemies>> enemiesArray;
         static int enemiesCount;
@@ -99,7 +103,12 @@ class Enemies : public Component {
         
         std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from enemytags
  
-         // Used for attacks involving more then one target
+        // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
+
+        Timer intentionTimer;
+
+        void CreateIntention();
+        void DeleteIntention();
 
 };

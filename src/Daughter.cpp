@@ -1,9 +1,11 @@
 #include "Daughter.h"
 #include "GameData.h"
-
-#ifdef DEBUG
 #include "Camera.h"
 #include "Game.h"
+#include "Camera.h"
+#include "Game.h"
+
+#ifdef DEBUG
 
 #include <SDL2/SDL.h>
 #endif //DEBUG
@@ -84,15 +86,17 @@ void Daughter::Update(float dt)
         //Shows who wants to attack
         if (selectedSkill) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-            if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
-                if(intention == nullptr){
-                    CreateIntention();
+            if(tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL ){
+                if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
+                    if(intention == nullptr){
+                        CreateIntention();
+                    }
+                    
                 }
-                
-            }
-            else{
-                DeleteIntention();
-            }
+                else{
+                    DeleteIntention();
+                }
+            }    
         }
         else{
             DeleteIntention(); 

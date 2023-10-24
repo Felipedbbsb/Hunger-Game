@@ -33,10 +33,12 @@ bool Enemies::enemyAttacking = false;
 Enemies::Enemies(GameObject& associated, EnemyId id)
     : Component::Component(associated), 
     enemyIndicator(nullptr),
+    intention(nullptr),
     id(id), 
     lifeBarEnemy(nullptr), 
     tagSpaceCount(0),
-    thisEnemyAttacked(false)
+    thisEnemyAttacked(false),
+    intentionTimer()
     {  
 
         EnemyInfo& enemyInfo = enemyInfoMap[id];
@@ -91,8 +93,10 @@ Enemies::~Enemies() {
     }
 
     DeleteEnemyIndicator();
+    DeleteIntention();
 
     enemiesCount -= 1;
+    enemiesToAttack-= 1;
 }
 
 void Enemies::Update(float dt) {
@@ -175,7 +179,7 @@ void Enemies::Update(float dt) {
 
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
-        if(!enemyAttacking && !thisEnemyAttacked && Skill::selectedSkillEnemy == nullptr){
+        if(!enemyAttacking && !thisEnemyAttacked && Skill::selectedSkill == nullptr){
     
             // Check if the enemy has at least two skills
             if (skills.size() >= 2) {
@@ -186,25 +190,43 @@ void Enemies::Update(float dt) {
                 std::swap(skills[randomSkillIndex], skills.back());
                 
                 // Now, the selected skill is in the last position of the vector
-                Skill::selectedSkillEnemy = new Skill(associated, selectedSkillId, nullptr);
+                Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
             }
             
             enemyAttacking = true;
             thisEnemyAttacked = true;
-            enemiesToAttack -= 1;
+            enemiesToAttack -= 1; 
 
-            //=============================Skill back sector=================================
-            //Sector to manipulate interections involving enemies being attacked
-            if(Skill::selectedSkillEnemy != nullptr){
-                Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[Skill::selectedSkillEnemy->GetId()];
-                if(tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_INDIVIDUAL
-                || tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_ALL){
-                    ApplySkillToSingleEnemy(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
-                    
-                }
-            }   
+            intentionTimer.Restart(); //time to "select" target
+            CreateIntention();
 
         }
+
+        //Time to remove skill from buff to properly activate it
+        if(selectedSkill != nullptr && intention != nullptr){
+            intentionTimer.Update(dt);
+            if(intentionTimer.Get() >= INTENTION_COOLDOWN){
+                Skill::selectedSkillEnemy = Skill::selectedSkill;
+                Skill::selectedSkill = nullptr; 
+                intentionTimer.Restart(); 
+            }
+             
+            
+        }
+
+
+        //=============================Skill back sector=================================
+        //Sector to manipulate interections involving enemies being attacked
+        if(Skill::selectedSkillEnemy != nullptr && intention != nullptr){
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[Skill::selectedSkillEnemy->GetId()];
+            if(tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_INDIVIDUAL
+            || tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_ALL){
+                ApplySkillToSingleEnemy(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+                    
+            }
+        }  
+
+
 
 
         //ApplySkillToAllEnemies()
@@ -212,7 +234,11 @@ void Enemies::Update(float dt) {
         //TODO SKILL BUFF DEFENSE
 
 
-        
+        //Finished deciding skill ready to attack
+        if(Skill::selectedSkillEnemy != nullptr){
+            DeleteIntention();
+        }
+         
 
     }
 
@@ -235,6 +261,23 @@ void Enemies::DeleteEnemyIndicator() {
     if (enemyIndicator != nullptr) {
         enemyIndicator->RequestDelete();
         enemyIndicator = nullptr;
+    }
+}
+
+
+void Enemies::CreateIntention() {
+    intention = new GameObject(enemyHitbox.x+ enemyHitbox.w/2, enemyHitbox.y);
+    Sprite* intention_spr = new Sprite(*intention, ENEMY_INTENTON_SPRITE);
+    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    intention->box.x -= intention->box.w/2;
+    intention->box.y -= intention->box.h/2;
+    Game::GetInstance().GetCurrentState().AddObject(intention);
+}
+
+void Enemies::DeleteIntention() {
+    if (intention != nullptr) {
+        intention->RequestDelete();
+        intention = nullptr;
     }
 }
 
@@ -388,9 +431,9 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 10, {Tag::Tags::PROVOKE}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
     enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
     enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::PROVOKE}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
  
