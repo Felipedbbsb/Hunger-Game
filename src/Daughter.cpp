@@ -11,6 +11,7 @@
 Daughter::Daughter(GameObject &associated) : 
 Component::Component(associated),
 indicator(nullptr),
+intention(nullptr),
 lifeBarDaughter(nullptr),
 tagSpaceCount(0){
     // Add  sprite
@@ -64,7 +65,7 @@ void Daughter::Update(float dt)
     //} 
 
 
-    //----Intention manager----
+    
 
 
     //ENEMY TURN
@@ -78,6 +79,28 @@ void Daughter::Update(float dt)
 
     //PLAYER TURN
     else{
+
+        //--------------Intention manager------------------
+        //Shows who wants to attack
+        if (selectedSkill) {
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+            if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
+                if(intention == nullptr){
+                    CreateIntention();
+                }
+                
+            }
+            else{
+                DeleteIntention();
+            }
+        }
+        else{
+            DeleteIntention(); 
+        }
+
+
+
+
         //=============================Skill buff sector==============================
          if (selectedSkill) {// Check if a skill is selected
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
@@ -125,10 +148,27 @@ void Daughter::CreateIndicator() {
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
 
+
 void Daughter::DeleteIndicator() {
     if (indicator != nullptr) {
         indicator->RequestDelete();
         indicator = nullptr;
+    }
+}
+
+void Daughter::CreateIntention() {
+    intention = new GameObject(daughterHitbox.x+ daughterHitbox.w/2, daughterHitbox.y);
+    Sprite* intention_spr = new Sprite(*intention, DAUGHTER_INTENTON_SPRITE);
+    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    intention->box.x -= intention->box.w/2;
+    intention->box.y -= intention->box.h/2;
+    Game::GetInstance().GetCurrentState().AddObject(intention);
+}
+
+void Daughter::DeleteIntention() {
+    if (intention != nullptr) {
+        intention->RequestDelete();
+        intention = nullptr;
     }
 }
 

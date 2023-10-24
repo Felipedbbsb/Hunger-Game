@@ -33,6 +33,8 @@ class Daughter : public Component{
     
     void CreateIndicator();
     void DeleteIndicator();
+    void CreateIntention();
+    void DeleteIntention();
     void ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags);
     void ApplyTags(std::vector<Tag::Tags> skillTags);
     std::weak_ptr<GameObject>  AddObjTag(Tag::Tags tag);
@@ -40,6 +42,7 @@ class Daughter : public Component{
     void ActivateTag(Tag::Tags tag); 
 
     GameObject* indicator; 
+    GameObject* intention; 
 
 private:
   LifeBar* lifeBarDaughter;

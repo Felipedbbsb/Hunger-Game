@@ -1,5 +1,6 @@
 #include "Mother.h"
 #include "GameData.h"
+#include "Enemies.h"
 
 #ifdef DEBUG
 #include "Camera.h"
@@ -17,7 +18,7 @@ lifeBarMother(nullptr),
 tagSpaceCount(0){
 
     hp = 50;
-    tags = {Tag::Tags::VULNERABLE};
+    tags = {};
 }
 
 void Mother::Start() 
@@ -57,6 +58,7 @@ void Mother::Update(float dt)
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     auto selectedSkill = Skill::selectedSkill;
+    auto selectedSkillEnemy = Skill::selectedSkillEnemy;
     auto skillBack = Skill::skillBackToMother;
 
 
@@ -69,30 +71,22 @@ void Mother::Update(float dt)
     //} 
 
 
-    //--------------Intention manager------------------
-    //Shows who wants to attack
-    if (selectedSkill) {
-        Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-        if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
-            if(intention == nullptr){
-                CreateIntention();
-            }
-            
-        }
-        else{
-            DeleteIntention();
-        }
-    }
-    else{
-       DeleteIntention(); 
-    }
 
 
     //ENEMY TURN
     if(GameData::playerTurn == false){
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
-        
+        if (Skill::selectedSkillEnemy){
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkillEnemy->GetId()];
+            if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL){
+                ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
+                Skill::selectedSkillEnemy = nullptr;
+                Enemies::enemyAttacking = false;
+            }
+            
+            
+        }
 
 
 
@@ -100,6 +94,26 @@ void Mother::Update(float dt)
 
     //PLAYER TURN
     else{
+
+        //--------------Intention manager------------------
+        //Shows who wants to attack
+        if (selectedSkill) {
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+            if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
+                if(intention == nullptr){
+                    CreateIntention();
+                }
+                
+            }
+            else{
+                DeleteIntention();
+            }
+        }
+        else{
+        DeleteIntention(); 
+        }
+
+
         //=============================Skill buff sector==============================
         if (selectedSkill) {// Check if a skill is selected
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];

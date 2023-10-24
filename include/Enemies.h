@@ -38,6 +38,7 @@ class Enemies : public Component {
             std::vector<Tag::Tags> tags;
             std::string name;
             std::string iconPath;
+            std::vector<Skill::SkillId> skills;
         };
 
 
@@ -74,6 +75,9 @@ class Enemies : public Component {
         static int enemiesCount;
         static int SkillAllenemies;
         static int provokedEnemies;
+        static int enemiesToAttack;
+        static bool enemyAttacking;
+        
     
     private:
         EnemyId id;
@@ -87,6 +91,9 @@ class Enemies : public Component {
         std::vector<Tag::Tags> tags;
         std::string name;
         std::string iconPath;
+        std::vector<Skill::SkillId> skills;
+
+        bool thisEnemyAttacked;
 
         std::vector<std::weak_ptr<GameObject>> enemytags;//only used for destructor
         

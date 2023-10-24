@@ -25,13 +25,18 @@ int Enemies::enemiesCount = 0;
 int Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
 
 int Enemies::provokedEnemies = 0;//how many left enemies has provoke
+
+int Enemies::enemiesToAttack = 0;//how many left enemies to attack
+
+bool Enemies::enemyAttacking = false;
  
 Enemies::Enemies(GameObject& associated, EnemyId id)
     : Component::Component(associated), 
     enemyIndicator(nullptr),
     id(id), 
     lifeBarEnemy(nullptr), 
-    tagSpaceCount(0)
+    tagSpaceCount(0),
+    thisEnemyAttacked(false)
     {  
 
         EnemyInfo& enemyInfo = enemyInfoMap[id];
@@ -39,6 +44,7 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
         tags = enemyInfo.tags;
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
+        skills = enemyInfo.skills;
  
         // Create a shared pointer for the current Enemies object
         std::shared_ptr<Enemies> sharedThis = std::shared_ptr<Enemies>(this);
@@ -67,7 +73,11 @@ void Enemies::Start() {
     //If enemies starts with tags
     ApplyTags(tags);
 
-    //lifeBarEnemy->SetCurrentHP(hp); 
+    lifeBarEnemy->SetCurrentHP(hp);
+
+    if(enemiesToAttack == 0){//init enemies attack turn
+        enemiesToAttack = enemiesCount;
+    } 
 
 }
 
@@ -90,14 +100,14 @@ void Enemies::Update(float dt) {
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     auto selectedSkill = Skill::selectedSkill;
-
-
-    //Iterator for all skill types, counts number of left enemies to receive skill
-    if(SkillAllenemies > 0){
+    
+//=============================//=============================//=============================//=============================
+    //Iterator for all skill types, counts number of left enemies to receive skill from player
+    if(SkillAllenemies > 0 && GameData::playerTurn == true){
         Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-        //if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
+        if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
             ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
-        //}
+        }
         
         SkillAllenemies -= 1; //less one enemy to receive skill
         if(SkillAllenemies == 0){ //no more enemies
@@ -108,6 +118,10 @@ void Enemies::Update(float dt) {
     }
 
 
+
+//=============================//=============================//=============================//=============================
+
+
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         DeleteEnemyIndicator();
@@ -116,20 +130,22 @@ void Enemies::Update(float dt) {
 
     } 
     
-
+//=============================//=============================//=============================//=============================
     //----Intention manager----
 
-
+//=============================//=============================//=============================//=============================
     //PLAYER TURN
     if(GameData::playerTurn == true){
 
+        thisEnemyAttacked = false; //reset 
 
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving enemies being attacked
         if (selectedSkill) {// Check if a skill is selected
 
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-            if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL ){
+            if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || 
+            tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL){
                 if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
                     CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
                 }       // and if any enemie has provoke
@@ -149,16 +165,55 @@ void Enemies::Update(float dt) {
             DeleteEnemyIndicator();// Delete the enemy indicator if it exists
         }
 
-        //=============================Skill buff sector==============================
-        //TODO SKILL BUFF DEFENSE
+        
 
     }
 
     //ENEMY TURN
     else{
+        
 
-        //=============================Skill back sector=================================
-        //Sector to manipulate interections involving enemies being attacked
+        std::cout << "chico mkjilo2222222" <<!enemyAttacking << !thisEnemyAttacked<<std::endl;
+        //=============================Targeted skill sector=============================
+        //Sector to manipulate interections involving mother being attacked
+        if(!enemyAttacking && !thisEnemyAttacked && Skill::selectedSkillEnemy == nullptr){
+    
+            // Check if the enemy has at least two skills
+            if (skills.size() >= 2) {
+                int randomSkillIndex = rand() % 2; //chooses between first or second skill
+                Skill::SkillId selectedSkillId = skills[randomSkillIndex];
+                
+                // Moves the selected skill to the end of the vector
+                std::swap(skills[randomSkillIndex], skills.back());
+                
+                // Now, the selected skill is in the last position of the vector
+                Skill::selectedSkillEnemy = new Skill(associated, selectedSkillId, nullptr);
+            }
+            
+            enemyAttacking = true;
+            thisEnemyAttacked = true;
+            enemiesToAttack -= 1;
+
+            //=============================Skill back sector=================================
+            //Sector to manipulate interections involving enemies being attacked
+            if(Skill::selectedSkillEnemy != nullptr){
+                Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[Skill::selectedSkillEnemy->GetId()];
+                if(tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_INDIVIDUAL
+                || tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_ALL){
+                    ApplySkillToSingleEnemy(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+                    
+                }
+            }   
+
+        }
+
+
+        //ApplySkillToAllEnemies()
+        //=============================Skill buff sector==============================
+        //TODO SKILL BUFF DEFENSE
+
+
+        
 
     }
 
@@ -188,7 +243,7 @@ void Enemies::ApplySkillToEnemy() {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
 
-    if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL) {
+    if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL) {
         ApplySkillToAllEnemies();
     } else {
         ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
@@ -199,7 +254,6 @@ void Enemies::ApplySkillToEnemy() {
 }
 
 void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
-    if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
         float tagMultiplier = 1; //multiplier without tags
         if (HasTag(Tag::Tags::RESILIENCE)){
             ActivateTag(Tag::Tags::RESILIENCE);
@@ -213,7 +267,7 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
         hp -= damage * tagMultiplier;
         ApplyTags(tags);
         lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
-    }    
+       
 }
 
 void Enemies::ApplySkillToAllEnemies() {
@@ -335,9 +389,9 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 10, {Tag::Tags::PROVOKE}, "Enemy 1", ENEMY1_SPRITE };
-    enemyInfoMap[ENEMY2] = { 20, {Tag::Tags::VULNERABLE}, "Enemy 2", ENEMY2_SPRITE };
-    enemyInfoMap[ENEMY3] = { 30, {Tag::Tags::RESILIENCE}, "Enemy 1", ENEMY3_SPRITE };
-    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::PROVOKE}, "Enemy 2", ENEMY4_SPRITE };
+    enemyInfoMap[ENEMY1] = { 10, {Tag::Tags::PROVOKE}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::PROVOKE}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
  

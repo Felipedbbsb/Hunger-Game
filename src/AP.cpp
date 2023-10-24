@@ -2,6 +2,8 @@
 #include "Text.h"
 #include "Game.h"
 #include "GameObject.h"
+#include "GameData.h"
+#include "Enemies.h"
 #include "Sprite.h"
 #include <algorithm> 
 
@@ -39,6 +41,20 @@ AP::~AP(){
 } 
 
 void AP::Update(float dt){  
+    if(apCount == 0 && GameData::playerTurn == true){
+        GameData::playerTurn = false;
+        std::cout << "chico mkjilo" << std::endl;
+        if(Enemies::enemiesToAttack == 0){//init enemies attack turn
+            Enemies::enemiesToAttack = Enemies::enemiesCount;
+        } 
+    }
+
+    if(Enemies::enemiesToAttack == 0 && !Enemies::enemyAttacking && GameData::playerTurn == false){ 
+        GameData::playerTurn = true;
+        AP::apCount = AP_QUANTITY;
+        SetAPCount(AP::apCount);
+    }
+
 }
 
 void AP::Render(){
@@ -93,17 +109,6 @@ void AP::MirrorAPCount(int mirrorAPCount) {
     }       
 }
 
-void AP::InitVisualRepresentationForMirror(int mirrorAPCount, GameObject &mirrorObject) {
-    for (int i = 0; i < 3; ++i) {
-        GameObject* apObj = new GameObject(mirrorObject.box.x, mirrorObject.box.y);
-        apObj->box.y += i * AP_VERTICAL_SPACING;
-        Game::GetInstance().GetCurrentState().AddObject(apObj);
-
-        // Configura os sprites com base no valor de mirrorAPCount
-        std::string spritePath = (mirrorAPCount > i) ? AP_FULL_SPRITE : AP_EMPTY_SPRITE;
-        Sprite* ap_spr = new Sprite(*apObj, spritePath);
-    }
-}
 
 bool AP::Is(std::string type){
     return (type == "AP");

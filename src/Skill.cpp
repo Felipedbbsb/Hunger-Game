@@ -8,11 +8,15 @@
  
 Skill* Skill::selectedSkill = nullptr; //generic 
 
+Skill* Skill::selectedSkillEnemy = nullptr; //generic 
+
 Skill* Skill::skillBackToMother = nullptr; //back effects
 
 Skill* Skill::skillBackToDaughter = nullptr; //back effects
 
 std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
+
+Skill::TargetType Skill::playerTargetType = Skill::IRR;
 
 Skill::Skill(GameObject& associated, SkillId id, AP* ap)
     : Component::Component(associated),
@@ -115,6 +119,8 @@ void Skill::Deselect() {
 
 
 
+
+
 //Rebound skill
 void Skill::SkillBack(TargetType targetTypeBack){
     if(targetTypeBack == TargetType::MOTHER){
@@ -136,6 +142,9 @@ void Skill::DeselectBack(TargetType targetTypeBack) {
         skillBackToDaughter = nullptr;
     }
 }
+
+
+
 
 void Skill::Render() {
     
@@ -178,11 +187,22 @@ void Skill::InitializeSkillInfoMap() {
  
     //------------DAUGHTER SKILL------------
     //Hide and Seek (1AP): Apply 1 Dodge and 1 Vulnerable to Mother; Protect Daughter 
-    skillInfoMap[HnS] =  {1,       5, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, MOTHER} ;
+    skillInfoMap[HnS] =  {1,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
     //-----------DJINN SKILLS--------
     //Instant Regret (3AP): Deal 15 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
     skillInfoMap[InstantRegret] = {3,      15, {},     7, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+
+
+    //----------Enemies skill------------
+    //5 damage n vulnerable, 1 n resilience back
+    skillInfoMap[E1_Skill1] = {0,   4, {Tag::Tags::VULNERABLE},     1, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+
+    //0 damage n 2WEAK, 1 n RAMPAGE back all
+    skillInfoMap[E1_Skill2] = {0,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
+
+    //0 damage n 2 PROTECTED buff, 1 n resilience back
+    skillInfoMap[E1_Skill3] = {0,   3, {},     0, {Tag::Tags::PROVOKE, Tag::Tags::PROVOKE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
 
 
 } 

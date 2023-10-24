@@ -78,10 +78,12 @@ std::string Tag::GetTagSprite(Tag::Tags tag){
 }
 
 void Tag::AcivateTag(std::string sprite){
-    bigTag = std::make_shared<Sprite>(associated, sprite);
-        bigTag->SetScale(2.5, 2.5); //  two times bigger
-        bigTag->SetAlpha(175); // APLHA
-        associated.AddComponent(bigTag); 
+        if(bigTag == nullptr ){
+            bigTag = std::make_shared<Sprite>(associated, sprite);
+            bigTag->SetScale(2.5, 2.5); //  two times bigger
+            bigTag->SetAlpha(175); // APLHA
+            associated.AddComponent(bigTag); 
+        }    
 }
 
 void Tag::UpdateQuantity(int newQuantity) { 

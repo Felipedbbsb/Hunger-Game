@@ -58,6 +58,13 @@
 #define I_InstantRegret "Deal 15 damage; \n Expose your daughter; \n Apply 1 Vulnerable to your daughter; \n Lose 7HP"
 #define SPR_InstantRegret "assets/img/UI/uiSkillDjinn.png"
 
+//Enemies
+#define NS_Generic "Attack1"
+#define I_Generic ""
+#define SPR_Generic ""
+
+
+
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
@@ -80,6 +87,10 @@ class Skill : public Component {
             HnS,
 
             InstantRegret,
+
+            E1_Skill1,
+            E1_Skill2,
+            E1_Skill3,
 
             INVALID_SKILL
         };
@@ -120,7 +131,7 @@ class Skill : public Component {
             AttackType attackTypeBack;
             TargetType targetTypeBack;
         };
-
+        
  
 
         Skill(GameObject& associated, SkillId id, AP* ap);
@@ -134,10 +145,14 @@ class Skill : public Component {
         SkillId GetId();
 
         static Skill* selectedSkill;
+
+        static Skill* selectedSkillEnemy;
         
         static Skill* skillBackToMother;
 
         static Skill* skillBackToDaughter;
+
+        static TargetType playerTargetType;
 
         void Deselect();
         void DeselectBack(TargetType targetTypeBack);
@@ -146,6 +161,8 @@ class Skill : public Component {
         static std::map<SkillId, SkillInfo> skillInfoMap; 
 
         static void InitializeSkillInfoMap();
+
+
 
     private:
         SkillId id;
