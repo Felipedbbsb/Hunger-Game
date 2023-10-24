@@ -297,15 +297,16 @@ void Enemies::ApplySkillToEnemy() {
 
 void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-        if (HasTag(Tag::Tags::RESILIENCE)){
-            ActivateTag(Tag::Tags::RESILIENCE);
-            tagMultiplier -= 0.5; 
+        if(damage > 0){
+            if (HasTag(Tag::Tags::RESILIENCE)){
+                ActivateTag(Tag::Tags::RESILIENCE);
+                tagMultiplier -= 0.5; 
+            }
+            if (HasTag(Tag::Tags::VULNERABLE)){
+                ActivateTag(Tag::Tags::VULNERABLE);
+                tagMultiplier += 0.5; 
+            }
         }
-        if (HasTag(Tag::Tags::VULNERABLE)){
-            ActivateTag(Tag::Tags::VULNERABLE);
-            tagMultiplier += 0.5; 
-        }
-
         hp -= damage * tagMultiplier;
         ApplyTags(tags);
         lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar

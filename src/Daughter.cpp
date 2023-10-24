@@ -72,6 +72,9 @@ void Daughter::Update(float dt)
 
     //ENEMY TURN
     if(GameData::playerTurn == false){
+        DeleteIntention();
+        DeleteIndicator();
+        
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving daughter being attacked
 
@@ -86,19 +89,16 @@ void Daughter::Update(float dt)
         //Shows who wants to attack
         if (selectedSkill) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-            if(tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL ){
-                if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
-                    if(intention == nullptr){
-                        CreateIntention();
-                    }
-                    
-                }
-                else{
-                    DeleteIntention();
-                }
-            }    
-        }
-        else{
+            if((tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL) 
+            &&tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
+                if(intention == nullptr){
+                    CreateIntention();
+                }                      
+            }else{
+                DeleteIntention();
+            }
+        
+        }else{
             DeleteIntention(); 
         }
 
@@ -121,6 +121,9 @@ void Daughter::Update(float dt)
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                         selectedSkill->Deselect();  
                     } 
+                }
+                else{
+                    DeleteIndicator();
                 }
             }
             else{
@@ -178,15 +181,16 @@ void Daughter::DeleteIntention() {
 
 void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-        if (HasTag(Tag::Tags::RESILIENCE)){
-            ActivateTag(Tag::Tags::RESILIENCE);
-            tagMultiplier -= 0.5; 
+        if(damage > 0){
+            if (HasTag(Tag::Tags::RESILIENCE)){
+                ActivateTag(Tag::Tags::RESILIENCE);
+                tagMultiplier -= 0.5; 
+            }
+            if (HasTag(Tag::Tags::VULNERABLE)){
+                ActivateTag(Tag::Tags::VULNERABLE);
+                tagMultiplier += 0.5; 
+            }
         }
-        if (HasTag(Tag::Tags::VULNERABLE)){
-            ActivateTag(Tag::Tags::VULNERABLE);
-            tagMultiplier += 0.5; 
-        }
-
         hp -= damage * tagMultiplier;
         ApplyTags(tags);
         lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar

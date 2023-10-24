@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Tag.h"
 #include "AP.h"
+#include "GameData.h"
  
 Skill* Skill::selectedSkill = nullptr; //generic 
 
@@ -46,7 +47,7 @@ void Skill::Update(float dt) {
     Vec2 mousePos(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
     skillClickTimer.Update(dt);
 
-    if (InputManager::GetInstance().MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill){
+    if (InputManager::GetInstance().MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill && GameData::playerTurn == true){
                 selectedSkill->Deselect();
     }
 
@@ -60,8 +61,7 @@ void Skill::Update(float dt) {
 
 
             }
-            if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON)) {
-
+            if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON) && GameData::playerTurn == true) {
                 if (selectedSkill != nullptr && selectedSkill != this  ) {
                     selectedSkill->Deselect();
                 }
@@ -140,7 +140,6 @@ void Skill::Render() {
             spriteComponentPtr->SetDesaturation(true);
         } else {
             // Ensure the sprite is not desaturated
-            std::cout << available << std::endl;
             spriteComponentPtr->SetDesaturation(false);
         }
     }    

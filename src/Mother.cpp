@@ -76,6 +76,8 @@ void Mother::Update(float dt)
 
     //ENEMY TURN
     if(GameData::playerTurn == false){
+        DeleteIntention();
+        DeleteIndicator();
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
         if (Skill::selectedSkillEnemy){
@@ -100,18 +102,17 @@ void Mother::Update(float dt)
         //Shows who wants to attack
         if (selectedSkill) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-            if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
+            if((tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL) 
+            &&tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
                 if(intention == nullptr){
                     CreateIntention();
-                }
-                
-            }
-            else{
+                }                      
+            }else{
                 DeleteIntention();
             }
-        }
-        else{
-        DeleteIntention(); 
+        
+        }else{
+            DeleteIntention(); 
         }
 
 
@@ -131,6 +132,9 @@ void Mother::Update(float dt)
                         ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
                         selectedSkill->Deselect();  
                     } 
+                }
+                else{
+                    DeleteIndicator();
                 }
             }
             else{
@@ -189,15 +193,16 @@ void Mother::DeleteIntention() {
 
 void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-        if (HasTag(Tag::Tags::RESILIENCE)){
-            ActivateTag(Tag::Tags::RESILIENCE);
-            tagMultiplier -= 0.5; 
+        if(damage > 0){
+            if (HasTag(Tag::Tags::RESILIENCE)){
+                ActivateTag(Tag::Tags::RESILIENCE);
+                tagMultiplier -= 0.5; 
+            }
+            if (HasTag(Tag::Tags::VULNERABLE)){
+                ActivateTag(Tag::Tags::VULNERABLE);
+                tagMultiplier += 0.5; 
+            }
         }
-        if (HasTag(Tag::Tags::VULNERABLE)){
-            ActivateTag(Tag::Tags::VULNERABLE);
-            tagMultiplier += 0.5; 
-        }
-
         hp -= damage * tagMultiplier;
         ApplyTags(tags);
         lifeBarMother->SetCurrentHP(hp);  // Update the enemy's HP bar
@@ -206,6 +211,7 @@ void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
  
 void Mother::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
+        ActivateTag(tag);
         if (tagCountMap.find(tag) != tagCountMap.end()) {
             // The tag already exists, increment the counter
             tagCountMap[tag]++;
