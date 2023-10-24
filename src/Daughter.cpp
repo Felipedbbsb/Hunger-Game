@@ -1,7 +1,6 @@
 #include "Daughter.h"
 #include "GameData.h"
-#include "Camera.h"
-#include "Game.h"
+#include "Enemies.h"
 #include "Camera.h"
 #include "Game.h"
 
@@ -57,6 +56,7 @@ void Daughter::Update(float dt)
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     auto selectedSkill = Skill::selectedSkill;
+    auto selectedSkillEnemy = Skill::selectedSkillEnemy;
     auto skillBack = Skill::skillBackToDaughter;
 
     // Check if the enemy's HP is zero or below and request deletion
@@ -74,10 +74,18 @@ void Daughter::Update(float dt)
     if(GameData::playerTurn == false){
         DeleteIntention();
         DeleteIndicator();
-        
+
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving daughter being attacked
-
+        if (Skill::selectedSkillEnemy){
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkillEnemy->GetId()];
+            if((tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL)
+            && Skill::playerTargetType == Skill::DAUGHTER){
+                ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
+                Skill::selectedSkillEnemy = nullptr;
+                Enemies::enemyAttacking = false;
+            }
+        }
 
     
     }
@@ -199,6 +207,7 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
  
 void Daughter::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
+        ActivateTag(tag);
         if (tagCountMap.find(tag) != tagCountMap.end()) {
             // The tag already exists, increment the counter
             tagCountMap[tag]++;

@@ -78,21 +78,18 @@ void Mother::Update(float dt)
     if(GameData::playerTurn == false){
         DeleteIntention();
         DeleteIndicator();
+
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
-        if (Skill::selectedSkillEnemy){
+        if (selectedSkillEnemy){
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkillEnemy->GetId()];
-            if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL){
+            if((tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL)
+            && Skill::playerTargetType == Skill::MOTHER){
                 ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
                 Skill::selectedSkillEnemy = nullptr;
                 Enemies::enemyAttacking = false;
             }
-            
-            
         }
-
-
-
     }
 
     //PLAYER TURN

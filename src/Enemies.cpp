@@ -169,8 +169,6 @@ void Enemies::Update(float dt) {
             DeleteEnemyIndicator();// Delete the enemy indicator if it exists
         }
 
-        
-
     }
 
     //ENEMY TURN
@@ -192,7 +190,20 @@ void Enemies::Update(float dt) {
                 // Now, the selected skill is in the last position of the vector
                 Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
             }
-            
+
+
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[Skill::selectedSkill->GetId()];
+            // Randomly decides player target if its a attack to them
+            if(tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL ||
+            tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL){
+                //TODO protected
+                Skill::TargetType validTargets[] = {Skill::TargetType::MOTHER, Skill::TargetType::DAUGHTER};
+                int randomIndex  = rand() % 2;
+                Skill::playerTargetType = validTargets[randomIndex];
+            }
+
+
+
             enemyAttacking = true;
             thisEnemyAttacked = true;
             enemiesToAttack -= 1; 
@@ -206,13 +217,30 @@ void Enemies::Update(float dt) {
         if(selectedSkill != nullptr && intention != nullptr){
             intentionTimer.Update(dt);
             if(intentionTimer.Get() >= INTENTION_COOLDOWN){
-                Skill::selectedSkillEnemy = Skill::selectedSkill;
-                Skill::selectedSkill = nullptr; 
+                Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[Skill::selectedSkill->GetId()];
+                if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL ||
+                tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL){
+                    Skill::selectedSkillEnemy = Skill::selectedSkill;
+                    Skill::selectedSkill = nullptr;
+                }
+
+                //=============================Skill buff sector==============================
+                else if(tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL){
+                    ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags); 
+                    Skill::selectedSkill = nullptr;
+                    enemyAttacking = false;
+                    DeleteIntention();
+                }
+                else if(tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL){
+
+                }   
                 intentionTimer.Restart(); 
             }
-             
+            
             
         }
+
+        
 
 
         //=============================Skill back sector=================================
@@ -221,28 +249,17 @@ void Enemies::Update(float dt) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[Skill::selectedSkillEnemy->GetId()];
             if(tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_INDIVIDUAL
             || tempSkillInfo.attackTypeBack == Skill::AttackType::BUFF_ALL){
-                ApplySkillToSingleEnemy(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
-                    
+                ApplySkillToSingleEnemy(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);     
             }
         }  
 
-
-
-
-        //ApplySkillToAllEnemies()
-        //=============================Skill buff sector==============================
-        //TODO SKILL BUFF DEFENSE
 
 
         //Finished deciding skill ready to attack
         if(Skill::selectedSkillEnemy != nullptr){
             DeleteIntention();
         }
-         
-
     }
-
-    
 
 }
  
@@ -285,7 +302,7 @@ void Enemies::ApplySkillToEnemy() {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
 
-    if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL) {
+    if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL) {
         ApplySkillToAllEnemies();
     } else {
         ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
@@ -354,6 +371,7 @@ void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
 
 void Enemies::ActivateTag(Tag::Tags tag){
     for (auto& weak_tag : enemytags) {
+        ActivateTag(tag);
         auto tagGameObject = weak_tag.lock();  // Get the GameObject
         if (tagGameObject) {
             // Try to retrieve the "Tag" component 

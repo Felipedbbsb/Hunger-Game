@@ -199,9 +199,9 @@ dep/Daughter.d bin/Daughter.o: src/Daughter.cpp include/Daughter.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Camera.h \
- include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h include/State.h \
- include/InputManager.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Enemies.h \
+ include/Camera.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/State.h include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -701,6 +701,8 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
+
+include/Enemies.h:
 
 include/Camera.h:
 
