@@ -196,7 +196,7 @@ void Skill::InitializeSkillInfoMap() {
 
     //----------Enemies skill------------
     //5 damage n vulnerable, 1 n resilience back
-    skillInfoMap[E1_Skill1] = {0,   4, {Tag::Tags::VULNERABLE},     1, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    skillInfoMap[E1_Skill1] = {0,   4, {Tag::Tags::VULNERABLE},     10, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
 
     //0 damage n 2WEAK, 1 n RAMPAGE back all
     skillInfoMap[E1_Skill2] = {0,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;

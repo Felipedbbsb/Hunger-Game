@@ -137,7 +137,7 @@ void Enemies::Update(float dt) {
     //PLAYER TURN
     if(GameData::playerTurn == true){
 
-        thisEnemyAttacked = false; //reset 
+        thisEnemyAttacked = false;
 
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving enemies being attacked
@@ -173,7 +173,6 @@ void Enemies::Update(float dt) {
     else{
         
 
-        std::cout << "chico mkjilo2222222" <<!enemyAttacking << !thisEnemyAttacked<<std::endl;
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
         if(!enemyAttacking && !thisEnemyAttacked && Skill::selectedSkillEnemy == nullptr){
