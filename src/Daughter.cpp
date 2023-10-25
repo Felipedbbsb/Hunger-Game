@@ -97,8 +97,7 @@ void Daughter::Update(float dt)
         //Shows who wants to attack
         if (selectedSkill) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-            if((tempSkillInfo.attackType == Skill::AttackType::BUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL) 
-            &&tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
+            if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
                 if(intention == nullptr){
                     CreateIntention();
                 }                      

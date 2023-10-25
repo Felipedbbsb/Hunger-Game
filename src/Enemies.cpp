@@ -301,7 +301,6 @@ void Enemies::DeleteIntention() {
 void Enemies::ApplySkillToEnemy() {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-
     if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL) {
         ApplySkillToAllEnemies();
     } else {
@@ -336,6 +335,7 @@ void Enemies::ApplySkillToAllEnemies() {
 
 void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
+        ActivateTag(tag);
         if (tagCountMap.find(tag) != tagCountMap.end()) {
             // The tag already exists, increment the counter
             tagCountMap[tag]++;
@@ -371,7 +371,6 @@ void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
 
 void Enemies::ActivateTag(Tag::Tags tag){
     for (auto& weak_tag : enemytags) {
-        ActivateTag(tag);
         auto tagGameObject = weak_tag.lock();  // Get the GameObject
         if (tagGameObject) {
             // Try to retrieve the "Tag" component 
@@ -397,6 +396,7 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
 
     tagObject->box.x = enemyHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = enemyHitbox.y + enemyHitbox.h + TAGS_SPACING_Y;
+
     std::weak_ptr<GameObject> go_tag = Game::GetInstance().GetCurrentState().AddObject(tagObject);
 
     tagSpaceCount += 1;

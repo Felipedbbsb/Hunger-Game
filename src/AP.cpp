@@ -49,7 +49,7 @@ void AP::Update(float dt){
         } 
     }
 
-    if(Enemies::enemiesToAttack == 0 && !Enemies::enemyAttacking && GameData::playerTurn == false){ 
+    if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking && GameData::playerTurn == false){ 
         GameData::playerTurn = true;
         AP::apCount = AP_QUANTITY; //reset
         SetAPCount(AP::apCount);

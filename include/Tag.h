@@ -20,6 +20,9 @@
 #define TAGS_SPACING_X 20.0f
 #define TAGS_SPACING_Y 35.0f
 
+#define IMPLOSION_VEL 2.25
+#define BIGTAG_APLHA 125
+#define BIGTAG_SCALE 3
 
 class Tag : public Component{
 
@@ -70,6 +73,6 @@ class Tag : public Component{
         GameObject* textSkillObj;
         std::string textSkill;
         GameObject* readerTag;
-        std::shared_ptr<Sprite> bigTag;
+        GameObject* bigTag;
         
 };

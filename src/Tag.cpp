@@ -15,7 +15,6 @@ bigTag(nullptr)
         
         Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
-
         AcivateTag(GetTagSprite(tag));
         
     }
@@ -54,11 +53,21 @@ void Tag::Update(float dt){
 
     // If bigtag exists, shrink it size until its equal diminua sua escala
     if (bigTag != nullptr) {
-        bigTag->SetScale(bigTag->GetScale().x - 1.5f * dt, bigTag->GetScale().y - 1.5f * dt);
+        auto spriteComponent = bigTag->GetComponent("Sprite");
+        auto bigTag_spr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+        
+
+        bigTag_spr->SetScale(bigTag_spr->GetScale().x - IMPLOSION_VEL * dt, bigTag_spr->GetScale().y - IMPLOSION_VEL * dt);
+        
+        auto center = associated.box.GetCenter();
+        bigTag->box.DefineCenter(Vec2(center));
+
         // When same size 
-        if (bigTag->GetScale().x <= 1) {
-            associated.RemoveComponent(bigTag);
+        if (bigTag_spr->GetScale().x <= 1) {
+            bigTag->RequestDelete();
             bigTag = nullptr;
+            
+            
         }
     }       
 } 
@@ -79,15 +88,20 @@ std::string Tag::GetTagSprite(Tag::Tags tag){
 
 void Tag::AcivateTag(std::string sprite){
         if(bigTag == nullptr ){
-            bigTag = std::make_shared<Sprite>(associated, sprite);
-            bigTag->SetScale(2.5, 2.5); //  two times bigger
-            bigTag->SetAlpha(175); // APLHA
-            associated.AddComponent(bigTag); 
+            bigTag = new GameObject(associated.box.x, associated.box.y);
+            Sprite* bigTag_spr = new Sprite(*bigTag, sprite);
+            bigTag->AddComponent(std::shared_ptr<Sprite>(bigTag_spr)); 
+            bigTag_spr->SetScale(BIGTAG_SCALE, BIGTAG_SCALE); //  two times bigger
+            bigTag_spr->SetAlpha(BIGTAG_APLHA); // APLHA
+
+            auto center = associated.box.GetCenter();
+            bigTag->box.DefineCenter(Vec2(center));
+            Game::GetInstance().GetCurrentState().AddObject(bigTag);
         }    
-}
+} 
 
 void Tag::UpdateQuantity(int newQuantity) { 
-    quantity = newQuantity;
+    quantity = newQuantity; 
 }
  
 Tag::Tags Tag::GetTag(){
