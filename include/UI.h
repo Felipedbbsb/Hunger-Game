@@ -15,6 +15,12 @@
 
 #define AP_POS Vec2( 75, RESOLUTION_HEIGHT * 2/3 + 50) 
 
+#define PROTECTED_POS Vec2( 250, RESOLUTION_HEIGHT * 2/3 + 75) 
+
+#define SKILL_N_OFFSET Vec2( 450, RESOLUTION_HEIGHT * 2/3 + 75) 
+
+#define SKILL_D_OFFSET Vec2( 200, RESOLUTION_HEIGHT * 2/3 + 75) //x = distance between normal and djinn skills
+
 #define UI_SCREEN_SPRITE "assets/img/UI/uiBottomScreen.png"
 
 class UI : public Component{

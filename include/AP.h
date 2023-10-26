@@ -34,9 +34,4 @@ class AP : public Component {
         static std::vector<std::shared_ptr<GameObject>> apArray;
         static int apCount;
 
-    private:
-        
-        void InitVisualRepresentationForMirror(int mirrorAPCount, GameObject &mirrorObject);
-
-        
 };
