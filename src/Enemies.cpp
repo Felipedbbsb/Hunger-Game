@@ -5,6 +5,7 @@
 #include "Tag.h"
 #include "Game.h"
 #include "AP.h" 
+#include "Protected.h" 
 #include "GameData.h" 
 #include <algorithm> 
 
@@ -40,7 +41,6 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     thisEnemyAttacked(false),
     intentionTimer()
     {  
-
         EnemyInfo& enemyInfo = enemyInfoMap[id];
         hp = enemyInfo.hp;
         tags = enemyInfo.tags;
@@ -133,9 +133,6 @@ void Enemies::Update(float dt) {
         return; // Early exit if the enemy is no longer alive
 
     } 
-    
-//=============================//=============================//=============================//=============================
-    //----Intention manager----
 
 //=============================//=============================//=============================//=============================
     //PLAYER TURN
@@ -196,10 +193,15 @@ void Enemies::Update(float dt) {
             // Randomly decides player target if its a attack to them
             if(tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL ||
             tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL){
-                //TODO protected
-                Skill::TargetType validTargets[] = {Skill::TargetType::MOTHER, Skill::TargetType::DAUGHTER};
-                int randomIndex  = rand() % 2;
-                Skill::playerTargetType = validTargets[randomIndex];
+                
+                if(Protected::isProtected == false){
+                    Skill::TargetType validTargets[] = {Skill::TargetType::MOTHER, Skill::TargetType::DAUGHTER};
+                    int randomIndex  = rand() % 2;
+                    Skill::playerTargetType = validTargets[randomIndex];
+                }
+                else{
+                    Skill::playerTargetType = Skill::TargetType::MOTHER;
+                }
             }
 
 
@@ -301,6 +303,16 @@ void Enemies::DeleteIntention() {
 void Enemies::ApplySkillToEnemy() {
     auto selectedSkill = Skill::selectedSkill;
     Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+
+    if(tempSkillInfo.isProtected == Skill::StateProtected::PROTECTED){
+        Protected::isProtected = true;
+    }
+    else if(tempSkillInfo.isProtected == Skill::StateProtected::EXPOSED){
+        Protected::isProtected = false;
+    } 
+
+
+
     if (tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL || tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL) {
         ApplySkillToAllEnemies();
     } else {
@@ -309,6 +321,9 @@ void Enemies::ApplySkillToEnemy() {
         selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
         selectedSkill->Deselect();
     }
+
+
+
 }
 
 void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {

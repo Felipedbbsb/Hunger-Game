@@ -3,6 +3,7 @@
 #include "Enemies.h"
 #include "Camera.h"
 #include "Game.h"
+#include "Protected.h" 
 
 #ifdef DEBUG
 
@@ -126,7 +127,15 @@ void Daughter::Update(float dt)
                     if (daughterHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
-                        selectedSkill->Deselect();  
+                        selectedSkill->Deselect();
+
+                        if(tempSkillInfo.isProtected == Skill::StateProtected::PROTECTED){
+                            Protected::isProtected = true;
+                        }
+                        else if(tempSkillInfo.isProtected == Skill::StateProtected::EXPOSED){
+                            Protected::isProtected = false;
+                        }
+
                     } 
                 }
                 else{

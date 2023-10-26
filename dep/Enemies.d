@@ -204,7 +204,8 @@ dep/Enemies.d bin/Enemies.o: src/Enemies.cpp include/Enemies.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/GameData.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
+ include/Protected.h include/GameData.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
@@ -712,6 +713,8 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
+
+include/Protected.h:
 
 include/GameData.h:
 

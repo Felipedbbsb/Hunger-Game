@@ -165,39 +165,39 @@ void Skill::InitializeSkillInfoMap() {
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
 
-    skillInfoMap[SKILL1] = {2, 5, {Tag::Tags::VULNERABLE}, 0, {}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL, IRR, ATTACK_ALL, IRR};
-    skillInfoMap[SKILL2] = {2, 0, {Tag::Tags::RESILIENCE}, 0, {}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL, DAUGHTER, ATTACK_ALL, IRR};
-    skillInfoMap[SKILL3] = {1, 0, {Tag::Tags::DODGE}, 0, {}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL, IRR, ATTACK_ALL, IRR};
-    skillInfoMap[SKILL4] = {1, 5, {}, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, ATTACK_INDIVIDUAL, MOTHER, ATTACK_ALL, IRR};
+    skillInfoMap[SKILL1] = {2, Skill::StateProtected::NOCHANGES, 5, {Tag::Tags::VULNERABLE}, 0, {}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL, IRR, ATTACK_ALL, IRR};
+    skillInfoMap[SKILL2] = {2, Skill::StateProtected::NOCHANGES, 0, {Tag::Tags::RESILIENCE}, 0, {}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL, DAUGHTER, ATTACK_ALL, IRR};
+    skillInfoMap[SKILL3] = {1, Skill::StateProtected::NOCHANGES, 0, {Tag::Tags::DODGE}, 0, {}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL, IRR, ATTACK_ALL, IRR};
+    skillInfoMap[SKILL4] = {1, Skill::StateProtected::NOCHANGES, 5, {}, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, ATTACK_INDIVIDUAL, MOTHER, ATTACK_ALL, IRR};
 
     //-------------MOTHER SKILLS-----------
     //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable.
-    skillInfoMap[Helmbreaker] = {2,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
+    skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
 
     //Rockabye (2AP): Apply 1 Resilience to your daughter.
-    skillInfoMap[Rockabye] =  {2,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
+    skillInfoMap[Rockabye] =  {2, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
 
     //Stinger (2AP): Deal 5 Damage to all enemies; Expose your daughter.
-    skillInfoMap[Stinger] =  {2,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
+    skillInfoMap[Stinger] =  {2, Skill::StateProtected::EXPOSED,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
  
     //------------DAUGHTER SKILL------------
     //Hide and Seek (1AP): Apply 1 Dodge and 1 Vulnerable to Mother; Protect Daughter 
-    skillInfoMap[HnS] =  {1,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+    skillInfoMap[HnS] =  {1, Skill::StateProtected::PROTECTED,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
     //-----------DJINN SKILLS--------
     //Instant Regret (3AP): Deal 15 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
-    skillInfoMap[InstantRegret] = {3,      15, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      15, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
 
 
     //----------Enemies skill------------
     //5 damage , 1 n resilience back
-    skillInfoMap[E1_Skill1] = {0,   5, {Tag::Tags::VULNERABLE},     0, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {Tag::Tags::VULNERABLE},     0, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
 
     //0 damage n Provoke auto buff, 1 n RAMPAGE back all
-    skillInfoMap[E1_Skill2] = {0,   0, {Tag::Tags::PROVOKE},     0, {Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::PROVOKE},     0, {Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
 
     //0 damage n 2 PROTECTED buff, 1 n resilience back
-    skillInfoMap[E1_Skill3] = {0,   3, {},     0, {Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   3, {},     0, {Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
 
 
 } 

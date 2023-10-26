@@ -29,6 +29,10 @@ void Tag::Start() {
   
 Tag::~Tag(){ 
     HideReader();
+
+    if(bigTag != nullptr ){
+        bigTag->RequestDelete();
+    }
 } 
 
 

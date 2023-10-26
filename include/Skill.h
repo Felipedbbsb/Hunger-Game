@@ -117,8 +117,15 @@ class Skill : public Component {
             IRR //irrelevant
         };
 
+        enum StateProtected {
+            PROTECTED,
+            EXPOSED, 
+            NOCHANGES //irrelevant
+        };
+
         struct SkillInfo {
             int apCost;
+            StateProtected isProtected;
             int damage;
             std::vector<Tag::Tags> tags;
             int damageBack;
