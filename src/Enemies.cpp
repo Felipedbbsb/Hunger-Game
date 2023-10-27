@@ -7,6 +7,8 @@
 #include "AP.h" 
 #include "Protected.h" 
 #include "GameData.h" 
+#include "Mother.h"
+#include "Daughter.h"  
 #include <algorithm> 
 
 #ifdef DEBUG
@@ -257,9 +259,6 @@ void Enemies::Update(float dt) {
             
         }
 
-        
-
-
         //=============================Skill back sector=================================
         //Sector to manipulate interections involving enemies being attacked
         if(Skill::selectedSkillEnemy != nullptr && intention != nullptr){
@@ -343,6 +342,15 @@ void Enemies::ApplySkillToEnemy() {
 
 void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
+
+        if (HasTag(Tag::Tags::DODGE)){
+            int dodgeChance = rand() % 2;
+            if(dodgeChance == 1){
+                ActivateTag(Tag::Tags::DODGE);
+                damage = 0;
+            }
+        }
+
         if(damage > 0){
             if (HasTag(Tag::Tags::RESILIENCE)){
                 ActivateTag(Tag::Tags::RESILIENCE);
@@ -352,6 +360,38 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
                 ActivateTag(Tag::Tags::VULNERABLE);
                 tagMultiplier += 0.5; 
             }
+            //============RAMPAGE and WEAK sector=================//
+            auto selectedSkill = Skill::selectedSkill; //poor code, it happens :(
+            Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
+            
+                bool tagRampage = false;
+                if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
+                    tagRampage= HasTagPlayer(Tag::Tags::RAMPAGE, Mother::tags);
+                    if(tagRampage){Mother::activateRampage = true;}
+                }
+                else if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
+                    tagRampage= HasTagPlayer(Tag::Tags::RAMPAGE, Daughter::tags);
+                    if(tagRampage){Daughter::activateRampage = true;}
+                }
+
+                bool tagWeak = false;
+                if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::MOTHER){
+                    tagWeak= HasTagPlayer(Tag::Tags::WEAK, Mother::tags);
+                    if(tagWeak){Mother::activateWeak = true;}
+                }
+                else if(tempSkillInfo.targetTypeAttacker == Skill::TargetType::DAUGHTER){
+                    tagWeak= HasTagPlayer(Tag::Tags::WEAK, Daughter::tags);
+                    if(tagWeak){Daughter::activateWeak = true;}
+                }
+
+            if (tagRampage){
+                tagMultiplier += 0.5; 
+            }
+            if (tagWeak){
+                //ActivateTag(Tag::Tags::VULNERABLE);
+                tagMultiplier -= 0.5; 
+            }
+
         }
         hp -= damage * tagMultiplier;
         ApplyTags(tags);
@@ -445,6 +485,17 @@ bool Enemies::HasTag(Tag::Tags tagToCheck) {
     return false; // tag isnt present.
 }
 
+bool Enemies::HasTagPlayer(Tag::Tags tagToCheck, std::vector<Tag::Tags> tags) {
+    // Go through the enemy's tag list and check if the desired tag is present. 
+    for (const auto& tag : tags) {
+        if (tag == tagToCheck) {
+            return true; // tag is present
+        }
+    }
+    return false; // tag isnt present.
+}
+
+
 void Enemies::Render() {
     #ifdef DEBUG
     Vec2 center(enemyHitbox.GetCenter());
@@ -480,9 +531,9 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY1] = { 10, {Tag::Tags::DODGE}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY2] = { 20, {Tag::Tags::DODGE}, "Enemy 2", ENEMY2_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY3] = { 30, {Tag::Tags::DODGE}, "Enemy 1", ENEMY3_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY4] = { 100, {Tag::Tags::DODGE}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
  

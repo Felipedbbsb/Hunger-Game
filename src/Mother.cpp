@@ -5,6 +5,11 @@
 #include "Game.h"
 #include "Protected.h" 
 
+int Mother::hp = MOTHER_HP; 
+std::vector<Tag::Tags> Mother::tags = {};
+bool Mother::activateRampage = false;
+bool Mother::activateWeak = false;
+
 #ifdef DEBUG
 
 #include <SDL2/SDL.h>
@@ -18,8 +23,7 @@ intention(nullptr),
 lifeBarMother(nullptr),
 tagSpaceCount(0){
 
-    hp = 50;
-    tags = {};
+    
 }
 
 void Mother::Start() 
@@ -91,10 +95,20 @@ void Mother::Update(float dt)
                 Enemies::enemyAttacking = false;
             }
         }
+
     }
 
     //PLAYER TURN
     else{
+        
+        if(activateRampage){
+            ActivateTag(Tag::Tags::RAMPAGE);
+            activateRampage = false;
+        }
+        if(activateWeak){
+            ActivateTag(Tag::Tags::WEAK);
+            activateWeak = false;
+        }
 
         //--------------Intention manager------------------
         //Shows who wants to attack
@@ -198,6 +212,15 @@ void Mother::DeleteIntention() {
 
 void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
+
+        if (HasTag(Tag::Tags::DODGE)){
+            int dodgeChance = rand() % 2;
+            if(dodgeChance == 1){
+                ActivateTag(Tag::Tags::DODGE);
+                damage = 0;
+            }
+        }
+
         if(damage > 0){
             if (HasTag(Tag::Tags::RESILIENCE)){
                 ActivateTag(Tag::Tags::RESILIENCE);

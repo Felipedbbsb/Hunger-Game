@@ -19,6 +19,8 @@
 
 #define DAUGHTER_SPRITE "assets/img/daughter/daughterIdle.png"
 
+#define DAUGHTER_HP 27
+
 class Daughter : public Component{
 
   public:
@@ -44,6 +46,12 @@ class Daughter : public Component{
     GameObject* indicator; 
     GameObject* intention; 
 
+    static int hp;
+    static std::vector<Tag::Tags> tags;
+
+    static bool activateRampage;
+    static bool activateWeak;
+
 private:
   LifeBar* lifeBarDaughter;
   Rect daughterHitbox;
@@ -54,7 +62,6 @@ private:
 
   std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
-  int hp;
-  std::vector<Tag::Tags> tags;
+
 
 };

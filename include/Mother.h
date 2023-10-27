@@ -19,6 +19,8 @@
 
 #define MOTHER_SPRITE "assets/img/mom/momIdle.png"
 
+#define MOTHER_HP 50
+
 class Mother : public Component{
 
   public:
@@ -44,6 +46,12 @@ class Mother : public Component{
     GameObject* indicator;   
     GameObject* intention; 
 
+    static int hp;
+    static std::vector<Tag::Tags> tags;
+
+    static bool activateRampage;
+    static bool activateWeak;
+
 private:
     LifeBar* lifeBarMother;
     Rect motherHitbox;
@@ -54,7 +62,7 @@ private:
 
     std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
-    int hp;
-    std::vector<Tag::Tags> tags;
+    
+    
 
 };

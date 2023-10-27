@@ -5,10 +5,20 @@
 #include "Game.h"
 #include "Protected.h" 
 
+
+
+
+
 #ifdef DEBUG
 
 #include <SDL2/SDL.h>
 #endif //DEBUG
+
+
+int Daughter::hp = DAUGHTER_HP; 
+std::vector<Tag::Tags> Daughter::tags = {};
+bool Daughter::activateRampage = false;
+bool Daughter::activateWeak = false;
 
 Daughter::Daughter(GameObject &associated) : 
 Component::Component(associated),
@@ -16,9 +26,7 @@ indicator(nullptr),
 intention(nullptr),
 lifeBarDaughter(nullptr),
 tagSpaceCount(0){
-    // Add  sprite
-    hp = 25;
-    tags = {};
+
 }
 
 void Daughter::Start() 
@@ -94,6 +102,15 @@ void Daughter::Update(float dt)
 
     //PLAYER TURN
     else{
+        
+        if(activateRampage){
+            ActivateTag(Tag::Tags::RAMPAGE);
+            activateRampage = false;
+        }
+        if(activateWeak){
+            ActivateTag(Tag::Tags::WEAK);
+            activateWeak = false;
+        }
 
         //--------------Intention manager------------------
         //Shows who wants to attack
@@ -198,6 +215,15 @@ void Daughter::DeleteIntention() {
 
 void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
+
+        if (HasTag(Tag::Tags::DODGE)){
+            int dodgeChance = rand() % 2;
+            if(dodgeChance == 1){
+                ActivateTag(Tag::Tags::DODGE);
+                damage = 0;
+            }
+        }
+
         if(damage > 0){
             if (HasTag(Tag::Tags::RESILIENCE)){
                 ActivateTag(Tag::Tags::RESILIENCE);
