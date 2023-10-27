@@ -82,6 +82,7 @@ void Daughter::Update(float dt)
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkillEnemy->GetId()];
             if((tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL)
             && Skill::playerTargetType == Skill::DAUGHTER){
+
                 ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                 Skill::selectedSkillEnemy = nullptr;
                 Enemies::enemyAttacking = false;
@@ -206,7 +207,17 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
                 ActivateTag(Tag::Tags::VULNERABLE);
                 tagMultiplier += 0.5; 
             }
+
+            //============RAMPAGE and WEAK sector=================//
+            if (Skill::HasTagRampageOrWeak.first){
+                tagMultiplier += 0.5;
+            }
+            if (Skill::HasTagRampageOrWeak.second){
+                tagMultiplier -= 0.5;
+            }
+
         }
+        Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
         ApplyTags(tags);
         lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar

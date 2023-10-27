@@ -159,6 +159,8 @@ class Skill : public Component {
 
         static Skill* skillBackToDaughter;
 
+        static std::pair<bool, bool> HasTagRampageOrWeak;
+
         static TargetType playerTargetType;
 
         void Deselect();

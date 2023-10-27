@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprite.h"
+#include "Reader.h"
 #include <algorithm> 
 
 
@@ -11,7 +12,8 @@ bool Protected::isProtected = false; //starts exposed
 
 Protected::Protected(GameObject &associated)
 : Component::Component(associated),
-isProtectedLocal(Protected::isProtected)
+isProtectedLocal(Protected::isProtected),
+reader(nullptr)
 {     
 } 
    
@@ -24,7 +26,7 @@ void Protected::Start() {
 }   
   
 Protected::~Protected(){ 
-    
+    HideReader();
 } 
 
 void Protected::Update(float dt){  
@@ -40,11 +42,45 @@ void Protected::Update(float dt){
         Protected_spr->SetScale(0.5, 0.5);
         associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
     }
+
+    auto& inputManager = InputManager::GetInstance();
+    Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
+
+
+    if(associated.box.Contains(mousePos.x, mousePos.y)){
+        ShowReader();
+    } else {
+        HideReader();
+    }
 }
 
 void Protected::Render(){
 } 
 
+
+void Protected::ShowReader(){
+    if (!reader) {
+        reader = new GameObject(associated.box.x, associated.box.y);
+        std::string message;
+        if(Protected::isProtected){
+            message = MESSAGE_PROTECTED;
+        }
+        else{
+            message = MESSAGE_EXPOSED;
+        }
+
+        Reader* reader_behaviour = new Reader(*reader, message);
+        reader->AddComponent(std::shared_ptr<Reader>(reader_behaviour));
+        Game::GetInstance().GetCurrentState().AddObject(reader);
+    }
+}
+
+void Protected::HideReader() {
+    if (reader!= nullptr) {
+        reader->RequestDelete();
+        reader = nullptr;
+    } 
+}
 
 bool Protected::Is(std::string type){
     return (type == "Protected");

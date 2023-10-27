@@ -14,6 +14,10 @@
 
 #define PROTECTED_PROTECTED_SPRITE "assets/img/UI/uiIndicatorProtected.png"
 
+#define MESSAGE_PROTECTED "Daughter is protected. \n Cannot be targeted by enemies"
+
+#define MESSAGE_EXPOSED "Daughter is exposed. \n May be targeted by enemies"
+
 class Protected : public Component {
     public:
         Protected(GameObject &associated);
@@ -21,10 +25,13 @@ class Protected : public Component {
         void Update(float dt);
         void Render();
         void Start();
+        void ShowReader();
+        void HideReader();
         bool Is(std::string type);
 
         static bool isProtected;
 
     private:
         bool isProtectedLocal;
+        GameObject* reader;
 };

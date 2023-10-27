@@ -224,6 +224,21 @@ void Enemies::Update(float dt) {
                 tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL){
                     Skill::selectedSkillEnemy = Skill::selectedSkill;
                     Skill::selectedSkill = nullptr;
+                    
+                    //============RAMPAGE and WEAK sector=================//
+                    if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL){
+                        bool hasRampage = false;
+                        bool hasWeak = false;
+                        if (HasTag(Tag::Tags::RAMPAGE)){
+                            ActivateTag(Tag::Tags::RAMPAGE);
+                            hasRampage = true;
+                        }
+                        if (HasTag(Tag::Tags::WEAK)){
+                            ActivateTag(Tag::Tags::WEAK);
+                            hasWeak = true;
+                        }
+                        Skill::HasTagRampageOrWeak ={hasRampage, hasWeak};
+                    }    
                 }
 
                 //=============================Skill buff sector==============================
