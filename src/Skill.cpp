@@ -192,13 +192,13 @@ void Skill::InitializeSkillInfoMap() {
 
     //----------Enemies skill------------
     //5 damage , 1 n resilience back
-    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
 
     //0 damage n Provoke auto buff, 1 n RAMPAGE back all
-    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
 
     //0 damage n 2 PROTECTED buff, 1 n resilience back
-    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   2, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
 
 
 } 
