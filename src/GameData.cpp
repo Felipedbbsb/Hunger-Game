@@ -1,4 +1,4 @@
 #include "GameData.h"
 
-bool GameData::playerVictory = false; // victory condition
+bool GameData::playerTurn = true; // victory condition
 

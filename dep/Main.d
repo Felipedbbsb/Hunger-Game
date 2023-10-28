@@ -194,8 +194,21 @@ dep/Main.d bin/Main.o: src/Main.cpp C:/SDL2/include/SDL2/SDL.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/TitleState.h include/Sprite.h C:/SDL2/include/SDL2/SDL_image.h \
- include/Timer.h
+ include/CombatState.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Sprite.h \
+ C:/SDL2/include/SDL2/SDL_image.h include/Timer.h include/Enemies.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
+ include/LifeBar.h include/Reader.h include/Sound.h \
+ C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
+ include/Tag.h include/AP.h
 
 C:/SDL2/include/SDL2/SDL.h:
 
@@ -667,10 +680,48 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 
-include/TitleState.h:
+include/CombatState.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
 
 include/Sprite.h:
 
 C:/SDL2/include/SDL2/SDL_image.h:
 
 include/Timer.h:
+
+include/Enemies.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h:
+
+include/LifeBar.h:
+
+include/Reader.h:
+
+include/Sound.h:
+
+C:/SDL2/include/SDL2/SDL_mixer.h:
+
+include/Skill.h:
+
+c:\mingw\include\time.h:
+
+include/Tag.h:
+
+include/AP.h:

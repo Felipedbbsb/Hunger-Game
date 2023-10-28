@@ -1,4 +1,4 @@
-dep/Skills.d bin/Skills.o: src/Skills.cpp include/Skills.h \
+dep/AP.d bin/AP.o: src/AP.cpp include/AP.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\c++config.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\os_defines.h \
@@ -188,9 +188,31 @@ dep/Skills.d bin/Skills.o: src/Skills.cpp include/Skills.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h
+ include/Timer.h include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/Game.h include/State.h include/InputManager.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\deque \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
+ include/GameData.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Enemies.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
+ include/LifeBar.h include/Reader.h include/Skill.h \
+ c:\mingw\include\time.h include/Tag.h
 
-include/Skills.h:
+include/AP.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:
 
@@ -645,3 +667,65 @@ C:/SDL2/include/SDL2/SDL_image.h:
 C:/SDL2/include/SDL2/SDL.h:
 
 include/Timer.h:
+
+include/Text.h:
+
+C:/SDL2/include/SDL2/SDL_ttf.h:
+
+include/Game.h:
+
+include/State.h:
+
+include/InputManager.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\deque:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
+
+include/GameData.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
+
+include/Enemies.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h:
+
+include/LifeBar.h:
+
+include/Reader.h:
+
+include/Skill.h:
+
+c:\mingw\include\time.h:
+
+include/Tag.h:

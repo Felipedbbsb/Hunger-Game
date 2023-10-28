@@ -10,8 +10,10 @@
 Sprite::Sprite(GameObject &associated) : Component::Component(associated),
 scale(Vec2(1, 1)),
 currentFrame(0),
-timeElapsed(0){
-    texture = nullptr;
+timeElapsed(0),
+alpha(255),
+isDesaturated(false){
+    texture = nullptr; 
 }
 
 Sprite::Sprite(GameObject &associated, std::string file, int frameCount, float frameTime, float secondsToSelfDestruct) : Sprite(associated){
@@ -51,18 +53,45 @@ void Sprite::SetClip(int x, int y, int w, int h) {
     associated.box.h = h * scale.y;
 }
 
+
+
+
 void Sprite::Render() {
     int RENDER_FAIL;
+    SDL_SetTextureAlphaMod(texture, static_cast<Uint8>(alpha)); // Aplica o valor de alpha
+
     SDL_Rect dstLoc = {int(associated.box.x) + (int)Camera::pos.x, int(associated.box.y) + (int)Camera::pos.y, (int)(clipRect.w * GetScale().x), (int)(clipRect.h * GetScale().y)};
 
-    // Renderiza a textura com a clipagem adequada
+    // Check if the sprite should be desaturated (black and white)
+    if (isDesaturated) {
+        SDL_SetTextureColorMod(texture, 100, 100, 100); // Set color modulation to black
+    } 
+    else {
+        // Reset the color modulation to white (no desaturation)
+        SDL_SetTextureColorMod(texture, 255, 255, 255);
+    }
+
+    // Renderiza a textura normalmente
     RENDER_FAIL = SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstLoc, associated.angleDeg, nullptr, SDL_FLIP_NONE);
+    
+
     if (RENDER_FAIL != 0) {
         std::cerr << "Texture render failure: " << SDL_GetError() << std::endl; // falha ao renderizar textura
     }
 }
 
 
+void Sprite::SetAlpha(float alpha) {
+    this->alpha = alpha;
+}
+ 
+float Sprite::GetAlpha() {
+    return alpha;
+} 
+
+void Sprite::SetDesaturation(bool desaturate) {
+    isDesaturated = desaturate;
+}
 
 
 //Render é um wrapper para SDL_RenderCopy, que recebe quatro argumentos.
@@ -75,14 +104,14 @@ void Sprite::Render() {
 //escala, contraindo ou expandindo a imagem para se adaptar a esses
 //valores.
 
-void Sprite::Render(int x, int y){
+void Sprite::Render(int x, int y) {
     int RENDER_FAIL;
+    SDL_SetTextureAlphaMod(texture, static_cast<Uint8>(alpha)); // Aplica o valor de alpha
     SDL_Rect dstLoc = {(int)(x * GetScale().x) + (int)Camera::pos.x, (int)(y * GetScale().y) + (int)Camera::pos.y, (int)(clipRect.w * GetScale().x), (int)(clipRect.h * GetScale().y)};
     
-    // Renderiza a textura em uma posição específica
     RENDER_FAIL = SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstLoc, associated.angleDeg, nullptr, SDL_FLIP_NONE);
-    if (RENDER_FAIL != 0){
-        std::cerr << "Texture render failure: " << SDL_GetError() << std::endl; // falha ao renderizar textura
+    if (RENDER_FAIL != 0) {
+        std::cerr << "Texture render failure: " << SDL_GetError() << std::endl;
     }
 }
 

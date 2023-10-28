@@ -4,9 +4,10 @@
 #define INCLUDE_SDL
 #define INCLUDE_SDL_TTF
 #define BACKGROUND_COLOR {0, 255, 0, 0}
+#define OUTLINE_COLOR {142, 11, 11, 0}
 
 #include <iostream>
-#include <vector>
+#include <vector> 
 #include <memory>
 #include "SDL_include.h"
 #include "Component.h"
@@ -15,7 +16,7 @@
 
 class Text : public Component {
 public:
-    enum TextStyle { SOLID, SHADED, BLENDED };
+    enum TextStyle { SOLID, SHADED, BLENDED, OUTLINE };
 
     Text(GameObject& associated,
          std::string fontFile,
@@ -38,15 +39,16 @@ public:
 private:
     struct TextLine {
         SDL_Texture* texture;
-        int width;  // Line width
-        int height; // Line height
+        int width;  // Largura da linha
+        int height; // Altura da linha
     };
 
     void RemakeTexture();
     SDL_Texture* RenderSolidText(const std::string& text, SDL_Color color);
     SDL_Texture* RenderShadedText(const std::string& text, SDL_Color color);
     SDL_Texture* RenderBlendedText(const std::string& text, SDL_Color color);
-
+    SDL_Texture* RenderTextWithOutline(const std::string& text, SDL_Color textColor, SDL_Color outlineColor);
+    
     TTF_Font* font;
     SDL_Texture* texture;
     std::string text;
@@ -57,9 +59,6 @@ private:
     int blinkPeriod;
     Timer blinkTimer;
     std::vector<TextLine> lines;
-    
-    void ProcessTextWithTags();
-    SDL_Color ParseColorTag(const std::string& tagContent);
 };
 
 #endif // TEXT_H

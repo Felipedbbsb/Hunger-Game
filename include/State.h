@@ -22,6 +22,8 @@ class State{
         bool PopRequested();
         bool QuitRequested();
 
+        
+    
     
     protected:
         void virtual StartArray();

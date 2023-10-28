@@ -10,8 +10,16 @@
 #include "Component.h"
 #include "Sound.h"
 #include "Sprite.h"
-
+#include "Vec2.h"
 #include "Skill.h"
+
+#define AP_POS Vec2( 75, RESOLUTION_HEIGHT * 2/3 + 50) 
+
+#define PROTECTED_POS Vec2( 250, RESOLUTION_HEIGHT * 2/3 + 75) 
+
+#define SKILL_N_OFFSET Vec2( 450, RESOLUTION_HEIGHT * 2/3 + 75) 
+
+#define SKILL_D_OFFSET Vec2( 200, RESOLUTION_HEIGHT * 2/3 + 75) //x = distance between normal and djinn skills
 
 #define UI_SCREEN_SPRITE "assets/img/UI/uiBottomScreen.png"
 
@@ -19,7 +27,8 @@ class UI : public Component{
 
   public:
     UI(GameObject &associated,
-       std::vector<std::shared_ptr<Skill>> SkillNormalArray);
+       std::vector<Skill::SkillId> SkillNormalArray,
+       std::vector<Skill::SkillId> SkillDjinArray);
 
     ~UI();
     void Update(float dt);
@@ -29,14 +38,14 @@ class UI : public Component{
     void Resume();
     bool Is(std::string type);
 
-    void AddSkill(std::shared_ptr<Skill> skill);
+    void AddSkill(Skill::SkillId skill);
 
   private:
-    std::vector<std::shared_ptr<Skill>> SkillNormalArray;
+    std::vector<Skill::SkillId> SkillNormalArray;
     //int nSkillNormal;
-    //std::vector<std::weak_ptr<GameObject>> SkillDjinArray;
+    std::vector<Skill::SkillId> SkillDjinArray;
     //int nSkillDjinn;
 
     
 
-};
+}; 

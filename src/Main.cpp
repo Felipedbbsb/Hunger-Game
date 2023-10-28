@@ -1,7 +1,9 @@
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include "Game.h"
-#include "TitleState.h"
+#include "CombatState.h"
+#include "Enemies.h"
+#include "Skill.h"
 
 #include <iostream>
 #include <exception>
@@ -11,7 +13,21 @@ int main(int argc, char** argv) {
         // ======================== Game happens here ===============================
         Game& game = Game::GetInstance();
 
-        TitleState* initialState = new TitleState();
+        // Populate the map with skill information during initialization.
+        Skill::InitializeSkillInfoMap();
+
+        // Populate the map with enemies information during initialization.
+        Enemies::InitializeEnemyInfoMap();
+
+        // ==========Enemies array==============
+        std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
+                                                       Enemies::ENEMY2, 
+                                                       Enemies::ENEMY3, 
+                                                       Enemies::ENEMY4 };
+
+        CombatState* initialState = new CombatState(enemiesArray); // Pass the enemiesArray
+
+        
         game.Push(initialState);
 
         game.Run();

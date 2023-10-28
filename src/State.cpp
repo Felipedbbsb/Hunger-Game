@@ -2,7 +2,7 @@
 
 State::State() : 
     popRequested(false),
-    quitRequested(false),
+    quitRequested(false), 
     started(false)
 {}
 
@@ -15,7 +15,7 @@ std::weak_ptr<GameObject> State::AddObject(GameObject* go){
     std::weak_ptr<GameObject> created_go(tmp);
     return created_go;
 }
-
+ 
 std::weak_ptr<GameObject> State::GetObjectPtr(GameObject *go){
     for (int i = 0; i < (int)objectArray.size(); i++){
         if (go == objectArray[i].get()){
@@ -97,3 +97,7 @@ void State::RenderArray(){
         objectArray[i]->Render();
     }
 } 
+
+
+
+

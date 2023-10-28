@@ -1,5 +1,4 @@
-dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
- include/TitleState.h include/State.h include/GameObject.h \
+dep/Tag.d bin/Tag.o: src/Tag.cpp include/Tag.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\c++config.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\os_defines.h \
@@ -97,13 +96,9 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\istream \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\istream.tcc \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\memory \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_construct.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_uninitialized.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_bvector.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\vector.tcc \
- include/Rect.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\memory \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tempbuf.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_raw_storage_iter.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\typeinfo \
@@ -122,9 +117,14 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\shared_ptr_atomic.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\atomic_base.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\backward\auto_ptr.h \
- include/Vec2.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\math.h \
+ include/GameObject.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_bvector.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\vector.tcc \
+ include/Rect.h include/Vec2.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\math.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\cmath c:\mingw\include\math.h \
- include/Component.h include/Sprite.h include/SDL_include.h \
+ include/Component.h include/Sound.h include/SDL_include.h \
  C:/SDL2/include/SDL2/SDL.h C:/SDL2/include/SDL2/SDL_main.h \
  C:/SDL2/include/SDL2/SDL_stdinc.h C:/SDL2/include/SDL2/SDL_config.h \
  C:/SDL2/include/SDL2/SDL_platform.h C:/SDL2/include/SDL2/begin_code.h \
@@ -186,9 +186,10 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  C:/SDL2/include/SDL2/SDL_shape.h C:/SDL2/include/SDL2/SDL_system.h \
  C:/SDL2/include/SDL2/SDL_timer.h C:/SDL2/include/SDL2/SDL_version.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
+ C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h \
- include/InputManager.h \
+ include/Timer.h include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/Game.h include/State.h include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -198,21 +199,9 @@ dep/TitleState.d bin/TitleState.o: src/TitleState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Sound.h \
- C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h include/Mother.h \
- include/Daughter.h
+ include/Reader.h
 
-include/TitleState.h:
-
-include/State.h:
-
-include/GameObject.h:
+include/Tag.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:
 
@@ -418,21 +407,11 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\istream:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\istream.tcc:
 
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\memory:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_construct.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_uninitialized.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_bvector.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\vector.tcc:
-
-include/Rect.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\memory:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tempbuf.h:
 
@@ -470,6 +449,18 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\atomic_base.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\backward\auto_ptr.h:
 
+include/GameObject.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_bvector.h:
+
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\vector.tcc:
+
+include/Rect.h:
+
 include/Vec2.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\math.h:
@@ -480,7 +471,7 @@ c:\mingw\include\math.h:
 
 include/Component.h:
 
-include/Sprite.h:
+include/Sound.h:
 
 include/SDL_include.h:
 
@@ -656,15 +647,23 @@ C:/SDL2/include/SDL2/SDL_locale.h:
 
 C:/SDL2/include/SDL2/SDL_misc.h:
 
+C:/SDL2/include/SDL2/SDL_mixer.h:
+
+include/Sprite.h:
+
 C:/SDL2/include/SDL2/SDL_image.h:
 
 C:/SDL2/include/SDL2/SDL.h:
 
 include/Timer.h:
 
-include/Game.h:
+include/Text.h:
 
 C:/SDL2/include/SDL2/SDL_ttf.h:
+
+include/Game.h:
+
+include/State.h:
 
 include/InputManager.h:
 
@@ -686,32 +685,4 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 
-include/CameraFollower.h:
-
-include/Camera.h:
-
-include/Text.h:
-
-include/UI.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
-
-c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
-
-include/Sound.h:
-
-C:/SDL2/include/SDL2/SDL_mixer.h:
-
-include/Skill.h:
-
-include/Mother.h:
-
-include/Daughter.h:
+include/Reader.h:
