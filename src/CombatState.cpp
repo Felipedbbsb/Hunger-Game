@@ -1,4 +1,5 @@
 #include "CombatState.h"
+#include "InteractionState.h"
 #include "Game.h"
 #include "InputManager.h" 
 #include "CameraFollower.h"
@@ -10,6 +11,9 @@
 #include "Enemies.h"
 #include "Skill.h" 
 
+bool CombatState::InteractionSCreenActivate = false;
+
+
 CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray) 
 : State::State(),
 enemiesArray(enemiesArray){
@@ -20,9 +24,17 @@ CombatState::~CombatState(){}
 void CombatState::Update(float dt){   
     InputManager& input = InputManager::GetInstance();
 
+    Camera::Update(dt);
+ 
     // If the event is quit, set the termination flag
     if ((input.KeyPress(ESCAPE_KEY)) || input.QuitRequested()){
         quitRequested = true;
+    }
+
+    if (CombatState::InteractionSCreenActivate){
+        InteractionState* new_stage = new InteractionState();
+        Game::GetInstance().Push(new_stage); 
+        
     }
 
 
@@ -56,6 +68,8 @@ void CombatState::LoadAssets(){
 
     UI* ui_behaviour = new UI(*ui, skillArrayNormal, skillArrayDjinn); 
     ui->AddComponent((std::shared_ptr<UI>)ui_behaviour); 
+    CameraFollower *bg_cmfl = new CameraFollower(*ui);
+    ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
     AddObject(ui);
 
     //============================ Mother ========================================
@@ -97,3 +111,4 @@ void CombatState::Pause(){}
 void CombatState::Resume(){
 
 }
+

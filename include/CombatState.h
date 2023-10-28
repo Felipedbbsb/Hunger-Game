@@ -33,7 +33,7 @@ class CombatState : public State{
         void Pause();
         void Resume();
 
-        
+        static bool InteractionSCreenActivate;
 
     private:
         std::vector<Enemies::EnemyId> enemiesArray;    

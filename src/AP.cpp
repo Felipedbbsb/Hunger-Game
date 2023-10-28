@@ -5,6 +5,7 @@
 #include "GameData.h"
 #include "Enemies.h"
 #include "Sprite.h"
+#include "CameraFollower.h"
 #include <algorithm> 
 
 std::vector<std::shared_ptr<GameObject>> AP::apArray;
@@ -23,6 +24,10 @@ AP::AP(GameObject &associated)
         std::string spritePath = (apCount > i) ? AP_FULL_SPRITE : AP_EMPTY_SPRITE;
         std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apObj, spritePath); // Use shared_ptr
         apObj->AddComponent(ap_spr);
+
+        std::shared_ptr<CameraFollower> ap_UI_cmfl = std::make_shared<CameraFollower>(*apObj);
+        apObj->AddComponent(ap_UI_cmfl);
+
         Game::GetInstance().GetCurrentState().AddObject(apObj.get());
 
         apArray.push_back(apObj);

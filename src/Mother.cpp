@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Game.h"
 #include "Protected.h" 
+#include "CombatState.h"
 
 int Mother::hp = MOTHER_HP; 
 std::vector<Tag::Tags> Mother::tags = {};
@@ -150,6 +151,7 @@ void Mother::Update(float dt)
                             Protected::isProtected = false;
                         } 
 
+                        CombatState::InteractionSCreenActivate = true;
                     } 
                 }
                 else{

@@ -197,7 +197,7 @@ dep/LifeBar.d bin/LifeBar.o: src/LifeBar.cpp include/LifeBar.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/text.h
+ include/Camera.h include/text.h
 
 include/LifeBar.h:
 
@@ -682,5 +682,7 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
+
+include/Camera.h:
 
 include/text.h:

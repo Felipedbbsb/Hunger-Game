@@ -210,7 +210,7 @@ dep/UI.d bin/UI.o: src/UI.cpp include/UI.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/Camera.h include/Protected.h
+ include/Camera.h include/Protected.h include/CameraFollower.h
 
 include/UI.h:
 
@@ -725,3 +725,5 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 include/Camera.h:
 
 include/Protected.h:
+
+include/CameraFollower.h:

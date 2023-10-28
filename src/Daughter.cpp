@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Game.h"
 #include "Protected.h" 
-
+#include "CombatState.h"
 
 
 
@@ -153,6 +153,8 @@ void Daughter::Update(float dt)
                         else if(tempSkillInfo.isProtected == Skill::StateProtected::EXPOSED){
                             Protected::isProtected = false;
                         }
+
+                        CombatState::InteractionSCreenActivate = true;
 
                     } 
                 }

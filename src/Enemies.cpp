@@ -9,6 +9,7 @@
 #include "GameData.h" 
 #include "Mother.h"
 #include "Daughter.h"  
+#include "CombatState.h"
 #include <algorithm> 
 
 #ifdef DEBUG
@@ -102,6 +103,10 @@ Enemies::~Enemies() {
 }
 
 void Enemies::Update(float dt) {
+    if(CombatState::InteractionSCreenActivate){
+        return;
+    }
+
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
@@ -172,7 +177,8 @@ void Enemies::Update(float dt) {
                 if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
-                        ApplySkillToEnemy();  
+                        ApplySkillToEnemy();
+                        CombatState::InteractionSCreenActivate = true;  
                     }
                 } 
             } 
@@ -202,6 +208,7 @@ void Enemies::Update(float dt) {
                 std::swap(skills[randomSkillIndex], skills.back());
                 
                 // Now, the selected skill is in the last position of the vector
+                //TODO
                 Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
             }
 
@@ -220,7 +227,6 @@ void Enemies::Update(float dt) {
                     Skill::playerTargetType = Skill::TargetType::MOTHER;
                 }
             }
-
 
 
             enemyAttacking = true;
@@ -269,7 +275,10 @@ void Enemies::Update(float dt) {
                     ApplySkillToAllEnemies();
                 }   
                 intentionTimer.Restart(); 
+
+                CombatState::InteractionSCreenActivate = true;
             }
+
             
             
         }
@@ -290,7 +299,9 @@ void Enemies::Update(float dt) {
         if(Skill::selectedSkillEnemy != nullptr){
             DeleteIntention();
         }
+        
     }
+        
 
 }
  

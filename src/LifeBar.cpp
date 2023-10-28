@@ -1,5 +1,6 @@
 #include "LifeBar.h"
 #include "Game.h"
+#include "Camera.h"
 #include "Reader.h"
 #include "text.h"
 #include <cmath>
@@ -27,6 +28,8 @@ void LifeBar::Start() {
 }
 
 void LifeBar::Update(float dt) { 
+    lifeBarRect.x = posx + Camera::pos.x; 
+    lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET + Camera::pos.y);
 }
 
 void LifeBar::Render() {
