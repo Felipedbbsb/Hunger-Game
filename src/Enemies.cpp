@@ -109,19 +109,34 @@ void Enemies::Update(float dt) {
     
 //=============================//=============================//=============================//=============================
     //Iterator for all skill types, counts number of left enemies to receive skill from player
-    if(SkillAllenemies > 0 && GameData::playerTurn == true){
+    if(SkillAllenemies > 0){
         Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[selectedSkill->GetId()];
-        if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
-            ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
-        }
+        if(GameData::playerTurn == true){
+            if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
+                ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
+            }
         
-        SkillAllenemies -= 1; //less one enemy to receive skill
-        if(SkillAllenemies == 0){ //no more enemies
-            AP::apCount -= tempSkillInfo.apCost;
-            selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
-            selectedSkill->Deselect();
+            SkillAllenemies -= 1; //less one enemy to receive skill
+            if(SkillAllenemies == 0){ //no more enemies
+                AP::apCount -= tempSkillInfo.apCost;
+                selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
+                selectedSkill->Deselect();
+            }
         }
+        //ENEMY TURN
+        else{
+            ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
+            SkillAllenemies -= 1; //less one enemy to receive skill
+            if(SkillAllenemies == 0){ //no more enemies
+                selectedSkill->Deselect();
+                enemyAttacking = false;
+                DeleteIntention();
+            }
+        }
+
     }
+
+                    
 
 
 
@@ -251,7 +266,7 @@ void Enemies::Update(float dt) {
                     DeleteIntention();
                 }
                 else if(tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL){
-
+                    ApplySkillToAllEnemies();
                 }   
                 intentionTimer.Restart(); 
             }
