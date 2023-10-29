@@ -55,6 +55,8 @@ class Enemies : public Component {
         void Resume();
         bool Is(std::string type); 
 
+        void SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks);
+
         void CreateEnemyIndicator();
         void DeleteEnemyIndicator();
         
@@ -82,6 +84,9 @@ class Enemies : public Component {
         static int provokedEnemies;
         static int enemiesToAttack;
         static bool enemyAttacking;
+
+        // Used for attacks involving more then one target
+        static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
         
     
     private:
@@ -104,8 +109,7 @@ class Enemies : public Component {
         
         std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from enemytags
  
-        // Used for attacks involving more then one target
-        static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
+        
 
         Timer intentionTimer;
 

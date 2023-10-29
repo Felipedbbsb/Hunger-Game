@@ -213,7 +213,8 @@ dep/InteractionState.d bin/InteractionState.o: src/InteractionState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
- include/Mother.h include/Daughter.h include/CombatState.h
+ include/Mother.h include/Daughter.h include/CombatState.h \
+ include/GameData.h
 
 include/InteractionState.h:
 
@@ -744,3 +745,5 @@ include/Mother.h:
 include/Daughter.h:
 
 include/CombatState.h:
+
+include/GameData.h:

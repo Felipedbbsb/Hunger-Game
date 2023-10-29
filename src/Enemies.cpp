@@ -119,23 +119,31 @@ void Enemies::Update(float dt) {
         if(GameData::playerTurn == true){
             if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
                 ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
+                CombatState::enemiesArrayIS.push_back(id);
             }
         
             SkillAllenemies -= 1; //less one enemy to receive skill
+            
             if(SkillAllenemies == 0){ //no more enemies
                 AP::apCount -= tempSkillInfo.apCost;
                 selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                 selectedSkill->Deselect();
+
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
             }
         }
         //ENEMY TURN
         else{
             ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
             SkillAllenemies -= 1; //less one enemy to receive skill
+            CombatState::enemiesArrayIS.push_back(id);
             if(SkillAllenemies == 0){ //no more enemies
                 selectedSkill->Deselect();
                 enemyAttacking = false;
                 DeleteIntention();
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
             }
         }
 
@@ -150,7 +158,6 @@ void Enemies::Update(float dt) {
 
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
-        DeleteEnemyIndicator();
         associated.RequestDelete();
         return; // Early exit if the enemy is no longer alive
 
@@ -178,7 +185,7 @@ void Enemies::Update(float dt) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
                         ApplySkillToEnemy();
-                        CombatState::InteractionSCreenActivate = true;  
+
                     }
                 } 
             } 
@@ -194,7 +201,7 @@ void Enemies::Update(float dt) {
     //ENEMY TURN
     else{
         
-
+        DeleteEnemyIndicator();
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
         if(!enemyAttacking && !thisEnemyAttacked && Skill::selectedSkill == nullptr){
@@ -208,7 +215,6 @@ void Enemies::Update(float dt) {
                 std::swap(skills[randomSkillIndex], skills.back());
                 
                 // Now, the selected skill is in the last position of the vector
-                //TODO
                 Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
             }
 
@@ -270,13 +276,15 @@ void Enemies::Update(float dt) {
                     Skill::selectedSkill = nullptr;
                     enemyAttacking = false;
                     DeleteIntention();
+                    CombatState::enemiesArrayIS.push_back(id);
+                    SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
                 }
                 else if(tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL){
                     ApplySkillToAllEnemies();
                 }   
                 intentionTimer.Restart(); 
 
-                CombatState::InteractionSCreenActivate = true;
             }
 
             
@@ -303,6 +311,13 @@ void Enemies::Update(float dt) {
     }
         
 
+}
+
+
+void Enemies::SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks){
+    CombatState::InteractionSCreenActivate = true;
+    CombatState::attackType = attackType;
+    CombatState::whoAttacks = whoAttacks;
 }
  
 void Enemies::CreateEnemyIndicator() {
@@ -360,6 +375,10 @@ void Enemies::ApplySkillToEnemy() {
         AP::apCount -= tempSkillInfo.apCost;
         selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
         selectedSkill->Deselect();
+        CombatState::enemiesArrayIS.push_back(id);
+        SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+        DeleteEnemyIndicator();
+
     }
 
 

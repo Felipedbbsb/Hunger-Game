@@ -94,6 +94,9 @@ void Mother::Update(float dt)
                 ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
                 Skill::selectedSkillEnemy = nullptr;
                 Enemies::enemyAttacking = false;
+
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
             }
         }
 
@@ -151,7 +154,8 @@ void Mother::Update(float dt)
                             Protected::isProtected = false;
                         } 
 
-                        CombatState::InteractionSCreenActivate = true;
+                        SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
                     } 
                 }
                 else{
@@ -177,6 +181,18 @@ void Mother::Update(float dt)
     }    
 }
 
+void Mother::SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks){
+    CombatState::InteractionSCreenActivate = true;
+    CombatState::attackType = attackType;
+    CombatState::whoAttacks = whoAttacks;
+    if(whoAttacks == Skill::TargetType::MOTHER){
+        CombatState::whoReceives = Skill::TargetType::DAUGHTER;
+    }
+    else{
+        CombatState::whoReceives = Skill::TargetType::MOTHER;
+    }
+    
+}
 
 void Mother::CreateIndicator() {
     indicator = new GameObject(motherHitbox.x, motherHitbox.y + motherHitbox.h);

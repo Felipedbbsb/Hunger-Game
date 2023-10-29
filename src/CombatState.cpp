@@ -13,6 +13,14 @@
 
 bool CombatState::InteractionSCreenActivate = false;
 
+std::vector<Enemies::EnemyId> CombatState::enemiesArrayIS = {};
+
+Skill::AttackType CombatState::attackType = Skill::AttackType::NONE;
+
+Skill::TargetType CombatState::whoAttacks = Skill::TargetType::IRR;
+
+Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR probably palyer is attacking
+
 
 CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray) 
 : State::State(),
@@ -32,7 +40,10 @@ void CombatState::Update(float dt){
     }
 
     if (CombatState::InteractionSCreenActivate){
-        InteractionState* new_stage = new InteractionState();
+        InteractionState* new_stage = new InteractionState(CombatState::enemiesArrayIS,
+                                                          CombatState::attackType,
+                                                          CombatState::whoAttacks,
+                                                          CombatState::whoReceives);
         Game::GetInstance().Push(new_stage); 
         
     }
@@ -109,6 +120,10 @@ void CombatState::Start(){
 void CombatState::Pause(){}
 
 void CombatState::Resume(){
-
+    CombatState::InteractionSCreenActivate = false;
+    CombatState::enemiesArrayIS.clear();
+    CombatState::attackType = Skill::AttackType::NONE;
+    CombatState::whoAttacks = Skill::TargetType::IRR;
+    CombatState::whoReceives = Skill::TargetType::IRR;
 }
 

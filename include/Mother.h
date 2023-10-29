@@ -33,6 +33,8 @@ class Mother : public Component{
     void Resume();
     bool Is(std::string type);
 
+    void SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks);
+
     void CreateIndicator();
     void DeleteIndicator();
     void CreateIntention();

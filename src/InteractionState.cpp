@@ -10,8 +10,9 @@
 #include "Enemies.h"
 #include "Skill.h" 
 #include "CombatState.h"
+#include "GameData.h"
 
-InteractionState::InteractionState() 
+InteractionState::InteractionState(std::vector<Enemies::EnemyId> enemiesArrayIS, Skill::AttackType attackType,Skill::TargetType whoAttacks, Skill::TargetType whoReceives) 
 : State::State(), interactionTime(){
 } 
   
@@ -27,11 +28,6 @@ void InteractionState::Update(float dt){
         quitRequested = true;
     }
 
-
-    if (input.KeyPress(W_KEY)){
-        popRequested = true; 
-
-    }
 
     interactionTime.Update(dt);
     if(interactionTime.Get() >= INTERECTION_COOLDOWN){
@@ -50,6 +46,14 @@ void InteractionState::LoadAssets(){
     Sprite* menuSprite= new Sprite(*bg, PAPIRO_SPRITE);
     bg->AddComponent((std::shared_ptr<Component>)menuSprite);
     AddObject(bg);
+
+
+    if(GameData::playerTurn == true){
+
+    }
+    else{
+            
+    }
 
     
 }

@@ -94,6 +94,7 @@ void Daughter::Update(float dt)
                 ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                 Skill::selectedSkillEnemy = nullptr;
                 Enemies::enemyAttacking = false;
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
             }
         }
 
@@ -154,7 +155,7 @@ void Daughter::Update(float dt)
                             Protected::isProtected = false;
                         }
 
-                        CombatState::InteractionSCreenActivate = true;
+                        SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
 
                     } 
                 }
@@ -178,6 +179,19 @@ void Daughter::Update(float dt)
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
+}
+
+
+void Daughter::SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks){
+    CombatState::InteractionSCreenActivate = true;
+    CombatState::attackType = attackType;
+    CombatState::whoAttacks = whoAttacks;
+    if(whoAttacks == Skill::TargetType::DAUGHTER){
+        CombatState::whoReceives = Skill::TargetType::MOTHER;
+    }
+    else{
+        CombatState::whoReceives = Skill::TargetType::DAUGHTER;
+    }
 }
 
 void Daughter::CreateIndicator() {

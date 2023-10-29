@@ -34,6 +34,10 @@ class CombatState : public State{
         void Resume();
 
         static bool InteractionSCreenActivate;
+        static std::vector<Enemies::EnemyId> enemiesArrayIS;
+        static Skill::AttackType attackType;
+        static Skill::TargetType whoAttacks ;
+        static Skill::TargetType whoReceives;
 
     private:
         std::vector<Enemies::EnemyId> enemiesArray;    

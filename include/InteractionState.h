@@ -20,7 +20,10 @@
 
 class InteractionState : public State{
     public:
-        InteractionState();
+        InteractionState(std::vector<Enemies::EnemyId> enemiesArrayIS, 
+                        Skill::AttackType attackType, 
+                        Skill::TargetType whoAttacks, 
+                        Skill::TargetType whoReceives);
         ~InteractionState();
         void LoadAssets();
         void Update(float dt);
