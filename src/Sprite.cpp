@@ -180,8 +180,22 @@ void Sprite::SetFrameTime(float frameTime){
 
 void Sprite::SetSelfDestruct(float frameTime){   
     this->secondsToSelfDestruct = secondsToSelfDestruct;
-}
+} 
 
 bool Sprite::Is(std::string type){
     return (type == "Sprite");
 }
+
+Sprite::Sprite(GameObject &associated, SDL_Texture *texture) : Component::Component(associated),
+texture(texture),
+scale(Vec2(1, 1)),
+currentFrame(0),
+timeElapsed(0),
+alpha(255),
+isDesaturated(false){
+    
+}
+
+void Sprite::SetTexture(SDL_Texture* texture) {
+    this->texture = texture;
+}    

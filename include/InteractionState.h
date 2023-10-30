@@ -1,8 +1,5 @@
 #pragma once
-
-#define PAPIRO_SPRITE "assets/img/UI/uiInteractionMargin.png"
-#define FONT_COLOR {200, 200, 200, 0} // Red Green Blue Alpha
-#define COMBAT_TEXT "PRESS SPACEBAR TO PLAY"
+#define PAPIRO_VELOCITY 50
 
 #define INTERECTION_COOLDOWN 2.5
 
@@ -33,6 +30,12 @@ class InteractionState : public State{
         void Resume();
 
     private:
-        Timer interactionTime;    
+        Timer interactionTime;  
+
+        SDL_Texture* screenTexture; // A textura para a tela atual
+        SDL_Texture* screenBackup; // A textura para a tela de backup 
+        
+        void CopyScreenToBackup();
 
 };
+ 

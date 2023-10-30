@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
                                                        Enemies::ENEMY3, 
                                                        Enemies::ENEMY4 };
 
-        CombatState* initialState = new CombatState(enemiesArray); // Pass the enemiesArray
+        CombatState* initialState = new CombatState(enemiesArray, COMBAT_IMAGE); // Pass the enemiesArray
 
         
         game.Push(initialState);

@@ -6,15 +6,16 @@
 #include "Camera.h"
 #include "Text.h"
 #include "UI.h"
-#include "Mother.h"
+#include "Mother.h" 
 #include "Daughter.h"
-#include "Enemies.h"
+#include "Enemies.h" 
 #include "Skill.h" 
+#include "Papiro.h" 
 
 bool CombatState::InteractionSCreenActivate = false;
 
 std::vector<Enemies::EnemyId> CombatState::enemiesArrayIS = {};
-
+ 
 Skill::AttackType CombatState::attackType = Skill::AttackType::NONE;
 
 Skill::TargetType CombatState::whoAttacks = Skill::TargetType::IRR;
@@ -22,10 +23,11 @@ Skill::TargetType CombatState::whoAttacks = Skill::TargetType::IRR;
 Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR probably palyer is attacking
 
 
-CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray) 
+CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string spriteBackground) 
 : State::State(),
-enemiesArray(enemiesArray){
-} 
+enemiesArray(enemiesArray),
+papiro(nullptr),
+spriteBackground(spriteBackground){} 
   
 CombatState::~CombatState(){}
 
@@ -39,26 +41,44 @@ void CombatState::Update(float dt){
         quitRequested = true;
     }
 
-    if (CombatState::InteractionSCreenActivate){
-        InteractionState* new_stage = new InteractionState(CombatState::enemiesArrayIS,
-                                                          CombatState::attackType,
-                                                          CombatState::whoAttacks,
-                                                          CombatState::whoReceives);
-        Game::GetInstance().Push(new_stage); 
+    //if (CombatState::InteractionSCreenActivate){
+    //    InteractionState* new_stage = new InteractionState(CombatState::enemiesArrayIS,
+    //                                                      CombatState::attackType,
+   //                                                       CombatState::whoAttacks,
+    //                                                      CombatState::whoReceives);
+        //Game::GetInstance().Push(new_stage); 
         
-    }
+    //}
 
 
     //============================ Checks whether to delete objects and updates ========================================
-    UpdateArray(dt);
+    if(!CombatState::InteractionSCreenActivate){
+       UpdateArray(dt);
+       papiro = nullptr; 
+    }
+    else{
+        if(papiro == nullptr){
+            papiro = new GameObject();
+            Papiro* papiro_behaviour = new Papiro(*papiro,      CombatState::enemiesArrayIS,
+                                                        CombatState::attackType,
+                                                        CombatState::whoAttacks,
+                                                        CombatState::whoReceives);
+            papiro->AddComponent((std::shared_ptr<Component>)papiro_behaviour);
+            AddObject(papiro);
+        }
+        else{
+            papiro->Update(dt);
+        }
+    }
     
+     
 }
 
 void CombatState::LoadAssets(){
     //============================ Background ========================================
     GameObject *bg = new GameObject();
-    Sprite* menuSprite= new Sprite(*bg, COMBAT_IMAGE);
-    bg->AddComponent((std::shared_ptr<Component>)menuSprite);
+    Sprite* bgSprite= new Sprite(*bg, spriteBackground);
+    bg->AddComponent((std::shared_ptr<Component>)bgSprite);
     AddObject(bg);
 
     //============================ UI ========================================

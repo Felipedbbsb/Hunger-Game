@@ -42,10 +42,10 @@ void Protected::Update(float dt){
         Protected_spr->SetScale(0.5, 0.5);
         associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
     }
-
+ 
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
-
+ 
 
     if(associated.box.Contains(mousePos.x, mousePos.y)){
         ShowReader();

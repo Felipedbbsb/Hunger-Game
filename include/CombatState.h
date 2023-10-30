@@ -1,6 +1,6 @@
 #pragma once
 
-#define COMBAT_IMAGE "assets/img/backgrounds/backgroundTemple.png"
+
 #define FONT_COLOR {200, 200, 200, 0} // Red Green Blue Alpha
 #define COMBAT_TEXT "PRESS SPACEBAR TO PLAY"
 
@@ -9,7 +9,7 @@
 #define DAUGHTER_POS Vec2(200, RESOLUTION_HEIGHT * 2/3 + OBJECT_STATS_OFFSET)
 #define ENEMIES_POS1 Vec2(1100, RESOLUTION_HEIGHT * 2/3 + OBJECT_STATS_OFFSET)//enemies separeted by x, pos1 only sets the first in the array
 
-#define OBJECT_STATS_OFFSET -55
+#define OBJECT_STATS_OFFSET -75
 
 #include <iostream>
 #include <memory>
@@ -24,7 +24,7 @@
 
 class CombatState : public State{
     public:
-        CombatState(std::vector<Enemies::EnemyId>);
+        CombatState(std::vector<Enemies::EnemyId>, std::string spriteBackground);
         ~CombatState();
         void LoadAssets();
         void Update(float dt);
@@ -40,5 +40,7 @@ class CombatState : public State{
         static Skill::TargetType whoReceives;
 
     private:
-        std::vector<Enemies::EnemyId> enemiesArray;    
+        std::vector<Enemies::EnemyId> enemiesArray;  
+        GameObject* papiro;  
+        std::string spriteBackground;
 };

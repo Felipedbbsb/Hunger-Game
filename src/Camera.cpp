@@ -17,8 +17,8 @@ void Camera::Update(float dt) {
         speed.y = static_cast<float>((input.IsKeyDown(DOWN_ARROW_KEY) - input.IsKeyDown(UP_ARROW_KEY)) * CAMERA_SPEED);
     }
     else {
-        pos.x = -(focus->box.GetCenter().x) + (SCREEN_WIDTH / 2);
-        pos.y = -(focus->box.GetCenter().y) + (SCREEN_HEIGHT / 2);
+        pos.x = -(focus->box.GetCenter().x) + (RESOLUTION_WIDTH / 2);
+        pos.y = -(focus->box.GetCenter().y) + (RESOLUTION_HEIGHT / 2);
     }
 
     pos.x += dt * speed.x;

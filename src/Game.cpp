@@ -97,13 +97,13 @@ bool Game::CreateWindowAndRenderer(const std::string& title, int width, int heig
     
     if (renderer == nullptr) {
         throw std::runtime_error("Failed to create renderer");
-    } 
-
+    }  
+ 
  
     //Render logical size, rezise screen based on resolution screen
-    float resizer = (float)RESOLUTION_WIDTH / SCREEN_WIDTH;
+    float resizer = (float)RESOLUTION_WIDTH / width;
     std::cout <<"Proporcao de resolucao e tela ficou de: " << resizer << std::endl;
-    if(SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH  * resizer, SCREEN_HEIGHT * resizer)){
+    if(SDL_RenderSetLogicalSize(renderer, width  * resizer, height * resizer)){
         throw std::runtime_error("Failed to create renderer resized");
     }
 
@@ -200,12 +200,12 @@ void Game::Run() {
 
             
         }
-
+ 
         // Check if there's a stored state to push
-        if (storedState != nullptr) {
+        if (storedState != nullptr) { 
             if (!stateStack.empty()) {
                 stateStack.top()->Pause();
-            }
+            } 
             stateStack.push((std::unique_ptr<State>)storedState); // Use std::move to transfer ownership
             stateStack.top()->Start();
             storedState = nullptr;
@@ -218,12 +218,12 @@ void Game::Run() {
         InputManager::GetInstance().Update();
         auto& currentTopState = stateStack.top();
         currentTopState->Update(dt);
-        currentTopState->Render();
+        currentTopState->Render(); 
         SDL_RenderPresent(Game::GetInstance().GetRenderer());
     }   
 
    
-    Resources::ClearImages();
+    Resources::ClearImages(); 
     Resources::ClearMusics();
     Resources::ClearSounds();
     Resources::ClearFonts();
@@ -241,3 +241,20 @@ void Game::CalculateDeltaTime(){
 }
 
 float Game::GetDeltaTime(){return dt;} 
+
+
+
+void Game::TakeScreenshot(std::string filename) {
+    SDL_Surface* screenshotSurface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+    if (screenshotSurface) {
+        SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, screenshotSurface->pixels, screenshotSurface->pitch);
+        IMG_SavePNG(screenshotSurface, filename.c_str());
+        SDL_FreeSurface(screenshotSurface);
+    }
+}
+
+
+
+
+
+
