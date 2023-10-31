@@ -1,5 +1,4 @@
 #include "CombatState.h"
-#include "InteractionState.h"
 #include "Game.h"
 #include "InputManager.h" 
 #include "CameraFollower.h"
@@ -59,7 +58,7 @@ void CombatState::Update(float dt){
     else{
         if(papiro == nullptr){
             papiro = new GameObject();
-            Papiro* papiro_behaviour = new Papiro(*papiro,      CombatState::enemiesArrayIS,
+            Papiro* papiro_behaviour = new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
                                                         CombatState::attackType,
                                                         CombatState::whoAttacks,
                                                         CombatState::whoReceives);

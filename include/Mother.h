@@ -18,6 +18,8 @@
 #define MOTHER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 
 #define MOTHER_SPRITE "assets/img/mom/momIdle.png"
+#define MOTHER_FC 6
+#define MOTHER_FT 1.0
 
 #define MOTHER_HP 50
 

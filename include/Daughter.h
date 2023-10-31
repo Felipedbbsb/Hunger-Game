@@ -18,6 +18,8 @@
 #define DAUGHTER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 
 #define DAUGHTER_SPRITE "assets/img/daughter/daughterIdle.png"
+#define DAUGHTER_FC 7
+#define DAUGHTER_FT 1.0
 
 #define DAUGHTER_HP 27
 

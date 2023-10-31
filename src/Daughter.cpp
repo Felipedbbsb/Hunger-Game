@@ -31,25 +31,25 @@ tagSpaceCount(0){
 
 void Daughter::Start() 
 {
-    Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE);
+    Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
     associated.AddComponent((std::shared_ptr<Sprite>)daughter_spr); 
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
     daughterHitbox = Rect(associated.box.x, associated.box.y, 130, associated.box.h);
+ 
+    associated.box.x -= (associated.box.w/DAUGHTER_FC - daughterHitbox.w )/2;
 
-    associated.box.x -= (associated.box.w - daughterHitbox.w )/2;
-
-    //==================================LifeBar====================================
+    //==================================LifeBar========= ===========================
     lifeBarDaughter = new LifeBar(associated, hp, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarDaughter));
 
     //If enemies starts with tags
-    ApplyTags(tags);
-
-    lifeBarDaughter->SetCurrentHP(hp); 
-
-}
+    ApplyTags(tags);   
+ 
+    lifeBarDaughter->SetCurrentHP(hp);  
+ 
+} 
  
 Daughter::~Daughter()
 {

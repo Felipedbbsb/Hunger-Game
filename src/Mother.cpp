@@ -29,14 +29,14 @@ tagSpaceCount(0){
 
 void Mother::Start() 
 {
-    Sprite *mother_spr = new Sprite(associated, MOTHER_SPRITE);
+    Sprite *mother_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
     associated.AddComponent((std::shared_ptr<Sprite>)mother_spr); 
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
     motherHitbox = Rect(associated.box.x, associated.box.y, 130, associated.box.h);
 
-    associated.box.x -= (associated.box.w - motherHitbox.w )/2;
+    associated.box.x -= (associated.box.w/MOTHER_FC - motherHitbox.w )/2;
 
     //==================================LifeBar====================================
     lifeBarMother = new LifeBar(associated, hp, hp, motherHitbox.w, motherHitbox.x); //width from hitbox

@@ -19,13 +19,13 @@
 #define PAPIRO_ENEMY_SPRITE "assets/img/UI/PapiroEnemy.png"
 #define PAPIRO_PLAYER_SPRITE "assets/img/UI/PapiroPlayer.png"
 
-#define PAPIRO_VELOCITY 2000
 
-#define INTERACTION_COOLDOWN 2.5
+#define BG_SCALE 1.25
+#define INTERACTION_COOLDOWN 3
 
 class Papiro : public Component {
     public:
-        Papiro(GameObject &associated,  
+        Papiro(GameObject &associated, std::string spriteBackground,  
                 std::vector<Enemies::EnemyId> enemiesArrayIS, 
                 Skill::AttackType attackType,
                 Skill::TargetType whoAttacks, 
@@ -38,9 +38,11 @@ class Papiro : public Component {
 
 
     private:
-        GameObject* reader;
+        GameObject* background;
+        GameObject* papiro_obj;
 
         float papiroVelocity;
+        float papiroAc;
         std::vector<Enemies::EnemyId> enemiesArrayIS;
         Skill::AttackType attackType;
         Skill::TargetType whoAttacks;
@@ -48,4 +50,8 @@ class Papiro : public Component {
         
         Timer interactionTime;  
 
+        bool movingRight;
+        std::string spriteBackground;
+
+        int backgroundOffsetX;
 };
