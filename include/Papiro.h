@@ -20,7 +20,7 @@
 #define PAPIRO_PLAYER_SPRITE "assets/img/UI/PapiroPlayer.png"
 
 
-#define BG_SCALE 1.25
+#define BG_SCALE 1.0  
 #define INTERACTION_COOLDOWN 3
 
 class Papiro : public Component {
@@ -54,4 +54,6 @@ class Papiro : public Component {
         std::string spriteBackground;
 
         int backgroundOffsetX;
+
+        std::vector<std::weak_ptr<GameObject>> interactionObjects;
 };

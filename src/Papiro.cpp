@@ -6,7 +6,9 @@
 #include "Reader.h"
 #include "GameData.h"
 #include "CombatState.h"
+#include "InteractionObject.h"
 #include <algorithm>
+
 
 Papiro::Papiro(GameObject &associated, std::string spriteBackground, std::vector<Enemies::EnemyId> enemiesArrayIS, Skill::AttackType attackType, Skill::TargetType whoAttacks, Skill::TargetType whoReceives)
     : Component(associated),
@@ -51,25 +53,48 @@ void Papiro::Start() {
     //int centerY = 221 + (638 / 2); // Posição Y do ponto central
 
  
-    background = new GameObject(associated.box.w * 3/4, associated.box.h/4 - 80);
+    background = new GameObject(associated.box.x + 392, 221);
     Sprite *background_spr = new Sprite(*background, spriteBackground);
     background->AddComponent(std::shared_ptr<Sprite>(background_spr));
     
-    background_spr->SetClip(associated.box.w/4, associated.box.h/4, background_spr->GetWidth() * 0.75, background_spr->GetHeight() * 0.75); // Define um ponto central de 1x1 pixel
+    background_spr->SetClip(associated.box.w/4, associated.box.h/4, 1132/BG_SCALE, 638/BG_SCALE); // Define um ponto central de 1x1 pixel
     background_spr->SetScale(BG_SCALE,BG_SCALE);
     //background_spr->SetDesaturation(true);
     Game::GetInstance().GetCurrentState().AddObject(background);
 
     Game::GetInstance().GetCurrentState().AddObject(papiro_obj);
 
-    backgroundOffsetX = 0;
+    //offeset precisely made by sprite reference 
+    backgroundOffsetX = 392; 
     if (!movingRight){
-        background->box.x += 500;
+        backgroundOffsetX = 393;
+    }  
+
+
+
+
+    //Combat interection objects
+    for (const auto &enemyId : enemiesArrayIS) {
+        GameObject* interactionObj = new GameObject();
+        InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, whoAttacks, enemyId);
+        interactionObj->AddComponent(std::shared_ptr<InteractionObject>(interactionObj_behaviour));
+
+        std::weak_ptr<GameObject> go_obj = Game::GetInstance().GetCurrentState().AddObject(interactionObj);
+        interactionObjects.push_back(go_obj);
+
     }
 
-}  
+
+
+
+
+}   
 
 Papiro::~Papiro() {
+    for (int i = interactionObjects.size() - 1; i >= 0; i--) { //remove enemies tags
+            interactionObjects.erase(interactionObjects.begin() + i);
+    }
+
     background->RequestDelete();
     papiro_obj->RequestDelete();
 }
@@ -113,9 +138,15 @@ void Papiro::Update(float dt) {
         } 
    
     }
-    
+
     background->box.x = associated.box.x + backgroundOffsetX;
     papiro_obj->box.x = associated.box.x;
+
+
+    for (auto& interactionObj : interactionObjects) {
+        interactionObj.lock()->box.x = background->box.x;
+    }
+
     interactionTime.Update(dt); 
 }
 

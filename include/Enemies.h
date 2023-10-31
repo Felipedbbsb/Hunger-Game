@@ -43,7 +43,7 @@ class Enemies : public Component {
             std::vector<Skill::SkillId> skills;
         };
 
-
+    
         Enemies(GameObject& associated, 
                 EnemyId id);
  

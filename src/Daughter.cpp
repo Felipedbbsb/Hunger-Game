@@ -23,11 +23,11 @@ bool Daughter::activateWeak = false;
 Daughter::Daughter(GameObject &associated) : 
 Component::Component(associated),
 indicator(nullptr),
-intention(nullptr),
+intention(nullptr), 
 lifeBarDaughter(nullptr),
-tagSpaceCount(0){
-
-}
+tagSpaceCount(0){ 
+ 
+} 
 
 void Daughter::Start() 
 {

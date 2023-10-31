@@ -99,19 +99,19 @@ void Mother::Update(float dt)
 
             }
         }
-
+ 
     }
-
+ 
     //PLAYER TURN
     else{
         
         if(activateRampage){
             ActivateTag(Tag::Tags::RAMPAGE);
             activateRampage = false;
-        }
+        } 
         if(activateWeak){
             ActivateTag(Tag::Tags::WEAK);
-            activateWeak = false;
+            activateWeak = false; 
         }
 
         //--------------Intention manager------------------
