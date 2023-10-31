@@ -265,7 +265,8 @@ void Enemies::Update(float dt) {
                         if (HasTag(Tag::Tags::WEAK)){
                             ActivateTag(Tag::Tags::WEAK);
                             hasWeak = true;
-                        }
+                        } 
+                        CombatState::enemiesArrayIS.push_back(id);
                         Skill::HasTagRampageOrWeak ={hasRampage, hasWeak};
                     }    
                 }

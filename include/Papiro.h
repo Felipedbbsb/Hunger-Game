@@ -11,6 +11,7 @@
 #include "Daughter.h"
 #include "Enemies.h"
 #include "Skill.h" 
+#include "Vec2.h" 
 
 #define TEXT_SKILL_FONT "assets/font/Play-Regular.ttf"
 
@@ -19,9 +20,16 @@
 #define PAPIRO_ENEMY_SPRITE "assets/img/UI/PapiroEnemy.png"
 #define PAPIRO_PLAYER_SPRITE "assets/img/UI/PapiroPlayer.png"
 
+#define OFFESET_ENEMIES  Vec2(500, -50)
+#define SPACING_ENEMIES  100
 
+#define SPACING_PLAYERS  150
+
+#define PAPIRO_SCREEN Vec2(1132, 638) 
 #define BG_SCALE 1.0  
 #define INTERACTION_COOLDOWN 3
+
+#define OBJECT_VELOCITY PAPIRO_SCREEN.x / 20
 
 class Papiro : public Component {
     public:
@@ -36,6 +44,8 @@ class Papiro : public Component {
         void Start();
         bool Is(std::string type);
 
+        void CreateEnemyObject();
+        void CreatePlayerObject(Skill::TargetType targetType);
 
     private:
         GameObject* background;
@@ -44,6 +54,7 @@ class Papiro : public Component {
         float papiroVelocity;
         float papiroAc;
         std::vector<Enemies::EnemyId> enemiesArrayIS;
+        
         Skill::AttackType attackType;
         Skill::TargetType whoAttacks;
         Skill::TargetType whoReceives;
@@ -55,5 +66,14 @@ class Papiro : public Component {
 
         int backgroundOffsetX;
 
+        
+        std::vector<std::weak_ptr<GameObject>> PLayerObjects;
         std::vector<std::weak_ptr<GameObject>> interactionObjects;
+
+        bool objectsMovesRight;
+
+        int objectsMoves;
+
+        bool centralized;
+
 };

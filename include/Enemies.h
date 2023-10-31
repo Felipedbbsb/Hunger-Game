@@ -31,7 +31,9 @@ class Enemies : public Component {
             ENEMY1,
             ENEMY2,
             ENEMY3,
-            ENEMY4
+            ENEMY4,
+
+            INVALID_ENEMY
         };
 
         // Structure to store enemy information
@@ -43,7 +45,7 @@ class Enemies : public Component {
             std::vector<Skill::SkillId> skills;
         };
 
-    
+
         Enemies(GameObject& associated, 
                 EnemyId id);
  
