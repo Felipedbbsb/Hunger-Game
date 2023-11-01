@@ -15,12 +15,13 @@ bigTag(nullptr)
         
         Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
+        //tag_spr->SetScale(0.8, 0.8);
         AcivateTag(GetTagSprite(tag));
         
     }
     else{
         associated.RequestDelete();
-    }
+    } 
 } 
  
 void Tag::Start() {     
@@ -65,14 +66,14 @@ void Tag::Update(float dt){
         
         auto center = associated.box.GetCenter();
         bigTag->box.DefineCenter(Vec2(center));
-
+ 
         // When same size 
         if (bigTag_spr->GetScale().x <= 1) {
             bigTag->RequestDelete();
             bigTag = nullptr;
             
             
-        }
+        } 
     }       
 } 
 
@@ -89,7 +90,7 @@ std::string Tag::GetTagSprite(Tag::Tags tag){
         }
     return spriteTag ;   
 }
-
+ 
 void Tag::AcivateTag(std::string sprite){
         if(bigTag == nullptr ){
             bigTag = new GameObject(associated.box.x, associated.box.y);

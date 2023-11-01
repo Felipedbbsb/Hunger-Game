@@ -47,7 +47,7 @@ void Daughter::Start()
     //If enemies starts with tags
     ApplyTags(tags);   
  
-    lifeBarDaughter->SetCurrentHP(hp);  
+    lifeBarDaughter->SetCurrentHP(hp);   
  
 } 
  
@@ -193,14 +193,16 @@ void Daughter::SetupInteractionScreen(Skill::AttackType attackType, Skill::Targe
         CombatState::whoReceives = Skill::TargetType::DAUGHTER;
     }
 }
-
+ 
 void Daughter::CreateIndicator() {
-    indicator = new GameObject(daughterHitbox.x, daughterHitbox.y + daughterHitbox.h);
+    indicator = new GameObject(daughterHitbox.x + daughterHitbox.w/2, daughterHitbox.y + daughterHitbox.h + LIFEBAROFFSET);
     Sprite* indicator_spr = new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
 
+    indicator->box.x -= indicator->box.w/2;
+    indicator->box.y -= indicator->box.h;
     // Scale the enemy indicator
-    float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
-    indicator_spr->SetScale(percentageEnemyWidth, 1);
+    //float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
+    //indicator_spr->SetScale(percentageEnemyWidth, 1);
     indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }

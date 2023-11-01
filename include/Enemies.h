@@ -13,7 +13,7 @@
 #include "Rect.h"
 #include "Timer.h"
 
-#define ENEMY_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
+#define ENEMY_INDICATOR_SPRITE "assets/img/UI/uiIndicatorEnemy.png"
 
 #define ENEMY_INTENTON_SPRITE "assets/img/UI/uiIntentionEnemy.png"
 

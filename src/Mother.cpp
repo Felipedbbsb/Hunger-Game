@@ -195,12 +195,12 @@ void Mother::SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetT
 }
 
 void Mother::CreateIndicator() {
-    indicator = new GameObject(motherHitbox.x, motherHitbox.y + motherHitbox.h);
+    indicator = new GameObject(motherHitbox.x + motherHitbox.w/2, motherHitbox.y + motherHitbox.h + LIFEBAROFFSET);
     Sprite* indicator_spr = new Sprite(*indicator, MOTHER_INDICATOR_SPRITE);
 
-    // Scale the enemy indicator
-    float percentageEnemyWidth = motherHitbox.w / indicator->box.w;
-    indicator_spr->SetScale(percentageEnemyWidth, 1);
+    indicator->box.x -= indicator->box.w/2;
+    indicator->box.y -= indicator->box.h;
+
     indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
@@ -328,16 +328,16 @@ std::weak_ptr<GameObject>  Mother::AddObjTag(Tag::Tags tag){
     tagObject->box.y = motherHitbox.y + motherHitbox.h + TAGS_SPACING_Y;
     std::weak_ptr<GameObject> go_tag = Game::GetInstance().GetCurrentState().AddObject(tagObject);
 
-    tagSpaceCount += 1;
+    tagSpaceCount += 1; 
     mothertags.push_back(go_tag);  
 
-    return go_tag;
+    return go_tag; 
 }
 
 bool Mother::HasTag(Tag::Tags tagToCheck) {
-    // Go through the enemy's tag list and check if the desired tag is present. 
+    // Go through the enemy's tag list and check if the desired ta g is present. 
     for (const auto& tag : tags) {
-        if (tag == tagToCheck) {
+        if (tag == tagToCheck) {  
             return true; // tag is present
         }
     }

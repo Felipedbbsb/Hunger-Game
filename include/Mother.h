@@ -13,7 +13,7 @@
 #include "Skill.h"
 #include "Rect.h"
 
-#define MOTHER_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
+#define MOTHER_INDICATOR_SPRITE "assets/img/UI/uiIndicatorPlayer.png"
 
 #define MOTHER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 

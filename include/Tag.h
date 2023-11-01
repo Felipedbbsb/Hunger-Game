@@ -17,12 +17,12 @@
 #define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"
 #define TAG_PROTECTED_SPRITE "assets/img/UI/uiIconProtected.png"
 
-#define TAGS_SPACING_X 20.0f
+#define TAGS_SPACING_X 40.0f
 #define TAGS_SPACING_Y 35.0f
 
-#define IMPLOSION_VEL 2.25
+#define IMPLOSION_VEL 1.5
 #define BIGTAG_APLHA 125
-#define BIGTAG_SCALE 3
+#define BIGTAG_SCALE 1.5
 
 class Tag : public Component{
 

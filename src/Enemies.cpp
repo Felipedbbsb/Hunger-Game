@@ -24,7 +24,7 @@ std::map<Enemies::EnemyId, Enemies::EnemyInfo> Enemies::enemyInfoMap;
 
 std::vector<std::shared_ptr<Enemies>> Enemies::enemiesArray;
 
-int Enemies::enemiesCount = 0;
+int Enemies::enemiesCount = 0; 
 
 int Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
 
@@ -322,12 +322,12 @@ void Enemies::SetupInteractionScreen(Skill::AttackType attackType, Skill::Target
 }
  
 void Enemies::CreateEnemyIndicator() {
-    enemyIndicator = new GameObject(enemyHitbox.x, enemyHitbox.y + enemyHitbox.h);
+    enemyIndicator = new GameObject(enemyHitbox.x + enemyHitbox.w/2, enemyHitbox.y + enemyHitbox.h+ LIFEBAROFFSET);
     Sprite* enemyIndicator_spr = new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
 
-    // Scale the enemy indicator
-    float percentageEnemyWidth = enemyHitbox.w / enemyIndicator->box.w;
-    enemyIndicator_spr->SetScale(percentageEnemyWidth, 1);
+    enemyIndicator->box.x -= enemyIndicator->box.w/2;
+    enemyIndicator->box.y -= enemyIndicator->box.h;
+
     enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }

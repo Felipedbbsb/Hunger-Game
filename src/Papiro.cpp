@@ -59,10 +59,10 @@ void Papiro::Start() {
     Sprite *background_spr = new Sprite(*background, spriteBackground);
     background->AddComponent(std::shared_ptr<Sprite>(background_spr));
     
-    background_spr->SetClip(associated.box.w/4, associated.box.h/4, PAPIRO_SCREEN.x/BG_SCALE, PAPIRO_SCREEN.y/BG_SCALE); // Define um ponto central de 1x1 pixel
+    background_spr->SetClip(associated.box.w/4, 0, PAPIRO_SCREEN.x/BG_SCALE, PAPIRO_SCREEN.y/BG_SCALE); // Define um ponto central de 1x1 pixel
     background_spr->SetScale(BG_SCALE,BG_SCALE);
-    //background_spr->SetDesaturation(true);
-    Game::GetInstance().GetCurrentState().AddObject(background);
+    //background_spr->SetDesaturation(true); 
+    Game::GetInstance().GetCurrentState().AddObject(background);  
 
 
     //offeset precisely made by sprite reference 

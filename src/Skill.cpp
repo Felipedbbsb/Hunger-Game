@@ -172,12 +172,12 @@ void Skill::InitializeSkillInfoMap() {
     skillInfoMap[SKILL4] = {1, Skill::StateProtected::NOCHANGES, 5, {}, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, ATTACK_INDIVIDUAL, MOTHER, ATTACK_ALL, IRR};
 
     //-------------MOTHER SKILLS-----------
-    //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable.
+    //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable. 
     skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
 
     //Rockabye (2AP): Apply 1 Resilience to your daughter.
     skillInfoMap[Rockabye] =  {2, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
-
+ 
     //Stinger (2AP): Deal 5 Damage to all enemies; Expose your daughter.
     skillInfoMap[Stinger] =  {2, Skill::StateProtected::EXPOSED,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
  
