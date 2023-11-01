@@ -191,14 +191,31 @@ void Skill::InitializeSkillInfoMap() {
 
 
     //----------Enemies skill------------
-    //5 damage , 1 n resilience back
-    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    // Deal 5 damage.
+    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 
-    //0 damage n Provoke auto buff, 1 n RAMPAGE back all
-    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+    //Deal 2 damage; Gain 2 Rampage.
+    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   2, {},     0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
 
-    //0 damage n 2 PROTECTED buff, 1 n resilience back
-    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    //Deal 7 Damage.
+    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   7, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    // Skill 1: Deal 1 damage; Apply 1 Weak to target
+    skillInfoMap[E2_Skill1] = {0, Skill::StateProtected::NOCHANGES,   1, {Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Apply 1 Resilience to a random ally
+    skillInfoMap[E2_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
+
+    // Apply 1 Weak to all enemies
+    skillInfoMap[E2_Skill3] = {0, Skill::StateProtected::NOCHANGES,   5, {Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    // Apply 2 vulnerable 
+    skillInfoMap[E3_Skill1] = {0, Skill::StateProtected::NOCHANGES,   8, {Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Apply Rampage in all allies
+    skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
 
 
 } 

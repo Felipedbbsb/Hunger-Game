@@ -22,12 +22,11 @@ void InteractionObject::Start() {
     if(targetType == Skill::TargetType::IRR){
         Enemies::EnemyInfo& enemyInfo = Enemies::enemyInfoMap[enemyId]; 
         iconPath = enemyInfo.iconPath;
-         Sprite* obj_spr = new Sprite(associated, iconPath); 
+        Sprite* obj_spr = new Sprite(associated, iconPath); 
         associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
         
     }
     else{
-        std::cout << "aaaaa" << std::endl;
         if(targetType == Skill::TargetType::MOTHER){
             if(isAttacking){
                 iconPath = MOTHER_SPRITE_ATK;
@@ -40,7 +39,7 @@ void InteractionObject::Start() {
         else{
             if(isAttacking){
                 iconPath = DAUGHTER_SPRITE_ATK;
-            }
+            } 
             else{
                 iconPath = DAUGHTER_SPRITE_DFS;
             }

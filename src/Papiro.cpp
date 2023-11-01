@@ -58,12 +58,12 @@ void Papiro::Start() {
     background = new GameObject(associated.box.x + 392, 221);
     Sprite *background_spr = new Sprite(*background, spriteBackground);
     background->AddComponent(std::shared_ptr<Sprite>(background_spr));
-    
-    background_spr->SetClip(associated.box.w/4, 0, PAPIRO_SCREEN.x/BG_SCALE, PAPIRO_SCREEN.y/BG_SCALE); // Define um ponto central de 1x1 pixel
+     
+    background_spr->SetClip(0, 0, PAPIRO_SCREEN.x/BG_SCALE, PAPIRO_SCREEN.y/BG_SCALE); // Define um ponto central de 1x1 pixel
     background_spr->SetScale(BG_SCALE,BG_SCALE);
     //background_spr->SetDesaturation(true); 
     Game::GetInstance().GetCurrentState().AddObject(background);  
-
+ 
 
     //offeset precisely made by sprite reference 
     backgroundOffsetX = 392; 
@@ -75,14 +75,22 @@ void Papiro::Start() {
     //Processing relation between objects
     if(movingRight){
         if(attackType == Skill::BUFF_INDIVIDUAL || attackType == Skill::BUFF_ALL){
-            CreatePlayerObject(whoAttacks);
-            CreatePlayerObject(whoReceives);
+            //daughter always in front
+            if(whoAttacks == Skill::TargetType::MOTHER){
+                CreatePlayerObject(whoAttacks);
+                CreatePlayerObject(whoReceives);
+            }
+            else{
+                CreatePlayerObject(whoReceives);
+                CreatePlayerObject(whoAttacks);
+            }
+
             objectsMovesRight = false;
             centralized = true;
         }
         else{
-            CreatePlayerObject(whoAttacks);
             CreateEnemyObject();
+            CreatePlayerObject(whoAttacks);
             objectsMovesRight = true;
             centralized = false;
         }
@@ -113,6 +121,7 @@ void Papiro::CreateEnemyObject(){
             GameObject* interactionObj = new GameObject(background->box.x, background->box.y);
             InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, Skill::TargetType::IRR, enemyId, !movingRight);
             interactionObj->AddComponent(std::shared_ptr<InteractionObject>(interactionObj_behaviour));
+            interactionObj->box.x -= interactionObj->box.w;
 
             std::weak_ptr<GameObject> go_obj = Game::GetInstance().GetCurrentState().AddObject(interactionObj);
             interactionObjects.push_back(go_obj);
@@ -125,6 +134,7 @@ void Papiro::CreatePlayerObject(Skill::TargetType targetType){
     GameObject* interactionObjP = new GameObject(background->box.x, background->box.y);
     InteractionObject* interactionObjP_behaviour = new InteractionObject(*interactionObjP, targetType, Enemies::EnemyId::INVALID_ENEMY, movingRight);
     interactionObjP->AddComponent(std::shared_ptr<InteractionObject>(interactionObjP_behaviour));
+    interactionObjP->box.x -= interactionObjP->box.w;
 
     std::weak_ptr<GameObject> go_objP = Game::GetInstance().GetCurrentState().AddObject(interactionObjP);
     PLayerObjects.push_back(go_objP);
@@ -214,7 +224,7 @@ void Papiro::Update(float dt) {
            interactionObj.lock()->box.x += interactionObj.lock()->box.w/2;
         }
 
-        interactionObj.lock()->box.y = background->box.y +  background->box.h - interactionObj.lock()->box.h - background->box.h/10;
+        interactionObj.lock()->box.y = background->box.y +  background->box.h - interactionObj.lock()->box.h;
         spacingEnemies++;
 
     }
@@ -224,10 +234,10 @@ void Papiro::Update(float dt) {
         PLayerObject.lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - PLayerObject.lock()->box.w/2 + objectsMoves + SPACING_PLAYERS * spacingplayers;
         
         if(!centralized){
-           PLayerObject.lock()->box.x += PAPIRO_SCREEN.x/8 - PAPIRO_SCREEN.x/2 + PLayerObject.lock()->box.w/2;
+           PLayerObject.lock()->box.x += PAPIRO_SCREEN.x/4 - PAPIRO_SCREEN.x/2 ;
         }
 
-        PLayerObject.lock()->box.y = background->box.y +  background->box.h - PLayerObject.lock()->box.h - background->box.h/10;
+        PLayerObject.lock()->box.y = background->box.y +  background->box.h - PLayerObject.lock()->box.h;
         spacingplayers++;
 
     }

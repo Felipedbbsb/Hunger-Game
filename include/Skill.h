@@ -92,6 +92,13 @@ class Skill : public Component {
             E1_Skill2,
             E1_Skill3,
 
+            E2_Skill1,
+            E2_Skill2,
+            E2_Skill3,
+
+            E3_Skill1,
+            E3_Skill2,
+
             INVALID_SKILL
         };
         
