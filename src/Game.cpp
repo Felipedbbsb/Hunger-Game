@@ -96,18 +96,18 @@ bool Game::CreateWindowAndRenderer(const std::string& title, int width, int heig
         throw std::runtime_error("Failed to get display mode");
     } else {
         maxScreenWidth = dm.w;
-        maxScreenHeight = dm.h;
+        maxScreenHeight = dm.h; 
     }
     
     float widthRatio = static_cast<float>(maxScreenWidth) / RESOLUTION_WIDTH;
     float heightRatio = static_cast<float>(maxScreenHeight) / RESOLUTION_HEIGHT;
     resizer = std::min(widthRatio, heightRatio);
- 
+  
     // Calcule a largura e altura da janela de acordo com a resolução máxima
-    int windowWidth = static_cast<int>(RESOLUTION_WIDTH * resizer);
+    int windowWidth = static_cast<int>(RESOLUTION_WIDTH * resizer); 
     int windowHeight = static_cast<int>(RESOLUTION_HEIGHT * resizer);
     
-    
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, flags);
     if (window == nullptr) {
         throw std::runtime_error("Window creation failed");

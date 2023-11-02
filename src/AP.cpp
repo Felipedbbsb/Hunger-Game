@@ -66,7 +66,6 @@ void AP::Update(float dt){
         } 
     }
 
-    std::cout << Enemies::enemiesToAttack << GameData::playerTurn << !Enemies::enemyAttacking << std::endl;
     if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
         GameData::playerTurn = true;
         AP::apCount = AP_QUANTITY; //reset
