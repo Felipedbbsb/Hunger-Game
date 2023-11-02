@@ -39,7 +39,7 @@ class Game {
         float GetDeltaTime();
         
         void TakeScreenshot(std::string filename);
-
+        static float resizer;
 
 
     private:

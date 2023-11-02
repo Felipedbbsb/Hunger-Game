@@ -24,6 +24,8 @@
 // Static class member initialization
 Game *Game::instance = nullptr;
 
+float Game::resizer  = 1;
+
 Game::Game(std::string title, int width, int height) : 
     frameStart(0), 
     dt(0.0),
@@ -87,12 +89,31 @@ bool Game::InitializeTTF() {
 }
 
 bool Game::CreateWindowAndRenderer(const std::string& title, int width, int height, int flags) {
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+    
+    int maxScreenWidth, maxScreenHeight;
+    SDL_DisplayMode dm;
+    if (SDL_GetCurrentDisplayMode(0, &dm) != 0) {
+        throw std::runtime_error("Failed to get display mode");
+    } else {
+        maxScreenWidth = dm.w;
+        maxScreenHeight = dm.h;
+    }
+    
+    float widthRatio = static_cast<float>(maxScreenWidth) / RESOLUTION_WIDTH;
+    float heightRatio = static_cast<float>(maxScreenHeight) / RESOLUTION_HEIGHT;
+    resizer = std::min(widthRatio, heightRatio);
+ 
+    // Calcule a largura e altura da janela de acordo com a resolução máxima
+    int windowWidth = static_cast<int>(RESOLUTION_WIDTH * resizer);
+    int windowHeight = static_cast<int>(RESOLUTION_HEIGHT * resizer);
+    
+    
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, flags);
     if (window == nullptr) {
         throw std::runtime_error("Window creation failed");
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE); 
     //SDL_SetHint(SDL_HINT_RENDERER_SCALE_QUALITY, “linear”);
     
     if (renderer == nullptr) {
@@ -101,15 +122,13 @@ bool Game::CreateWindowAndRenderer(const std::string& title, int width, int heig
  
  
     //Render logical size, rezise screen based on resolution screen
-    float resizer = (float)RESOLUTION_WIDTH / width;
-    std::cout <<"Proporcao de resolucao e tela ficou de: " << resizer << std::endl;
-    if(SDL_RenderSetLogicalSize(renderer, width  * resizer, height * resizer)){
-        throw std::runtime_error("Failed to create renderer resized");
+     if(SDL_RenderSetLogicalSize(renderer, RESOLUTION_WIDTH, RESOLUTION_HEIGHT)){
+        throw std::runtime_error("Failed to set logical size");
     }
 
     return true;
 }
-
+ 
 
 
 //A ordem importa! Faça na ordem inversa da inizialização

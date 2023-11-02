@@ -249,7 +249,7 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
             }
             if (HasTag(Tag::Tags::VULNERABLE)){
                 ActivateTag(Tag::Tags::VULNERABLE);
-                tagMultiplier += 0.5; 
+                tagMultiplier += 0.25; 
             }
 
             //============RAMPAGE and WEAK sector=================//
@@ -257,7 +257,7 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
                 tagMultiplier += 0.5;
             }
             if (Skill::HasTagRampageOrWeak.second){
-                tagMultiplier -= 0.5;
+                tagMultiplier -= 0.25;
             }
 
         }

@@ -61,16 +61,17 @@ void AP::Update(float dt){
     if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
     Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
         GameData::playerTurn = false;
-        if(Enemies::enemiesToAttack == 0){//init enemies attack turn
+        if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
             Enemies::enemiesToAttack = Enemies::enemiesCount;
         } 
     }
 
-    if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking && GameData::playerTurn == false){ 
+    std::cout << Enemies::enemiesToAttack << GameData::playerTurn << !Enemies::enemyAttacking << std::endl;
+    if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
         GameData::playerTurn = true;
         AP::apCount = AP_QUANTITY; //reset
         SetAPCount(AP::apCount);
-    }
+    } 
 
 }
 

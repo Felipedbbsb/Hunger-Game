@@ -128,7 +128,7 @@ void Enemies::Update(float dt) {
                 AP::apCount -= tempSkillInfo.apCost;
                 selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                 selectedSkill->Deselect();
-
+                enemyAttacking = false;
                 SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
 
             }
@@ -431,11 +431,10 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
                 }
 
             if (tagRampage){
-                tagMultiplier += 0.5; 
+                tagMultiplier += 0.25; 
             }
             if (tagWeak){
-                //ActivateTag(Tag::Tags::VULNERABLE);
-                tagMultiplier -= 0.5; 
+                tagMultiplier -= 0.25; 
             }
 
         }

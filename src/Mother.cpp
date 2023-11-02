@@ -248,13 +248,14 @@ void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
                 ActivateTag(Tag::Tags::VULNERABLE);
                 tagMultiplier += 0.5; 
             }
+            
 
             //============RAMPAGE and WEAK sector=================//
             if (Skill::HasTagRampageOrWeak.first){
-                tagMultiplier += 0.5;
+                tagMultiplier += 0.25;
             }
             if (Skill::HasTagRampageOrWeak.second){
-                tagMultiplier -= 0.5;
+                tagMultiplier -= 0.25;
             }
 
             
