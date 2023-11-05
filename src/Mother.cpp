@@ -11,9 +11,11 @@ std::vector<Tag::Tags> Mother::tags = {};
 bool Mother::activateRampage = false;
 bool Mother::activateWeak = false;
 
+std::weak_ptr<GameObject> Mother::motherInstance;
+
 #ifdef DEBUG
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h> 
 #endif //DEBUG
 
 // speed já está sendo inicializado pelo construtor de Vec2
@@ -24,7 +26,6 @@ intention(nullptr),
 lifeBarMother(nullptr),
 tagSpaceCount(0){
 
-    
 }
 
 void Mother::Start() 
@@ -270,11 +271,13 @@ void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
 void Mother::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
         ActivateTag(tag);
-        if (tagCountMap.find(tag) != tagCountMap.end()) {
-            // The tag already exists, increment the counter
-            tagCountMap[tag]++;
-
-            // Iterate over the list of weak_ptr to the tag GameObjects
+        if (!(std::find(tags.begin(), tags.end(), tag) != tags.end())) {
+            tags.push_back(tag);
+            auto go_tag = AddObjTag(tag);
+        }
+        tagCountMap[tag]++;
+        
+        // Iterate over the list of weak_ptr to the tag GameObjects
             for (auto& weak_tag : mothertags) {
                 auto tagGameObject = weak_tag.lock();  // Get the GameObject
                 if (tagGameObject) {
@@ -289,14 +292,6 @@ void Mother::ApplyTags(std::vector<Tag::Tags> skillTags) {
                     }
                 }
             }
-        } else {
-            // The tag doesn't exist in the map, add it with a counter of 1
-            tagCountMap[tag] = 1;
-            tags.push_back(tag);
-            auto go_tag = AddObjTag(tag);
-            
-
-        }
     }
 }
 
@@ -322,7 +317,7 @@ std::weak_ptr<GameObject>  Mother::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, 1);
+    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
     tagObject->box.x = motherHitbox.x + TAGS_SPACING_X * tagSpaceCount;
@@ -334,6 +329,69 @@ std::weak_ptr<GameObject>  Mother::AddObjTag(Tag::Tags tag){
 
     return go_tag; 
 }
+
+void Mother::RemoveOneTagAll() {
+    std::vector<Tag::Tags> tagsToRemove;
+
+    for (const auto& tag : tags) {
+        if (tagCountMap.find(tag) != tagCountMap.end() && tagCountMap[tag] > 0) {
+            tagCountMap[tag]--;
+
+            // Iterate over the list of weak_ptr to the tag GameObjects
+            auto it = mothertags.begin();
+            while (it != mothertags.end()) {
+                auto tagGameObject = it->lock();
+                if (tagGameObject) {
+                    auto tagComponent = tagGameObject->GetComponent("Tag");
+                    auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);
+                    if (tagComponentPtr && tagComponentPtr->GetTag() == tag) {
+                        tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
+                        if (tagCountMap[tag] == 0) {
+                            tagsToRemove.push_back(tag);
+                            tagGameObject->RequestDelete();
+                            it = mothertags.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    } else {
+                        ++it;
+                    }
+                } else {
+                    it = mothertags.erase(it);
+                }
+            }
+        }
+    }
+
+    // Remove the tags from the 'tags' list
+    for (const auto& tag : tagsToRemove) {
+        tags.erase(std::remove(tags.begin(), tags.end(), tag), tags.end());
+    }
+
+    // Re-create the tag UI
+    RecreateTagUI();
+}
+
+void Mother::RecreateTagUI() {
+    // Clear all existing tag objects
+    for (auto& weak_tag : mothertags) {
+        auto tagGameObject = weak_tag.lock();
+        if (tagGameObject) {
+            tagGameObject->RequestDelete();
+        }
+    }
+
+    // Clear the list of tag objects
+    mothertags.clear();
+
+    tagSpaceCount = 0;
+
+    // Recreate tag objects based on the current tag list
+    for (const auto& tag : tags) {
+        AddObjTag(tag);
+    }
+}
+
 
 bool Mother::HasTag(Tag::Tags tagToCheck) {
     // Go through the enemy's tag list and check if the desired ta g is present. 

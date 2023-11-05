@@ -116,9 +116,9 @@ bool Game::CreateWindowAndRenderer(const std::string& title, int width, int heig
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE); 
     //SDL_SetHint(SDL_HINT_RENDERER_SCALE_QUALITY, “linear”);
     
-    if (renderer == nullptr) {
+    if (renderer == nullptr) { 
         throw std::runtime_error("Failed to create renderer");
-    }  
+    }   
  
  
     //Render logical size, rezise screen based on resolution screen

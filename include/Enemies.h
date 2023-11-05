@@ -70,6 +70,9 @@ class Enemies : public Component {
         bool HasTag(Tag::Tags tagToCheck);
         bool HasTagPlayer(Tag::Tags tagToCheck, std::vector<Tag::Tags> tags);
         void ActivateTag(Tag::Tags tag); 
+        
+        void RemoveOneTagAll();
+        void RecreateTagUI();
 
         EnemyId GetId(); 
 
@@ -80,7 +83,8 @@ class Enemies : public Component {
         GameObject* enemyIndicator;  
         GameObject* intention; 
 
-        static std::vector<std::shared_ptr<Enemies>> enemiesArray;
+        static std::vector<std::weak_ptr<GameObject>> enemiesArray;
+        
         static int enemiesCount;
         static int SkillAllenemies;
         static int provokedEnemies;
@@ -90,7 +94,8 @@ class Enemies : public Component {
         // Used for attacks involving more then one target
         static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
         
-    
+        
+
     private:
         EnemyId id;
         LifeBar* lifeBarEnemy;

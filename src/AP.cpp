@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include "GameData.h"
 #include "Enemies.h"
+#include "Mother.h"
+#include "Daughter.h"
 #include "Sprite.h"
 #include "CameraFollower.h"
 #include <algorithm> 
@@ -70,6 +72,30 @@ void AP::Update(float dt){
         GameData::playerTurn = true;
         AP::apCount = AP_QUANTITY; //reset
         SetAPCount(AP::apCount);
+
+        // Remove one count of all tag drom which enemy
+        for (const std::weak_ptr<GameObject>& enemy : Enemies::enemiesArray) {
+            auto enemyPtr = enemy.lock();
+            if (enemyPtr) {
+                auto enemiesComponent = enemyPtr->GetComponent("Enemies");
+                if (enemiesComponent) {
+                    auto enemies = std::dynamic_pointer_cast<Enemies>(enemiesComponent);
+                    enemies->RemoveOneTagAll();
+                }
+            }
+        }
+
+        auto motherComponent = Mother::motherInstance.lock()->GetComponent("Mother");
+        if (motherComponent) {
+            auto mother = std::dynamic_pointer_cast<Mother>(motherComponent);
+            mother->RemoveOneTagAll();
+        }
+
+        auto daughterComponent = Daughter::daughterInstance.lock()->GetComponent("Daughter");
+        if (daughterComponent) {
+            auto daughter = std::dynamic_pointer_cast<Daughter>(daughterComponent);
+            daughter->RemoveOneTagAll();
+        }
     } 
 
 }

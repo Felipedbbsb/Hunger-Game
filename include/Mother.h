@@ -47,6 +47,9 @@ class Mother : public Component{
     bool HasTag(Tag::Tags tagToCheck);
     void ActivateTag(Tag::Tags tag); 
 
+    void RemoveOneTagAll();
+    void RecreateTagUI();
+
     GameObject* indicator;   
     GameObject* intention; 
 
@@ -55,7 +58,7 @@ class Mother : public Component{
 
     static bool activateRampage;
     static bool activateWeak;
-
+    static std::weak_ptr<GameObject> motherInstance;
 private:
     LifeBar* lifeBarMother;
     Rect motherHitbox;

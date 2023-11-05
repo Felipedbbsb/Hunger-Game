@@ -106,13 +106,15 @@ void CombatState::LoadAssets(){
     GameObject *mom = new GameObject(MOTHER_POS);
     Mother* mom_behaviour= new Mother(*mom);
     mom->AddComponent((std::shared_ptr<Mother>)mom_behaviour);
-    AddObject(mom);
+    std::weak_ptr<GameObject> weak_mother = AddObject(mom);
+    Mother::motherInstance = weak_mother;
 
     //============================ Daughter ========================================
     GameObject *daughter = new GameObject(DAUGHTER_POS);
     Daughter* daughter_behaviour= new Daughter(*daughter);
     daughter->AddComponent((std::shared_ptr<Daughter>)daughter_behaviour);
-    AddObject(daughter);
+    std::weak_ptr<GameObject> weak_daughter = AddObject(daughter);
+    Daughter::daughterInstance = weak_daughter;
 
     //============================ Enemies ========================================
     for (int i = enemiesArray.size() - 1; i >= 0; i--) {
@@ -121,7 +123,8 @@ void CombatState::LoadAssets(){
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Enemies* enemy_behaviour = new Enemies(*enemy, enemiesArray[i]);
         enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
-        Game::GetInstance().GetCurrentState().AddObject(enemy);
+        std::weak_ptr<GameObject> weak_enemy = AddObject(enemy);
+        Enemies::enemiesArray.push_back(weak_enemy);
     }
 
 }
