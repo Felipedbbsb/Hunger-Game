@@ -145,7 +145,7 @@ void Daughter::Update(float dt)
 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
-                    if (daughterHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (daughterHitbox.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                         selectedSkill->Deselect();
@@ -235,12 +235,13 @@ void Daughter::DeleteIntention() {
 
 void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-
+        bool dodge = false;
         if (HasTag(Tag::Tags::DODGE)){
             int dodgeChance = rand() % 2;
             if(dodgeChance == 1){
                 ActivateTag(Tag::Tags::DODGE);
                 damage = 0;
+                dodge = true;
             }
         }
 
@@ -265,8 +266,13 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-        ApplyTags(tags);
-        lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar
+        if(!dodge){
+            ApplyTags(tags);
+        }
+
+        if(damage > 0 || dodge){
+            lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar
+        }
  
 }
  

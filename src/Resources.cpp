@@ -122,14 +122,16 @@ TTF_Font* Resources::GetFont(std::string file, int fontSize) {
     TTF_Font *font = nullptr;
 
     try {
-        auto it = Resources::fontTable.find(file);
+        std::string key = file + std::to_string(fontSize); // Inclui o tamanho da fonte no nome da chave
+        auto it = Resources::fontTable.find(key);
+
         if (it == Resources::fontTable.end()) {
-            std::cout << "Loading a new font file... (" << file << ")" << std::endl;
+            std::cout << "Loading a new font file... (" << file << ", Size: " << fontSize << ")" << std::endl;
             font = TTF_OpenFont(file.c_str(), fontSize);
 
             if (font != nullptr) {
-                Resources::fontTable.insert({file, font});
-                std::cout << "Loading done! (" << file << ")" << std::endl;
+                Resources::fontTable.insert({key, font});
+                std::cout << "Loading done! (" << file << ", Size: " << fontSize << ")" << std::endl;
                 return font;
             } else {
                 throw std::runtime_error("Failed to load font file: " + file);

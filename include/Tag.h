@@ -8,6 +8,10 @@
 #include "Sound.h"
 #include "Sprite.h"
 
+#define TEXT_TAGCOUNT_FONT "assets/font/Play-Bold.ttf"
+#define TEXT_TAGCOUNT_FONT_COLOR {255, 255, 255, 0} // Red Green Blue Alpha
+
+#define TEXT_TAGCOUNT_SIZE 20
 
 #define TAG_RESILIENCE_SPRITE "assets/img/UI/uiIconResilience.png"
 #define TAG_DODGE_SPRITE "assets/img/UI/uiIconDodge.png"
@@ -20,9 +24,9 @@
 #define TAGS_SPACING_X 40.0f
 #define TAGS_SPACING_Y 35.0f
 
-#define IMPLOSION_VEL 1.5
+#define IMPLOSION_VEL 1.25
 #define BIGTAG_APLHA 125
-#define BIGTAG_SCALE 1.5
+#define BIGTAG_SCALE 1.75
 
 class Tag : public Component{
 
@@ -65,6 +69,7 @@ class Tag : public Component{
         std::string GetTagName();
         std::string GetTagSprite(Tag::Tags tag);
         std::string GetTagInfo();
+        void tagCountRender();
          
     private:
         std::weak_ptr<GameObject> enemyRef; 
@@ -74,5 +79,5 @@ class Tag : public Component{
         std::string textSkill;
         GameObject* readerTag;
         GameObject* bigTag;
-        
+        GameObject* tagCountNumber;
 };

@@ -1,7 +1,8 @@
 #include "Reader.h"
 #include "Text.h"
 #include "Game.h"
-
+#include "Camera.h"
+#include "CameraFollower.h"
 // speed já está sendo inicializado pelo construtor de Vec2
 Reader::Reader(GameObject &associated, std::string textSkill )
 : Component::Component(associated),
@@ -11,6 +12,8 @@ textSkill(textSkill)
      // Adicione um sprite
     Sprite *reader_spr = new Sprite(associated, READER_SPRITE);
     associated.AddComponent(std::shared_ptr<Sprite>(reader_spr));    
+    CameraFollower *textSkillObj_cmfl = new CameraFollower(associated);
+    associated.AddComponent((std::shared_ptr<CameraFollower>)textSkillObj_cmfl);
 } 
   
 void Reader::Start() {     
@@ -34,7 +37,10 @@ Reader::~Reader(){
 } 
 
 void Reader::Update(float dt){  
-
+    if(textSkillObj != nullptr){
+        textSkillObj->box.x = associated.box.x + 10;
+        textSkillObj->box.y = associated.box.y + 10;
+    }
 }
 
 void Reader::Render(){

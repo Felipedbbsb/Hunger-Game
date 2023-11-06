@@ -6,6 +6,7 @@
 #include "Tag.h"
 #include "AP.h"
 #include "GameData.h"
+#include "Camera.h"
  
 Skill* Skill::selectedSkill = nullptr; //generic 
 
@@ -52,7 +53,7 @@ void Skill::Update(float dt) {
                 selectedSkill->Deselect();
     }
 
-    if (associated.box.Contains(mousePos.x, mousePos.y)) { 
+    if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)) { 
         if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
             if (!readerSkill) {
                 readerSkill = new GameObject(associated.box.x, associated.box.y);

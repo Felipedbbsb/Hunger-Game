@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Sprite.h"
 #include "Reader.h"
+#include "Camera.h"
 #include <algorithm> 
 
 
@@ -47,7 +48,7 @@ void Protected::Update(float dt){
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
  
 
-    if(associated.box.Contains(mousePos.x, mousePos.y)){
+    if(associated.box.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
         ShowReader();
     } else {
         HideReader();

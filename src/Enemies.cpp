@@ -10,10 +10,10 @@
 #include "Mother.h"
 #include "Daughter.h"  
 #include "CombatState.h"
+#include "Camera.h"
 #include <algorithm> 
 
 #ifdef DEBUG
-#include "Camera.h"
 #include "Game.h"
 
 #include <SDL2/SDL.h> 
@@ -72,7 +72,7 @@ void Enemies::Start() {
     //If enemies starts with tags
     ApplyTags(tags);
 
-    lifeBarEnemy->SetCurrentHP(hp);
+    //lifeBarEnemy->SetCurrentHP(hp);
 
     if(enemiesToAttack == 0){//init enemies attack turn
         enemiesToAttack = enemiesCount;
@@ -182,7 +182,7 @@ void Enemies::Update(float dt) {
                 }       // and if any enemie has provoke
 
                 // Check if the mouse is over the enemy and left mouse button is pressed
-                if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
                         ApplySkillToEnemy();
@@ -389,12 +389,14 @@ void Enemies::ApplySkillToEnemy() {
 
 void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-
+        bool dodge = false;
+        
         if (HasTag(Tag::Tags::DODGE)){
             int dodgeChance = rand() % 2;
             if(dodgeChance == 1){
                 ActivateTag(Tag::Tags::DODGE);
                 damage = 0;
+                dodge = true;
             }
         }
 
@@ -440,8 +442,16 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
 
         }
         hp -= damage * tagMultiplier;
-        ApplyTags(tags);
-        lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+        if(!dodge){
+            ApplyTags(tags);
+        }
+
+
+
+        if(damage > 0 || dodge){
+            lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+        }
+        
        
 }
 

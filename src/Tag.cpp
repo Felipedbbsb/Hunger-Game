@@ -9,7 +9,8 @@ enemyRef(enemyRef),
 quantity(quantity), 
 tag(tag),
 readerTag(nullptr),
-bigTag(nullptr) 
+bigTag(nullptr),
+tagCountNumber(nullptr)
 {   
     if (enemyRef.lock()){
         
@@ -199,6 +200,30 @@ std::string Tag::GetTagName() {
     }
 
     return tagName;
+}
+
+void Tag::tagCountRender() { 
+    if (tagCountNumber != nullptr){ 
+        tagCountNumber->RequestDelete();
+        tagCountNumber = nullptr;   
+    }  
+    //Creates Reader for hp
+    //position middle of hp bar
+    tagCountNumber =  new GameObject(); //posicao foi no olho...
+    std::string textNumber = std::to_string(quantity);
+    Text* tagCountNumber_behaviour = new Text(*tagCountNumber, TEXT_TAGCOUNT_FONT, 
+                                                      TEXT_TAGCOUNT_SIZE,
+                                                      Text::BLENDED,
+                                                      textNumber, 
+                                                      TEXT_TAGCOUNT_FONT_COLOR,
+                                                      0);  
+ 
+    //tagCountNumber->box.x += (lifeBarRect.w - hpReader->box.w)/2;                                                
+    //tagCountNumber->box.y += (lifeBarRect.h - hpReader->box.h)/2 - 1;     
+
+    tagCountNumber->AddComponent(std::shared_ptr<Text>(tagCountNumber_behaviour));
+    Game::GetInstance().GetCurrentState().AddObject(tagCountNumber);
+
 }
 
 void Tag::Render(){

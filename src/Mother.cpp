@@ -44,9 +44,8 @@ void Mother::Start()
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarMother));
 
     //If enemies starts with tags
-    ApplyTags(tags);
+    ApplyTags(tags); 
 
-    lifeBarMother->SetCurrentHP(hp); 
 }
 
 Mother::~Mother()
@@ -143,7 +142,7 @@ void Mother::Update(float dt)
 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
-                    if (motherHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (motherHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
                         selectedSkill->Deselect();
@@ -231,12 +230,13 @@ void Mother::DeleteIntention() {
 
 void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-
+        bool dodge = false;
         if (HasTag(Tag::Tags::DODGE)){
             int dodgeChance = rand() % 2;
             if(dodgeChance == 1){
                 ActivateTag(Tag::Tags::DODGE);
                 damage = 0;
+                dodge = true;
             }
         }
 
@@ -263,8 +263,15 @@ void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-        ApplyTags(tags);
-        lifeBarMother->SetCurrentHP(hp);  // Update the enemy's HP bar
+
+        if(!dodge){
+            ApplyTags(tags);
+        }
+        
+
+        if(damage > 0 || dodge){
+            lifeBarMother->SetCurrentHP(hp);  // Update the enemy's HP bar
+        }
  
 }
  

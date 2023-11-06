@@ -40,10 +40,10 @@ void Papiro::Start() {
 
     if (movingRight) {
         // Move Papiro to the left initially
-        associated.box.x -= associated.box.w;
+        associated.box.x -= associated.box.w; 
     } else {
         // Move Papiro to the right initially
-        associated.box.x += RESOLUTION_WIDTH;
+        associated.box.x += RESOLUTION_WIDTH * Game::resizer;
     }
     papiro_obj->box.x = associated.box.x;
 
@@ -144,12 +144,12 @@ void Papiro::CreatePlayerObject(Skill::TargetType targetType){
 }
 
 Papiro::~Papiro() {
-    for (int i = PLayerObjects.size() - 1; i >= 0; i--) { //remove enemies tags
-            PLayerObjects.erase(PLayerObjects.begin() + i);
+    for (int i = PLayerObjects.size() - 1; i >= 0; i--) {
+        PLayerObjects[i].lock()->RequestDelete();
     }
 
-    for (int i = interactionObjects.size() - 1; i >= 0; i--) { //remove enemies tags
-            interactionObjects.erase(interactionObjects.begin() + i);
+    for (int i = interactionObjects.size() - 1; i >= 0; i--) {
+        interactionObjects[i].lock()->RequestDelete();
     }
 
     background->RequestDelete();
@@ -213,9 +213,9 @@ void Papiro::Update(float dt) {
         objectsMoves += OBJECT_VELOCITY * dt;
     }
     else{ 
-        objectsMoves -= OBJECT_VELOCITY * dt; 
+        objectsMoves -= OBJECT_VELOCITY * dt;    
     }  
- 
+  
     int spacingEnemies = 0; 
     for (auto& interactionObj : interactionObjects) {
         interactionObj.lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - interactionObj.lock()->box.w/2 + objectsMoves + SPACING_ENEMIES * spacingEnemies;

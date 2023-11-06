@@ -29,12 +29,16 @@ void UI::Start() {
     //HUD backgorund 
     GameObject *ui_BG = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
     Sprite *ui_screen_BG_spr = new Sprite(*ui_BG, UI_SCREEN_BG_SPRITE);
+    CameraFollower *ui_BG_cmfl = new CameraFollower(*ui_BG);
+    ui_BG->AddComponent((std::shared_ptr<CameraFollower>)ui_BG_cmfl);
     ui_BG->AddComponent((std::shared_ptr<Sprite>)ui_screen_BG_spr);
     Game::GetInstance().GetCurrentState().AddObject(ui_BG);
 
     //AP
     GameObject* ap_UI = new GameObject(associated.box.x , associated.box.y);
         AP* ap_behaviour = new AP(*ap_UI);
+        CameraFollower *ap_UI_cmfl = new CameraFollower(*ap_UI);
+        ap_UI->AddComponent((std::shared_ptr<CameraFollower>)ap_UI_cmfl);
         ap_UI->AddComponent(std::shared_ptr<AP>(ap_behaviour));
         Game::GetInstance().GetCurrentState().AddObject(ap_UI);
   
@@ -81,6 +85,8 @@ void UI::Start() {
     
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
     Sprite *ui_screen_spr = new Sprite(*ui, UI_SCREEN_SPRITE);
+    CameraFollower *ui_cmfl = new CameraFollower(*ui);
+    ui->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
     ui->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
     Game::GetInstance().GetCurrentState().AddObject(ui);
 
