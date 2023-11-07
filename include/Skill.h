@@ -13,6 +13,13 @@
 #include "Time.h"
 #include "Tag.h" 
 #include "AP.h" 
+
+#define TEXT_TAGCOUNT2_SIZE 45
+
+
+
+
+
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiSkillDjinn.png"
@@ -178,6 +185,7 @@ class Skill : public Component {
 
         static void InitializeSkillInfoMap();
 
+        void CreateTagCount();
 
     private:
         SkillId id;
@@ -186,5 +194,6 @@ class Skill : public Component {
         std::string textSkill = "";
         AP* apInstance;
         GameObject* jewelObj;
+        GameObject* tagCount;
         bool toggleJewel;
 };

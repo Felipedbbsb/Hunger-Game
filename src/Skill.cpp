@@ -31,10 +31,8 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap)
     readerSkill(nullptr),
     apInstance(ap),
     jewelObj(nullptr),
+    tagCount(nullptr),
     toggleJewel(false) {
-
-    //Game::GetInstance().GetCurrentState().AddObject(&associated); 
-
     
 }
 
@@ -61,7 +59,9 @@ void Skill::Start() {
         jewelObj->AddComponent((std::shared_ptr<CameraFollower>)jewelObj_cmfl);
         
         Game::GetInstance().GetCurrentState().AddObject(jewelObj);
-        
+
+
+        CreateTagCount();
     }
 
     
@@ -71,6 +71,10 @@ Skill::~Skill() {
     if(jewelObj != nullptr){
         jewelObj->RequestDelete();
         jewelObj = nullptr;
+        if(tagCount){
+            tagCount->RequestDelete();
+            tagCount = nullptr;
+        }
     }
 }
 
@@ -118,6 +122,56 @@ void Skill::Update(float dt) {
 
         } 
     }
+
+
+
+
+
+
+
+
+
+    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
+    bool available = (AP::apCount >= tempSkillInfo.apCost);
+
+    auto spriteComponent = associated.GetComponent("Sprite");
+    auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+    if (spriteComponentPtr) {
+        if (!available) {
+            // Apply the desaturation effect
+            spriteComponentPtr->SetDesaturation(true);
+        } else {
+            // Ensure the sprite is not desaturated
+            spriteComponentPtr->SetDesaturation(false);
+        }
+    }    
+
+    if(jewelObj != nullptr){
+        spriteComponent = jewelObj->GetComponent("Sprite");
+        spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+        if (spriteComponentPtr) {
+            if (!available) {
+                if (!toggleJewel) {
+                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour2));
+                    toggleJewel = true;  
+                    tagCount->RequestDelete();
+                    tagCount = nullptr;
+                }
+            } else { 
+                if (toggleJewel) {
+                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    Sprite* jewelObj_behaviour3 = new Sprite(*jewelObj, AP_FULL_SPRITE);
+                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour3));
+                    toggleJewel = false;  
+                    CreateTagCount();
+                }
+            }
+        }
+    }
+
+
 } 
 
 
@@ -161,41 +215,38 @@ void Skill::DeselectBack(TargetType targetTypeBack) {
 
 
 void Skill::Render() {
-    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
-    bool available = (AP::apCount >= tempSkillInfo.apCost);
+}
 
-    auto spriteComponent = associated.GetComponent("Sprite");
-    auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
-    if (spriteComponentPtr) {
-        if (!available) {
-            // Apply the desaturation effect
-            spriteComponentPtr->SetDesaturation(true);
-        } else {
-            // Ensure the sprite is not desaturated
-            spriteComponentPtr->SetDesaturation(false);
-        }
-    }    
+void Skill::CreateTagCount() {
+    //numberCounter
+    if(tagCount == nullptr){
+        const SkillInfo& skillInfo = skillInfoMap[id];
+        tagCount =  new GameObject(jewelObj->box.x, jewelObj->box.y); //posicao foi no olho...
+        std::string textNumber = std::to_string(skillInfo.apCost);
+        Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                                            TEXT_TAGCOUNT2_SIZE,
+                                                            Text::OUTLINE3,
+                                                            textNumber, 
+                                                            TEXT_TAGCOUNT_FONT_COLOR,
+                                                            0);   
 
-    if(jewelObj != nullptr){
-        spriteComponent = jewelObj->GetComponent("Sprite");
-        spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
-        if (spriteComponentPtr) {
-            if (!available) {
-                if (!toggleJewel) {
-                    jewelObj->RemoveComponent(spriteComponentPtr);
-                    Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
-                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour2));
-                    toggleJewel = true;  
-                }
-            } else { 
-                if (toggleJewel) {
-                    jewelObj->RemoveComponent(spriteComponentPtr);
-                    Sprite* jewelObj_behaviour3 = new Sprite(*jewelObj, AP_FULL_SPRITE);
-                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour3));
-                    toggleJewel = false;  
-                }
-            }
+        //Centralize
+        if(skillInfo.apCost == 1){
+            tagCount->box.x += jewelObj->box.w/2 - tagCount->box.w * 0.45 ;                                                 
+            tagCount->box.y += jewelObj->box.h/2 - tagCount->box.h/2; 
+        }  
+        else if(skillInfo.apCost == 2){
+            tagCount->box.x += jewelObj->box.w/2 - tagCount->box.w * 0.40 ;                                                 
+            tagCount->box.y += jewelObj->box.h/2 - tagCount->box.h/2; 
         }
+        else if(skillInfo.apCost == 3){
+            tagCount->box.x += jewelObj->box.w/2 - tagCount->box.w * 0.30 ;                                                 
+            tagCount->box.y += jewelObj->box.h/2 - tagCount->box.h/2;
+        }
+
+
+        tagCount->AddComponent(std::shared_ptr<Text>(tagCountNumber_behaviour));
+        Game::GetInstance().GetCurrentState().AddObject(tagCount);
     }
 }
 

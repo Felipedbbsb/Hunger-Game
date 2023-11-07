@@ -106,6 +106,10 @@ void Text::RemakeTexture() {
                 textLine.texture = RenderTextWithOutline(line, color, OUTLINE2_COLOR);
                 break;
             }
+            case OUTLINE3: {
+                textLine.texture = RenderTextWithOutline(line, color, OUTLINE3_COLOR);
+                break;
+            }
         }
         SDL_QueryTexture(textLine.texture, nullptr, nullptr, &textLine.width, &textLine.height);
         lines.push_back(textLine);
