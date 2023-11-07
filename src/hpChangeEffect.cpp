@@ -14,8 +14,8 @@ hpChangeEffect::hpChangeEffect(GameObject& associated, std::string number, int l
     lifebarRectY(lifebarRectY),
     direction(rand() % 2 == 0 ? 1 : -1), // Randomly choose left or right (1 for right, -1 for left)
     concavity(1), // 1 for upward concavity
-    maxXDisplacement(100),
-    tMaxHeight(200),
+    maxXDisplacement(75),
+    tMaxHeight(175),
     alpha(1)
 {
 }
@@ -57,7 +57,7 @@ void hpChangeEffect::Update(float dt) {
     associated.box.x = initialXPosition + xDisplacement;
     associated.box.y = initialYPosition + yDisplacement;
 
-     auto textComponent = associated.GetComponent("Text");
+    auto textComponent = associated.GetComponent("Text");
     auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
 
     // Atualize o valor alpha para aumentar gradualmente, atingir 255 na altura máxima e diminuir depois

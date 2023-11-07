@@ -45,7 +45,7 @@ class Papiro : public Component {
         bool Is(std::string type);
 
         void CreateEnemyObject();
-        void CreatePlayerObject(Skill::TargetType targetType);
+        void CreatePlayerObject(Skill::TargetType targetType, Skill::TargetType targetReceiver);
 
     private:
         GameObject* background;

@@ -1,9 +1,9 @@
 #include "Text.h"
 #include "Game.h"
 #include "Camera.h"
-#include "Resources.h"
-#include <sstream>
-
+#include "Resources.h"  
+#include <sstream> 
+ 
 Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color, int blinkPeriod)
     : Component(associated),
       font(nullptr),

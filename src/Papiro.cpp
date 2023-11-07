@@ -77,12 +77,12 @@ void Papiro::Start() {
         if(attackType == Skill::BUFF_INDIVIDUAL || attackType == Skill::BUFF_ALL){
             //daughter always in front
             if(whoAttacks == Skill::TargetType::MOTHER){
-                CreatePlayerObject(whoAttacks);
-                CreatePlayerObject(whoReceives);
+                CreatePlayerObject(whoAttacks, whoReceives);
+                CreatePlayerObject(whoReceives, whoReceives);
             }
             else{
-                CreatePlayerObject(whoReceives);
-                CreatePlayerObject(whoAttacks);
+                CreatePlayerObject(whoReceives, whoReceives);
+                CreatePlayerObject(whoAttacks, whoReceives);
             }
 
             objectsMovesRight = false;
@@ -90,7 +90,7 @@ void Papiro::Start() {
         }
         else{
             CreateEnemyObject();
-            CreatePlayerObject(whoAttacks);
+            CreatePlayerObject(whoAttacks, Skill::TargetType::IRR);
             objectsMovesRight = true;
             centralized = false;
         }
@@ -103,7 +103,7 @@ void Papiro::Start() {
             centralized = true;
         }
         else{
-            CreatePlayerObject(whoReceives);
+            CreatePlayerObject(whoReceives, Skill::TargetType::IRR);
             CreateEnemyObject();
             objectsMovesRight = false;
             centralized = false;
@@ -119,7 +119,7 @@ void Papiro::CreateEnemyObject(){
     if(!enemiesArrayIS.empty()){
         for (const auto &enemyId : enemiesArrayIS) {
             GameObject* interactionObj = new GameObject(background->box.x, background->box.y);
-            InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, Skill::TargetType::IRR, enemyId, !movingRight);
+            InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, attackType, Skill::TargetType::IRR, enemyId, !movingRight);
             interactionObj->AddComponent(std::shared_ptr<InteractionObject>(interactionObj_behaviour));
             interactionObj->box.x -= interactionObj->box.w;
 
@@ -130,9 +130,13 @@ void Papiro::CreateEnemyObject(){
     }
 }
 
-void Papiro::CreatePlayerObject(Skill::TargetType targetType){
+void Papiro::CreatePlayerObject(Skill::TargetType targetType,  Skill::TargetType targetReceiver){
     GameObject* interactionObjP = new GameObject(background->box.x, background->box.y);
-    InteractionObject* interactionObjP_behaviour = new InteractionObject(*interactionObjP, targetType, Enemies::EnemyId::INVALID_ENEMY, movingRight);
+    bool tempRight = movingRight;
+    if(targetType == targetReceiver ){
+        tempRight = !tempRight;
+    }
+    InteractionObject* interactionObjP_behaviour = new InteractionObject(*interactionObjP, attackType, targetType, Enemies::EnemyId::INVALID_ENEMY, tempRight);   
     interactionObjP->AddComponent(std::shared_ptr<InteractionObject>(interactionObjP_behaviour));
     interactionObjP->box.x -= interactionObjP->box.w;
 
@@ -167,6 +171,15 @@ Papiro::~Papiro() {
 }
  
 void Papiro::Update(float dt) {
+
+    for (int i = PLayerObjects.size() - 1; i >= 0; i--) {
+        PLayerObjects[i].lock()->Update(dt);
+    }
+
+    for (int i = interactionObjects.size() - 1; i >= 0; i--) {
+        interactionObjects[i].lock()->Update(dt);
+    }
+
     papiro_obj->Update(dt);
 
     if (movingRight) {

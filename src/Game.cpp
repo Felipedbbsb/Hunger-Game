@@ -133,7 +133,7 @@ bool Game::CreateWindowAndRenderer(const std::string& title, int width, int heig
 
 //A ordem importa! Faça na ordem inversa da inizialização
 Game::~Game() {
-    // Clean up the state stack using a while loop
+    // Clean up the state stack using a while loop 
     while (!stateStack.empty()) {
         // Delete and pop each state, ensuring proper resource release
         stateStack.pop();
@@ -143,7 +143,7 @@ Game::~Game() {
     if (storedState != nullptr) {
         delete storedState;
     }
-
+ 
     Resources::ClearImages();
 	Resources::ClearSounds();
 	Resources::ClearMusics();

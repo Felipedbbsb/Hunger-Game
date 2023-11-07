@@ -49,7 +49,7 @@ void Daughter::Start()
     //If enemies starts with tags
     ApplyTags(tags);   
  
-    lifeBarDaughter->SetCurrentHP(hp);   
+    //lifeBarDaughter->SetCurrentHP(hp);   
  
 } 
  
@@ -342,6 +342,10 @@ void Daughter::RemoveOneTagAll() {
 
     for (const auto& tag : tags) {
         if (tagCountMap.find(tag) != tagCountMap.end() && tagCountMap[tag] > 0) {
+            if(tag == Tag::Tags::CURSE){
+                hp -= tagCountMap[tag];
+                lifeBarDaughter->SetCurrentHP(hp);
+            }
             tagCountMap[tag]--;
 
             // Iterate over the list of weak_ptr to the tag GameObjects

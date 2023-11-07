@@ -6,15 +6,18 @@
 
 #define MOTHER_SPRITE_ATK "assets/img/mom/momMeleeAttack.png"
 #define MOTHER_SPRITE_DFS "assets/img/mom/momDamage.png"
+#define MOTHER_SPRITE_BUFF "assets/img/mom/momDamage.png"
 
 #define DAUGHTER_SPRITE_ATK "assets/img/daughter/daughterMeleeAttack.png"
 #define DAUGHTER_SPRITE_DFS "assets/img/daughter/daughterDamage.png"
+#define DAUGHTER_SPRITE_BUFF "assets/img/daughter/daughterDamage.png"
 
 
 
 class InteractionObject : public Component {
     public:
         InteractionObject(GameObject &associated, 
+                            Skill::AttackType attackType,
                             Skill::TargetType targetType, 
                             Enemies::EnemyId enemyId, 
                             bool isAttacking);
@@ -31,6 +34,6 @@ class InteractionObject : public Component {
         Skill::TargetType targetType;
         Enemies::EnemyId enemyId;
         std::string iconPath;
-
+        Skill::AttackType attackType;
         bool isAttacking;
 };  

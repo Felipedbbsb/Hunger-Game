@@ -101,19 +101,24 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
     this->hpCurrent = hpCurrent;
     UpdateLifeBarRect();
 
+    std::string changeText;
     // Create the number change effect GameObject 
-    //if (hpChange != 0) {
-        GameObject *hpChangeEffec_obj = new GameObject(associated.box.x + associated.box.w/2, lifeBarRect.y - associated.box.h); 
-        std::string changeText = (hpChange > 0) ? "+" + std::to_string(hpChange) : std::to_string(hpChange);
-        hpChangeEffect* hpReader_behaviour = new hpChangeEffect(*hpChangeEffec_obj, changeText, lifeBarRect.y);
-        hpChangeEffec_obj->AddComponent(std::shared_ptr<hpChangeEffect>(hpReader_behaviour));
+    if (hpChange != 0) {
 
-        hpChangeEffec_obj->box.x -= hpChangeEffec_obj->box.w / 2;
-        //hpChangeEffect->box.y += (lifeBarRect.h - hpChangeEffect->box.h) / 2 - 1;
+        changeText = (hpChange > 0) ? "+" + std::to_string(hpChange) : std::to_string(hpChange);
 
-        Game::GetInstance().GetCurrentState().AddObject(hpChangeEffec_obj);
+    }
+    else{
+        changeText = "DODGE!";
+    }
+    GameObject *hpChangeEffec_obj = new GameObject(associated.box.x + associated.box.w/2, lifeBarRect.y - associated.box.h); 
+    hpChangeEffect* hpReader_behaviour = new hpChangeEffect(*hpChangeEffec_obj, changeText, lifeBarRect.y);
+    hpChangeEffec_obj->AddComponent(std::shared_ptr<hpChangeEffect>(hpReader_behaviour));
 
-    //}
+    hpChangeEffec_obj->box.x -= hpChangeEffec_obj->box.w / 2;
+    //hpChangeEffect->box.y += (lifeBarRect.h - hpChangeEffect->box.h) / 2 - 1;
+
+    Game::GetInstance().GetCurrentState().AddObject(hpChangeEffec_obj);
 
     // Update the HP reader text 
     hpReaderRender();

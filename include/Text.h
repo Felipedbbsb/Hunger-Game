@@ -5,7 +5,7 @@
 #define INCLUDE_SDL_TTF
 #define BACKGROUND_COLOR {0, 255, 0, 0}
 #define OUTLINE_COLOR {142, 11, 11, 0}
-#define OUTLINE2_COLOR {68, 53, 53, 0}
+#define OUTLINE2_COLOR {50, 50, 50, 0}
 
 #include <iostream>
 #include <vector> 
