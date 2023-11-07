@@ -43,4 +43,5 @@ class CombatState : public State{
         std::vector<Enemies::EnemyId> enemiesArray;  
         GameObject* papiro;  
         std::string spriteBackground;
+        bool toggleState;
 };

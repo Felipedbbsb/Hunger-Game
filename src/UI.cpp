@@ -10,29 +10,13 @@
 UI::UI(GameObject &associated, std::vector<Skill::SkillId> SkillNormalArray, std::vector<Skill::SkillId> SkillDjinArray)
     : Component(associated), SkillNormalArray(SkillNormalArray), SkillDjinArray(SkillDjinArray){
     
-} 
- 
-
-
-UI::~UI() 
-{
-     
-}
-
-
-
-void UI::AddSkill(Skill::SkillId skill) {
-    SkillNormalArray.push_back(skill);
-}
-
-void UI::Start() {  
     //HUD backgorund 
     GameObject *ui_BG = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
     Sprite *ui_screen_BG_spr = new Sprite(*ui_BG, UI_SCREEN_BG_SPRITE);
     CameraFollower *ui_BG_cmfl = new CameraFollower(*ui_BG);
     ui_BG->AddComponent((std::shared_ptr<CameraFollower>)ui_BG_cmfl);
     ui_BG->AddComponent((std::shared_ptr<Sprite>)ui_screen_BG_spr);
-    Game::GetInstance().GetCurrentState().AddObject(ui_BG);
+    Game::GetInstance().GetCurrentState().AddObject(ui_BG);   
 
     //AP
     GameObject* ap_UI = new GameObject(associated.box.x , associated.box.y);
@@ -83,6 +67,24 @@ void UI::Start() {
         
     }
     
+
+} 
+ 
+
+
+UI::~UI() 
+{
+     
+}
+
+
+
+void UI::AddSkill(Skill::SkillId skill) {
+    SkillNormalArray.push_back(skill);
+}
+
+void UI::Start() {  
+    
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
     Sprite *ui_screen_spr = new Sprite(*ui, UI_SCREEN_SPRITE);
     CameraFollower *ui_cmfl = new CameraFollower(*ui);
@@ -90,7 +92,6 @@ void UI::Start() {
     ui->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
     Game::GetInstance().GetCurrentState().AddObject(ui);
 
- 
 }
 
 void UI::Update(float dt) { 

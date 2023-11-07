@@ -5,8 +5,10 @@
 #include "Game.h"
 #include "Tag.h"
 #include "AP.h"
+#include "Text.h"
 #include "GameData.h"
 #include "Camera.h"
+#include "CameraFollower.h"
  
 Skill* Skill::selectedSkill = nullptr; //generic 
 
@@ -22,11 +24,18 @@ std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
 
 Skill::TargetType Skill::playerTargetType = Skill::IRR;
 
+
 Skill::Skill(GameObject& associated, SkillId id, AP* ap)
     : Component::Component(associated),
     id(id),  
     readerSkill(nullptr),
-    apInstance(ap) {
+    apInstance(ap),
+    jewelObj(nullptr),
+    toggleJewel(false) {
+
+    //Game::GetInstance().GetCurrentState().AddObject(&associated); 
+
+    
 }
 
 void Skill::Start() {
@@ -39,9 +48,30 @@ void Skill::Start() {
  
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
     associated.AddComponent(std::shared_ptr<Sprite>(skillSprite));
+
+    if(jewelObj == nullptr){
+        jewelObj = new GameObject(associated.box.x, associated.box.y);
+        Sprite* jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
+        jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour));
+
+        jewelObj->box.x += associated.box.w - jewelObj->box.w/2;
+        jewelObj->box.y += associated.box.h/2 - jewelObj->box.h/2;
+        
+        CameraFollower *jewelObj_cmfl = new CameraFollower(*jewelObj);
+        jewelObj->AddComponent((std::shared_ptr<CameraFollower>)jewelObj_cmfl);
+        
+        Game::GetInstance().GetCurrentState().AddObject(jewelObj);
+        
+    }
+
+    
 }
 
 Skill::~Skill() {
+    if(jewelObj != nullptr){
+        jewelObj->RequestDelete();
+        jewelObj = nullptr;
+    }
 }
 
 void Skill::Update(float dt) {
@@ -145,6 +175,28 @@ void Skill::Render() {
             spriteComponentPtr->SetDesaturation(false);
         }
     }    
+
+    if(jewelObj != nullptr){
+        spriteComponent = jewelObj->GetComponent("Sprite");
+        spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+        if (spriteComponentPtr) {
+            if (!available) {
+                if (!toggleJewel) {
+                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour2));
+                    toggleJewel = true;  
+                }
+            } else { 
+                if (toggleJewel) {
+                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    Sprite* jewelObj_behaviour3 = new Sprite(*jewelObj, AP_FULL_SPRITE);
+                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour3));
+                    toggleJewel = false;  
+                }
+            }
+        }
+    }
 }
 
 Skill::SkillId Skill::GetId() {

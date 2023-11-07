@@ -7,6 +7,8 @@
 #include "GameData.h"
 #include "CombatState.h"
 #include "InteractionObject.h"
+#include "CameraFollower.h"
+
 #include <algorithm>
 
 
@@ -34,7 +36,7 @@ void Papiro::Start() {
     papiro_obj = new GameObject();
     Sprite *Papiro_spr = new Sprite(*papiro_obj, spritePath); 
     papiro_obj->AddComponent(std::shared_ptr<Sprite>(Papiro_spr));    
-    
+
     associated.box.w = papiro_obj->box.w;
     associated.box.h = papiro_obj->box.h;
 
@@ -45,7 +47,8 @@ void Papiro::Start() {
         // Move Papiro to the right initially
         associated.box.x += RESOLUTION_WIDTH * Game::resizer;
     }
-    papiro_obj->box.x = associated.box.x;
+    papiro_obj->box.x = associated.box.x-Camera::pos.x;
+    papiro_obj->box.y = -Camera::pos.y;
 
     papiroVelocity = 2*(associated.box.w / (INTERACTION_COOLDOWN * 0.25)) ;
     papiroAc =(papiroVelocity) / (INTERACTION_COOLDOWN * 0.25);
@@ -53,12 +56,12 @@ void Papiro::Start() {
     // Posicionar o ponto central 
     //int centerX = 392 + (1132 / 2) + associated.box.x; // Posição X do ponto central
     //int centerY = 221 + (638 / 2); // Posição Y do ponto central
-
+ 
  
     background = new GameObject(associated.box.x + 392, 221);
     Sprite *background_spr = new Sprite(*background, spriteBackground);
     background->AddComponent(std::shared_ptr<Sprite>(background_spr));
-     
+
     background_spr->SetClip(0, 0, PAPIRO_SCREEN.x/BG_SCALE, PAPIRO_SCREEN.y/BG_SCALE); // Define um ponto central de 1x1 pixel
     background_spr->SetScale(BG_SCALE,BG_SCALE);
     //background_spr->SetDesaturation(true); 
@@ -123,6 +126,9 @@ void Papiro::CreateEnemyObject(){
             interactionObj->AddComponent(std::shared_ptr<InteractionObject>(interactionObj_behaviour));
             interactionObj->box.x -= interactionObj->box.w;
 
+            CameraFollower *interactionObj_cmfl = new CameraFollower(*interactionObj);
+            interactionObj->AddComponent((std::shared_ptr<CameraFollower>)interactionObj_cmfl);
+
             std::weak_ptr<GameObject> go_obj = Game::GetInstance().GetCurrentState().AddObject(interactionObj);
             interactionObjects.push_back(go_obj);
 
@@ -139,6 +145,10 @@ void Papiro::CreatePlayerObject(Skill::TargetType targetType,  Skill::TargetType
     InteractionObject* interactionObjP_behaviour = new InteractionObject(*interactionObjP, attackType, targetType, Enemies::EnemyId::INVALID_ENEMY, tempRight);   
     interactionObjP->AddComponent(std::shared_ptr<InteractionObject>(interactionObjP_behaviour));
     interactionObjP->box.x -= interactionObjP->box.w;
+
+    CameraFollower *interactionObjP_cmfl = new CameraFollower(*interactionObjP);
+    interactionObjP->AddComponent((std::shared_ptr<CameraFollower>)interactionObjP_cmfl);
+
 
     std::weak_ptr<GameObject> go_objP = Game::GetInstance().GetCurrentState().AddObject(interactionObjP);
     PLayerObjects.push_back(go_objP);
@@ -219,8 +229,8 @@ void Papiro::Update(float dt) {
    
     }
 
-    background->box.x = associated.box.x + backgroundOffsetX;
-    papiro_obj->box.x = associated.box.x;
+    background->box.x = associated.box.x + backgroundOffsetX -Camera::pos.x;
+    papiro_obj->box.x = associated.box.x -Camera::pos.x;
 
     if(objectsMovesRight){
         objectsMoves += OBJECT_VELOCITY * dt;
@@ -237,7 +247,7 @@ void Papiro::Update(float dt) {
            interactionObj.lock()->box.x += interactionObj.lock()->box.w/2;
         }
 
-        interactionObj.lock()->box.y = background->box.y +  background->box.h - interactionObj.lock()->box.h;
+        interactionObj.lock()->box.y = background->box.y +  background->box.h - interactionObj.lock()->box.h-Camera::pos.y;
         spacingEnemies++;
 
     }
@@ -250,7 +260,7 @@ void Papiro::Update(float dt) {
            PLayerObject.lock()->box.x += PAPIRO_SCREEN.x/4 - PAPIRO_SCREEN.x/2 ;
         }
 
-        PLayerObject.lock()->box.y = background->box.y +  background->box.h - PLayerObject.lock()->box.h;
+        PLayerObject.lock()->box.y = background->box.y +  background->box.h - PLayerObject.lock()->box.h-Camera::pos.y;
         spacingplayers++;
 
     }

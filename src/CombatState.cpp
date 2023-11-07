@@ -26,7 +26,8 @@ CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string
 : State::State(),
 enemiesArray(enemiesArray),
 papiro(nullptr),
-spriteBackground(spriteBackground){} 
+spriteBackground(spriteBackground),
+toggleState(true){}
   
 CombatState::~CombatState(){}
 
@@ -52,16 +53,28 @@ void CombatState::Update(float dt){
 
     //============================ Checks whether to delete objects and updates ========================================
     if(!CombatState::InteractionSCreenActivate){
-       UpdateArray(dt);
-       papiro = nullptr; 
+        if(!toggleState){
+            toggleState = true;
+            Resume();
+        }
+        UpdateArray(dt);
+        papiro = nullptr; 
     }
     else{
+        if(toggleState){
+            toggleState = false;
+            Pause();
+        }
+
         if(papiro == nullptr){
             papiro = new GameObject();
             Papiro* papiro_behaviour = new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
                                                         CombatState::attackType,
                                                         CombatState::whoAttacks,
                                                         CombatState::whoReceives);
+
+            CameraFollower *papiro_cmfl = new CameraFollower(*papiro);
+            //papiro->AddComponent((std::shared_ptr<CameraFollower>)papiro_cmfl);
             papiro->AddComponent((std::shared_ptr<Component>)papiro_behaviour);
             AddObject(papiro);
         }
@@ -139,7 +152,9 @@ void CombatState::Start(){
     started = true;
 }
  
-void CombatState::Pause(){}
+void CombatState::Pause(){
+    
+}
 
 void CombatState::Resume(){
     CombatState::InteractionSCreenActivate = false;

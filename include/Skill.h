@@ -179,11 +179,12 @@ class Skill : public Component {
         static void InitializeSkillInfoMap();
 
 
-
     private:
         SkillId id;
         Timer skillClickTimer;
         GameObject* readerSkill;
         std::string textSkill = "";
         AP* apInstance;
+        GameObject* jewelObj;
+        bool toggleJewel;
 };
