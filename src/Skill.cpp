@@ -124,12 +124,7 @@ void Skill::Update(float dt) {
     }
 
 
-
-
-
-
-
-
+ 
 
     Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
     bool available = (AP::apCount >= tempSkillInfo.apCost);
@@ -316,9 +311,9 @@ void Skill::InitializeSkillInfoMap() {
 
 
     // Apply 2 vulnerable 
-    skillInfoMap[E3_Skill1] = {0, Skill::StateProtected::NOCHANGES,   8, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+    skillInfoMap[E3_Skill1] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,        NONE, IRR} ;
 
-    //Apply Rampage in all allies
+    //Apply Rampage in all allies 
     skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
 
  

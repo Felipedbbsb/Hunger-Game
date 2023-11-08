@@ -14,7 +14,7 @@
 #include "Tag.h" 
 #include "AP.h" 
 
-#define TEXT_TAGCOUNT2_SIZE 45
+#define TEXT_TAGCOUNT2_SIZE 42
 
 
 
@@ -197,3 +197,4 @@ class Skill : public Component {
         GameObject* tagCount;
         bool toggleJewel;
 };
+ 

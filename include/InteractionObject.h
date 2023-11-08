@@ -10,9 +10,11 @@
 
 #define DAUGHTER_SPRITE_ATK "assets/img/daughter/daughterMeleeAttack.png"
 #define DAUGHTER_SPRITE_DFS "assets/img/daughter/daughterDamage.png"
-#define DAUGHTER_SPRITE_BUFF "assets/img/daughter/daughterDamage.png"
+#define DAUGHTER_SPRITE_BUFF "assets/img/daughter/daughterBuff.png"
 
-
+#define ATK_SPRITE "assets/img/UI/effectDamage.png"
+#define DEBUFF_SPRITE "assets/img/UI/effectDebuff.png" 
+#define BUFF_SPRITE "assets/img/UI/effectBuff.png"
 
 class InteractionObject : public Component {
     public:
@@ -28,7 +30,8 @@ class InteractionObject : public Component {
         void Render();
         bool Is(std::string type);
 
-        // Map to store enemy information
+        void CreateEffect(std::string TypeEffect);
+        void SetPos(int posX, int posY);
 
     private:
         Skill::TargetType targetType;
@@ -36,4 +39,8 @@ class InteractionObject : public Component {
         std::string iconPath;
         Skill::AttackType attackType;
         bool isAttacking;
+        GameObject* effect;
+        int posX;
+        int posY;
+        std::string typeEffect;
 };  

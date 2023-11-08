@@ -92,8 +92,8 @@ void Papiro::Start() {
             centralized = true;
         }
         else{
-            CreateEnemyObject();
             CreatePlayerObject(whoAttacks, Skill::TargetType::IRR);
+            CreateEnemyObject(false);
             objectsMovesRight = true;
             centralized = false;
         }
@@ -101,13 +101,13 @@ void Papiro::Start() {
     }
     else{
         if(attackType == Skill::BUFF_INDIVIDUAL || attackType == Skill::BUFF_ALL){   
-            CreateEnemyObject();
+            CreateEnemyObject(true);
             objectsMovesRight = true;
             centralized = true;
         }
         else{
+            CreateEnemyObject(true);
             CreatePlayerObject(whoReceives, Skill::TargetType::IRR);
-            CreateEnemyObject();
             objectsMovesRight = false;
             centralized = false;
         }
@@ -118,11 +118,11 @@ void Papiro::Start() {
 
 }   
 
-void Papiro::CreateEnemyObject(){
+void Papiro::CreateEnemyObject(bool acting){
     if(!enemiesArrayIS.empty()){
         for (const auto &enemyId : enemiesArrayIS) {
-            GameObject* interactionObj = new GameObject(background->box.x, background->box.y);
-            InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, attackType, Skill::TargetType::IRR, enemyId, !movingRight);
+            GameObject* interactionObj = new GameObject(-10000,-10000);
+            InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, attackType, Skill::TargetType::IRR, enemyId, acting);
             interactionObj->AddComponent(std::shared_ptr<InteractionObject>(interactionObj_behaviour));
             interactionObj->box.x -= interactionObj->box.w;
 
@@ -137,7 +137,7 @@ void Papiro::CreateEnemyObject(){
 }
 
 void Papiro::CreatePlayerObject(Skill::TargetType targetType,  Skill::TargetType targetReceiver){
-    GameObject* interactionObjP = new GameObject(background->box.x, background->box.y);
+    GameObject* interactionObjP = new GameObject(-10000,-10000);
     bool tempRight = movingRight;
     if(targetType == targetReceiver ){
         tempRight = !tempRight;
@@ -182,6 +182,7 @@ Papiro::~Papiro() {
  
 void Papiro::Update(float dt) {
 
+
     for (int i = PLayerObjects.size() - 1; i >= 0; i--) {
         PLayerObjects[i].lock()->Update(dt);
     }
@@ -193,7 +194,7 @@ void Papiro::Update(float dt) {
     papiro_obj->Update(dt);
 
     if (movingRight) {
-        // Mother or Daughter is attacking, move Papiro to the right
+        // Mother or Daughter is attacking, move Papiro to the right 
          if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25) {
             associated.box.x += papiroVelocity * dt;
             papiroVelocity -= papiroAc * dt;
@@ -239,30 +240,49 @@ void Papiro::Update(float dt) {
         objectsMoves -= OBJECT_VELOCITY * dt;    
     }  
   
+
+
+    //=================================Enemies update position=============================
     int spacingEnemies = 0; 
-    for (auto& interactionObj : interactionObjects) {
-        interactionObj.lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - interactionObj.lock()->box.w/2 + objectsMoves + SPACING_ENEMIES * spacingEnemies;
+    for (int i = interactionObjects.size() - 1; i >= 0; i--) {
+        
+        interactionObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - interactionObjects[i].lock()->box.w/2 + objectsMoves + SPACING_ENEMIES * spacingEnemies;
 
         if(!centralized){
-           interactionObj.lock()->box.x += interactionObj.lock()->box.w/2;
+           interactionObjects[i].lock()->box.x += interactionObjects[i].lock()->box.w/2;
         }
 
-        interactionObj.lock()->box.y = background->box.y +  background->box.h - interactionObj.lock()->box.h-Camera::pos.y;
-        spacingEnemies++;
+        interactionObjects[i].lock()->box.y = background->box.y +  background->box.h - interactionObjects[i].lock()->box.h-Camera::pos.y;
+        spacingEnemies++; 
 
+
+        auto objComponent = interactionObjects[i].lock()->GetComponent("InteractionObject");
+        auto objComponentPtr = std::dynamic_pointer_cast<InteractionObject>(objComponent);
+        if(objComponentPtr){
+            objComponentPtr->SetPos(interactionObjects[i].lock()->box.x, interactionObjects[i].lock()->box.y);
+        }
+        
     }
+
  
+    //=================================Players update position=============================
     int spacingplayers = 0; 
-    for (auto& PLayerObject : PLayerObjects) {
-        PLayerObject.lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - PLayerObject.lock()->box.w/2 + objectsMoves + SPACING_PLAYERS * spacingplayers;
+    for (int i = PLayerObjects.size() - 1; i >= 0; i--) {
+        PLayerObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - PLayerObjects[i].lock()->box.w/2 + objectsMoves + SPACING_PLAYERS * spacingplayers;
         
         if(!centralized){
-           PLayerObject.lock()->box.x += PAPIRO_SCREEN.x/4 - PAPIRO_SCREEN.x/2 ;
+           PLayerObjects[i].lock()->box.x += PAPIRO_SCREEN.x/4 - PAPIRO_SCREEN.x/2 ;
         }
 
-        PLayerObject.lock()->box.y = background->box.y +  background->box.h - PLayerObject.lock()->box.h-Camera::pos.y;
+        PLayerObjects[i].lock()->box.y = background->box.y +  background->box.h - PLayerObjects[i].lock()->box.h-Camera::pos.y;
         spacingplayers++;
 
+
+        auto objComponent2 = PLayerObjects[i].lock()->GetComponent("InteractionObject");
+        auto objComponentPtr2 = std::dynamic_pointer_cast<InteractionObject>(objComponent2);
+        if(objComponentPtr2){
+            objComponentPtr2->SetPos(PLayerObjects[i].lock()->box.x, PLayerObjects[i].lock()->box.y);
+        }
     }
 
     interactionTime.Update(dt); 

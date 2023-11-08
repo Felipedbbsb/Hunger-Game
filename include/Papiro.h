@@ -21,7 +21,7 @@
 #define PAPIRO_PLAYER_SPRITE "assets/img/UI/PapiroPlayer.png"
 
 #define OFFESET_ENEMIES  Vec2(500, -50)
-#define SPACING_ENEMIES  100
+#define SPACING_ENEMIES  150
 
 #define SPACING_PLAYERS  150
 
@@ -44,7 +44,7 @@ class Papiro : public Component {
         void Start();
         bool Is(std::string type);
 
-        void CreateEnemyObject();
+        void CreateEnemyObject(bool acting);
         void CreatePlayerObject(Skill::TargetType targetType, Skill::TargetType targetReceiver);
 
     private:

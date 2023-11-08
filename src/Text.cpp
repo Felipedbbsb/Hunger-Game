@@ -9,7 +9,7 @@ Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle
       font(nullptr),
       texture(nullptr),
       text(text),
-      style(style),
+      style(style), 
       fontFile(fontFile),
       fontSize(fontSize),
       color(color),

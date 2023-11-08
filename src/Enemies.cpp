@@ -267,9 +267,9 @@ void Enemies::Update(float dt) {
                             ActivateTag(Tag::Tags::WEAK);
                             hasWeak = true;
                         } 
-                        CombatState::enemiesArrayIS.push_back(id);
                         Skill::HasTagRampageOrWeak ={hasRampage, hasWeak};
                     }    
+                    CombatState::enemiesArrayIS.push_back(id);
                 }
 
                 //=============================Skill buff sector==============================

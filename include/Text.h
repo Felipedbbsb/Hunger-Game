@@ -6,7 +6,7 @@
 #define BACKGROUND_COLOR {0, 255, 0, 0}
 #define OUTLINE_COLOR {142, 11, 11, 0}
 #define OUTLINE2_COLOR {50, 50, 50, 0}
-#define OUTLINE3_COLOR {255, 120, 0, 0}
+#define OUTLINE3_COLOR {0, 0, 0, 0}
 
 #include <iostream>
 #include <vector> 
