@@ -5,7 +5,10 @@
 #include "Game.h"
 #include "Tag.h"
 #include "AP.h"
+#include "Text.h"
 #include "GameData.h"
+#include "Camera.h"
+#include "CameraFollower.h"
  
 Skill* Skill::selectedSkill = nullptr; //generic 
 
@@ -21,11 +24,17 @@ std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
 
 Skill::TargetType Skill::playerTargetType = Skill::IRR;
 
+std::vector<Skill::SkillId> Skill::skillArray = {};
+
 Skill::Skill(GameObject& associated, SkillId id, AP* ap)
     : Component::Component(associated),
     id(id),  
     readerSkill(nullptr),
-    apInstance(ap) {
+    apInstance(ap),
+    jewelObj(nullptr),
+    tagCount(nullptr),
+    toggleJewel(false) {
+    
 }
 
 void Skill::Start() {
@@ -38,9 +47,36 @@ void Skill::Start() {
  
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
     associated.AddComponent(std::shared_ptr<Sprite>(skillSprite));
+
+    if(jewelObj == nullptr){
+        jewelObj = new GameObject(associated.box.x, associated.box.y);
+        Sprite* jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
+        jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour));
+
+        jewelObj->box.x += associated.box.w - jewelObj->box.w/2;
+        jewelObj->box.y += associated.box.h/2 - jewelObj->box.h/2;
+        
+        CameraFollower *jewelObj_cmfl = new CameraFollower(*jewelObj);
+        jewelObj->AddComponent((std::shared_ptr<CameraFollower>)jewelObj_cmfl);
+        
+        Game::GetInstance().GetCurrentState().AddObject(jewelObj);
+
+
+        CreateTagCount();
+    }
+
+    
 }
 
 Skill::~Skill() {
+    if(jewelObj != nullptr){
+        jewelObj->RequestDelete();
+        jewelObj = nullptr;
+        if(tagCount){
+            tagCount->RequestDelete();
+            tagCount = nullptr;
+        }
+    }
 }
 
 void Skill::Update(float dt) {
@@ -52,7 +88,7 @@ void Skill::Update(float dt) {
                 selectedSkill->Deselect();
     }
 
-    if (associated.box.Contains(mousePos.x, mousePos.y)) { 
+    if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)) { 
         if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
             if (!readerSkill) {
                 readerSkill = new GameObject(associated.box.x, associated.box.y);
@@ -87,6 +123,51 @@ void Skill::Update(float dt) {
 
         } 
     }
+
+
+ 
+
+    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
+    bool available = (AP::apCount >= tempSkillInfo.apCost);
+
+    auto spriteComponent = associated.GetComponent("Sprite");
+    auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+    if (spriteComponentPtr) {
+        if (!available) {
+            // Apply the desaturation effect
+            spriteComponentPtr->SetDesaturation(true);
+        } else {
+            // Ensure the sprite is not desaturated
+            spriteComponentPtr->SetDesaturation(false);
+        }
+    }    
+
+    if(jewelObj != nullptr){
+        spriteComponent = jewelObj->GetComponent("Sprite");
+        spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+        if (spriteComponentPtr) {
+            if (!available) {
+                if (!toggleJewel) {
+                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour2));
+                    toggleJewel = true;  
+                    tagCount->RequestDelete();
+                    tagCount = nullptr;
+                }
+            } else { 
+                if (toggleJewel) {
+                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    Sprite* jewelObj_behaviour3 = new Sprite(*jewelObj, AP_FULL_SPRITE);
+                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour3));
+                    toggleJewel = false;  
+                    CreateTagCount();
+                }
+            }
+        }
+    }
+
+
 } 
 
 
@@ -130,20 +211,39 @@ void Skill::DeselectBack(TargetType targetTypeBack) {
 
 
 void Skill::Render() {
-    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
-    bool available = (AP::apCount >= tempSkillInfo.apCost);
+}
 
-    auto spriteComponent = associated.GetComponent("Sprite");
-    auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
-    if (spriteComponentPtr) {
-        if (!available) {
-            // Apply the desaturation effect
-            spriteComponentPtr->SetDesaturation(true);
-        } else {
-            // Ensure the sprite is not desaturated
-            spriteComponentPtr->SetDesaturation(false);
+void Skill::CreateTagCount() {
+    //numberCounter
+    if(tagCount == nullptr){
+        const SkillInfo& skillInfo = skillInfoMap[id];
+        tagCount =  new GameObject(jewelObj->box.x, jewelObj->box.y); //posicao foi no olho...
+        std::string textNumber = std::to_string(skillInfo.apCost);
+        Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                                            TEXT_TAGCOUNT2_SIZE,
+                                                            Text::OUTLINE3,
+                                                            textNumber, 
+                                                            TEXT_TAGCOUNT_FONT_COLOR,
+                                                            0);   
+
+        //Centralize
+        if(skillInfo.apCost == 1){
+            tagCount->box.x += jewelObj->box.w/2 - tagCount->box.w * 0.45 ;                                                 
+            tagCount->box.y += jewelObj->box.h/2 - tagCount->box.h/2; 
+        }  
+        else if(skillInfo.apCost == 2){
+            tagCount->box.x += jewelObj->box.w/2 - tagCount->box.w * 0.40 ;                                                 
+            tagCount->box.y += jewelObj->box.h/2 - tagCount->box.h/2; 
         }
-    }    
+        else if(skillInfo.apCost == 3){
+            tagCount->box.x += jewelObj->box.w/2 - tagCount->box.w * 0.30 ;                                                 
+            tagCount->box.y += jewelObj->box.h/2 - tagCount->box.h/2;
+        }
+
+
+        tagCount->AddComponent(std::shared_ptr<Text>(tagCountNumber_behaviour));
+        Game::GetInstance().GetCurrentState().AddObject(tagCount);
+    }
 }
 
 Skill::SkillId Skill::GetId() {
@@ -152,6 +252,17 @@ Skill::SkillId Skill::GetId() {
 
 bool Skill::Is(std::string type) {
     return (type == "Skill");
+}
+
+
+//Starter skills
+void Skill::InitializeSkills() {
+    //Adding skills
+        skillArray.push_back(Skill::Helmbreaker);
+        skillArray.push_back(Skill::Rockabye);
+        skillArray.push_back(Skill::Stinger);
+        skillArray.push_back(Skill::HnS);
+        skillArray.push_back(Skill::InstantRegret);
 }
 
 void Skill::InitializeSkillInfoMap() {
@@ -172,12 +283,12 @@ void Skill::InitializeSkillInfoMap() {
     skillInfoMap[SKILL4] = {1, Skill::StateProtected::NOCHANGES, 5, {}, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, ATTACK_INDIVIDUAL, MOTHER, ATTACK_ALL, IRR};
 
     //-------------MOTHER SKILLS-----------
-    //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable.
+    //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable. 
     skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
 
     //Rockabye (2AP): Apply 1 Resilience to your daughter.
     skillInfoMap[Rockabye] =  {2, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
-
+ 
     //Stinger (2AP): Deal 5 Damage to all enemies; Expose your daughter.
     skillInfoMap[Stinger] =  {2, Skill::StateProtected::EXPOSED,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
  
@@ -191,15 +302,32 @@ void Skill::InitializeSkillInfoMap() {
 
 
     //----------Enemies skill------------
-    //5 damage , 1 n resilience back
-    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    // Deal 5 damage.
+    skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 
-    //0 damage n Provoke auto buff, 1 n RAMPAGE back all
-    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+    //Deal 2 damage; Gain 2 Rampage.
+    skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   2, {},     0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
 
-    //0 damage n 2 PROTECTED buff, 1 n resilience back
-    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        BUFF_INDIVIDUAL, IRR} ;
+    //Deal 7 Damage.
+    skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   7, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 
 
+    // Skill 1: Deal 1 damage; Apply 1 Weak to target
+    skillInfoMap[E2_Skill1] = {0, Skill::StateProtected::NOCHANGES,   1, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Apply 1 Resilience to a random ally
+    skillInfoMap[E2_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
+
+    // Apply 1 Weak to all enemies
+    skillInfoMap[E2_Skill3] = {0, Skill::StateProtected::NOCHANGES,   5, {Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    // Apply 2 vulnerable 
+    skillInfoMap[E3_Skill1] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Apply Rampage in all allies 
+    skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
+
+ 
 } 
        

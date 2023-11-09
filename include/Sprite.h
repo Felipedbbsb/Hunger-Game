@@ -44,6 +44,11 @@ class Sprite : public Component{
     void SetDesaturation(bool desaturate);
     
     void DesaturateTexture(SDL_Texture* texture);
+
+    Sprite(GameObject &associated, SDL_Texture *texture);
+
+    void SetTexture(SDL_Texture* texture);
+
   private:
     SDL_Texture *texture;
     int width;
@@ -53,7 +58,7 @@ class Sprite : public Component{
 
     int frameCount; 
     int currentFrame; 
-    float timeElapsed;
+    float timeElapsed; 
     float frameTime;
 
     Timer selfDestructCount;

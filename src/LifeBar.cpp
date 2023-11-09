@@ -2,7 +2,10 @@
 #include "Game.h"
 #include "Camera.h"
 #include "Reader.h"
-#include "text.h"
+#include "hpChangeEffect.h"
+#include "Text.h"
+#include "CameraFollower.h"
+
 #include <cmath>
 LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx )
     : Component(associated), 
@@ -30,7 +33,11 @@ void LifeBar::Start() {
 void LifeBar::Update(float dt) { 
     lifeBarRect.x = posx + Camera::pos.x; 
     lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET + Camera::pos.y);
+
+
 }
+
+
 
 void LifeBar::Render() {
     SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
@@ -88,11 +95,33 @@ void LifeBar::RenderSemicircle(SDL_Renderer* renderer, int x, int y, int radius,
 bool LifeBar::Is(std::string type) {
     return (type == "LifeBar");
 }
- 
-void LifeBar::SetCurrentHP(int hpCurrent) {
+   
+void LifeBar::SetCurrentHP(int hpCurrent) { 
+    int hpChange = hpCurrent - this->hpCurrent;
     this->hpCurrent = hpCurrent;
-    UpdateLifeBarRect(); 
-    hpReaderRender(); 
+    UpdateLifeBarRect();
+
+    std::string changeText;
+    // Create the number change effect GameObject 
+    if (hpChange != 0) {
+
+        changeText = (hpChange > 0) ? "+" + std::to_string(hpChange) : std::to_string(hpChange);
+
+    }
+    else{
+        changeText = "DODGE!";
+    }
+    GameObject *hpChangeEffec_obj = new GameObject(associated.box.x + associated.box.w/2, lifeBarRect.y - associated.box.h); 
+    hpChangeEffect* hpReader_behaviour = new hpChangeEffect(*hpChangeEffec_obj, changeText, lifeBarRect.y);
+    hpChangeEffec_obj->AddComponent(std::shared_ptr<hpChangeEffect>(hpReader_behaviour));
+
+    hpChangeEffec_obj->box.x -= hpChangeEffec_obj->box.w / 2;
+    //hpChangeEffect->box.y += (lifeBarRect.h - hpChangeEffect->box.h) / 2 - 1;
+
+    Game::GetInstance().GetCurrentState().AddObject(hpChangeEffec_obj);
+
+    // Update the HP reader text 
+    hpReaderRender();
 }
  
 void LifeBar::hpReaderRender() { 
@@ -111,8 +140,8 @@ void LifeBar::hpReaderRender() {
                                                       TEXT_LIFEBAR_FONT_COLOR,
                                                       0); 
  
-    hpReader->box.x += (lifeBarRect.w - hpReader->box.w)/2;                                                
-    hpReader->box.y += (lifeBarRect.h - hpReader->box.h)/2 - 1;     
+    hpReader->box.x += (lifeBarRect.w - hpReader->box.w)/2 - Camera::pos.x;                                                
+    hpReader->box.y += (lifeBarRect.h - hpReader->box.h)/2 - 1 - Camera::pos.y;     
 
     hpReader->AddComponent(std::shared_ptr<Text>(hpReader_behaviour));
     Game::GetInstance().GetCurrentState().AddObject(hpReader);
@@ -121,8 +150,8 @@ void LifeBar::hpReaderRender() {
 
 void LifeBar::UpdateLifeBarRect() {
     // Calculate the position and dimensions of the life bar rectangle
-    lifeBarRect.x = static_cast<int>(posx);
-    lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET); // Place it above the GameObject
+    lifeBarRect.x = static_cast<int>(posx+ Camera::pos.x);
+    lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET+ Camera::pos.y); // Place it above the GameObject
     lifeBarRect.w = lifeBarWidth;
     lifeBarRect.h = lifeBarHeight;  
 } 

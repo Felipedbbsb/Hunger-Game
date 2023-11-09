@@ -1,29 +1,39 @@
 #include "CombatState.h"
-#include "InteractionState.h"
 #include "Game.h"
 #include "InputManager.h" 
 #include "CameraFollower.h"
 #include "Camera.h"
 #include "Text.h"
 #include "UI.h"
-#include "Mother.h"
+#include "Mother.h" 
 #include "Daughter.h"
-#include "Enemies.h"
+#include "Enemies.h" 
 #include "Skill.h" 
+#include "Papiro.h" 
 
 bool CombatState::InteractionSCreenActivate = false;
 
+std::vector<Enemies::EnemyId> CombatState::enemiesArrayIS = {};
+ 
+Skill::AttackType CombatState::attackType = Skill::AttackType::NONE;
 
-CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray) 
+Skill::TargetType CombatState::whoAttacks = Skill::TargetType::IRR;
+
+Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR probably palyer is attacking
+
+
+CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string spriteBackground) 
 : State::State(),
-enemiesArray(enemiesArray){
-} 
+enemiesArray(enemiesArray),
+papiro(nullptr),
+spriteBackground(spriteBackground),
+toggleState(true){}
   
 CombatState::~CombatState(){}
 
 void CombatState::Update(float dt){   
     InputManager& input = InputManager::GetInstance();
-
+ 
     Camera::Update(dt);
  
     // If the event is quit, set the termination flag
@@ -31,42 +41,62 @@ void CombatState::Update(float dt){
         quitRequested = true;
     }
 
-    if (CombatState::InteractionSCreenActivate){
-        InteractionState* new_stage = new InteractionState();
-        Game::GetInstance().Push(new_stage); 
+    //if (CombatState::InteractionSCreenActivate){
+    //    InteractionState* new_stage = new InteractionState(CombatState::enemiesArrayIS,
+    //                                                      CombatState::attackType,
+   //                                                       CombatState::whoAttacks,
+    //                                                      CombatState::whoReceives);
+        //Game::GetInstance().Push(new_stage); 
         
-    }
+    //}
 
 
     //============================ Checks whether to delete objects and updates ========================================
-    UpdateArray(dt);
-    
-}
+    if(!CombatState::InteractionSCreenActivate){
+        if(!toggleState){
+            toggleState = true;
+            Resume();
+        }
+        UpdateArray(dt);
+        papiro = nullptr; 
+    }
+    else{
+        if(toggleState){
+            toggleState = false;
+            Pause(); 
+        }
+ 
+        if(papiro == nullptr){
+            papiro = new GameObject();
+            Papiro* papiro_behaviour = new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
+                                                        CombatState::attackType,
+                                                        CombatState::whoAttacks,
+                                                        CombatState::whoReceives);
+
+            //CameraFollower *papiro_cmfl = new CameraFollower(*papiro);
+            //papiro->AddComponent((std::shared_ptr<CameraFollower>)papiro_cmfl);
+            papiro->AddComponent((std::shared_ptr<Component>)papiro_behaviour);
+            AddObject(papiro);
+        }
+        else{
+            papiro->Update(dt);  
+        }
+    }
+     
+     
+} 
 
 void CombatState::LoadAssets(){
     //============================ Background ========================================
     GameObject *bg = new GameObject();
-    Sprite* menuSprite= new Sprite(*bg, COMBAT_IMAGE);
-    bg->AddComponent((std::shared_ptr<Component>)menuSprite);
+    Sprite* bgSprite= new Sprite(*bg, spriteBackground);
+    bg->AddComponent((std::shared_ptr<Component>)bgSprite);
     AddObject(bg);
 
     //============================ UI ========================================
     //UI takes up 1/3 of the box at the bottom
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-
-        //Adding skills
-        std::vector<Skill::SkillId> skillArrayNormal;
-        skillArrayNormal.push_back(Skill::Helmbreaker);
-        skillArrayNormal.push_back(Skill::Rockabye);
-        skillArrayNormal.push_back(Skill::Stinger);
-        skillArrayNormal.push_back(Skill::HnS);
-        
-        std::vector<Skill::SkillId> skillArrayDjinn;
-        skillArrayDjinn.push_back(Skill::InstantRegret);
-
- 
-
-    UI* ui_behaviour = new UI(*ui, skillArrayNormal, skillArrayDjinn); 
+    UI* ui_behaviour = new UI(*ui); 
     ui->AddComponent((std::shared_ptr<UI>)ui_behaviour); 
     CameraFollower *bg_cmfl = new CameraFollower(*ui);
     ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
@@ -76,13 +106,15 @@ void CombatState::LoadAssets(){
     GameObject *mom = new GameObject(MOTHER_POS);
     Mother* mom_behaviour= new Mother(*mom);
     mom->AddComponent((std::shared_ptr<Mother>)mom_behaviour);
-    AddObject(mom);
+    std::weak_ptr<GameObject> weak_mother = AddObject(mom);
+    Mother::motherInstance = weak_mother;
 
     //============================ Daughter ========================================
     GameObject *daughter = new GameObject(DAUGHTER_POS);
     Daughter* daughter_behaviour= new Daughter(*daughter);
     daughter->AddComponent((std::shared_ptr<Daughter>)daughter_behaviour);
-    AddObject(daughter);
+    std::weak_ptr<GameObject> weak_daughter = AddObject(daughter);
+    Daughter::daughterInstance = weak_daughter;
 
     //============================ Enemies ========================================
     for (int i = enemiesArray.size() - 1; i >= 0; i--) {
@@ -91,7 +123,8 @@ void CombatState::LoadAssets(){
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Enemies* enemy_behaviour = new Enemies(*enemy, enemiesArray[i]);
         enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
-        Game::GetInstance().GetCurrentState().AddObject(enemy);
+        std::weak_ptr<GameObject> weak_enemy = AddObject(enemy);
+        Enemies::enemiesArray.push_back(weak_enemy);
     }
 
 }
@@ -106,9 +139,15 @@ void CombatState::Start(){
     started = true;
 }
  
-void CombatState::Pause(){}
+void CombatState::Pause(){
+    
+}
 
 void CombatState::Resume(){
-
+    CombatState::InteractionSCreenActivate = false;
+    CombatState::enemiesArrayIS.clear();
+    CombatState::attackType = Skill::AttackType::NONE;
+    CombatState::whoAttacks = Skill::TargetType::IRR;
+    CombatState::whoReceives = Skill::TargetType::IRR;
 }
 

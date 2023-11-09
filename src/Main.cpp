@@ -16,20 +16,21 @@ int main(int argc, char** argv) {
         // Populate the map with skill information during initialization.
         Skill::InitializeSkillInfoMap();
 
+        Skill::InitializeSkills();
+
         // Populate the map with enemies information during initialization.
         Enemies::InitializeEnemyInfoMap();
 
         // ==========Enemies array==============
         std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
                                                        Enemies::ENEMY2, 
-                                                       Enemies::ENEMY3, 
-                                                       Enemies::ENEMY4 };
+                                                       Enemies::ENEMY3 };
 
-        CombatState* initialState = new CombatState(enemiesArray); // Pass the enemiesArray
+        CombatState* initialState = new CombatState(enemiesArray, COMBAT_IMAGE); // Pass the enemiesArray
 
         
         game.Push(initialState);
-
+ 
         game.Run();
         // ==========================================================================
     } catch (const std::exception& e) {

@@ -13,22 +13,24 @@
 #include "Vec2.h"
 #include "Skill.h"
 
-#define AP_POS Vec2( 75, RESOLUTION_HEIGHT * 2/3 + 50) 
+#define AP_POS Vec2( 0 , RESOLUTION_HEIGHT * 2/3) 
 
-#define PROTECTED_POS Vec2( 250, RESOLUTION_HEIGHT * 2/3 + 75) 
+#define PROTECTED_POS Vec2( 250, RESOLUTION_HEIGHT/10 + 75) 
 
-#define SKILL_N_OFFSET Vec2( 450, RESOLUTION_HEIGHT * 2/3 + 75) 
+#define SKILL_N_OFFSET Vec2( 367, RESOLUTION_HEIGHT * 2/3 + 123) 
 
-#define SKILL_D_OFFSET Vec2( 200, RESOLUTION_HEIGHT * 2/3 + 75) //x = distance between normal and djinn skills
+#define SKILL_D_OFFSET Vec2( 200, RESOLUTION_HEIGHT * 2/3 + 123) //x = distance between normal and djinn skills
 
-#define UI_SCREEN_SPRITE "assets/img/UI/uiBottomScreen.png"
+#define SKILL_SPACE 174
+
+#define UI_SCREEN_SPRITE "assets/img/UI/uiBottomScreen.png" 
+
+#define UI_SCREEN_BG_SPRITE "assets/img/UI/uiBottomScreenBG.png"
 
 class UI : public Component{
 
   public:
-    UI(GameObject &associated,
-       std::vector<Skill::SkillId> SkillNormalArray,
-       std::vector<Skill::SkillId> SkillDjinArray);
+    UI(GameObject &associated);
 
     ~UI();
     void Update(float dt);
@@ -38,13 +40,9 @@ class UI : public Component{
     void Resume();
     bool Is(std::string type);
 
-    void AddSkill(Skill::SkillId skill);
 
   private:
-    std::vector<Skill::SkillId> SkillNormalArray;
-    //int nSkillNormal;
-    std::vector<Skill::SkillId> SkillDjinArray;
-    //int nSkillDjinn;
+  
 
     
 

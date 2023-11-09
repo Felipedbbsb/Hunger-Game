@@ -15,13 +15,14 @@
 #include <string>
 #include <memory>
 
-
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1080
+#define COMBAT_IMAGE "assets/img/backgrounds/backgroundTemple.png"
+ 
+#define SCREEN_WIDTH 1366
+#define SCREEN_HEIGHT 768
 
 #define RESOLUTION_WIDTH 1920
 #define RESOLUTION_HEIGHT 1080
-
+ 
 class State;
 
 
@@ -36,6 +37,10 @@ class Game {
         void Push(State* state);
         void Run();
         float GetDeltaTime();
+        
+        void TakeScreenshot(std::string filename);
+        static float resizer;
+
 
     private:
         void CalculateDeltaTime();
@@ -54,5 +59,6 @@ class Game {
         bool InitializeMixer();
         bool InitializeTTF();
         bool CreateWindowAndRenderer(const std::string& title, int width, int height, int flags);
+
 
 };

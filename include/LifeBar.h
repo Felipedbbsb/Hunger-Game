@@ -3,15 +3,17 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "SDL_include.h"
+#include "Timer.h"
 #include <SDL2/SDL.h>
 #include "Reader.h"
 
 #define TEXT_LIFEBAR_FONT "assets/font/Play-Bold.ttf"
 #define TEXT_LIFEBAR_FONT_COLOR {255, 255, 255, 0} // Red Green Blue Alpha
+#define TEXT_HP_CHANGE_COLOR {255, 255, 255, 0}
 
 #define TEXT_LIFEBAR_SIZE 20
-
-#define LIFEBAROFFSET 20
+#define TEXT_HP_CHANGE_SIZE 40
+#define LIFEBAROFFSET 20 
 
 class LifeBar : public Component {
 public:
@@ -43,4 +45,5 @@ private:
     void RenderSemicircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color);
 
     GameObject* hpReader;
+    
 };

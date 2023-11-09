@@ -13,11 +13,13 @@
 #include "Skill.h"
 #include "Rect.h"
 
-#define MOTHER_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
+#define MOTHER_INDICATOR_SPRITE "assets/img/UI/uiIndicatorPlayer.png"
 
 #define MOTHER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 
 #define MOTHER_SPRITE "assets/img/mom/momIdle.png"
+#define MOTHER_FC 6
+#define MOTHER_FT 1.0
 
 #define MOTHER_HP 50
 
@@ -33,6 +35,8 @@ class Mother : public Component{
     void Resume();
     bool Is(std::string type);
 
+    void SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks);
+
     void CreateIndicator();
     void DeleteIndicator();
     void CreateIntention();
@@ -43,6 +47,9 @@ class Mother : public Component{
     bool HasTag(Tag::Tags tagToCheck);
     void ActivateTag(Tag::Tags tag); 
 
+    void RemoveOneTagAll();
+    void RecreateTagUI();
+
     GameObject* indicator;   
     GameObject* intention; 
 
@@ -51,7 +58,7 @@ class Mother : public Component{
 
     static bool activateRampage;
     static bool activateWeak;
-
+    static std::weak_ptr<GameObject> motherInstance;
 private:
     LifeBar* lifeBarMother;
     Rect motherHitbox;
@@ -63,6 +70,8 @@ private:
     std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
     
-    
-
+    void IntentionAnimation(float dt);
+    int ScaleIntention; //If 1 is growing, -1 the opposite
+    void IndicatorAnimation(float dt);
+    int ScaleIndicator; //If 1 is growing, -1 the opposite
 };

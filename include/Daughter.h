@@ -13,11 +13,13 @@
 #include "Skill.h"
 #include "Rect.h"
 
-#define DAUGHTER_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
+#define DAUGHTER_INDICATOR_SPRITE "assets/img/UI/uiIndicatorPlayer.png"
 
 #define DAUGHTER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 
 #define DAUGHTER_SPRITE "assets/img/daughter/daughterIdle.png"
+#define DAUGHTER_FC 7
+#define DAUGHTER_FT 1.0
 
 #define DAUGHTER_HP 27
 
@@ -33,6 +35,8 @@ class Daughter : public Component{
     void Resume();
     bool Is(std::string type);
     
+    void SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks);
+
     void CreateIndicator();
     void DeleteIndicator();
     void CreateIntention();
@@ -43,6 +47,9 @@ class Daughter : public Component{
     bool HasTag(Tag::Tags tagToCheck);
     void ActivateTag(Tag::Tags tag); 
 
+    void RemoveOneTagAll();
+    void RecreateTagUI();
+
     GameObject* indicator; 
     GameObject* intention; 
 
@@ -51,6 +58,7 @@ class Daughter : public Component{
 
     static bool activateRampage;
     static bool activateWeak;
+    static std::weak_ptr<GameObject> daughterInstance;
 
 private:
   LifeBar* lifeBarDaughter;
@@ -62,6 +70,9 @@ private:
 
   std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
-
+  void IntentionAnimation(float dt);
+  int ScaleIntention; //If 1 is growing, -1 the opposite
+  void IndicatorAnimation(float dt);
+  int ScaleIndicator; //If 1 is growing, -1 the opposite
 
 };

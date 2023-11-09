@@ -10,21 +10,21 @@
 #include "Mother.h"
 #include "Daughter.h"  
 #include "CombatState.h"
+#include "Camera.h"
 #include <algorithm> 
 
 #ifdef DEBUG
-#include "Camera.h"
 #include "Game.h"
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h> 
 #endif //DEBUG
 
 // Initialize the static enemyInfoMap
 std::map<Enemies::EnemyId, Enemies::EnemyInfo> Enemies::enemyInfoMap;
 
-std::vector<std::shared_ptr<Enemies>> Enemies::enemiesArray;
+std::vector<std::weak_ptr<GameObject>> Enemies::enemiesArray;
 
-int Enemies::enemiesCount = 0;
+int Enemies::enemiesCount = 0; 
 
 int Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
 
@@ -36,13 +36,15 @@ bool Enemies::enemyAttacking = false;
  
 Enemies::Enemies(GameObject& associated, EnemyId id)
     : Component::Component(associated), 
-    enemyIndicator(nullptr),
+    enemyIndicator(nullptr), 
     intention(nullptr),
     id(id), 
     lifeBarEnemy(nullptr), 
     tagSpaceCount(0),
     thisEnemyAttacked(false),
-    intentionTimer()
+    intentionTimer(),
+    ScaleIntention(1),
+    ScaleIndicator(1)
     {  
         EnemyInfo& enemyInfo = enemyInfoMap[id];
         hp = enemyInfo.hp;
@@ -51,12 +53,6 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
         iconPath = enemyInfo.iconPath;
         skills = enemyInfo.skills;
  
-        // Create a shared pointer for the current Enemies object
-        std::shared_ptr<Enemies> sharedThis = std::shared_ptr<Enemies>(this);
-
-        // Create a weak pointer from the shared pointer and add it to the enemiesArray
-        std::weak_ptr<Enemies> weakThis = sharedThis;
-        enemiesArray.push_back(sharedThis);
     
         enemiesCount += 1;    //one more enemy 
 }
@@ -78,7 +74,7 @@ void Enemies::Start() {
     //If enemies starts with tags
     ApplyTags(tags);
 
-    lifeBarEnemy->SetCurrentHP(hp);
+    //lifeBarEnemy->SetCurrentHP(hp);
 
     if(enemiesToAttack == 0){//init enemies attack turn
         enemiesToAttack = enemiesCount;
@@ -87,6 +83,7 @@ void Enemies::Start() {
 }
 
 Enemies::~Enemies() { 
+
     for (int i = enemytags.size() - 1; i >= 0; i--) { //remove enemies tags
             enemytags.erase(enemytags.begin() + i);
     }
@@ -100,12 +97,23 @@ Enemies::~Enemies() {
 
     enemiesCount -= 1;
     enemiesToAttack-= 1;
+
+     // Remove the enemy from the enemiesArray vector
+    enemiesArray.erase(std::remove_if(enemiesArray.begin(), enemiesArray.end(),
+        [this](const std::weak_ptr<GameObject>& enemy) {
+            return enemy.lock().get() == &associated;
+        }), enemiesArray.end());
 }
 
 void Enemies::Update(float dt) {
     if(CombatState::InteractionSCreenActivate){
         return;
     }
+
+
+    IntentionAnimation(dt);
+    IndicatorAnimation(dt);
+    
 
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
@@ -119,23 +127,31 @@ void Enemies::Update(float dt) {
         if(GameData::playerTurn == true){
             if (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE))){
                 ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
+                CombatState::enemiesArrayIS.push_back(id);
             }
         
             SkillAllenemies -= 1; //less one enemy to receive skill
+            
             if(SkillAllenemies == 0){ //no more enemies
                 AP::apCount -= tempSkillInfo.apCost;
                 selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                 selectedSkill->Deselect();
+                enemyAttacking = false;
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
             }
         }
         //ENEMY TURN
         else{
             ApplySkillToSingleEnemy(tempSkillInfo.damage, tempSkillInfo.tags);
             SkillAllenemies -= 1; //less one enemy to receive skill
+            CombatState::enemiesArrayIS.push_back(id);
             if(SkillAllenemies == 0){ //no more enemies
                 selectedSkill->Deselect();
                 enemyAttacking = false;
                 DeleteIntention();
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
             }
         }
 
@@ -150,7 +166,6 @@ void Enemies::Update(float dt) {
 
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
-        DeleteEnemyIndicator();
         associated.RequestDelete();
         return; // Early exit if the enemy is no longer alive
 
@@ -173,12 +188,28 @@ void Enemies::Update(float dt) {
                     CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
                 }       // and if any enemie has provoke
 
+                if(enemyIndicator != nullptr){
+                    auto objComponent = enemyIndicator->GetComponent("Sprite");
+                    auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+                    if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                        if (objComponentPtr) {
+                            objComponentPtr->SetAlpha(255);                          
+                        }
+                        else{
+                            if (objComponentPtr) {
+                                objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
+                            }
+                        }    
+                    }
+
+                }
+
                 // Check if the mouse is over the enemy and left mouse button is pressed
-                if (enemyHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
                         ApplySkillToEnemy();
-                        CombatState::InteractionSCreenActivate = true;  
+
                     }
                 } 
             } 
@@ -194,7 +225,7 @@ void Enemies::Update(float dt) {
     //ENEMY TURN
     else{
         
-
+        DeleteEnemyIndicator();
         //=============================Targeted skill sector=============================
         //Sector to manipulate interections involving mother being attacked
         if(!enemyAttacking && !thisEnemyAttacked && Skill::selectedSkill == nullptr){
@@ -208,7 +239,6 @@ void Enemies::Update(float dt) {
                 std::swap(skills[randomSkillIndex], skills.back());
                 
                 // Now, the selected skill is in the last position of the vector
-                //TODO
                 Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
             }
 
@@ -259,9 +289,10 @@ void Enemies::Update(float dt) {
                         if (HasTag(Tag::Tags::WEAK)){
                             ActivateTag(Tag::Tags::WEAK);
                             hasWeak = true;
-                        }
+                        } 
                         Skill::HasTagRampageOrWeak ={hasRampage, hasWeak};
                     }    
+                    CombatState::enemiesArrayIS.push_back(id);
                 }
 
                 //=============================Skill buff sector==============================
@@ -270,13 +301,15 @@ void Enemies::Update(float dt) {
                     Skill::selectedSkill = nullptr;
                     enemyAttacking = false;
                     DeleteIntention();
+                    CombatState::enemiesArrayIS.push_back(id);
+                    SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+
                 }
                 else if(tempSkillInfo.attackType == Skill::AttackType::BUFF_ALL){
                     ApplySkillToAllEnemies();
                 }   
                 intentionTimer.Restart(); 
 
-                CombatState::InteractionSCreenActivate = true;
             }
 
             
@@ -303,15 +336,67 @@ void Enemies::Update(float dt) {
     }
         
 
+    
+
+
 }
+
+
+void Enemies::SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks){
+    CombatState::InteractionSCreenActivate = true;
+    CombatState::attackType = attackType;
+    CombatState::whoAttacks = whoAttacks;
+}
+
+void Enemies::IndicatorAnimation(float dt) {
+    if (enemyIndicator != nullptr) {
+        auto objComponent = enemyIndicator->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            objComponentPtr->SetAlpha(INDICATOR_ALPHA);
+
+            // Set the target scale and animation speed
+            float targetScale = INDICATOR_TIME_ANIMATION;
+            float animationSpeed = INDICATOR_TIME_ANIMATION_V;
+ 
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIndicator * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIndicator == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIndicator = -1;
+            } else if (ScaleIndicator == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIndicator = 1;
+            }
+
+            // Center position original
+            auto posXenterX = enemyIndicator->box.x + enemyIndicator->box.w / 2;
+            auto posXenterY = enemyIndicator->box.y + enemyIndicator->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            enemyIndicator->box.x = posXenterX - enemyIndicator->box.w / 2;
+            enemyIndicator->box.y = posXenterY - enemyIndicator->box.h / 2;
+        }
+    }
+} 
  
 void Enemies::CreateEnemyIndicator() {
-    enemyIndicator = new GameObject(enemyHitbox.x, enemyHitbox.y + enemyHitbox.h);
+    enemyIndicator = new GameObject(enemyHitbox.x + enemyHitbox.w/2, enemyHitbox.y + enemyHitbox.h+ LIFEBAROFFSET);
     Sprite* enemyIndicator_spr = new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
 
-    // Scale the enemy indicator
-    float percentageEnemyWidth = enemyHitbox.w / enemyIndicator->box.w;
-    enemyIndicator_spr->SetScale(percentageEnemyWidth, 1);
+    enemyIndicator->box.x -= enemyIndicator->box.w/2;
+    enemyIndicator->box.y -= enemyIndicator->box.h;
+
     enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }
@@ -322,6 +407,49 @@ void Enemies::DeleteEnemyIndicator() {
         enemyIndicator = nullptr;
     }
 }
+
+
+void Enemies::IntentionAnimation(float dt) {
+    if (intention != nullptr) {
+        auto objComponent = intention->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            // Set the target scale and animation speed
+            float targetScale = INTENTION_TIME_ANIMATION;
+            float animationSpeed = INTENTION_TIME_ANIMATION_V;
+
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIntention * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIntention == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIntention = -1;
+            } else if (ScaleIntention == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIntention = 1;
+            }
+
+            // Center position original
+            auto posXenterX = intention->box.x + intention->box.w / 2;
+            auto posXenterY = intention->box.y + intention->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            intention->box.x = posXenterX - intention->box.w / 2;
+            intention->box.y = posXenterY - intention->box.h / 2;
+        }
+    }
+}
+
+
 
 
 void Enemies::CreateIntention() {
@@ -360,6 +488,10 @@ void Enemies::ApplySkillToEnemy() {
         AP::apCount -= tempSkillInfo.apCost;
         selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
         selectedSkill->Deselect();
+        CombatState::enemiesArrayIS.push_back(id);
+        SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
+        DeleteEnemyIndicator();
+
     }
 
 
@@ -368,12 +500,14 @@ void Enemies::ApplySkillToEnemy() {
 
 void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-
+        bool dodge = false;
+        
         if (HasTag(Tag::Tags::DODGE)){
             int dodgeChance = rand() % 2;
             if(dodgeChance == 1){
                 ActivateTag(Tag::Tags::DODGE);
                 damage = 0;
+                dodge = true;
             }
         }
 
@@ -411,17 +545,24 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
                 }
 
             if (tagRampage){
-                tagMultiplier += 0.5; 
+                tagMultiplier += 0.25; 
             }
             if (tagWeak){
-                //ActivateTag(Tag::Tags::VULNERABLE);
-                tagMultiplier -= 0.5; 
+                tagMultiplier -= 0.25; 
             }
 
         }
         hp -= damage * tagMultiplier;
-        ApplyTags(tags);
-        lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+        if(!dodge){
+            ApplyTags(tags);
+        }
+
+
+
+        if(damage > 0 || dodge){
+            lifeBarEnemy->SetCurrentHP(hp);  // Update the enemy's HP bar
+        }
+        
        
 }
 
@@ -432,11 +573,12 @@ void Enemies::ApplySkillToAllEnemies() {
 void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
         ActivateTag(tag);
-        if (tagCountMap.find(tag) != tagCountMap.end()) {
-            // The tag already exists, increment the counter
-            tagCountMap[tag]++;
-
-            // Iterate over the list of weak_ptr to the tag GameObjects
+        if (!(std::find(tags.begin(), tags.end(), tag) != tags.end())) {
+            tags.push_back(tag);
+            auto go_tag = AddObjTag(tag);
+        }
+        tagCountMap[tag]++;
+        // Iterate over the list of weak_ptr to the tag GameObjects
             for (auto& weak_tag : enemytags) {
                 auto tagGameObject = weak_tag.lock();  // Get the GameObject
                 if (tagGameObject) {
@@ -451,16 +593,6 @@ void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
                     }
                 }
             }
-        } else {
-            // The tag doesn't exist in the map, add it with a counter of 1
-            tagCountMap[tag] = 1;
-            tags.push_back(tag);
-            auto go_tag = AddObjTag(tag);
-            
-            if(tag == Tag::Tags::PROVOKE){
-                provokedEnemies++;
-            }
-        }
     }
 }
  
@@ -487,7 +619,7 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, 1);
+    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
     tagObject->box.x = enemyHitbox.x + TAGS_SPACING_X * tagSpaceCount;
@@ -500,6 +632,79 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
 
     return go_tag;
 }
+
+void Enemies::RemoveOneTagAll() {
+    std::vector<Tag::Tags> tagsToRemove;
+
+    for (const auto& tag : tags) {
+        if (tagCountMap.find(tag) != tagCountMap.end() && tagCountMap[tag] > 0) {
+            
+
+            if(tag == Tag::Tags::CURSE){
+                hp -= tagCountMap[tag];
+                lifeBarEnemy->SetCurrentHP(hp);
+            }
+
+            tagCountMap[tag]--;
+            // Iterate over the list of weak_ptr to the tag GameObjects
+            auto it = enemytags.begin();
+            while (it != enemytags.end()) {
+                auto tagGameObject = it->lock();
+                if (tagGameObject) {
+                    auto tagComponent = tagGameObject->GetComponent("Tag");
+                    auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);
+                    if (tagComponentPtr && tagComponentPtr->GetTag() == tag) {
+                        tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
+                        if (tagCountMap[tag] == 0) {
+                            tagsToRemove.push_back(tag);
+                            tagGameObject->RequestDelete();
+                            it = enemytags.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    } else {
+                        ++it;
+                    }
+                } else {
+                    it = enemytags.erase(it);
+                }
+            }
+        }
+    }
+
+    // Remove the tags from the 'tags' list
+    for (const auto& tag : tagsToRemove) {
+        tags.erase(std::remove(tags.begin(), tags.end(), tag), tags.end());
+    }
+
+    // Re-create the tag UI
+    RecreateTagUI();
+}
+
+void Enemies::RecreateTagUI() {
+    // Clear all existing tag objects
+    for (auto& weak_tag : enemytags) {
+        auto tagGameObject = weak_tag.lock();
+        if (tagGameObject) {
+            tagGameObject->RequestDelete();
+        }
+    }
+
+    // Clear the list of tag objects
+    enemytags.clear();
+
+    tagSpaceCount = 0;
+
+    // Recreate tag objects based on the current tag list
+    for (const auto& tag : tags) {
+        AddObjTag(tag);
+    }
+}
+
+
+
+
+
 
 bool Enemies::HasTag(Tag::Tags tagToCheck) {
     // Go through the enemy's tag list and check if the desired tag is present. 
@@ -558,8 +763,8 @@ bool Enemies::Is(std::string type) {
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
     enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
+    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
     enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
  

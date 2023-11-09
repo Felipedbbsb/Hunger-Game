@@ -70,6 +70,8 @@
         "map": "cpp",
         "xtree": "cpp",
         "gameobject.h": "c",
-        "component.h": "c"
+        "component.h": "c",
+        "sprite.h": "c",
+        "enemies.h": "c"
     }
 }

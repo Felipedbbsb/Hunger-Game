@@ -24,6 +24,8 @@
 // Static class member initialization
 Game *Game::instance = nullptr;
 
+float Game::resizer  = 1;
+
 Game::Game(std::string title, int width, int height) : 
     frameStart(0), 
     dt(0.0),
@@ -87,34 +89,51 @@ bool Game::InitializeTTF() {
 }
 
 bool Game::CreateWindowAndRenderer(const std::string& title, int width, int height, int flags) {
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+    
+    int maxScreenWidth, maxScreenHeight;
+    SDL_DisplayMode dm;
+    if (SDL_GetCurrentDisplayMode(0, &dm) != 0) {
+        throw std::runtime_error("Failed to get display mode");
+    } else {
+        maxScreenWidth = dm.w;
+        maxScreenHeight = dm.h; 
+    }
+    
+    float widthRatio = static_cast<float>(maxScreenWidth) / RESOLUTION_WIDTH;
+    float heightRatio = static_cast<float>(maxScreenHeight) / RESOLUTION_HEIGHT;
+    resizer = std::min(widthRatio, heightRatio);
+  
+    // Calcule a largura e altura da janela de acordo com a resolução máxima
+    int windowWidth = static_cast<int>(RESOLUTION_WIDTH * resizer); 
+    int windowHeight = static_cast<int>(RESOLUTION_HEIGHT * resizer);
+    
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, flags);
     if (window == nullptr) {
         throw std::runtime_error("Window creation failed");
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE); 
     //SDL_SetHint(SDL_HINT_RENDERER_SCALE_QUALITY, “linear”);
     
-    if (renderer == nullptr) {
+    if (renderer == nullptr) { 
         throw std::runtime_error("Failed to create renderer");
-    } 
-
+    }   
+ 
  
     //Render logical size, rezise screen based on resolution screen
-    float resizer = (float)RESOLUTION_WIDTH / SCREEN_WIDTH;
-    std::cout <<"Proporcao de resolucao e tela ficou de: " << resizer << std::endl;
-    if(SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH  * resizer, SCREEN_HEIGHT * resizer)){
-        throw std::runtime_error("Failed to create renderer resized");
+     if(SDL_RenderSetLogicalSize(renderer, RESOLUTION_WIDTH, RESOLUTION_HEIGHT)){
+        throw std::runtime_error("Failed to set logical size");
     }
 
     return true;
 }
-
+ 
 
 
 //A ordem importa! Faça na ordem inversa da inizialização
 Game::~Game() {
-    // Clean up the state stack using a while loop
+    // Clean up the state stack using a while loop 
     while (!stateStack.empty()) {
         // Delete and pop each state, ensuring proper resource release
         stateStack.pop();
@@ -124,7 +143,7 @@ Game::~Game() {
     if (storedState != nullptr) {
         delete storedState;
     }
-
+ 
     Resources::ClearImages();
 	Resources::ClearSounds();
 	Resources::ClearMusics();
@@ -200,12 +219,12 @@ void Game::Run() {
 
             
         }
-
+ 
         // Check if there's a stored state to push
-        if (storedState != nullptr) {
+        if (storedState != nullptr) { 
             if (!stateStack.empty()) {
                 stateStack.top()->Pause();
-            }
+            } 
             stateStack.push((std::unique_ptr<State>)storedState); // Use std::move to transfer ownership
             stateStack.top()->Start();
             storedState = nullptr;
@@ -218,12 +237,12 @@ void Game::Run() {
         InputManager::GetInstance().Update();
         auto& currentTopState = stateStack.top();
         currentTopState->Update(dt);
-        currentTopState->Render();
+        currentTopState->Render(); 
         SDL_RenderPresent(Game::GetInstance().GetRenderer());
     }   
 
    
-    Resources::ClearImages();
+    Resources::ClearImages(); 
     Resources::ClearMusics();
     Resources::ClearSounds();
     Resources::ClearFonts();
@@ -241,3 +260,20 @@ void Game::CalculateDeltaTime(){
 }
 
 float Game::GetDeltaTime(){return dt;} 
+
+
+
+void Game::TakeScreenshot(std::string filename) {
+    SDL_Surface* screenshotSurface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+    if (screenshotSurface) {
+        SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, screenshotSurface->pixels, screenshotSurface->pitch);
+        IMG_SavePNG(screenshotSurface, filename.c_str());
+        SDL_FreeSurface(screenshotSurface);
+    }
+}
+
+
+
+
+
+

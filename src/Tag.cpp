@@ -9,22 +9,24 @@ enemyRef(enemyRef),
 quantity(quantity), 
 tag(tag),
 readerTag(nullptr),
-bigTag(nullptr) 
+bigTag(nullptr),
+tagCountNumber(nullptr)
 {   
     if (enemyRef.lock()){
         
         Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
+        //tag_spr->SetScale(0.8, 0.8);
         AcivateTag(GetTagSprite(tag));
         
     }
     else{
         associated.RequestDelete();
-    }
+    } 
 } 
  
 void Tag::Start() {     
-   
+   tagCountRender();
 }  
   
 Tag::~Tag(){ 
@@ -33,6 +35,11 @@ Tag::~Tag(){
     if(bigTag != nullptr ){
         bigTag->RequestDelete();
     }
+
+    if (tagCountNumber != nullptr){ 
+        tagCountNumber->RequestDelete();
+        tagCountNumber = nullptr;   
+    }  
 } 
 
 
@@ -65,14 +72,14 @@ void Tag::Update(float dt){
         
         auto center = associated.box.GetCenter();
         bigTag->box.DefineCenter(Vec2(center));
-
+ 
         // When same size 
         if (bigTag_spr->GetScale().x <= 1) {
             bigTag->RequestDelete();
             bigTag = nullptr;
             
             
-        }
+        } 
     }       
 } 
 
@@ -86,10 +93,11 @@ std::string Tag::GetTagSprite(Tag::Tags tag){
             case Tag::Tags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
             case Tag::Tags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
             case Tag::Tags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
+            case Tag::Tags::CURSE: spriteTag = TAG_CURSE_SPRITE; break;
         }
     return spriteTag ;   
 }
-
+ 
 void Tag::AcivateTag(std::string sprite){
         if(bigTag == nullptr ){
             bigTag = new GameObject(associated.box.x, associated.box.y);
@@ -106,6 +114,7 @@ void Tag::AcivateTag(std::string sprite){
 
 void Tag::UpdateQuantity(int newQuantity) { 
     quantity = newQuantity; 
+    tagCountRender();
 }
  
 Tag::Tags Tag::GetTag(){
@@ -140,26 +149,29 @@ std::string Tag::GetTagInfo() {
 
     switch (tag) {
         case Tags::RESILIENCE:
-            tagName = "Resilience";
+            tagName = "Reduz o dano recebido em 50%";
             break;
         case Tags::DODGE:
-            tagName = "Dodge";
+            tagName = "50% de chance de evitar todo o dano do proximo golpe";
             break;
         case Tags::PROVOKE:
-            tagName = "Provoke";
+            tagName = "Força os inimigos a atacarem este alvo";
             break;
         case Tags::VULNERABLE:
-            tagName = "Vulnerable";
+            tagName = "Aumenta o dano recebido em 50%";
             break;
         case Tags::WEAK:
-            tagName = "Weak";
+            tagName = "Reduz o seu dano em 25%";
             break;
         case Tags::RAMPAGE:
-            tagName = "Rampage";
+            tagName = "Aumenta seu dano em 25%";
             break;
         case Tags::PROTECTED: 
-            tagName = "Protected";
+            tagName = "Nao pode ser alvejado";
             break;
+        case Tags::CURSE: 
+            tagName = "Curse";
+            break;        
         default:
             tagName = "Unknown";
     }
@@ -193,11 +205,38 @@ std::string Tag::GetTagName() {
         case Tags::PROTECTED: 
             tagName = "Protected";
             break;
+        case Tags::CURSE: 
+            tagName = "Curse";
+            break;    
         default:
             tagName = "Unknown";
     }
 
     return tagName;
+}
+
+void Tag::tagCountRender() { 
+    if (tagCountNumber != nullptr){ 
+        tagCountNumber->RequestDelete();
+        tagCountNumber = nullptr;     
+    }  
+    //Creates Reader for hp 
+    //position middle of hp bar
+    tagCountNumber =  new GameObject(associated.box.x + associated.box.w, associated.box.y + associated.box.h); //posicao foi no olho...
+    std::string textNumber = std::to_string(quantity);
+    Text* tagCountNumber_behaviour = new Text(*tagCountNumber, TEXT_TAGCOUNT_FONT, 
+                                                      TEXT_TAGCOUNT_SIZE,
+                                                      Text::OUTLINE2,
+                                                      textNumber, 
+                                                      TEXT_TAGCOUNT_FONT_COLOR, 
+                                                      0);  
+ 
+    tagCountNumber->box.x -= tagCountNumber->box.w;                                                 
+    tagCountNumber->box.y -= tagCountNumber->box.h;     
+
+    tagCountNumber->AddComponent(std::shared_ptr<Text>(tagCountNumber_behaviour));
+    Game::GetInstance().GetCurrentState().AddObject(tagCountNumber);
+
 }
 
 void Tag::Render(){

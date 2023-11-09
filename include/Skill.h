@@ -13,6 +13,13 @@
 #include "Time.h"
 #include "Tag.h" 
 #include "AP.h" 
+
+#define TEXT_TAGCOUNT2_SIZE 42
+
+
+
+
+
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
 #define SKILL1_SPRITE "assets/img/UI/uiSkillDjinn.png"
@@ -38,25 +45,25 @@
 //MOTHER SKILLS
 #define NS_Helmbreaker "Helmbreaker"
 #define I_Helmbreaker "Deal 3 damage; \nApply 2 Vulnerable."
-#define SPR_Helmbreaker "assets/img/UI/uiSkillNormal.png"
+#define SPR_Helmbreaker "assets/img/UI/skills/Helmbreaker.png"
 
 #define NS_Rockabye "Rockabye"
 #define I_Rockabye "Apply 1 Resilience \n to your daughter."
-#define SPR_Rockabye "assets/img/UI/uiSkillNormal.png"
+#define SPR_Rockabye "assets/img/UI/skills/Rockabye.png"
 
 #define NS_Stinger "Stinger"
 #define I_Stinger "Deal 5 Damage \n to all enemies; \n Expose your daughter."
-#define SPR_Stinger "assets/img/UI/uiSkillNormal.png"
+#define SPR_Stinger "assets/img/UI/skills/Stinger.png"
 
 //Daughter
 #define NS_HnS "Hide and Seek"
 #define I_HnS "Apply 1 Dodge \n and 1 Vulnerable \n to Mother; \n Protect Daughter "
-#define SPR_HnS "assets/img/UI/uiSkillNormal.png"
+#define SPR_HnS "assets/img/UI/skills/HideandSeek.png"
 
 //Djinn
 #define NS_InstantRegret "Instant Regret"
 #define I_InstantRegret "Deal 15 damage; \n Expose your daughter; \n Apply 1 Vulnerable to your daughter; \n Lose 7HP"
-#define SPR_InstantRegret "assets/img/UI/uiSkillDjinn.png"
+#define SPR_InstantRegret "assets/img/UI/skills/InstantRegret.png"
 
 //Enemies
 #define NS_Generic "Attack1"
@@ -91,6 +98,13 @@ class Skill : public Component {
             E1_Skill1,
             E1_Skill2,
             E1_Skill3,
+
+            E2_Skill1,
+            E2_Skill2,
+            E2_Skill3,
+
+            E3_Skill1,
+            E3_Skill2,
 
             INVALID_SKILL
         };
@@ -168,10 +182,12 @@ class Skill : public Component {
         void SkillBack(TargetType targetTypeBack);
 
         static std::map<SkillId, SkillInfo> skillInfoMap; 
+        static std::vector<Skill::SkillId> skillArray;
 
         static void InitializeSkillInfoMap();
+        static void InitializeSkills();
 
-
+        void CreateTagCount();
 
     private:
         SkillId id;
@@ -179,4 +195,8 @@ class Skill : public Component {
         GameObject* readerSkill;
         std::string textSkill = "";
         AP* apInstance;
+        GameObject* jewelObj;
+        GameObject* tagCount;
+        bool toggleJewel;
 };
+ 

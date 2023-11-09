@@ -20,36 +20,40 @@ std::vector<Tag::Tags> Daughter::tags = {};
 bool Daughter::activateRampage = false;
 bool Daughter::activateWeak = false;
 
+std::weak_ptr<GameObject> Daughter::daughterInstance;
+
 Daughter::Daughter(GameObject &associated) : 
 Component::Component(associated),
 indicator(nullptr),
-intention(nullptr),
+intention(nullptr), 
 lifeBarDaughter(nullptr),
-tagSpaceCount(0){
-
-}
+tagSpaceCount(0),
+ScaleIntention(1),
+ScaleIndicator(1){ 
+ 
+} 
 
 void Daughter::Start() 
 {
-    Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE);
+    Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
     associated.AddComponent((std::shared_ptr<Sprite>)daughter_spr); 
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
     daughterHitbox = Rect(associated.box.x, associated.box.y, 130, associated.box.h);
+ 
+    associated.box.x -= (associated.box.w/DAUGHTER_FC - daughterHitbox.w )/2;
 
-    associated.box.x -= (associated.box.w - daughterHitbox.w )/2;
-
-    //==================================LifeBar====================================
+    //==================================LifeBar========= ===========================
     lifeBarDaughter = new LifeBar(associated, hp, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarDaughter));
 
     //If enemies starts with tags
-    ApplyTags(tags);
-
-    lifeBarDaughter->SetCurrentHP(hp); 
-
-}
+    ApplyTags(tags);   
+ 
+    //lifeBarDaughter->SetCurrentHP(hp);   
+ 
+} 
  
 Daughter::~Daughter()
 {
@@ -61,6 +65,9 @@ Daughter::~Daughter()
 
 void Daughter::Update(float dt)
 {   
+    IntentionAnimation(dt);
+    IndicatorAnimation(dt);
+
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
@@ -94,6 +101,7 @@ void Daughter::Update(float dt)
                 ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                 Skill::selectedSkillEnemy = nullptr;
                 Enemies::enemyAttacking = false;
+                SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
             }
         }
 
@@ -139,10 +147,25 @@ void Daughter::Update(float dt)
                     if (indicator == nullptr){
                         CreateIndicator(); // Create an indicator if it doesn't exist
                     }
+                    else{
+                        auto objComponent = indicator->GetComponent("Sprite");
+                        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+                        if (daughterHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                            if (objComponentPtr) {
+                                objComponentPtr->SetAlpha(255);                          
+                            }
+                             else{
+                                if (objComponentPtr) {
+                                    objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
+                                }
+                            }    
+                        }
+
+                    }
 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
-                    if (daughterHitbox.Contains(mousePos.x, mousePos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (daughterHitbox.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                         selectedSkill->Deselect();
@@ -154,7 +177,7 @@ void Daughter::Update(float dt)
                             Protected::isProtected = false;
                         }
 
-                        CombatState::InteractionSCreenActivate = true;
+                        SetupInteractionScreen(tempSkillInfo.attackType, tempSkillInfo.targetTypeAttacker);
 
                     } 
                 }
@@ -180,13 +203,70 @@ void Daughter::Update(float dt)
     }    
 }
 
+
+void Daughter::SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks){
+    CombatState::InteractionSCreenActivate = true;
+    CombatState::attackType = attackType;
+    CombatState::whoAttacks = whoAttacks;
+    if(whoAttacks == Skill::TargetType::DAUGHTER){
+        CombatState::whoReceives = Skill::TargetType::MOTHER;
+    }
+    else{
+        CombatState::whoReceives = Skill::TargetType::DAUGHTER;
+    }
+}
+ 
+void Daughter::IndicatorAnimation(float dt) {
+    if (indicator != nullptr) {
+        auto objComponent = indicator->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            objComponentPtr->SetAlpha(INDICATOR_ALPHA);
+
+            // Set the target scale and animation speed
+            float targetScale = INDICATOR_TIME_ANIMATION;
+            float animationSpeed = INDICATOR_TIME_ANIMATION_V;
+ 
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIndicator * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIndicator == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIndicator = -1;
+            } else if (ScaleIndicator == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIndicator = 1;
+            }
+
+            // Center position original
+            auto posXenterX = indicator->box.x + indicator->box.w / 2;
+            auto posXenterY = indicator->box.y + indicator->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            indicator->box.x = posXenterX - indicator->box.w / 2;
+            indicator->box.y = posXenterY - indicator->box.h / 2;
+        }
+    }
+} 
+
 void Daughter::CreateIndicator() {
-    indicator = new GameObject(daughterHitbox.x, daughterHitbox.y + daughterHitbox.h);
+    indicator = new GameObject(daughterHitbox.x + daughterHitbox.w/2, daughterHitbox.y + daughterHitbox.h + LIFEBAROFFSET);
     Sprite* indicator_spr = new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
 
+    indicator->box.x -= indicator->box.w/2;
+    indicator->box.y -= indicator->box.h;
     // Scale the enemy indicator
-    float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
-    indicator_spr->SetScale(percentageEnemyWidth, 1);
+    //float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
+    //indicator_spr->SetScale(percentageEnemyWidth, 1);
     indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
@@ -196,6 +276,46 @@ void Daughter::DeleteIndicator() {
     if (indicator != nullptr) {
         indicator->RequestDelete();
         indicator = nullptr;
+    }
+}
+
+void Daughter::IntentionAnimation(float dt) {
+    if (intention != nullptr) {
+        auto objComponent = intention->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            // Set the target scale and animation speed
+            float targetScale = INTENTION_TIME_ANIMATION;
+            float animationSpeed = INTENTION_TIME_ANIMATION_V;
+
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIntention * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIntention == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIntention = -1;
+            } else if (ScaleIntention == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIntention = 1;
+            }
+
+            // Center position original
+            auto posXenterX = intention->box.x + intention->box.w / 2;
+            auto posXenterY = intention->box.y + intention->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            intention->box.x = posXenterX - intention->box.w / 2;
+            intention->box.y = posXenterY - intention->box.h / 2;
+        }
     }
 }
 
@@ -217,12 +337,13 @@ void Daughter::DeleteIntention() {
 
 void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         float tagMultiplier = 1; //multiplier without tags
-
+        bool dodge = false;
         if (HasTag(Tag::Tags::DODGE)){
             int dodgeChance = rand() % 2;
             if(dodgeChance == 1){
                 ActivateTag(Tag::Tags::DODGE);
                 damage = 0;
+                dodge = true;
             }
         }
 
@@ -233,7 +354,7 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
             }
             if (HasTag(Tag::Tags::VULNERABLE)){
                 ActivateTag(Tag::Tags::VULNERABLE);
-                tagMultiplier += 0.5; 
+                tagMultiplier += 0.25; 
             }
 
             //============RAMPAGE and WEAK sector=================//
@@ -241,25 +362,31 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
                 tagMultiplier += 0.5;
             }
             if (Skill::HasTagRampageOrWeak.second){
-                tagMultiplier -= 0.5;
+                tagMultiplier -= 0.25;
             }
 
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-        ApplyTags(tags);
-        lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar
+        if(!dodge){
+            ApplyTags(tags);
+        }
+
+        if(damage > 0 || dodge){
+            lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar
+        }
  
 }
  
 void Daughter::ApplyTags(std::vector<Tag::Tags> skillTags) {
     for (auto& tag : skillTags) {
         ActivateTag(tag);
-        if (tagCountMap.find(tag) != tagCountMap.end()) {
-            // The tag already exists, increment the counter
-            tagCountMap[tag]++;
-
-            // Iterate over the list of weak_ptr to the tag GameObjects
+        if (!(std::find(tags.begin(), tags.end(), tag) != tags.end())) {
+            tags.push_back(tag);
+            auto go_tag = AddObjTag(tag);
+        }
+        tagCountMap[tag]++;
+        // Iterate over the list of weak_ptr to the tag GameObjects
             for (auto& weak_tag : daughtertags) {
                 auto tagGameObject = weak_tag.lock();  // Get the GameObject
                 if (tagGameObject) {
@@ -274,14 +401,6 @@ void Daughter::ApplyTags(std::vector<Tag::Tags> skillTags) {
                     }
                 }
             }
-        } else {
-            // The tag doesn't exist in the map, add it with a counter of 1
-            tagCountMap[tag] = 1;
-            tags.push_back(tag);
-            auto go_tag = AddObjTag(tag);
-            
-
-        }
     }
 }
 
@@ -307,7 +426,7 @@ std::weak_ptr<GameObject>  Daughter::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, 1);
+    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
     tagObject->box.x = daughterHitbox.x + TAGS_SPACING_X * tagSpaceCount;
@@ -318,6 +437,72 @@ std::weak_ptr<GameObject>  Daughter::AddObjTag(Tag::Tags tag){
     daughtertags.push_back(go_tag);  
 
     return go_tag;
+}
+
+void Daughter::RemoveOneTagAll() {
+    std::vector<Tag::Tags> tagsToRemove;
+
+    for (const auto& tag : tags) {
+        if (tagCountMap.find(tag) != tagCountMap.end() && tagCountMap[tag] > 0) {
+            if(tag == Tag::Tags::CURSE){
+                hp -= tagCountMap[tag];
+                lifeBarDaughter->SetCurrentHP(hp);
+            }
+            tagCountMap[tag]--;
+
+            // Iterate over the list of weak_ptr to the tag GameObjects
+            auto it = daughtertags.begin();
+            while (it != daughtertags.end()) {
+                auto tagGameObject = it->lock();
+                if (tagGameObject) {
+                    auto tagComponent = tagGameObject->GetComponent("Tag");
+                    auto tagComponentPtr = std::dynamic_pointer_cast<Tag>(tagComponent);
+                    if (tagComponentPtr && tagComponentPtr->GetTag() == tag) {
+                        tagComponentPtr->UpdateQuantity(tagCountMap[tag]);
+                        if (tagCountMap[tag] == 0) {
+                            tagsToRemove.push_back(tag);
+                            tagGameObject->RequestDelete();
+                            it = daughtertags.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    } else {
+                        ++it;
+                    }
+                } else {
+                    it = daughtertags.erase(it);
+                }
+            }
+        }
+    }
+
+    // Remove the tags from the 'tags' list
+    for (const auto& tag : tagsToRemove) {
+        tags.erase(std::remove(tags.begin(), tags.end(), tag), tags.end());
+    }
+
+    // Re-create the tag UI
+    RecreateTagUI();
+}
+
+void Daughter::RecreateTagUI() {
+    // Clear all existing tag objects
+    for (auto& weak_tag : daughtertags) {
+        auto tagGameObject = weak_tag.lock();
+        if (tagGameObject) {
+            tagGameObject->RequestDelete();
+        }
+    }
+
+    // Clear the list of tag objects
+    daughtertags.clear();
+
+    tagSpaceCount = 0;
+
+    // Recreate tag objects based on the current tag list
+    for (const auto& tag : tags) {
+        AddObjTag(tag);
+    }
 }
 
 bool Daughter::HasTag(Tag::Tags tagToCheck) {

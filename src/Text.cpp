@@ -1,15 +1,15 @@
 #include "Text.h"
 #include "Game.h"
 #include "Camera.h"
-#include "Resources.h"
-#include <sstream>
-
+#include "Resources.h"  
+#include <sstream> 
+ 
 Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color, int blinkPeriod)
     : Component(associated),
       font(nullptr),
       texture(nullptr),
       text(text),
-      style(style),
+      style(style), 
       fontFile(fontFile),
       fontSize(fontSize),
       color(color),
@@ -79,7 +79,6 @@ void Text::RemakeTexture() {
     }
     font = Resources::GetFont(fontFile, fontSize);
 
-
     // Divida o texto em várias linhas com base no tamanho máximo permitido
     lines.clear();
     std::istringstream iss(text);
@@ -101,6 +100,14 @@ void Text::RemakeTexture() {
             }
             case OUTLINE: {
                 textLine.texture = RenderTextWithOutline(line, color, OUTLINE_COLOR);
+                break;
+            }
+            case OUTLINE2: {
+                textLine.texture = RenderTextWithOutline(line, color, OUTLINE2_COLOR);
+                break;
+            }
+            case OUTLINE3: {
+                textLine.texture = RenderTextWithOutline(line, color, OUTLINE3_COLOR);
                 break;
             }
         }
@@ -178,6 +185,13 @@ SDL_Texture* Text::RenderBlendedText(const std::string& text, SDL_Color color) {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(Game::GetInstance().GetRenderer(), surface);
     SDL_FreeSurface(surface);
     return texture;
+}
+
+void Text::SetAlpha(Uint8 alpha) {
+    this->color.a = alpha; // updates alpha
+
+    // Atualiza a textura do texto com a nova cor
+    RemakeTexture();
 }
 
 bool Text::Is(std::string type) {

@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include "GameData.h"
 #include "Enemies.h"
+#include "Mother.h"
+#include "Daughter.h"
 #include "Sprite.h"
 #include "CameraFollower.h"
 #include <algorithm> 
@@ -17,8 +19,20 @@ AP::AP(GameObject &associated)
 
 {   
     for (int i = 0; i < AP_QUANTITY; ++i) {
-        std::shared_ptr<GameObject> apObj = std::make_shared<GameObject>(associated.box.x, associated.box.y); // Use shared_ptr
-        apObj->box.y += i * AP_VERTICAL_SPACING;
+        std::shared_ptr<GameObject> apObj = std::make_shared<GameObject>(associated.box.x, associated.box.y - 20); // Use shared_ptr
+        
+        if(i == 0){
+            apObj->box.x += AP_POS1.x ;
+            apObj->box.y += AP_POS1.y;
+        }
+        else if(i == 1){ 
+            apObj->box.x += AP_POS2.x;
+            apObj->box.y += AP_POS2.y;
+        } 
+        else if(i == 2){ 
+            apObj->box.x += AP_POS3.x;
+            apObj->box.y += AP_POS3.y;
+        }
 
         // Configure the sprites based on the value of apCount
         std::string spritePath = (apCount > i) ? AP_FULL_SPRITE : AP_EMPTY_SPRITE;
@@ -49,23 +63,47 @@ void AP::Update(float dt){
     if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
     Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
         GameData::playerTurn = false;
-        if(Enemies::enemiesToAttack == 0){//init enemies attack turn
+        if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
             Enemies::enemiesToAttack = Enemies::enemiesCount;
         } 
     }
 
-    if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking && GameData::playerTurn == false){ 
+    if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
         GameData::playerTurn = true;
         AP::apCount = AP_QUANTITY; //reset
         SetAPCount(AP::apCount);
-    }
+
+        // Remove one count of all tag drom which enemy
+        for (const std::weak_ptr<GameObject>& enemy : Enemies::enemiesArray) {
+            auto enemyPtr = enemy.lock();
+            if (enemyPtr) {
+                auto enemiesComponent = enemyPtr->GetComponent("Enemies");
+                if (enemiesComponent) {
+                    auto enemies = std::dynamic_pointer_cast<Enemies>(enemiesComponent);
+                    enemies->RemoveOneTagAll();
+                }
+            }
+        }
+
+        auto motherComponent = Mother::motherInstance.lock()->GetComponent("Mother");
+        if (motherComponent) {
+            auto mother = std::dynamic_pointer_cast<Mother>(motherComponent);
+            mother->RemoveOneTagAll();
+        }
+
+        auto daughterComponent = Daughter::daughterInstance.lock()->GetComponent("Daughter");
+        if (daughterComponent) {
+            auto daughter = std::dynamic_pointer_cast<Daughter>(daughterComponent);
+            daughter->RemoveOneTagAll();
+        }
+    } 
 
 }
 
 void AP::Render(){
 } 
 
-void AP::SetAPCount(int newAPCount) {
+void AP::SetAPCount(int newAPCount) { 
     if (newAPCount >= 0 && newAPCount <= 3) {
         apCount = newAPCount;
     }

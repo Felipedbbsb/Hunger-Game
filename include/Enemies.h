@@ -13,7 +13,7 @@
 #include "Rect.h"
 #include "Timer.h"
 
-#define ENEMY_INDICATOR_SPRITE "assets/img/UI/uiEnemyIndicator.png"
+#define ENEMY_INDICATOR_SPRITE "assets/img/UI/uiIndicatorEnemy.png"
 
 #define ENEMY_INTENTON_SPRITE "assets/img/UI/uiIntentionEnemy.png"
 
@@ -31,7 +31,9 @@ class Enemies : public Component {
             ENEMY1,
             ENEMY2,
             ENEMY3,
-            ENEMY4
+            ENEMY4,
+
+            INVALID_ENEMY
         };
 
         // Structure to store enemy information
@@ -55,6 +57,8 @@ class Enemies : public Component {
         void Resume();
         bool Is(std::string type); 
 
+        void SetupInteractionScreen(Skill::AttackType attackType, Skill::TargetType whoAttacks);
+
         void CreateEnemyIndicator();
         void DeleteEnemyIndicator();
         
@@ -67,6 +71,9 @@ class Enemies : public Component {
         bool HasTagPlayer(Tag::Tags tagToCheck, std::vector<Tag::Tags> tags);
         void ActivateTag(Tag::Tags tag); 
 
+        void RemoveOneTagAll();
+        void RecreateTagUI();
+
         EnemyId GetId(); 
 
         // Function to initialize enemy information
@@ -76,14 +83,19 @@ class Enemies : public Component {
         GameObject* enemyIndicator;  
         GameObject* intention; 
 
-        static std::vector<std::shared_ptr<Enemies>> enemiesArray;
+        static std::vector<std::weak_ptr<GameObject>> enemiesArray;
+        
         static int enemiesCount;
         static int SkillAllenemies;
         static int provokedEnemies;
         static int enemiesToAttack;
         static bool enemyAttacking;
+
+        // Used for attacks involving more then one target
+        static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
         
-    
+        
+
     private:
         EnemyId id;
         LifeBar* lifeBarEnemy;
@@ -104,12 +116,15 @@ class Enemies : public Component {
         
         std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from enemytags
  
-        // Used for attacks involving more then one target
-        static std::map<EnemyId, EnemyInfo> enemyInfoMap;// Map to store enemy information
+        
 
         Timer intentionTimer;
 
         void CreateIntention();
         void DeleteIntention();
 
+        void IntentionAnimation(float dt);
+        int ScaleIntention; //If 1 is growing, -1 the opposite
+        void IndicatorAnimation(float dt);
+        int ScaleIndicator; //If 1 is growing, -1 the opposite
 };
