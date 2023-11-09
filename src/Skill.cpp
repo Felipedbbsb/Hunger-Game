@@ -286,8 +286,8 @@ void Skill::InitializeSkillInfoMap() {
     //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable. 
     skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
 
-    //Rockabye (2AP): Apply 1 Resilience to your daughter.
-    skillInfoMap[Rockabye] =  {2, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
+    //Rockabye (1AP): Apply 1 Resilience to your daughter.
+    skillInfoMap[Rockabye] =  {1, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
  
     //Stinger (2AP): Deal 5 Damage to all enemies; Expose your daughter.
     skillInfoMap[Stinger] =  {2, Skill::StateProtected::EXPOSED,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
@@ -323,7 +323,7 @@ void Skill::InitializeSkillInfoMap() {
 
 
     // Apply 2 vulnerable 
-    skillInfoMap[E3_Skill1] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,        NONE, IRR} ;
+    skillInfoMap[E3_Skill1] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,        NONE, IRR} ;
 
     //Apply Rampage in all allies 
     skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
