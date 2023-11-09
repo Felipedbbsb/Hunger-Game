@@ -182,8 +182,10 @@ class Skill : public Component {
         void SkillBack(TargetType targetTypeBack);
 
         static std::map<SkillId, SkillInfo> skillInfoMap; 
+        static std::vector<Skill::SkillId> skillArray;
 
         static void InitializeSkillInfoMap();
+        static void InitializeSkills();
 
         void CreateTagCount();
 

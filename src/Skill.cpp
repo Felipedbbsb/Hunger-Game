@@ -24,6 +24,7 @@ std::map<Skill::SkillId, Skill::SkillInfo> Skill::skillInfoMap; // Defina o mapa
 
 Skill::TargetType Skill::playerTargetType = Skill::IRR;
 
+std::vector<Skill::SkillId> Skill::skillArray = {};
 
 Skill::Skill(GameObject& associated, SkillId id, AP* ap)
     : Component::Component(associated),
@@ -251,6 +252,17 @@ Skill::SkillId Skill::GetId() {
 
 bool Skill::Is(std::string type) {
     return (type == "Skill");
+}
+
+
+//Starter skills
+void Skill::InitializeSkills() {
+    //Adding skills
+        skillArray.push_back(Skill::Helmbreaker);
+        skillArray.push_back(Skill::Rockabye);
+        skillArray.push_back(Skill::Stinger);
+        skillArray.push_back(Skill::HnS);
+        skillArray.push_back(Skill::InstantRegret);
 }
 
 void Skill::InitializeSkillInfoMap() {

@@ -16,6 +16,8 @@ int main(int argc, char** argv) {
         // Populate the map with skill information during initialization.
         Skill::InitializeSkillInfoMap();
 
+        Skill::InitializeSkills();
+
         // Populate the map with enemies information during initialization.
         Enemies::InitializeEnemyInfoMap();
 
@@ -28,7 +30,7 @@ int main(int argc, char** argv) {
 
         
         game.Push(initialState);
-
+ 
         game.Run();
         // ==========================================================================
     } catch (const std::exception& e) {

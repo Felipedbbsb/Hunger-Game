@@ -96,20 +96,7 @@ void CombatState::LoadAssets(){
     //============================ UI ========================================
     //UI takes up 1/3 of the box at the bottom
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-
-        //Adding skills
-        std::vector<Skill::SkillId> skillArrayNormal;
-        skillArrayNormal.push_back(Skill::Helmbreaker);
-        skillArrayNormal.push_back(Skill::Rockabye);
-        skillArrayNormal.push_back(Skill::Stinger);
-        skillArrayNormal.push_back(Skill::HnS);
-        
-        std::vector<Skill::SkillId> skillArrayDjinn;
-        skillArrayDjinn.push_back(Skill::InstantRegret);
-
- 
-
-    UI* ui_behaviour = new UI(*ui, skillArrayNormal, skillArrayDjinn); 
+    UI* ui_behaviour = new UI(*ui); 
     ui->AddComponent((std::shared_ptr<UI>)ui_behaviour); 
     CameraFollower *bg_cmfl = new CameraFollower(*ui);
     ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);

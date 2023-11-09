@@ -30,9 +30,7 @@
 class UI : public Component{
 
   public:
-    UI(GameObject &associated,
-       std::vector<Skill::SkillId> SkillNormalArray,
-       std::vector<Skill::SkillId> SkillDjinArray);
+    UI(GameObject &associated);
 
     ~UI();
     void Update(float dt);
@@ -42,13 +40,9 @@ class UI : public Component{
     void Resume();
     bool Is(std::string type);
 
-    void AddSkill(Skill::SkillId skill);
 
   private:
-    std::vector<Skill::SkillId> SkillNormalArray;
-    //int nSkillNormal;
-    std::vector<Skill::SkillId> SkillDjinArray;
-    //int nSkillDjinn;
+  
 
     
 
