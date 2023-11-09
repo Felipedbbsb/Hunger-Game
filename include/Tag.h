@@ -25,9 +25,9 @@
 #define TAGS_SPACING_X 40.0f
 #define TAGS_SPACING_Y 35.0f
 
-#define IMPLOSION_VEL 1.25
+#define IMPLOSION_VEL 1.5
 #define BIGTAG_APLHA 125
-#define BIGTAG_SCALE 1.75
+#define BIGTAG_SCALE 2.5
 
 class Tag : public Component{
 

@@ -27,7 +27,9 @@ Component::Component(associated),
 indicator(nullptr),
 intention(nullptr), 
 lifeBarDaughter(nullptr),
-tagSpaceCount(0){ 
+tagSpaceCount(0),
+ScaleIntention(1),
+ScaleIndicator(1){ 
  
 } 
 
@@ -63,6 +65,9 @@ Daughter::~Daughter()
 
 void Daughter::Update(float dt)
 {   
+    IntentionAnimation(dt);
+    IndicatorAnimation(dt);
+
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
@@ -142,6 +147,21 @@ void Daughter::Update(float dt)
                     if (indicator == nullptr){
                         CreateIndicator(); // Create an indicator if it doesn't exist
                     }
+                    else{
+                        auto objComponent = indicator->GetComponent("Sprite");
+                        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+                        if (daughterHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                            if (objComponentPtr) {
+                                objComponentPtr->SetAlpha(255);                          
+                            }
+                             else{
+                                if (objComponentPtr) {
+                                    objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
+                                }
+                            }    
+                        }
+
+                    }
 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
@@ -196,6 +216,48 @@ void Daughter::SetupInteractionScreen(Skill::AttackType attackType, Skill::Targe
     }
 }
  
+void Daughter::IndicatorAnimation(float dt) {
+    if (indicator != nullptr) {
+        auto objComponent = indicator->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            objComponentPtr->SetAlpha(INDICATOR_ALPHA);
+
+            // Set the target scale and animation speed
+            float targetScale = INDICATOR_TIME_ANIMATION;
+            float animationSpeed = INDICATOR_TIME_ANIMATION_V;
+ 
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIndicator * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIndicator == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIndicator = -1;
+            } else if (ScaleIndicator == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIndicator = 1;
+            }
+
+            // Center position original
+            auto posXenterX = indicator->box.x + indicator->box.w / 2;
+            auto posXenterY = indicator->box.y + indicator->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            indicator->box.x = posXenterX - indicator->box.w / 2;
+            indicator->box.y = posXenterY - indicator->box.h / 2;
+        }
+    }
+} 
+
 void Daughter::CreateIndicator() {
     indicator = new GameObject(daughterHitbox.x + daughterHitbox.w/2, daughterHitbox.y + daughterHitbox.h + LIFEBAROFFSET);
     Sprite* indicator_spr = new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
@@ -214,6 +276,46 @@ void Daughter::DeleteIndicator() {
     if (indicator != nullptr) {
         indicator->RequestDelete();
         indicator = nullptr;
+    }
+}
+
+void Daughter::IntentionAnimation(float dt) {
+    if (intention != nullptr) {
+        auto objComponent = intention->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            // Set the target scale and animation speed
+            float targetScale = INTENTION_TIME_ANIMATION;
+            float animationSpeed = INTENTION_TIME_ANIMATION_V;
+
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIntention * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIntention == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIntention = -1;
+            } else if (ScaleIntention == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIntention = 1;
+            }
+
+            // Center position original
+            auto posXenterX = intention->box.x + intention->box.w / 2;
+            auto posXenterY = intention->box.y + intention->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            intention->box.x = posXenterX - intention->box.w / 2;
+            intention->box.y = posXenterY - intention->box.h / 2;
+        }
     }
 }
 

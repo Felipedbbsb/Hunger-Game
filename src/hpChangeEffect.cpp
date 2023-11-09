@@ -64,7 +64,15 @@ void hpChangeEffect::Update(float dt) {
     if (t < 0.5) {
         alpha = t * 2 * 255.0;
     } else {
-        alpha = (1.0 - t)  * 255.0;
+        if(t < 1.0){
+          alpha = (1.0 - t)  * 255.0;
+            if(alpha < 0){
+                alpha = 1;
+            }  
+        }
+        else{
+            alpha = 1;
+        }
     }
 
 

@@ -92,8 +92,8 @@ void Papiro::Start() {
             centralized = true;
         }
         else{
-            CreatePlayerObject(whoAttacks, Skill::TargetType::IRR);
             CreateEnemyObject(false);
+            CreatePlayerObject(whoAttacks, Skill::TargetType::IRR);
             objectsMovesRight = true;
             centralized = false;
         }
@@ -254,15 +254,16 @@ void Papiro::Update(float dt) {
 
         interactionObjects[i].lock()->box.y = background->box.y +  background->box.h - interactionObjects[i].lock()->box.h-Camera::pos.y;
         spacingEnemies++; 
-
+ 
 
         auto objComponent = interactionObjects[i].lock()->GetComponent("InteractionObject");
         auto objComponentPtr = std::dynamic_pointer_cast<InteractionObject>(objComponent);
         if(objComponentPtr){
             objComponentPtr->SetPos(interactionObjects[i].lock()->box.x, interactionObjects[i].lock()->box.y);
-        }
+            objComponentPtr->Update(dt);
+        } 
         
-    }
+    }  
 
  
     //=================================Players update position=============================
@@ -282,6 +283,7 @@ void Papiro::Update(float dt) {
         auto objComponentPtr2 = std::dynamic_pointer_cast<InteractionObject>(objComponent2);
         if(objComponentPtr2){
             objComponentPtr2->SetPos(PLayerObjects[i].lock()->box.x, PLayerObjects[i].lock()->box.y);
+            objComponentPtr2->Update(dt);
         }
     }
 

@@ -42,7 +42,9 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     lifeBarEnemy(nullptr), 
     tagSpaceCount(0),
     thisEnemyAttacked(false),
-    intentionTimer()
+    intentionTimer(),
+    ScaleIntention(1),
+    ScaleIndicator(1)
     {  
         EnemyInfo& enemyInfo = enemyInfoMap[id];
         hp = enemyInfo.hp;
@@ -107,6 +109,11 @@ void Enemies::Update(float dt) {
     if(CombatState::InteractionSCreenActivate){
         return;
     }
+
+
+    IntentionAnimation(dt);
+    IndicatorAnimation(dt);
+    
 
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
@@ -180,6 +187,22 @@ void Enemies::Update(float dt) {
                 if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
                     CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
                 }       // and if any enemie has provoke
+
+                if(enemyIndicator != nullptr){
+                    auto objComponent = enemyIndicator->GetComponent("Sprite");
+                    auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+                    if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                        if (objComponentPtr) {
+                            objComponentPtr->SetAlpha(255);                          
+                        }
+                        else{
+                            if (objComponentPtr) {
+                                objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
+                            }
+                        }    
+                    }
+
+                }
 
                 // Check if the mouse is over the enemy and left mouse button is pressed
                 if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
@@ -313,6 +336,9 @@ void Enemies::Update(float dt) {
     }
         
 
+    
+
+
 }
 
 
@@ -321,6 +347,48 @@ void Enemies::SetupInteractionScreen(Skill::AttackType attackType, Skill::Target
     CombatState::attackType = attackType;
     CombatState::whoAttacks = whoAttacks;
 }
+
+void Enemies::IndicatorAnimation(float dt) {
+    if (enemyIndicator != nullptr) {
+        auto objComponent = enemyIndicator->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            objComponentPtr->SetAlpha(INDICATOR_ALPHA);
+
+            // Set the target scale and animation speed
+            float targetScale = INDICATOR_TIME_ANIMATION;
+            float animationSpeed = INDICATOR_TIME_ANIMATION_V;
+ 
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIndicator * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIndicator == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIndicator = -1;
+            } else if (ScaleIndicator == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIndicator = 1;
+            }
+
+            // Center position original
+            auto posXenterX = enemyIndicator->box.x + enemyIndicator->box.w / 2;
+            auto posXenterY = enemyIndicator->box.y + enemyIndicator->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            enemyIndicator->box.x = posXenterX - enemyIndicator->box.w / 2;
+            enemyIndicator->box.y = posXenterY - enemyIndicator->box.h / 2;
+        }
+    }
+} 
  
 void Enemies::CreateEnemyIndicator() {
     enemyIndicator = new GameObject(enemyHitbox.x + enemyHitbox.w/2, enemyHitbox.y + enemyHitbox.h+ LIFEBAROFFSET);
@@ -339,6 +407,49 @@ void Enemies::DeleteEnemyIndicator() {
         enemyIndicator = nullptr;
     }
 }
+
+
+void Enemies::IntentionAnimation(float dt) {
+    if (intention != nullptr) {
+        auto objComponent = intention->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if (objComponentPtr) {
+            auto scaleSprite = objComponentPtr->GetScale();
+
+            // Set the target scale and animation speed
+            float targetScale = INTENTION_TIME_ANIMATION;
+            float animationSpeed = INTENTION_TIME_ANIMATION_V;
+
+
+            // Calculate the new scale based on time (dt)
+            scaleSprite.x += ScaleIntention * animationSpeed * dt;
+
+            // Check if the scale has reached the minimum or maximum limit
+            if (ScaleIntention == 1 && scaleSprite.x >= targetScale) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = targetScale;
+                ScaleIntention = -1;
+            } else if (ScaleIntention == -1 && scaleSprite.x <= 1.0f) {
+                // Set the scale to the target value and reverse the direction
+                scaleSprite.x = 1.0f;
+                ScaleIntention = 1;
+            }
+
+            // Center position original
+            auto posXenterX = intention->box.x + intention->box.w / 2;
+            auto posXenterY = intention->box.y + intention->box.h / 2;
+
+            // Call SetScale with the correct number of arguments
+            objComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
+
+            // Postion correction
+            intention->box.x = posXenterX - intention->box.w / 2;
+            intention->box.y = posXenterY - intention->box.h / 2;
+        }
+    }
+}
+
+
 
 
 void Enemies::CreateIntention() {

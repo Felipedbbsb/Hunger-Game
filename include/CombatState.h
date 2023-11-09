@@ -1,5 +1,11 @@
 #pragma once
 
+#define INTENTION_TIME_ANIMATION 1.2f
+#define INTENTION_TIME_ANIMATION_V 0.375
+
+#define INDICATOR_TIME_ANIMATION 1.2f
+#define INDICATOR_TIME_ANIMATION_V 0.375
+#define INDICATOR_ALPHA 125
 
 #define FONT_COLOR {200, 200, 200, 0} // Red Green Blue Alpha
 #define COMBAT_TEXT "PRESS SPACEBAR TO PLAY"
@@ -10,7 +16,7 @@
 #define ENEMIES_POS1 Vec2(1100, RESOLUTION_HEIGHT * 2/3 + OBJECT_STATS_OFFSET)//enemies separeted by x, pos1 only sets the first in the array
 
 #define OBJECT_STATS_OFFSET -75
-
+ 
 #include <iostream>
 #include <memory>
 #include <algorithm> 

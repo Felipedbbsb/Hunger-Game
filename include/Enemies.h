@@ -70,7 +70,7 @@ class Enemies : public Component {
         bool HasTag(Tag::Tags tagToCheck);
         bool HasTagPlayer(Tag::Tags tagToCheck, std::vector<Tag::Tags> tags);
         void ActivateTag(Tag::Tags tag); 
-        
+
         void RemoveOneTagAll();
         void RecreateTagUI();
 
@@ -123,4 +123,8 @@ class Enemies : public Component {
         void CreateIntention();
         void DeleteIntention();
 
+        void IntentionAnimation(float dt);
+        int ScaleIntention; //If 1 is growing, -1 the opposite
+        void IndicatorAnimation(float dt);
+        int ScaleIndicator; //If 1 is growing, -1 the opposite
 };

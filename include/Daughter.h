@@ -70,6 +70,9 @@ private:
 
   std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
-
+  void IntentionAnimation(float dt);
+  int ScaleIntention; //If 1 is growing, -1 the opposite
+  void IndicatorAnimation(float dt);
+  int ScaleIndicator; //If 1 is growing, -1 the opposite
 
 };

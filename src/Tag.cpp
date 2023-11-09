@@ -220,7 +220,7 @@ void Tag::tagCountRender() {
         tagCountNumber->RequestDelete();
         tagCountNumber = nullptr;     
     }  
-    //Creates Reader for hp
+    //Creates Reader for hp 
     //position middle of hp bar
     tagCountNumber =  new GameObject(associated.box.x + associated.box.w, associated.box.y + associated.box.h); //posicao foi no olho...
     std::string textNumber = std::to_string(quantity);
@@ -228,7 +228,7 @@ void Tag::tagCountRender() {
                                                       TEXT_TAGCOUNT_SIZE,
                                                       Text::OUTLINE2,
                                                       textNumber, 
-                                                      TEXT_TAGCOUNT_FONT_COLOR,
+                                                      TEXT_TAGCOUNT_FONT_COLOR, 
                                                       0);  
  
     tagCountNumber->box.x -= tagCountNumber->box.w;                                                 

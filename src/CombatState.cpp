@@ -33,7 +33,7 @@ CombatState::~CombatState(){}
 
 void CombatState::Update(float dt){   
     InputManager& input = InputManager::GetInstance();
-
+ 
     Camera::Update(dt);
  
     // If the event is quit, set the termination flag
@@ -63,9 +63,9 @@ void CombatState::Update(float dt){
     else{
         if(toggleState){
             toggleState = false;
-            Pause();
+            Pause(); 
         }
-
+ 
         if(papiro == nullptr){
             papiro = new GameObject();
             Papiro* papiro_behaviour = new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
@@ -73,18 +73,18 @@ void CombatState::Update(float dt){
                                                         CombatState::whoAttacks,
                                                         CombatState::whoReceives);
 
-            CameraFollower *papiro_cmfl = new CameraFollower(*papiro);
+            //CameraFollower *papiro_cmfl = new CameraFollower(*papiro);
             //papiro->AddComponent((std::shared_ptr<CameraFollower>)papiro_cmfl);
             papiro->AddComponent((std::shared_ptr<Component>)papiro_behaviour);
             AddObject(papiro);
         }
         else{
-            papiro->Update(dt);
+            papiro->Update(dt);  
         }
     }
-    
      
-}
+     
+} 
 
 void CombatState::LoadAssets(){
     //============================ Background ========================================

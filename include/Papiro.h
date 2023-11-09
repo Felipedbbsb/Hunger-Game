@@ -27,9 +27,9 @@
 
 #define PAPIRO_SCREEN Vec2(1132, 638) 
 #define BG_SCALE 0.5 
-#define INTERACTION_COOLDOWN 2.5 
+#define INTERACTION_COOLDOWN 2.75 
 
-#define OBJECT_VELOCITY (RESOLUTION_WIDTH / 20) * Game::resizer 
+#define OBJECT_VELOCITY (RESOLUTION_WIDTH / 30) * Game::resizer 
 
 class Papiro : public Component {
     public:

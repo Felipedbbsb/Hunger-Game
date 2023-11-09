@@ -204,7 +204,8 @@ dep/InteractionObject.d bin/InteractionObject.o: \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
  include/LifeBar.h include/Reader.h include/Sound.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
- include/Tag.h include/AP.h include/Mother.h include/Daughter.h
+ include/Tag.h include/AP.h include/Papiro.h include/Mother.h \
+ include/Daughter.h
 
 include/InteractionObject.h:
 
@@ -709,6 +710,8 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
+
+include/Papiro.h:
 
 include/Mother.h:
 

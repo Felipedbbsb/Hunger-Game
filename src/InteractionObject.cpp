@@ -21,6 +21,10 @@ InteractionObject::InteractionObject(GameObject &associated, Skill::AttackType a
 }
  
 InteractionObject::~InteractionObject() {
+    if(effect != nullptr){
+        effect->RequestDelete();
+        effect = nullptr;
+    }
 }
  
 void InteractionObject::Start() { 
@@ -33,7 +37,7 @@ void InteractionObject::Start() {
         if(isAttacking){
             if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
                 //CREATES BUFF
-                CreateEffect("BUFF");
+                CreateEffect("BUFF", false);
                 
             }
             else{
@@ -45,7 +49,12 @@ void InteractionObject::Start() {
             }
             else{
                 //CREATES DAMAGE OR DEBUFF
-                CreateEffect("ATK");
+                if(attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || attackType == Skill::AttackType::DEBUFF_ALL){
+                    CreateEffect("DEBUFF", false); 
+                }else{
+                    CreateEffect("ATK", false);
+                }    
+                
             }
         }
         
@@ -73,14 +82,18 @@ void InteractionObject::Start() {
                     obj_spr->SetScale(1.35, 1.35);
 
                     //CREATES BUFF
-                    CreateEffect("BUFF");
+                    CreateEffect("BUFF", true);
                 }
                 else{
                     iconPath = MOTHER_SPRITE_DFS;
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
                     //CREATES DAMAGE OR DEBUFF
-                    CreateEffect("ATK");
+                    if(attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || attackType == Skill::AttackType::DEBUFF_ALL){
+                    CreateEffect("DEBUFF", true); 
+                    }else{
+                        CreateEffect("ATK", true);
+                    };
                 }
 
             } 
@@ -107,14 +120,18 @@ void InteractionObject::Start() {
                     obj_spr->SetScale(1.35, 1.35);
 
                     //CREATES BUFF
-                    CreateEffect("BUFF");
+                    CreateEffect("BUFF", true);
                 }
                 else{
                     iconPath = DAUGHTER_SPRITE_DFS;
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
                     //CREATES DAMAGE OR DEBUFF
-                    CreateEffect("ATK");
+                    if(attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || attackType == Skill::AttackType::DEBUFF_ALL){
+                    CreateEffect("DEBUFF", true);
+                    }else{
+                        CreateEffect("ATK", true);
+                    }
                 }
                 
             }
@@ -125,27 +142,38 @@ void InteractionObject::Start() {
     
 }
 
-void InteractionObject::CreateEffect(std::string TypeEffect) {
+void InteractionObject::CreateEffect(std::string TypeEffect, bool isPlayer) {
     effect = new GameObject();
     Sprite* effect_spr = nullptr; // Declare a variável aqui
 
-    if (TypeEffect == "BUFF") {
-        effect_spr = new Sprite(*effect, BUFF_SPRITE); // Use *effect para obter o objeto por referência
-    } else if (TypeEffect == "ATK") {
-        effect_spr = new Sprite(*effect, ATK_SPRITE);
-    } else if (TypeEffect == "DEBUFF") {
-        effect_spr = new Sprite(*effect, DEBUFF_SPRITE);
+    if(isPlayer){
+        if (TypeEffect == "BUFF") {
+            effect_spr = new Sprite(*effect, BUFF_SPRITE_R); 
+        } else if (TypeEffect == "ATK") {
+            effect_spr = new Sprite(*effect, ATK_SPRITE_R);
+        } else if (TypeEffect == "DEBUFF") {
+            effect_spr = new Sprite(*effect, DEBUFF_SPRITE_R);
+        }
     }
+    else{
+        if (TypeEffect == "BUFF") {
+            effect_spr = new Sprite(*effect, BUFF_SPRITE); 
+        } else if (TypeEffect == "ATK") {
+            effect_spr = new Sprite(*effect, ATK_SPRITE);
+        } else if (TypeEffect == "DEBUFF") {
+            effect_spr = new Sprite(*effect, DEBUFF_SPRITE);
+        }
+    }
+    
 
-    // Verifique se effect_spr não é nulo antes de adicioná-lo
+    // Verifique se effect_spr não é nulo antes de adicioná-lo 
     if (effect_spr) { 
-        effect->AddComponent(std::shared_ptr<Sprite>(effect_spr));
+        effect->AddComponent(std::shared_ptr<Sprite>(effect_spr)); 
+        effect_spr->SetAlpha(1);
     }
 
-    effect_spr->SetScale(0.5, 0.5);
     effect->box.x = associated.box.x + associated.box.w/2 - effect->box.w/2;
     effect->box.y = associated.box.y + associated.box.h/2 - effect->box.h/2;
-
     
 
     Game::GetInstance().GetCurrentState().AddObject(effect);
@@ -156,24 +184,60 @@ void InteractionObject::CreateEffect(std::string TypeEffect) {
 
  
 void InteractionObject::Update(float dt) {
+    if(effect != nullptr){
+        effectDuration.Update(dt);
 
+        auto velocityAplha = 255 / (INTERACTION_COOLDOWN * 0.75);
 
+        auto objComponent = effect->GetComponent("Sprite");
+        auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
+        if(objComponentPtr){
+            auto aplhaSprite = objComponentPtr->GetAlpha();
+            std::cout << aplhaSprite << std::endl; 
+            if( effectDuration.Get() < INTERACTION_COOLDOWN * 0.8 ){
+                if(aplhaSprite <= 255){
+                    objComponentPtr->SetAlpha(aplhaSprite +  velocityAplha * dt);
+                    if(objComponentPtr->GetAlpha() > 255){
+                        objComponentPtr->SetAlpha(255);
+                    }  
+                }
+                
+            } 
+            else if(effectDuration.Get() > INTERACTION_COOLDOWN * 1.0){
+                if(aplhaSprite > 1){
+                    objComponentPtr->SetAlpha(aplhaSprite -  velocityAplha * dt);
+                    if(objComponentPtr->GetAlpha() < 0){
+                        objComponentPtr->SetAlpha(1);
+                    }
+                }
+            }
+        }
+        
+    }
 }
 
 void InteractionObject::SetPos(int posX, int posY) {
     if(effect != nullptr){
         if(typeEffect == "ATK"){
-            effect->box.x = posX + associated.box.w/2 - effect->box.w/2 + 60;
-            effect->box.y = posY + associated.box.h/6 - effect->box.h/2;
-        } else{
+            effect->box.x = posX + associated.box.w/2 - effect->box.w/2 - 10;
+            effect->box.y = posY + associated.box.h/3 - effect->box.h/2;
+        }
+        else if(typeEffect == "BUFF") {
             effect->box.x = posX + associated.box.w/2 - effect->box.w/2;
-            effect->box.y = posY + associated.box.h/6 - effect->box.h/2;
+            effect->box.y = posY + associated.box.h - effect->box.h - 10;
+        } 
+        else if(typeEffect == "DEBUFF") {
+            effect->box.x = posX + associated.box.w/2 - effect->box.w/2;
+            effect->box.y = posY + associated.box.h/2 - effect->box.h/2;
         } 
               
     }
 
-}
+    
 
+
+}
+ 
 void InteractionObject::Render() {
 
 }
