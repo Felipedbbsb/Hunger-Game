@@ -1,5 +1,7 @@
 #pragma once
 
+#define SKILL_SELECTION_COOLDOWN_START 2
+
 #define INTENTION_TIME_ANIMATION 1.2f
 #define INTENTION_TIME_ANIMATION_V 0.375
 
@@ -48,6 +50,9 @@ class CombatState : public State{
     private:
         std::vector<Enemies::EnemyId> enemiesArray;  
         GameObject* papiro;  
+        GameObject* skillSelection; 
         std::string spriteBackground;
         bool toggleState;
+
+        Timer skillSelectionStart;
 };

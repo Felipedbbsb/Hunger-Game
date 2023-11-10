@@ -8,6 +8,8 @@
 #include "Daughter.h"
 #include "Sprite.h"
 #include "CameraFollower.h"
+#include "SkillSelection.h"
+
 #include <algorithm> 
 
 std::vector<std::shared_ptr<GameObject>> AP::apArray;
@@ -60,43 +62,50 @@ AP::~AP(){
 } 
 
 void AP::Update(float dt){  
-    if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
-    Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
-        GameData::playerTurn = false;
-        if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
-            Enemies::enemiesToAttack = Enemies::enemiesCount;
-        } 
-    }
+    if(!SkillSelection::skillSelectionActivated){
+        if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
+        Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
+            GameData::playerTurn = false;
+            if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
+                Enemies::enemiesToAttack = Enemies::enemiesCount;
+            } 
+        }
 
-    if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
-        GameData::playerTurn = true;
-        AP::apCount = AP_QUANTITY; //reset
-        SetAPCount(AP::apCount);
+        if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
+            GameData::playerTurn = true;
+            AP::apCount = AP_QUANTITY; //reset
+            SetAPCount(AP::apCount);
 
-        // Remove one count of all tag drom which enemy
-        for (const std::weak_ptr<GameObject>& enemy : Enemies::enemiesArray) {
-            auto enemyPtr = enemy.lock();
-            if (enemyPtr) {
-                auto enemiesComponent = enemyPtr->GetComponent("Enemies");
-                if (enemiesComponent) {
-                    auto enemies = std::dynamic_pointer_cast<Enemies>(enemiesComponent);
-                    enemies->RemoveOneTagAll();
+            // Remove one count of all tag drom which enemy
+            for (const std::weak_ptr<GameObject>& enemy : Enemies::enemiesArray) {
+                auto enemyPtr = enemy.lock();
+                if (enemyPtr) {
+                    auto enemiesComponent = enemyPtr->GetComponent("Enemies");
+                    if (enemiesComponent) {
+                        auto enemies = std::dynamic_pointer_cast<Enemies>(enemiesComponent);
+                        enemies->RemoveOneTagAll();
+                    }
                 }
             }
-        }
 
-        auto motherComponent = Mother::motherInstance.lock()->GetComponent("Mother");
-        if (motherComponent) {
-            auto mother = std::dynamic_pointer_cast<Mother>(motherComponent);
-            mother->RemoveOneTagAll();
-        }
+            auto motherComponent = Mother::motherInstance.lock()->GetComponent("Mother");
+            if (motherComponent) {
+                auto mother = std::dynamic_pointer_cast<Mother>(motherComponent);
+                mother->RemoveOneTagAll();
+            }
 
-        auto daughterComponent = Daughter::daughterInstance.lock()->GetComponent("Daughter");
-        if (daughterComponent) {
-            auto daughter = std::dynamic_pointer_cast<Daughter>(daughterComponent);
-            daughter->RemoveOneTagAll();
-        }
-    } 
+            auto daughterComponent = Daughter::daughterInstance.lock()->GetComponent("Daughter");
+            if (daughterComponent) {
+                auto daughter = std::dynamic_pointer_cast<Daughter>(daughterComponent);
+                daughter->RemoveOneTagAll();
+            }
+        } 
+    }
+    else{
+        AP::apCount = AP_QUANTITY; //reset
+        SetAPCount(AP::apCount);
+    }
+    
 
 }
 

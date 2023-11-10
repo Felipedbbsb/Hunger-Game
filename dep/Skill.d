@@ -211,7 +211,8 @@ dep/Skill.d bin/Skill.o: src/Skill.cpp include/Skill.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits \
- include/CameraFollower.h
+ include/CameraFollower.h include/SkillSelection.h include/Mother.h \
+ include/LifeBar.h include/Daughter.h include/Enemies.h
 
 include/Skill.h:
 
@@ -730,3 +731,13 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
 
 include/CameraFollower.h:
+
+include/SkillSelection.h:
+
+include/Mother.h:
+
+include/LifeBar.h:
+
+include/Daughter.h:
+
+include/Enemies.h:

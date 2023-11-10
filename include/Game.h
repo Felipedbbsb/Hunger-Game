@@ -17,8 +17,8 @@
 
 #define COMBAT_IMAGE "assets/img/backgrounds/backgroundTemple.png"
  
-#define SCREEN_WIDTH 1366
-#define SCREEN_HEIGHT 768
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
 
 #define RESOLUTION_WIDTH 1920
 #define RESOLUTION_HEIGHT 1080

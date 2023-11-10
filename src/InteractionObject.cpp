@@ -193,7 +193,6 @@ void InteractionObject::Update(float dt) {
         auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
         if(objComponentPtr){
             auto aplhaSprite = objComponentPtr->GetAlpha();
-            std::cout << aplhaSprite << std::endl; 
             if( effectDuration.Get() < INTERACTION_COOLDOWN * 0.8 ){
                 if(aplhaSprite <= 255){
                     objComponentPtr->SetAlpha(aplhaSprite +  velocityAplha * dt);

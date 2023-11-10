@@ -10,6 +10,7 @@
 #include "Enemies.h" 
 #include "Skill.h" 
 #include "Papiro.h" 
+#include "SkillSelection.h" 
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -26,6 +27,7 @@ CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string
 : State::State(),
 enemiesArray(enemiesArray),
 papiro(nullptr),
+skillSelection(nullptr),
 spriteBackground(spriteBackground),
 toggleState(true){}
   
@@ -41,23 +43,34 @@ void CombatState::Update(float dt){
         quitRequested = true;
     }
 
-    //if (CombatState::InteractionSCreenActivate){
-    //    InteractionState* new_stage = new InteractionState(CombatState::enemiesArrayIS,
-    //                                                      CombatState::attackType,
-   //                                                       CombatState::whoAttacks,
-    //                                                      CombatState::whoReceives);
-        //Game::GetInstance().Push(new_stage); 
-        
-    //}
-
 
     //============================ Checks whether to delete objects and updates ========================================
+    
+
     if(!CombatState::InteractionSCreenActivate){
-        if(!toggleState){
+        if(!toggleState){// Checks with needs to resume the state
             toggleState = true;
             Resume();
         }
-        UpdateArray(dt);
+        // other Conditional for pausing the game
+        if(Enemies::enemiesCount == 0){
+            skillSelectionStart.Update(dt);
+            if(skillSelectionStart.Get() >= SKILL_SELECTION_COOLDOWN_START){
+                 if(skillSelection == nullptr){
+                    // Create a new skillSelection object for skillSelection Screen
+                    skillSelection = new GameObject();
+                    SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection);
+                    skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
+                    AddObject(skillSelection);
+                 }       
+                else{
+                    // Update the existing skillSelection object for skillSelection Screen
+                    skillSelection->Update(dt);  
+                }
+            }
+        }
+        
+        UpdateArray(dt); 
         papiro = nullptr; 
     }
     else{
@@ -65,8 +78,10 @@ void CombatState::Update(float dt){
             toggleState = false;
             Pause(); 
         }
- 
+
+        // Handle Interaction Screen updates
         if(papiro == nullptr){
+            // Create a new Papiro object for Interaction Screen
             papiro = new GameObject();
             Papiro* papiro_behaviour = new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
                                                         CombatState::attackType,
@@ -78,11 +93,12 @@ void CombatState::Update(float dt){
             papiro->AddComponent((std::shared_ptr<Component>)papiro_behaviour);
             AddObject(papiro);
         }
-        else{
+        else{ 
+            // Update the existing Papiro object for Interaction Screen
             papiro->Update(dt);  
         }
     }
-     
+
      
 } 
 

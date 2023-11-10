@@ -37,7 +37,8 @@ UI::UI(GameObject &associated)
         CameraFollower *normalSkill_cmfl = new CameraFollower(*normalSkill);
         normalSkill->AddComponent((std::shared_ptr<CameraFollower>)normalSkill_cmfl);
         normalSkill->AddComponent(std::shared_ptr<Skill>(skill_behaviour));
-        Game::GetInstance().GetCurrentState().AddObject(normalSkill); 
+        auto weak_skill = Game::GetInstance().GetCurrentState().AddObject(normalSkill); 
+        Skill::skillArrayObj.push_back(weak_skill);
     }   
 
     

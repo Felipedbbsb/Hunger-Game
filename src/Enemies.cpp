@@ -764,7 +764,7 @@ void Enemies::InitializeEnemyInfoMap() {
     // Populate the map with enemy information during initialization.
     enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
     enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
-    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
+    enemyInfoMap[ENEMY3] = { 25, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
     enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
  

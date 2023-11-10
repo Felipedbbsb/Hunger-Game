@@ -70,6 +70,23 @@
 #define I_Generic ""
 #define SPR_Generic ""
 
+//LOCKED
+#define NS_LOCKED "LOCKED"
+#define I_LOCKED "Desbloqueado com Np1"
+#define SPR_LOCKED "assets/img/UI/skills/Locked.png"
+
+#define NS_LOCKED2 "LOCKED"
+#define I_LOCKED2 "Desbloqueado com Np2"
+#define SPR_LOCKED2 "assets/img/UI/skills/Locked.png"
+
+#define NS_LOCKED3 "LOCKED"
+#define I_LOCKED3 "Desbloqueado com Np3"
+#define SPR_LOCKED3 "assets/img/UI/skills/Locked.png"
+
+//EMPTY
+#define NS_EMPTY "EMPTY"
+#define I_EMPTY "EMPTY"
+#define SPR_EMPTY "assets/img/UI/skills/Empty.png"
 
 
 //-------------------------------------------------------------------
@@ -105,6 +122,13 @@ class Skill : public Component {
 
             E3_Skill1,
             E3_Skill2,
+            
+            
+            LOCKED1,
+            LOCKED2,
+            LOCKED3,
+
+            EMPTY,
 
             INVALID_SKILL
         };
@@ -183,11 +207,14 @@ class Skill : public Component {
 
         static std::map<SkillId, SkillInfo> skillInfoMap; 
         static std::vector<Skill::SkillId> skillArray;
+        static std::vector<std::weak_ptr<GameObject>> skillArrayObj;
 
         static void InitializeSkillInfoMap();
         static void InitializeSkills();
 
         void CreateTagCount();
+
+        static void AddSkill(Skill::SkillId id);
 
     private:
         SkillId id;
@@ -198,5 +225,6 @@ class Skill : public Component {
         GameObject* jewelObj;
         GameObject* tagCount;
         bool toggleJewel;
+
 };
  
