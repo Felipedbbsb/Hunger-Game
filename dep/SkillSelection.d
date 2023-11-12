@@ -214,7 +214,7 @@ dep/SkillSelection.d bin/SkillSelection.o: src/SkillSelection.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/CombatState.h \
  include/InteractionObject.h include/Papiro.h include/CameraFollower.h \
- include/Camera.h
+ include/Camera.h include/UI.h
 
 include/SkillSelection.h:
 
@@ -749,3 +749,5 @@ include/Papiro.h:
 include/CameraFollower.h:
 
 include/Camera.h:
+
+include/UI.h:

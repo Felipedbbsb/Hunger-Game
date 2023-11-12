@@ -111,9 +111,13 @@ void Skill::Update(float dt) {
 
             if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
                 if (!readerSkill) {
-                    readerSkill = new GameObject(associated.box.x, associated.box.y);
+                    readerSkill = new GameObject(associated.box.x + Camera::pos.x, associated.box.y + Camera::pos.y);
                     Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
                     readerSkill->AddComponent(std::make_shared<Reader>(*readerSkill_behaviour));
+
+                    CameraFollower *readerSkill_cmfl = new CameraFollower(*readerSkill);
+                    readerSkill->AddComponent(std::make_shared<CameraFollower>(*readerSkill_cmfl));
+
                     Game::GetInstance().GetCurrentState().AddObject(readerSkill);
 
 
@@ -279,7 +283,7 @@ void Skill::CreateTagCount() {
     //numberCounter
     if(skillInfo.apCost != 0){
         if(tagCount == nullptr){
-            tagCount =  new GameObject(jewelObj->box.x, jewelObj->box.y); //posicao foi no olho...
+            tagCount =  new GameObject(jewelObj->box.x , jewelObj->box.y ); //posicao foi no olho...
             std::string textNumber = std::to_string(skillInfo.apCost);
             Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
                                                                 TEXT_TAGCOUNT2_SIZE,

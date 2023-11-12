@@ -9,6 +9,7 @@
 #include "InteractionObject.h"
 #include "CameraFollower.h"
 #include "Skill.h"
+#include "UI.h"
 
 #include <algorithm>
 
@@ -35,6 +36,7 @@ SkillSelection::SkillSelection(GameObject &associated,  bool isDjinn)
 }
   
 void SkillSelection::Start() {
+
     //background
     CreateBackground();
     
@@ -224,11 +226,8 @@ void SkillSelection::Update(float dt) {
                 arrowComponentPtr->SetScale(1.0, 1.0);
 
                 // Postion correction
-                std::cout << passButon->box.x << std::endl;
                 passButon->box.x = posXenterX - passButon->box.w / 2;
                 passButon->box.y = posXenterY - passButon->box.h / 2;
-                
-                std::cout << passButon->box.x << " " << passButon->box.w / 2<<" " <<posXenterX << std::endl;
         }
     }  
     
