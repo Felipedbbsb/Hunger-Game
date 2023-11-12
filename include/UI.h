@@ -40,10 +40,12 @@ class UI : public Component{
     void Resume();
     bool Is(std::string type);
 
-
+    static void CreateSkillsGO(AP* ap_behaviour);
+    static GameObject* uiGO;
+    
   private:
-  
+    
 
     
 
-}; 
+};  

@@ -56,17 +56,13 @@ void CombatState::Update(float dt){
         if(Enemies::enemiesCount == 0){
             skillSelectionStart.Update(dt);
             if(skillSelectionStart.Get() >= SKILL_SELECTION_COOLDOWN_START){
-                 if(skillSelection == nullptr){
-                    // Create a new skillSelection object for skillSelection Screen
+                if(skillSelection == nullptr){
+                    // Create a new skillSelection object for skillSelection Screen 
                     skillSelection = new GameObject();
                     SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection);
                     skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
                     AddObject(skillSelection);
-                 }       
-                else{
-                    // Update the existing skillSelection object for skillSelection Screen
-                    skillSelection->Update(dt);  
-                }
+                }       
             }
         }
         

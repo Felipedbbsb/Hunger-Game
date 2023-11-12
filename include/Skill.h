@@ -67,8 +67,8 @@
 
 //Enemies
 #define NS_Generic "Attack1"
-#define I_Generic ""
-#define SPR_Generic ""
+#define I_Generic "assets/img/UI/uiSkillDjinn.png"
+#define SPR_Generic "assets/img/UI/uiSkillDjinn.png"
 
 //LOCKED
 #define NS_LOCKED "LOCKED"
@@ -112,6 +112,12 @@ class Skill : public Component {
 
             InstantRegret,
 
+            LOCKED1,
+            LOCKED2,
+            LOCKED3,
+
+            EMPTY,
+
             E1_Skill1,
             E1_Skill2,
             E1_Skill3,
@@ -124,11 +130,6 @@ class Skill : public Component {
             E3_Skill2,
             
             
-            LOCKED1,
-            LOCKED2,
-            LOCKED3,
-
-            EMPTY,
 
             INVALID_SKILL
         };
@@ -179,7 +180,7 @@ class Skill : public Component {
         
  
 
-        Skill(GameObject& associated, SkillId id, AP* ap);
+        Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel = true);
         ~Skill();
 
         void Start();
@@ -188,6 +189,9 @@ class Skill : public Component {
         bool Is(std::string type);
 
         SkillId GetId();
+
+        static Skill* skillFromReward;
+        static Skill* skillToReward;
 
         static Skill* selectedSkill;
 
@@ -214,7 +218,7 @@ class Skill : public Component {
 
         void CreateTagCount();
 
-        static void AddSkill(Skill::SkillId id);
+        static void AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange = Skill::EMPTY);
 
     private:
         SkillId id;
@@ -225,6 +229,6 @@ class Skill : public Component {
         GameObject* jewelObj;
         GameObject* tagCount;
         bool toggleJewel;
-
+        bool createJewel;
 };
  

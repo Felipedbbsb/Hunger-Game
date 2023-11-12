@@ -10,8 +10,11 @@
 #include "Camera.h"
 #include "CameraFollower.h"
 #include "SkillSelection.h"
+#include "UI.h"
 
- 
+Skill* Skill::skillFromReward = nullptr; //selection reward  
+Skill* Skill::skillToReward = nullptr; //selection reward  
+
 Skill* Skill::selectedSkill = nullptr; //generic 
 
 Skill* Skill::selectedSkillEnemy = nullptr; //generic 
@@ -30,14 +33,15 @@ std::vector<Skill::SkillId> Skill::skillArray = {};
 std::vector<std::weak_ptr<GameObject>> Skill::skillArrayObj = {};
 
 
-Skill::Skill(GameObject& associated, SkillId id, AP* ap)
+Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     : Component::Component(associated),
     id(id),  
     readerSkill(nullptr),
     apInstance(ap),
     jewelObj(nullptr),
     tagCount(nullptr),
-    toggleJewel(false) {
+    toggleJewel(false),
+    createJewel(createJewel) {
     
 }
 
@@ -50,9 +54,9 @@ void Skill::Start() {
     textSkill = skillInfo.info;
  
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
-    associated.AddComponent(std::shared_ptr<Sprite>(skillSprite));
+    associated.AddComponent(std::make_shared<Sprite>(*skillSprite));
 
-    if(jewelObj == nullptr){
+    if(jewelObj == nullptr && createJewel){
         jewelObj = new GameObject(associated.box.x, associated.box.y);
         Sprite* jewelObj_behaviour;
         if(skillInfo.apCost != 0){
@@ -61,13 +65,13 @@ void Skill::Start() {
         else{
             jewelObj_behaviour = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
         }
-        jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour));
-
+        jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
+ 
         jewelObj->box.x += associated.box.w - jewelObj->box.w/2;
         jewelObj->box.y += associated.box.h/2 - jewelObj->box.h/2;
         
         CameraFollower *jewelObj_cmfl = new CameraFollower(*jewelObj);
-        jewelObj->AddComponent((std::shared_ptr<CameraFollower>)jewelObj_cmfl);
+        jewelObj->AddComponent(std::make_shared<CameraFollower>(*jewelObj_cmfl));
         
         Game::GetInstance().GetCurrentState().AddObject(jewelObj);
 
@@ -94,47 +98,70 @@ void Skill::Update(float dt) {
     Vec2 mousePos(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
     skillClickTimer.Update(dt);
 
-    if (InputManager::GetInstance().MousePress(RIGHT_MOUSE_BUTTON) && selectedSkill && GameData::playerTurn == true){
-        selectedSkill->Deselect();
+    if (InputManager::GetInstance().MousePress(RIGHT_MOUSE_BUTTON) && GameData::playerTurn == true){
+        if(selectedSkill){
+            selectedSkill->Deselect();
+        }
+        
+        skillToReward = nullptr;
+        skillFromReward = nullptr;
     }
 
     if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)){ 
 
-        //Scenerio where combat its not alerady on skill selection
-        if(!SkillSelection::skillSelectionActivated){
             if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
                 if (!readerSkill) {
                     readerSkill = new GameObject(associated.box.x, associated.box.y);
                     Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
-                    readerSkill->AddComponent(std::shared_ptr<Reader>(readerSkill_behaviour));
+                    readerSkill->AddComponent(std::make_shared<Reader>(*readerSkill_behaviour));
                     Game::GetInstance().GetCurrentState().AddObject(readerSkill);
 
 
                 }
-                if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON) && GameData::playerTurn == true 
-                && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)) {
-                    if (selectedSkill != nullptr && selectedSkill != this  ) {
-                        selectedSkill->Deselect();
-                    }
-                    selectedSkill = this;
 
-                    //Checks if apCount is bigger or equal to apCost
-                    Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
-                    // Check if there are enough AP points to select the skill
-                    if (AP::apCount >= tempSkillInfo.apCost) {
-                        // Deduct the AP cost from the total AP count
-                        apInstance->MirrorAPCount(AP::apCount - tempSkillInfo.apCost);
-                    } else {
+                
+                if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON) && GameData::playerTurn == true) {
+                    
+                    //Scenerio where combat its not alerady on skill selection
+                    if(!SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
+                        if (selectedSkill != nullptr && selectedSkill != this  ) {
                         selectedSkill->Deselect();
+                        }
+                        selectedSkill = this;
+
+                        //Checks if apCount is bigger or equal to apCost
+                        Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
+                        // Check if there are enough AP points to select the skill
+                        if (AP::apCount >= tempSkillInfo.apCost) {
+                            // Deduct the AP cost from the total AP count
+                            apInstance->MirrorAPCount(AP::apCount - tempSkillInfo.apCost);
+                        } else {
+                            selectedSkill->Deselect();
+                        }
                     }
+
+                    //Scenerio where combat its  alerady on skill selection
+                    else if(SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
+                        if(createJewel){
+                            if (skillToReward != nullptr && skillToReward != this  ) {
+                                skillToReward = nullptr;
+                            }
+                            skillToReward = this;
+                            
+                        }else{
+                            if (skillFromReward != nullptr && skillFromReward != this  ) {
+                                skillFromReward = nullptr;
+                            }
+                            skillFromReward = this;
+                        }
+                        
+                    }
+
                 }
+                
             }
-        }  
         
-        //Scenerio where combat its  alerady on skill selection
-        else{
-            
-        }
+
 
 
     } else {
@@ -176,7 +203,7 @@ void Skill::Update(float dt) {
                 if (!toggleJewel) {
                     jewelObj->RemoveComponent(spriteComponentPtr);
                     Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
-                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour2));
+                    jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour2));
                     toggleJewel = true;  
                     tagCount->RequestDelete();
                     tagCount = nullptr;
@@ -185,7 +212,6 @@ void Skill::Update(float dt) {
                 if (toggleJewel) {
                     jewelObj->RemoveComponent(spriteComponentPtr);
                     const SkillInfo& skillInfo = skillInfoMap[id];
-
                     Sprite* jewelObj_behaviour;
                     if(skillInfo.apCost != 0){
                         jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
@@ -193,10 +219,10 @@ void Skill::Update(float dt) {
                     else{
                         jewelObj_behaviour = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
                     }
-                    jewelObj->AddComponent(std::shared_ptr<Sprite>(jewelObj_behaviour));
+                    jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
                     toggleJewel = false;  
                     CreateTagCount();
-                }
+                } 
             }
         }
     }
@@ -277,7 +303,11 @@ void Skill::CreateTagCount() {
             }
 
 
-            tagCount->AddComponent(std::shared_ptr<Text>(tagCountNumber_behaviour));
+            tagCount->AddComponent(std::make_shared<Text>(*tagCountNumber_behaviour));
+
+            CameraFollower *tagCountj_cmfl = new CameraFollower(*tagCount);
+            tagCount->AddComponent(std::make_shared<CameraFollower>(*tagCountj_cmfl));
+
             Game::GetInstance().GetCurrentState().AddObject(tagCount);
         }
     }
@@ -292,36 +322,33 @@ bool Skill::Is(std::string type) {
     return (type == "Skill");
 }
 
-void Skill::AddSkill(Skill::SkillId id) {
+void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
     // Find the first occurrence of EMPTY in skillArray
-    auto it = std::find(skillArray.begin(), skillArray.end(), Skill::EMPTY);
+    auto it = std::find(skillArray.begin(), skillArray.end(),skillIdToChange);
 
     // Check if there is an empty slot available
     if (it != skillArray.end()) {
         // Replace the empty slot with the new skill
         *it = id;
     }
+
+    UI::CreateSkillsGO(nullptr);
   
 }
 
 //Starter skills
 void Skill::InitializeSkills() {
     //Adding skills
+        skillArray.push_back(Skill::HnS);
         skillArray.push_back(Skill::EMPTY);
-        skillArray.push_back(Skill::EMPTY);
-        skillArray.push_back(Skill::EMPTY);
-        skillArray.push_back(Skill::EMPTY);
+        skillArray.push_back(Skill::Rockabye);
+        skillArray.push_back(Skill::Stinger);
         skillArray.push_back(Skill::EMPTY);
 
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
         skillArray.push_back(Skill::LOCKED3);
 
-        AddSkill(Skill::HnS);
-        AddSkill(Skill::Helmbreaker);
-        AddSkill(Skill::Rockabye);
-        AddSkill(Skill::Stinger);
-        AddSkill(Skill::InstantRegret);
         
 }
 
@@ -336,11 +363,6 @@ void Skill::InitializeSkillInfoMap() {
     // Populate the map with skill information during initialization.
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
-
-    skillInfoMap[SKILL1] = {2, Skill::StateProtected::NOCHANGES, 5, {Tag::Tags::VULNERABLE}, 0, {}, NAME_SKILL1, INFO_SKILL1, SKILL1_SPRITE, ATTACK_ALL, IRR, ATTACK_ALL, IRR};
-    skillInfoMap[SKILL2] = {2, Skill::StateProtected::NOCHANGES, 0, {Tag::Tags::RESILIENCE}, 0, {}, NAME_SKILL2, INFO_SKILL2, SKILL2_SPRITE, ATTACK_INDIVIDUAL, DAUGHTER, ATTACK_ALL, IRR};
-    skillInfoMap[SKILL3] = {1, Skill::StateProtected::NOCHANGES, 0, {Tag::Tags::DODGE}, 0, {}, NAME_SKILL3, INFO_SKILL3, SKILL3_SPRITE, DEFENSE_INDIVIDUAL, IRR, ATTACK_ALL, IRR};
-    skillInfoMap[SKILL4] = {1, Skill::StateProtected::NOCHANGES, 5, {}, 5, {}, NAME_SKILL4, INFO_SKILL4, SKILL4_SPRITE, ATTACK_INDIVIDUAL, MOTHER, ATTACK_ALL, IRR};
 
     //-------------MOTHER SKILLS-----------
     //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable. 
@@ -361,13 +383,22 @@ void Skill::InitializeSkillInfoMap() {
     skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      15, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
 
 
+    //--------LOCKED--------
+    skillInfoMap[LOCKED1] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED, I_LOCKED, SPR_LOCKED,          NONE, IRR,        NONE, IRR};
+    skillInfoMap[LOCKED2] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED2, I_LOCKED2, SPR_LOCKED2,          NONE, IRR,        NONE, IRR};
+    skillInfoMap[LOCKED3] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED3, I_LOCKED3, SPR_LOCKED3,          NONE, IRR,        NONE, IRR};
+    
+    //--------EMPTY
+    skillInfoMap[EMPTY] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_EMPTY, I_EMPTY, SPR_EMPTY,          NONE, IRR,        NONE, IRR};
+    
+
     //----------Enemies skill------------
     // Deal 5 damage.
     skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 
     //Deal 2 damage; Gain 2 Rampage.
     skillInfoMap[E1_Skill2] = {0, Skill::StateProtected::NOCHANGES,   2, {},     0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
-
+  
     //Deal 7 Damage.
     skillInfoMap[E1_Skill3] = {0, Skill::StateProtected::NOCHANGES,   7, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 
@@ -388,13 +419,6 @@ void Skill::InitializeSkillInfoMap() {
     //Apply Rampage in all allies 
     skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
 
-    //LOCKED
-    skillInfoMap[LOCKED1] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED, I_LOCKED, SPR_LOCKED,          NONE, IRR,        NONE, IRR};
-    skillInfoMap[LOCKED2] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED2, I_LOCKED2, SPR_LOCKED2,          NONE, IRR,        NONE, IRR};
-    skillInfoMap[LOCKED3] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED3, I_LOCKED3, SPR_LOCKED3,          NONE, IRR,        NONE, IRR};
-    
-    //EMPTY
-    skillInfoMap[EMPTY] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_EMPTY, I_EMPTY, SPR_EMPTY,          NONE, IRR,        NONE, IRR};
     
 } 
        

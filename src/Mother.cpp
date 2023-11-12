@@ -158,7 +158,7 @@ void Mother::Update(float dt)
                                     objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
                                 }
                             }    
-                        }
+                        } 
 
                     }
                     // Check if the mouse is over the enemy and left mouse button is pressed
@@ -254,10 +254,10 @@ void Mother::IndicatorAnimation(float dt) {
 
             // Postion correction
             indicator->box.x = posXenterX - indicator->box.w / 2;
-            indicator->box.y = posXenterY - indicator->box.h / 2;
+            indicator->box.y = posXenterY - indicator->box.h / 2; 
         }
     }
-} 
+}  
 
 void Mother::CreateIndicator() {
     indicator = new GameObject(motherHitbox.x + motherHitbox.w/2, motherHitbox.y + motherHitbox.h + LIFEBAROFFSET);

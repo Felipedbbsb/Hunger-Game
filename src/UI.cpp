@@ -7,6 +7,8 @@
 
 // speed já está sendo inicializado pelo construtor de Vec2
 // UI.h
+GameObject* UI::uiGO = nullptr;
+
 UI::UI(GameObject &associated)
     : Component(associated){
     
@@ -28,6 +30,30 @@ UI::UI(GameObject &associated)
         Game::GetInstance().GetCurrentState().AddObject(protected_UI);
  
     
+    CreateSkillsGO(ap_behaviour);
+
+    
+
+} 
+ 
+
+
+UI::~UI() 
+{
+    for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
+            Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
+    }
+
+}
+
+void UI::CreateSkillsGO( AP* ap_behaviour) {
+
+    //resets
+    for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
+            Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
+    }
+
+
     for (unsigned int i = 0; i < Skill::skillArray.size(); i++) {
         int offsetArray = i;
         GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, SKILL_N_OFFSET.y);
@@ -39,36 +65,37 @@ UI::UI(GameObject &associated)
         normalSkill->AddComponent(std::shared_ptr<Skill>(skill_behaviour));
         auto weak_skill = Game::GetInstance().GetCurrentState().AddObject(normalSkill); 
         Skill::skillArrayObj.push_back(weak_skill);
-    }   
+    }  
 
-    
+    if(uiGO!=nullptr){
+        uiGO->RequestDelete();
+        uiGO = nullptr;
+    }
 
-} 
- 
+    uiGO = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
+    Sprite *ui_screen_spr = new Sprite(*uiGO, UI_SCREEN_SPRITE);
+    CameraFollower *ui_cmfl = new CameraFollower(*uiGO);
+    uiGO->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
+    uiGO->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
+    Game::GetInstance().GetCurrentState().AddObject(uiGO);
 
-
-UI::~UI() 
-{
-     
 }
-
-
 
 
 void UI::Start() {  
     
-    GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    Sprite *ui_screen_spr = new Sprite(*ui, UI_SCREEN_SPRITE);
-    CameraFollower *ui_cmfl = new CameraFollower(*ui);
-    ui->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
-    ui->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
-    Game::GetInstance().GetCurrentState().AddObject(ui);
+    uiGO = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
+    Sprite *ui_screen_spr = new Sprite(*uiGO, UI_SCREEN_SPRITE);
+    CameraFollower *ui_cmfl = new CameraFollower(*uiGO);
+    uiGO->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
+    uiGO->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
+    Game::GetInstance().GetCurrentState().AddObject(uiGO);
 
 }
 
 void UI::Update(float dt) { 
  
-}
+} 
  
 void UI::Render() {
 

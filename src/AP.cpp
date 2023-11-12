@@ -102,8 +102,11 @@ void AP::Update(float dt){
         } 
     }
     else{
-        AP::apCount = AP_QUANTITY; //reset
-        SetAPCount(AP::apCount);
+        if(AP::apCount != AP_QUANTITY){
+            AP::apCount = AP_QUANTITY; //reset
+            SetAPCount(AP::apCount);
+        }
+        
     }
     
 
