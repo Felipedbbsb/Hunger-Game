@@ -9,7 +9,7 @@ enemyRef(enemyRef),
 quantity(quantity), 
 tag(tag),
 readerTag(nullptr),
-bigTag(nullptr),
+bigTag(nullptr), 
 tagCountNumber(nullptr)
 {   
     if (enemyRef.lock()){

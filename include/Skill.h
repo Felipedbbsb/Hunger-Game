@@ -42,30 +42,84 @@
 //I  = Info
 //SPR = Sprite
 
-//MOTHER SKILLS
+//=================MOTHER SKILLS=================
 #define NS_Helmbreaker "Helmbreaker"
-#define I_Helmbreaker "Deal 3 damage; \nApply 2 Vulnerable."
+#define I_Helmbreaker "assets/img/UI/skills/readers/readerHelmbreaker.png"
 #define SPR_Helmbreaker "assets/img/UI/skills/Helmbreaker.png"
 
 #define NS_Rockabye "Rockabye"
-#define I_Rockabye "Apply 1 Resilience \n to your daughter."
+#define I_Rockabye "assets/img/UI/skills/readers/readerRockabye.png"
 #define SPR_Rockabye "assets/img/UI/skills/Rockabye.png"
 
 #define NS_Stinger "Stinger"
-#define I_Stinger "Deal 5 Damage \n to all enemies; \n Expose your daughter."
+#define I_Stinger "assets/img/UI/skills/readers/readerStinger.png"
 #define SPR_Stinger "assets/img/UI/skills/Stinger.png"
 
-//Daughter
+#define NS_RecklessSlash "Reckless Slash"
+#define I_RecklessSlash "assets/img/UI/skills/readers/readerRecklessSlash.png"
+#define SPR_RecklessSlash "assets/img/UI/uiSkillNormal.png"
+
+#define NS_CautiousStrike "Cautious Strike"
+#define I_CautiousStrike "assets/img/UI/skills/readers/readerCautiousStrike.png"
+#define SPR_CautiousStrike "assets/img/UI/uiSkillNormal.png"
+
+#define NS_MotherlyLove "Motherly Love"
+#define I_MotherlyLove "assets/img/UI/skills/readers/readerMotherlyLove.png"
+#define SPR_MotherlyLove "assets/img/UI/uiSkillNormal.png"
+
+
+#define NS_PocketSand "Pocket Sand"
+#define I_PocketSand "assets/img/UI/skills/readers/readerPocketSand.png"
+#define SPR_PocketSand "assets/img/UI/uiSkillNormal.png"
+
+#define NS_HyperProtective "Hyper Protective"
+#define I_HyperProtective "assets/img/UI/skills/readers/readerHyperProtective.png"
+#define SPR_HyperProtective "assets/img/UI/uiSkillNormal.png"
+
+#define NS_RiskyManeuver "Risky Maneuver"
+#define I_RiskyManeuver "assets/img/UI/skills/readers/readerRiskyManeuver.png"
+#define SPR_RiskyManeuver "assets/img/UI/uiSkillNormal.png"
+
+#define NS_BattleHymn "Battle Hymn"
+#define I_BattleHymn "assets/img/UI/skills/readers/readerBattleHymn.png"
+#define SPR_BattleHymn "assets/img/UI/uiSkillNormal.png"
+
+#define NS_SwiftFooted "Swift Footed"
+#define I_SwiftFooted "assets/img/UI/skills/readers/readerSwiftFooted.png"
+#define SPR_SwiftFooted "assets/img/UI/uiSkillNormal.png"
+
+#define NS_BlindedbyFear "Blinded by Fear"
+#define I_BlindedbyFear "assets/img/UI/skills/readers/readerBlindedbyFear.png"
+#define SPR_BlindedbyFear "assets/img/UI/uiSkillNormal.png"
+
+#define NS_Solitude "Solitude"
+#define I_Solitude "assets/img/UI/skills/readers/readerSolitude.png"
+#define SPR_Solitude "assets/img/UI/uiSkillNormal.png"
+
+#define NS_MaternalInstincts "Maternal Instincts"
+#define I_MaternalInstincts "assets/img/UI/skills/readers/readerMaternalInstincts.png"
+#define SPR_MaternalInstincts "assets/img/UI/uiSkillNormal.png"
+
+//=================Daughter=================
 #define NS_HnS "Hide and Seek"
-#define I_HnS "Apply 1 Dodge \n and 1 Vulnerable \n to Mother; \n Protect Daughter "
+#define I_HnS "assets/img/UI/skills/readers/readerHideandSeek.png"
 #define SPR_HnS "assets/img/UI/skills/HideandSeek.png"
 
-//Djinn
+#define NS_NanaNanaNa "Nana Nana Na"
+#define I_NanaNanaNa "assets/img/UI/skills/readers/readerNanaNanaNa.png"
+#define SPR_NanaNanaNa "assets/img/UI/uiSkillNormal.png"
+
+#define NS_PommelStrike "Pommel Strike"
+#define I_PommelStrike "assets/img/UI/skills/readers/readerPommelStrike.png"
+#define SPR_PommelStrike "assets/img/UI/uiSkillNormal.png"
+
+
+//=================Djinn=================
 #define NS_InstantRegret "Instant Regret"
-#define I_InstantRegret "Deal 15 damage; \n Expose your daughter; \n Apply 1 Vulnerable to your daughter; \n Lose 7HP"
+#define I_InstantRegret "assets/img/UI/skills/readers/readerInstantRegret.png"
 #define SPR_InstantRegret "assets/img/UI/skills/InstantRegret.png"
 
-//Enemies
+//=================Enemies=================
 #define NS_Generic "Attack1"
 #define I_Generic "assets/img/UI/uiSkillDjinn.png"
 #define SPR_Generic "assets/img/UI/uiSkillDjinn.png"
@@ -107,8 +161,21 @@ class Skill : public Component {
             Helmbreaker,
             Rockabye,
             Stinger,
+            RecklessSlash,
+            CautiousStrike,
+            MotherlyLove,
+            PommelStrike,
+            HyperProtective,
+            RiskyManeuver,
+            BattleHymn,
+            SwiftFooted,
+            BlindedbyFear,
+            Solitude,
+            MaternalInstincts,
 
             HnS,
+            PocketSand,
+            NanaNanaNa,
 
             InstantRegret,
 

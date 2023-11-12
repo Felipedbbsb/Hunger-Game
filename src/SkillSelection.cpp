@@ -112,14 +112,14 @@ void SkillSelection::CreateSkillOptions() {
         // Create a GameObject for the skill
         GameObject *skillObject = new GameObject();
         Skill *skillSprite = new Skill(*skillObject, skillId, nullptr, false);
-        skillObject->AddComponent(std::shared_ptr<Skill>(skillSprite));
+        skillObject->AddComponent(std::make_shared<Skill>(*skillSprite));
 
         // Set the position and add to the current state
         skillObject->box.x = background->box.x + background->box.w / 2 - skillObject->box.w / 2 - OFFSET_SKILL_OPTIONS + OFFSET_SKILL_OPTIONS * i;
         skillObject->box.y = background->box.y + OFFSET_SKILL_OPTIONSY;
 
         CameraFollower *skill_cmfl = new CameraFollower(*skillObject);
-        skillObject->AddComponent((std::shared_ptr<CameraFollower>)skill_cmfl);
+        skillObject->AddComponent(std::make_shared<CameraFollower>(*skill_cmfl));
 
         Game::GetInstance().GetCurrentState().AddObject(skillObject);
     }
@@ -162,7 +162,7 @@ void SkillSelection::Update(float dt) {
             if (arrowComponentPtr) {
                 passButon->RemoveComponent(arrowComponentPtr);
                 Sprite *passButon_spr = new Sprite(*passButon, SKILL_SELECTION_ARROW_ACTIVATED); 
-                passButon->AddComponent(std::shared_ptr<Sprite>(passButon_spr)); 
+                passButon->AddComponent(std::make_shared<Sprite>(*passButon_spr)); 
             } 
         }       
     }
@@ -176,7 +176,7 @@ void SkillSelection::Update(float dt) {
             if (arrowComponentPtr) {
                 passButon->RemoveComponent(arrowComponentPtr);
                 Sprite *passButon_spr = new Sprite(*passButon, SKILL_SELECTION_ARROW); 
-                passButon->AddComponent(std::shared_ptr<Sprite>(passButon_spr)); 
+                passButon->AddComponent(std::make_shared<Sprite>(*passButon_spr)); 
             }
         }    
     }
@@ -206,10 +206,10 @@ void SkillSelection::Update(float dt) {
                 // Call SetScale with the correct number of arguments
                 arrowComponentPtr->SetScale(SCALE_ARROW, SCALE_ARROW);
 
-
                 // Calcula a nova largura e altura
                 passButon->box.x = posXenterX - passButon->box.w / 2;
                 passButon->box.y = posXenterY - passButon->box.h / 2;
+
         }        
        
     }else{

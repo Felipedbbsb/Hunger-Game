@@ -282,8 +282,8 @@ void Skill::CreateTagCount() {
 
     //numberCounter
     if(skillInfo.apCost != 0){
-        if(tagCount == nullptr){
-            tagCount =  new GameObject(jewelObj->box.x , jewelObj->box.y ); //posicao foi no olho...
+        if(tagCount == nullptr){ 
+            tagCount =  new GameObject(jewelObj->box.x , jewelObj->box.y); //posicao foi no olho...
             std::string textNumber = std::to_string(skillInfo.apCost);
             Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
                                                                 TEXT_TAGCOUNT2_SIZE,
@@ -344,18 +344,19 @@ void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
 void Skill::InitializeSkills() {
     //Adding skills
         skillArray.push_back(Skill::HnS);
-        skillArray.push_back(Skill::EMPTY);
-        skillArray.push_back(Skill::Rockabye);
         skillArray.push_back(Skill::Stinger);
-        skillArray.push_back(Skill::EMPTY);
+        skillArray.push_back(Skill::Helmbreaker);
+        skillArray.push_back(Skill::Rockabye);
+        skillArray.push_back(Skill::InstantRegret);
 
+        skillArray.push_back(Skill::EMPTY);
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
-        skillArray.push_back(Skill::LOCKED3);
+ 
 
         
 }
-
+ 
 void Skill::InitializeSkillInfoMap() {
     //struct SkillInfo {
     //    ap cost;     
@@ -368,35 +369,78 @@ void Skill::InitializeSkillInfoMap() {
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
 
-    //-------------MOTHER SKILLS-----------
-    //Helmbreaker (2AP): Deal 3 damage; Apply 2 Vulnerable. 
-    skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
+    //==================================MOTHER SKILLS==================================
+    //Helmbreaker (2AP): Deal 6 damage; Apply 2 Vulnerable. 
+    skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      6, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
 
     //Rockabye (1AP): Apply 1 Resilience to your daughter.
     skillInfoMap[Rockabye] =  {1, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
  
-    //Stinger (2AP): Deal 5 Damage to all enemies; Expose your daughter.
-    skillInfoMap[Stinger] =  {2, Skill::StateProtected::EXPOSED,      5, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
+    //Stinger (2AP): Deal 6 Damage to all enemies; Expose your daughter.
+    skillInfoMap[Stinger] =  {2, Skill::StateProtected::EXPOSED,      6, {},                      0, {},                          NS_Stinger, I_Stinger, SPR_Stinger,               ATTACK_ALL, MOTHER,               NONE, IRR };
  
-    //------------DAUGHTER SKILL------------
+    //Reckless Slash (2AP):Deal 6 damage; Expose your daughter
+    skillInfoMap[RecklessSlash] =  {2, Skill::StateProtected::EXPOSED,      6, {},                      0, {},                          NS_RecklessSlash, I_RecklessSlash, SPR_RecklessSlash,               ATTACK_INDIVIDUAL, MOTHER,               NONE, IRR };
+    
+    //Cautious Strike (2AP): Deal 3 damage; Protect your daughter.
+    skillInfoMap[CautiousStrike] =  {2, Skill::StateProtected::PROTECTED,      3, {},                      0, {},                          NS_CautiousStrike, I_CautiousStrike, SPR_CautiousStrike,               ATTACK_INDIVIDUAL, MOTHER,               NONE, IRR };
+    
+    //Motherly Love (1AP): Apply Provoke to Target; Gain 1 resilience;
+    skillInfoMap[MotherlyLove] =  {1, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::PROVOKE},                      0, {Tag::Tags::RESILIENCE},                          NS_MotherlyLove, I_MotherlyLove, SPR_MotherlyLove,               DEBUFF_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER };
+    
+
+    //Pommel Strike (2AP): Deal 6 Damage; Gain 1 Resilience.
+    skillInfoMap[PommelStrike] =  {2, Skill::StateProtected::NOCHANGES,      6, {},                      0, {Tag::Tags::RESILIENCE},                          NS_PommelStrike, I_PommelStrike, SPR_PommelStrike,               ATTACK_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER };
+    
+    //Hyper Protective (2AP): Protect your daughter; Apply 2 weak.
+    skillInfoMap[HyperProtective] =  {2, Skill::StateProtected::PROTECTED,      0, {Tag::Tags::WEAK, Tag::Tags::WEAK},              0, {},                          NS_HyperProtective, I_HyperProtective, SPR_HyperProtective,               DEBUFF_INDIVIDUAL, MOTHER,               NONE, IRR };
+
+    //Risky Maneuver (3AP): Deal 10 damage; Gain 2 Rampage; Expose your daughter; 
+    skillInfoMap[RiskyManeuver] =  {3, Skill::StateProtected::EXPOSED,      10, {},              0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},                          NS_RiskyManeuver, I_RiskyManeuver, SPR_RiskyManeuver,               ATTACK_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER };
+
+    //Battle Hymn (2AP): Apply 1 resilience and 1 dodge to daughter.
+    skillInfoMap[BattleHymn] =  {2, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE, Tag::Tags::DODGE},              0, {},                          NS_BattleHymn, I_BattleHymn, SPR_BattleHymn,               BUFF_INDIVIDUAL, MOTHER,               NONE, IRR };
+
+    //Swift Footed (2AP):  Gain 3 Dodge; Expose your daughter.
+    skillInfoMap[SwiftFooted] =  {2, Skill::StateProtected::EXPOSED,      0, {},              0, {Tag::Tags::DODGE, Tag::Tags::DODGE, Tag::Tags::DODGE},                          NS_SwiftFooted, I_SwiftFooted, SPR_SwiftFooted,               BUFF_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER };
+ 
+    //Blinded by Fear (1AP): Deal 4 Damage; Apply Dodge to target.
+    skillInfoMap[BlindedbyFear] =  {1, Skill::StateProtected::NOCHANGES,      4, {Tag::Tags::DODGE},              0, {},                          NS_BlindedbyFear, I_BlindedbyFear, SPR_BlindedbyFear,               ATTACK_INDIVIDUAL, MOTHER,               NONE, IRR };
+
+    //Solitude (1AP): Expose your daughter; Gain 2 Resilience
+    skillInfoMap[Solitude] =  {1, Skill::StateProtected::EXPOSED,      0, {},              0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},                          NS_Solitude, I_Solitude, SPR_Solitude,               BUFF_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER  };
+
+    //Maternal Instincts (3AP): Protect your daughter; Gain 3 Rampage
+    skillInfoMap[MaternalInstincts] =  {3, Skill::StateProtected::PROTECTED,      0, {},              0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},                          NS_MaternalInstincts, I_MaternalInstincts, SPR_MaternalInstincts,               BUFF_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER  };
+
+
+    //==================================DAUGHTER SKILL==================================
     //Hide and Seek (1AP): Apply 1 Dodge and 1 Vulnerable to Mother; Protect Daughter 
-    skillInfoMap[HnS] =  {1, Skill::StateProtected::PROTECTED,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+    skillInfoMap[HnS] =  {1, Skill::StateProtected::NOCHANGES,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
-    //-----------DJINN SKILLS--------
-    //Instant Regret (3AP): Deal 15 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
-    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      15, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+    //Pocket Sand [filha] (2AP): Deal 5 damage; Apply 1 weak
+    skillInfoMap[PocketSand] =  {2, Skill::StateProtected::NOCHANGES,       5, {Tag::Tags::WEAK},     0, {},   NS_PocketSand, I_PocketSand, SPR_PocketSand,        ATTACK_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
 
-    //--------LOCKED--------
+    //Nana Nana Na [filha] (1AP): Apply 1 Vulnerable and 1 Weak to one enemy
+    skillInfoMap[NanaNanaNa] =  {1, Skill::StateProtected::NOCHANGES,       0, {Tag::Tags::VULNERABLE, Tag::Tags::WEAK},     0, {},   NS_NanaNanaNa, I_NanaNanaNa, SPR_NanaNanaNa,        DEBUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+
+
+    //==================================DJINN SKILLS==================================
+    //Instant Regret (3AP): Deal 20 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
+    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      20, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+
+
+    //==================================LOCKED==================================
     skillInfoMap[LOCKED1] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED, I_LOCKED, SPR_LOCKED,          NONE, IRR,        NONE, IRR};
     skillInfoMap[LOCKED2] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED2, I_LOCKED2, SPR_LOCKED2,          NONE, IRR,        NONE, IRR};
     skillInfoMap[LOCKED3] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_LOCKED3, I_LOCKED3, SPR_LOCKED3,          NONE, IRR,        NONE, IRR};
     
-    //--------EMPTY
+    //==================================EMPTY==================================
     skillInfoMap[EMPTY] = {0, Skill::StateProtected::NOCHANGES,   0, {},     0, {},     NS_EMPTY, I_EMPTY, SPR_EMPTY,          NONE, IRR,        NONE, IRR};
     
 
-    //----------Enemies skill------------
+    //==================================Enemies skill==================================
     // Deal 5 damage.
     skillInfoMap[E1_Skill1] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 

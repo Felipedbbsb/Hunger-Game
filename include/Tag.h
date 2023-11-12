@@ -15,7 +15,7 @@
 
 #define TAG_RESILIENCE_SPRITE "assets/img/UI/uiIconResilience.png"
 #define TAG_DODGE_SPRITE "assets/img/UI/uiIconDodge.png"
-#define TAG_PROVOKE_SPRITE "assets/img/UI/uiIconProvoke.png"
+#define TAG_PROVOKE_SPRITE "assets/img/UI/uiIconVulnerable.png"
 #define TAG_VULNERABLE_SPRITE "assets/img/UI/uiIconVulnerable.png"
 #define TAG_WEAK_SPRITE "assets/img/UI/uiIconWeak.png"
 #define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"

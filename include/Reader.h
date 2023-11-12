@@ -20,7 +20,8 @@ class Reader : public Component{
 
     public:
         Reader(GameObject &associated,
-                std::string textSkill);
+                std::string textSkill,
+                std::string readerPath = "empty");
 
         ~Reader();
         void Update(float dt);
@@ -33,4 +34,5 @@ class Reader : public Component{
     private: 
         GameObject* textSkillObj;
         std::string textSkill;
+        std::string readerPath;
 };

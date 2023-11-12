@@ -166,6 +166,7 @@ void Mother::Update(float dt)
                     if (motherHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
+                        selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                         selectedSkill->Deselect();
 
                         if(tempSkillInfo.isProtected == Skill::StateProtected::PROTECTED){

@@ -48,25 +48,6 @@ UI::~UI()
 
 void UI::CreateSkillsGO( AP* ap_behaviour) {
 
-    //resets
-    for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
-            Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
-    }
-
-
-    for (unsigned int i = 0; i < Skill::skillArray.size(); i++) {
-        int offsetArray = i;
-        GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, SKILL_N_OFFSET.y);
-        // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
-        Skill::SkillId skillId = Skill::skillArray[i];
-        Skill* skill_behaviour = new Skill(*normalSkill, skillId, ap_behaviour);
-        CameraFollower *normalSkill_cmfl = new CameraFollower(*normalSkill);
-        normalSkill->AddComponent((std::shared_ptr<CameraFollower>)normalSkill_cmfl);
-        normalSkill->AddComponent(std::shared_ptr<Skill>(skill_behaviour));
-        auto weak_skill = Game::GetInstance().GetCurrentState().AddObject(normalSkill); 
-        Skill::skillArrayObj.push_back(weak_skill);
-    }  
-
     if(uiGO!=nullptr){
         uiGO->RequestDelete();
         uiGO = nullptr;
@@ -77,6 +58,26 @@ void UI::CreateSkillsGO( AP* ap_behaviour) {
     CameraFollower *ui_cmfl = new CameraFollower(*uiGO);
     uiGO->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
     uiGO->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
+
+    //resets
+    for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
+        Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
+    }
+
+
+    for (unsigned int i = 0; i < Skill::skillArray.size(); i++) {
+        int offsetArray = i;
+        GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, uiGO->box.y + 123 );
+        // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
+        Skill::SkillId skillId = Skill::skillArray[i];
+        Skill* skill_behaviour = new Skill(*normalSkill, skillId, ap_behaviour);
+        CameraFollower *normalSkill_cmfl = new CameraFollower(*normalSkill);
+        normalSkill->AddComponent((std::shared_ptr<CameraFollower>)normalSkill_cmfl);
+        normalSkill->AddComponent(std::shared_ptr<Skill>(skill_behaviour));
+        auto weak_skill = Game::GetInstance().GetCurrentState().AddObject(normalSkill); 
+        Skill::skillArrayObj.push_back(weak_skill);
+    }  
+
     Game::GetInstance().GetCurrentState().AddObject(uiGO);
 
 }

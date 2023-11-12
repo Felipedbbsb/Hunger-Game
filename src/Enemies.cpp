@@ -185,6 +185,7 @@ void Enemies::Update(float dt) {
             if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || 
             tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL){
                 if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
+                    std::cout << HasTag(Tag::Tags::PROVOKE) << !provokedEnemies<<std::endl;
                     CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
                 }       // and if any enemie has provoke
 
@@ -576,6 +577,9 @@ void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
         if (!(std::find(tags.begin(), tags.end(), tag) != tags.end())) {
             tags.push_back(tag);
             auto go_tag = AddObjTag(tag);
+            if(tag == Tag::Tags::PROVOKE){
+                provokedEnemies++;
+            }
         }
         tagCountMap[tag]++;
         // Iterate over the list of weak_ptr to the tag GameObjects
@@ -659,6 +663,9 @@ void Enemies::RemoveOneTagAll() {
                             tagsToRemove.push_back(tag);
                             tagGameObject->RequestDelete();
                             it = enemytags.erase(it);
+                            if(tag == Tag::Tags::PROVOKE){
+                                provokedEnemies--;
+                            }
                         } else {
                             ++it;
                         }
