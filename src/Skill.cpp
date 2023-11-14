@@ -43,10 +43,7 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     toggleJewel(false),
     createJewel(createJewel),
     skillSelected(nullptr) {
-    
-}
 
-void Skill::Start() {
     std::string spriteSkill;
     // Use skillInfoMap para obter informações da habilidade com base na ID
     const SkillInfo& skillInfo = skillInfoMap[id];
@@ -56,6 +53,14 @@ void Skill::Start() {
  
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
     associated.AddComponent(std::make_shared<Sprite>(*skillSprite));
+    
+}
+
+void Skill::Start() {
+    std::string spriteSkill;
+    // Use skillInfoMap para obter informações da habilidade com base na ID
+    const SkillInfo& skillInfo = skillInfoMap[id];
+
 
     if(jewelObj == nullptr && createJewel){
         jewelObj = new GameObject(associated.box.x, associated.box.y);

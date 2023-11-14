@@ -6,7 +6,9 @@ State::State() :
     started(false)
 {}
 
-State::~State(){objectArray.clear();}
+State::~State(){
+    objectArray.clear();
+}
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* go){
     std::shared_ptr<GameObject> tmp(go);
@@ -40,12 +42,16 @@ void State::Start(){
         objectArray[i]->Start();
     }
     started = true;
+
+
 }
 
 void State::Pause(){
+
 }
 
 void State::Resume(){
+
 }
 
 
@@ -56,6 +62,7 @@ void State::Resume(){
 //==================================================================
 
 void State::Update(float dt){
+    
 }
 
 void State::Render(){
@@ -90,6 +97,7 @@ void State::UpdateArray(float dt){
             objectArray.erase(objectArray.begin() + i);
         }
     }
+
 }
 
 void State::RenderArray(){

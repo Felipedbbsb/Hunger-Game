@@ -13,6 +13,8 @@
 #include "Skill.h" 
 #include "Vec2.h" 
 
+#define objectsMoves_VELOCITY 2000
+
 #define OFFSET_SKILL_OPTIONS 250
 #define OFFSET_SKILL_OPTIONSY 250
 
@@ -39,16 +41,18 @@ class SkillSelection : public Component {
         void CreateBackground();
         void CreatePassButon();
 
-        GameObject* background;
-        GameObject* passButon;
+        
 
         static bool skillSelectionActivated;
         static bool selectionSkillDjinnStyle;
 
     private:
-        
+        GameObject* background;
+        GameObject* passButon;
         GameObject* SkillSelection_obj;
         bool toggleArrow;
-        
+        bool endSkillSelection;
+        float objectsMoves;
+        std::vector<std::weak_ptr<GameObject>> rewardArrayObj;
 
 };

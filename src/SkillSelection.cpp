@@ -20,7 +20,10 @@ SkillSelection::SkillSelection(GameObject &associated,  bool isDjinn)
     : Component(associated),
     background(nullptr), 
     passButon(nullptr),
-    toggleArrow(false)
+    toggleArrow(false),
+    endSkillSelection(false),
+    objectsMoves(0),
+    rewardArrayObj({})
     {
         SkillSelection::skillSelectionActivated = true;
 
@@ -61,13 +64,11 @@ SkillSelection::~SkillSelection() {
 void SkillSelection::CreateBackground() {
     background = new GameObject();
     Sprite* background_spr = new Sprite(*background, SKILL_SELECTION_BCKGROUND); 
-    background->AddComponent(std::make_shared<Sprite>(*background_spr));    
+    background->AddComponent(std::shared_ptr<Sprite>(background_spr));    
     
-    background->box.x = (RESOLUTION_WIDTH )/2 - background->box.w/2;   
-    background->box.y = 0; 
+    background->box.x = (RESOLUTION_WIDTH )/2 - background->box.w/2 - Camera::pos.x;   
+    background->box.y = - Camera::pos.y; 
 
-    CameraFollower* background_cmfl = new CameraFollower(*background);
-    background->AddComponent(std::make_shared<CameraFollower>(*background_cmfl));
 
     
     Game::GetInstance().GetCurrentState().AddObject(background); 
@@ -76,15 +77,12 @@ void SkillSelection::CreateBackground() {
 void SkillSelection::CreatePassButon() {
     passButon = new GameObject(0, 0);
     Sprite* passButon_spr = new Sprite(*passButon, SKILL_SELECTION_ARROW); 
-    passButon->AddComponent(std::make_shared<Sprite>(*passButon_spr));    
+    passButon->AddComponent(std::shared_ptr<Sprite>(passButon_spr));    
+
     
-    passButon->box.x =  background->box.x + background->box.w - passButon->box.w - OFFSET_SKILL_SELECTION_ARROW.x;   
-    passButon->box.y = background->box.y + background->box.h - passButon->box.h - OFFSET_SKILL_SELECTION_ARROW.y; 
-
-    CameraFollower* passButon_cmfl = new CameraFollower(*passButon);
-    passButon->AddComponent(std::make_shared<CameraFollower>(*passButon_cmfl));
-
-
+    passButon->box.x =  background->box.x + background->box.w - passButon->box.w - OFFSET_SKILL_SELECTION_ARROW.x - Camera::pos.x;   
+    passButon->box.y = background->box.y + background->box.h - passButon->box.h - OFFSET_SKILL_SELECTION_ARROW.y - Camera::pos.y; 
+ 
     Game::GetInstance().GetCurrentState().AddObject(passButon); 
 }
 
@@ -138,21 +136,34 @@ void SkillSelection::CreateSkillOptions() {
         // Create a GameObject for the skill
         GameObject *skillObject = new GameObject();
         Skill *skillSprite = new Skill(*skillObject, skillId, nullptr, false);
-        skillObject->AddComponent(std::make_shared<Skill>(*skillSprite));
+        skillObject->AddComponent(std::shared_ptr<Skill>(skillSprite));
 
         // Set the position and add to the current state
-        skillObject->box.x = background->box.x + background->box.w / 2 - skillObject->box.w / 2 - OFFSET_SKILL_OPTIONS + OFFSET_SKILL_OPTIONS * i;
+        skillObject->box.x = background->box.x + background->box.w / 2 - skillObject->box.w / 2 - OFFSET_SKILL_OPTIONS  + OFFSET_SKILL_OPTIONS * i;
         skillObject->box.y = background->box.y + OFFSET_SKILL_OPTIONSY;
 
-        CameraFollower *skill_cmfl = new CameraFollower(*skillObject);
-        skillObject->AddComponent(std::make_shared<CameraFollower>(*skill_cmfl));
+        std::weak_ptr<GameObject> weak_reward = Game::GetInstance().GetCurrentState().AddObject(skillObject);
 
-        Game::GetInstance().GetCurrentState().AddObject(skillObject);
+        rewardArrayObj.push_back(weak_reward);
     }
 }
 
 
 void SkillSelection::Update(float dt) {
+
+    if(endSkillSelection){
+        objectsMoves += objectsMoves_VELOCITY * dt;
+    }
+    
+    background->box.x = objectsMoves + (RESOLUTION_WIDTH )/2 - background->box.w/2 - Camera::pos.x; 
+    passButon->box.x = background->box.x + background->box.w - passButon->box.w - OFFSET_SKILL_SELECTION_ARROW.x;
+
+    for(int i = rewardArrayObj.size() - 1; i >= 0; i-- ){
+        rewardArrayObj[i].lock()->box.x =  background->box.x + background->box.w / 2 - rewardArrayObj[i].lock()->box.w / 2 - OFFSET_SKILL_OPTIONS  + OFFSET_SKILL_OPTIONS * i;
+        rewardArrayObj[i].lock()->box.y = background->box.y + OFFSET_SKILL_OPTIONSY;  
+    }
+
+
 
     if (Skill::skillFromReward != nullptr) {
         // Encontra um Skill com o ID SkillId::EMPTY em Skill::skillArrayObj
@@ -213,13 +224,15 @@ void SkillSelection::Update(float dt) {
 
 
     if (passButon->box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)) {
-        if(InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON)){
+        if(InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON) && !endSkillSelection){
             if(Skill::skillFromReward != nullptr && Skill::skillToReward != nullptr){
                 auto skillFrom = Skill::skillFromReward->GetId();
                 auto skillTo = Skill::skillToReward->GetId();
                 Skill::AddSkill(skillFrom, skillTo);
                 Skill::skillFromReward = nullptr;
                 Skill::skillToReward = nullptr;
+                endSkillSelection = true;
+
             }
         }
 
@@ -257,6 +270,7 @@ void SkillSelection::Update(float dt) {
                 passButon->box.y = posXenterY - passButon->box.h / 2;
         }
     }  
+
     
 
 }

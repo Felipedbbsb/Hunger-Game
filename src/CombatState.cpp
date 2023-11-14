@@ -95,7 +95,7 @@ void CombatState::Update(float dt){
         }
     }
 
-     
+    State::Update(dt);
 } 
 
 void CombatState::LoadAssets(){
@@ -149,17 +149,22 @@ void CombatState::Start(){
     LoadAssets();
     StartArray();
     started = true;
+
 }
  
 void CombatState::Pause(){
-    
+    State::Pause();
 }
 
 void CombatState::Resume(){
+    State::Resume();
+
     CombatState::InteractionSCreenActivate = false;
     CombatState::enemiesArrayIS.clear();
     CombatState::attackType = Skill::AttackType::NONE;
     CombatState::whoAttacks = Skill::TargetType::IRR;
     CombatState::whoReceives = Skill::TargetType::IRR;
+
+
 }
 

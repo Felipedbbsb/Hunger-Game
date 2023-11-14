@@ -185,7 +185,6 @@ void Enemies::Update(float dt) {
             if(tempSkillInfo.attackType == Skill::AttackType::ATTACK_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::ATTACK_ALL || 
             tempSkillInfo.attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || tempSkillInfo.attackType == Skill::AttackType::DEBUFF_ALL){
                 if (enemyIndicator == nullptr && (!provokedEnemies ||  (provokedEnemies != 0  && HasTag(Tag::Tags::PROVOKE)))) {
-                    std::cout << HasTag(Tag::Tags::PROVOKE) << !provokedEnemies<<std::endl;
                     CreateEnemyIndicator();// Create an enemy indicator if it doesn't exist    
                 }       // and if any enemie has provoke
 
