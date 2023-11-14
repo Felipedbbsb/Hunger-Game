@@ -17,7 +17,7 @@
 #define TEXT_TAGCOUNT2_SIZE 42
 
 
-
+#define SKILL_SELECTED_OBJ "assets/img/UI/uiSkillSelected.png"
 
 
 //==================================================================
@@ -119,6 +119,19 @@
 #define I_InstantRegret "assets/img/UI/skills/readers/readerInstantRegret.png"
 #define SPR_InstantRegret "assets/img/UI/skills/InstantRegret.png"
 
+#define NS_AMillionStabs "A Million Stabs"
+#define I_AMillionStabs "assets/img/UI/skills/readers/readerAMillionStabs.png"
+#define SPR_AMillionStabs "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_DanseMacabre "Danse Macabre"
+#define I_DanseMacabre "assets/img/UI/skills/readers/readerDanseMacabre.png"
+#define SPR_DanseMacabre "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Hellfire "Hellfire"
+#define I_Hellfire "assets/img/UI/skills/readers/readerHellfire.png"
+#define SPR_Hellfire "assets/img/UI/uiSkillDjinn.png"
+
+
 //=================Enemies=================
 #define NS_Generic "Attack1"
 #define I_Generic "assets/img/UI/uiSkillDjinn.png"
@@ -178,6 +191,9 @@ class Skill : public Component {
             NanaNanaNa,
 
             InstantRegret,
+            AMillionStabs,
+            DanseMacabre,
+            Hellfire,
 
             LOCKED1,
             LOCKED2,
@@ -297,5 +313,6 @@ class Skill : public Component {
         GameObject* tagCount;
         bool toggleJewel;
         bool createJewel;
+        GameObject* skillSelected;
 };
  

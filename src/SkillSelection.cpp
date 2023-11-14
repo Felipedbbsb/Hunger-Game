@@ -90,10 +90,36 @@ void SkillSelection::CreatePassButon() {
 
 void SkillSelection::CreateSkillOptions() {
     // Get all skill IDs from Skill::skillInfoMap up to LOCKED1 (exclusive)
-    auto itEnd = Skill::skillInfoMap.find(Skill::InstantRegret);
+    auto itBegin = Skill::skillInfoMap.find(Skill::InstantRegret);
+    //auto itEnd = Skill::skillInfoMap.end();
+    auto itEnd = Skill::skillInfoMap.find(Skill::LOCKED1);
+
+    if (selectionSkillDjinnStyle ) {
+        // If isDjinn is true, exclude skills that are before InstantRegret
+        
+        itBegin = Skill::skillInfoMap.begin();
+        itEnd = Skill::skillInfoMap.find(Skill::InstantRegret);
+    }
+
     std::vector<Skill::SkillId> validSkillIds;
-    for (auto it = Skill::skillInfoMap.begin(); it != itEnd; ++it) {
+    for (auto it = itBegin; it != itEnd; ++it) {
         validSkillIds.push_back(it->first);
+    }
+
+    // Remove skills that are already present in Skill::skillArray
+    for (auto skillId : Skill::skillArray) {
+        auto it = std::find(validSkillIds.begin(), validSkillIds.end(), skillId);
+        if (it != validSkillIds.end()) {
+            validSkillIds.erase(it);
+        }
+    }
+
+    // If there are not enough remaining skills, do something (e.g., throw an exception)
+    if (validSkillIds.size() < 3) {
+        // Handle the case where there are not enough skills
+        // You may want to throw an exception or handle it differently based on your requirements
+        // For now, I'll just return without creating any new skills
+        return;
     }
 
     // Shuffle the valid skill IDs
@@ -124,7 +150,8 @@ void SkillSelection::CreateSkillOptions() {
         Game::GetInstance().GetCurrentState().AddObject(skillObject);
     }
 }
- 
+
+
 void SkillSelection::Update(float dt) {
 
     if (Skill::skillFromReward != nullptr) {

@@ -15,7 +15,7 @@
 
 #define TAG_RESILIENCE_SPRITE "assets/img/UI/uiIconResilience.png"
 #define TAG_DODGE_SPRITE "assets/img/UI/uiIconDodge.png"
-#define TAG_PROVOKE_SPRITE "assets/img/UI/uiIconVulnerable.png"
+#define TAG_PROVOKE_SPRITE "assets/img/UI/uiIconProvoke.png"
 #define TAG_VULNERABLE_SPRITE "assets/img/UI/uiIconVulnerable.png"
 #define TAG_WEAK_SPRITE "assets/img/UI/uiIconWeak.png"
 #define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"
@@ -29,10 +29,9 @@
 #define BIGTAG_APLHA 125
 #define BIGTAG_SCALE 2.5
 
-class Tag : public Component{
+class Tag : public Component{ 
 
     public:
-
  
         enum Tags {
             RESILIENCE, //Reduz o dano recebido em 50% (DONE)

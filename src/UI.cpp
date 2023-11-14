@@ -9,13 +9,15 @@
 // UI.h
 GameObject* UI::uiGO = nullptr;
 
+AP* UI::ap_behaviour = nullptr;
+
 UI::UI(GameObject &associated)
     : Component(associated){
     
 
     //AP
     GameObject* ap_UI = new GameObject(associated.box.x , associated.box.y);
-        AP* ap_behaviour = new AP(*ap_UI);
+        ap_behaviour = new AP(*ap_UI);
         CameraFollower *ap_UI_cmfl = new CameraFollower(*ap_UI);
         ap_UI->AddComponent((std::shared_ptr<CameraFollower>)ap_UI_cmfl);
         ap_UI->AddComponent(std::shared_ptr<AP>(ap_behaviour));
@@ -60,10 +62,13 @@ void UI::CreateSkillsGO( AP* ap_behaviour) {
     uiGO->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
 
     //resets
-    for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
-        Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
+    for (const auto skillObj : Skill::skillArrayObj) { //remove skills
+        skillObj.lock()->RequestDelete();
     }
 
+    for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
+            Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
+    }
 
     for (unsigned int i = 0; i < Skill::skillArray.size(); i++) {
         int offsetArray = i;

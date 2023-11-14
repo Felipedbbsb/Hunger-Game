@@ -41,7 +41,8 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     jewelObj(nullptr),
     tagCount(nullptr),
     toggleJewel(false),
-    createJewel(createJewel) {
+    createJewel(createJewel),
+    skillSelected(nullptr) {
     
 }
 
@@ -95,6 +96,34 @@ Skill::~Skill() {
 
 void Skill::Update(float dt) {
 
+    //Creates border to sinalize selection of skill
+    if(Skill::skillFromReward == this || Skill::skillToReward == this || Skill::selectedSkill == this){
+        
+        if(skillSelected == nullptr){
+            skillSelected = new GameObject(associated.box.x + Camera::pos.x - 4, associated.box.y + Camera::pos.y -2);
+            Sprite* skillSelected_behaviour = new Sprite(*skillSelected, SKILL_SELECTED_OBJ);
+            skillSelected->AddComponent(std::make_shared<Sprite>(*skillSelected_behaviour));
+
+            CameraFollower *skillSelected_cmfl = new CameraFollower(*skillSelected);
+            skillSelected->AddComponent(std::make_shared<CameraFollower>(*skillSelected_cmfl));
+
+            Game::GetInstance().GetCurrentState().AddObject(skillSelected); 
+
+            if(readerSkill != nullptr){
+                readerSkill->RequestDelete();
+                readerSkill = nullptr;
+            }
+        }
+           
+
+    }
+    else{
+        if(skillSelected != nullptr){
+            skillSelected->RequestDelete();
+            skillSelected = nullptr;
+        }
+    }
+
     Vec2 mousePos(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
     skillClickTimer.Update(dt);
 
@@ -105,6 +134,8 @@ void Skill::Update(float dt) {
         
         skillToReward = nullptr;
         skillFromReward = nullptr;
+
+        
     }
 
     if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)){ 
@@ -164,9 +195,6 @@ void Skill::Update(float dt) {
                 }
                 
             }
-        
-
-
 
     } else {
         skillClickTimer.Restart();
@@ -347,9 +375,9 @@ void Skill::InitializeSkills() {
         skillArray.push_back(Skill::Stinger);
         skillArray.push_back(Skill::Helmbreaker);
         skillArray.push_back(Skill::Rockabye);
-        skillArray.push_back(Skill::InstantRegret);
+        skillArray.push_back(Skill::Rockabye);
 
-        skillArray.push_back(Skill::EMPTY);
+        skillArray.push_back(Skill::MotherlyLove);
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
  
@@ -429,6 +457,15 @@ void Skill::InitializeSkillInfoMap() {
     //==================================DJINN SKILLS==================================
     //Instant Regret (3AP): Deal 20 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
     skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      20, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+
+    //A million stabs (2AP): Deal 8 damage to all enemies; Expose your daughter; Lose 10 HP.
+    skillInfoMap[AMillionStabs] = {2, Skill::StateProtected::EXPOSED,      8, {},     0, {},                     NS_AMillionStabs, I_AMillionStabs, SPR_AMillionStabs,          ATTACK_ALL, MOTHER,        NONE, IRR} ;
+
+    //Danse Macabre (3AP): Deal 12 damage to all enemies; Gain 2 Dodge; Apply 2 Vulnerable to all enemies; Lose 15 HP.
+    skillInfoMap[DanseMacabre] = {3, Skill::StateProtected::NOCHANGES,      12, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {Tag::Tags::DODGE, Tag::Tags::DODGE},                     NS_DanseMacabre, I_DanseMacabre, SPR_DanseMacabre,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
+
+    //Hellfire* (2AP): Deal 3 damage; Apply 4 stacks of curse; Lose 5 HP
+    skillInfoMap[Hellfire] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},                     NS_Hellfire, I_Hellfire, SPR_Hellfire,          ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR} ;
 
 
     //==================================LOCKED==================================

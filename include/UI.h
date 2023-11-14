@@ -42,7 +42,8 @@ class UI : public Component{
 
     static void CreateSkillsGO(AP* ap_behaviour);
     static GameObject* uiGO;
-    
+    static AP* ap_behaviour;
+
   private:
     
 

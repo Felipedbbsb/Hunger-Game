@@ -11,7 +11,7 @@ tag(tag),
 readerTag(nullptr),
 bigTag(nullptr), 
 tagCountNumber(nullptr)
-{   
+{    
     if (enemyRef.lock()){
         
         Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
@@ -25,7 +25,7 @@ tagCountNumber(nullptr)
     } 
 } 
  
-void Tag::Start() {     
+void Tag::Start() {      
    tagCountRender();
 }  
   
