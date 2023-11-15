@@ -33,8 +33,6 @@ void LifeBar::Start() {
 void LifeBar::Update(float dt) { 
     lifeBarRect.x = posx + Camera::pos.x; 
     lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET + Camera::pos.y);
-
-
 }
 
 
@@ -60,7 +58,7 @@ void LifeBar::Render() {
     
     // Render the background of the life bar (empty portion)
     SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255); // Gray color (RGBA)
-    SDL_RenderFillRect(renderer, &lifeBarRect);
+    SDL_RenderFillRect(renderer, &lifeBarRect); 
 
     // Render the filled part of the health bar
     SDL_SetRenderDrawColor(renderer, barColor.r, barColor.g, barColor.b, barColor.a);

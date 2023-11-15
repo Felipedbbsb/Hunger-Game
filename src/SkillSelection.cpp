@@ -92,7 +92,7 @@ void SkillSelection::CreateSkillOptions() {
     //auto itEnd = Skill::skillInfoMap.end();
     auto itEnd = Skill::skillInfoMap.find(Skill::LOCKED1);
 
-    if (selectionSkillDjinnStyle ) {
+    if (!selectionSkillDjinnStyle ) {
         // If isDjinn is true, exclude skills that are before InstantRegret
         
         itBegin = Skill::skillInfoMap.begin();
@@ -135,7 +135,7 @@ void SkillSelection::CreateSkillOptions() {
 
         // Create a GameObject for the skill
         GameObject *skillObject = new GameObject();
-        Skill *skillSprite = new Skill(*skillObject, skillId, nullptr, false);
+        Skill *skillSprite = new Skill(*skillObject, skillId, UI::ap_behaviour, false);
         skillObject->AddComponent(std::shared_ptr<Skill>(skillSprite));
 
         // Set the position and add to the current state

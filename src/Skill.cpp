@@ -62,6 +62,7 @@ void Skill::Start() {
     const SkillInfo& skillInfo = skillInfoMap[id];
 
 
+
     if(jewelObj == nullptr && createJewel){
         jewelObj = new GameObject(associated.box.x, associated.box.y);
         Sprite* jewelObj_behaviour;
@@ -186,12 +187,22 @@ void Skill::Update(float dt) {
                             if (skillToReward != nullptr && skillToReward != this  ) {
                                 skillToReward = nullptr;
                             }
-                            skillToReward = this;
+
+                            //Scenerio where skills its djiin style, rules you can only choose normal skills to change
+                            if(SkillSelection::selectionSkillDjinnStyle){
+                                //TODO
+                            }
+                            //Scenerio where skills it not djiin style
+                            else{
+                                skillToReward = this;
+
+                            }
+                            
                             
                         }else{
                             if (skillFromReward != nullptr && skillFromReward != this  ) {
                                 skillFromReward = nullptr;
-                            }
+                            } 
                             skillFromReward = this;
                         }
                         
@@ -242,8 +253,7 @@ void Skill::Update(float dt) {
                     Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
                     jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour2));
                     toggleJewel = true;  
-                    tagCount->RequestDelete();
-                    tagCount = nullptr;
+                    BlankTagCount(true);
                 }
             } else { 
                 if (toggleJewel) {
@@ -258,7 +268,7 @@ void Skill::Update(float dt) {
                     }
                     jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
                     toggleJewel = false;  
-                    CreateTagCount();
+                    BlankTagCount(false);
                 } 
             }
         }
@@ -309,6 +319,36 @@ void Skill::DeselectBack(TargetType targetTypeBack) {
 
 void Skill::Render() {
 }
+
+void Skill::BlankTagCount(bool isBlank) {
+    const SkillInfo& skillInfo = skillInfoMap[id];
+    if(skillInfo.apCost != 0){
+        if(tagCount != nullptr && !isBlank){
+            auto textComponent = tagCount->GetComponent("Text");
+            auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
+            if(textComponentPtr){
+                tagCount->RemoveComponent(textComponentPtr);
+            }
+            std::string textNumber = std::to_string(skillInfo.apCost);
+            Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                                                 TEXT_TAGCOUNT2_SIZE,
+                                                                 Text::OUTLINE3,
+                                                                 textNumber, 
+                                                                 TEXT_TAGCOUNT_FONT_COLOR,
+                                                                 0);  
+            tagCount->AddComponent(std::make_shared<Text>(*tagCountNumber_behaviour));                                                                 
+            
+        }
+        else if(tagCount != nullptr && isBlank){
+            auto textComponent = tagCount->GetComponent("Text");
+            auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
+            if(textComponentPtr){
+                tagCount->RemoveComponent(textComponentPtr);
+            }    
+        } 
+    }
+}
+
 
 void Skill::CreateTagCount() {
     const SkillInfo& skillInfo = skillInfoMap[id];
@@ -446,17 +486,32 @@ void Skill::InitializeSkillInfoMap() {
     //Maternal Instincts (3AP): Protect your daughter; Gain 3 Rampage
     skillInfoMap[MaternalInstincts] =  {3, Skill::StateProtected::PROTECTED,      0, {},              0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},                          NS_MaternalInstincts, I_MaternalInstincts, SPR_MaternalInstincts,               BUFF_INDIVIDUAL, MOTHER,               BUFF_INDIVIDUAL, MOTHER  };
 
-
     //==================================DAUGHTER SKILL==================================
-    //Hide and Seek (1AP): Apply 1 Dodge and 1 Vulnerable to Mother; Protect Daughter 
-    skillInfoMap[HnS] =  {1, Skill::StateProtected::NOCHANGES,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
-
     //Pocket Sand [filha] (2AP): Deal 5 damage; Apply 1 weak
     skillInfoMap[PocketSand] =  {2, Skill::StateProtected::NOCHANGES,       5, {Tag::Tags::WEAK},     0, {},   NS_PocketSand, I_PocketSand, SPR_PocketSand,        ATTACK_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
-
     //Nana Nana Na [filha] (1AP): Apply 1 Vulnerable and 1 Weak to one enemy
     skillInfoMap[NanaNanaNa] =  {1, Skill::StateProtected::NOCHANGES,       0, {Tag::Tags::VULNERABLE, Tag::Tags::WEAK},     0, {},   NS_NanaNanaNa, I_NanaNanaNa, SPR_NanaNanaNa,        DEBUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+    
+    //Trick or Treat (1AP): Deal 1 damage; Gain 1 Dodge; Expose Daughter
+    skillInfoMap[TrickorTreat] =  {1, Skill::StateProtected::EXPOSED,       1, {},     0, {Tag::Tags::DODGE},   NS_TrickorTreat, I_TrickorTreat, SPR_TrickorTreat,                        ATTACK_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, DAUGHTER} ;
+
+    //Hide and Seek (1AP): Apply 1 Dodge and 1 Vulnerable to Mother; Protect Daughter 
+    skillInfoMap[HnS] =  {1, Skill::StateProtected::PROTECTED,       0, {Tag::Tags::DODGE, Tag::Tags::VULNERABLE},     0, {},   NS_HnS, I_HnS, SPR_HnS,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+
+    //Sweet Treats (2AP): Apply 2 rampage and 2 resilience to mother; Expose Daughter
+    skillInfoMap[SweetTreats] =  {2, Skill::StateProtected::EXPOSED,       0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE, Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},   NS_SweetTreats, I_SweetTreats, SPR_SweetTreats,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+
+    //Around the Rosie (1AP): Apply 1 Resilience and 1 Rampage to mother; Expose Daughter;
+    skillInfoMap[AroundtheRosie] =  {1, Skill::StateProtected::EXPOSED,       0, {Tag::Tags::RAMPAGE, Tag::Tags::RESILIENCE},     0, {},   NS_AroundtheRosie, I_AroundtheRosie, SPR_AroundtheRosie,                        BUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+
+    //TAG! You’re It (2AP): Deal 1 damage; Apply 3 Vulnerable; Expose Daughter
+    skillInfoMap[TagYoureIt] =  {2, Skill::StateProtected::EXPOSED,       1, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},   NS_TagYoureIt, I_TagYoureIt, SPR_TagYoureIt,                        ATTACK_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
+
+    //Red Light (2AP): Protect Daughter; Deal 1 damage to all enemies; Apply 2 Weak to all enemies
+    //Green Light (2AP): Expose Daughter; Deal 1 damage to all enemies; Apply 2 Vulnerable to all enemies
+    //Temper Tantrum (1AP): Expose Daughter; Gain 1 Rampage; Deal 3 Damage
+    //Desperate Flailing (1AP): Expose Daughter; Deal 2 damage to all enemies
 
 
     //==================================DJINN SKILLS==================================

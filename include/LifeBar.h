@@ -35,11 +35,10 @@ private:
     int hpCurrent;
     SDL_Color barColor;
     SDL_Rect lifeBarRect;
-     // Adicione uma instância de LifeBar como membro
 
     int posx;
     int lifeBarWidth; // Width of the life bar
-    const int lifeBarHeight = 12; // Height of the life bar
+    const int lifeBarHeight = 10; // Height of the life bar
     
     void UpdateLifeBarRect();
     void RenderSemicircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color);

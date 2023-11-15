@@ -237,9 +237,10 @@ void Enemies::Update(float dt) {
                 
                 // Moves the selected skill to the end of the vector
                 std::swap(skills[randomSkillIndex], skills.back());
-                
+
+                GameObject* generic = new GameObject();
                 // Now, the selected skill is in the last position of the vector
-                Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
+                Skill::selectedSkill = new Skill(*generic, selectedSkillId, nullptr, false);
             }
 
 

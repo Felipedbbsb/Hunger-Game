@@ -101,9 +101,6 @@
 #define SPR_MaternalInstincts "assets/img/UI/uiSkillNormal.png"
 
 //=================Daughter=================
-#define NS_HnS "Hide and Seek"
-#define I_HnS "assets/img/UI/skills/readers/readerHideandSeek.png"
-#define SPR_HnS "assets/img/UI/skills/HideandSeek.png"
 
 #define NS_NanaNanaNa "Nana Nana Na"
 #define I_NanaNanaNa "assets/img/UI/skills/readers/readerNanaNanaNa.png"
@@ -112,6 +109,27 @@
 #define NS_PommelStrike "Pommel Strike"
 #define I_PommelStrike "assets/img/UI/skills/readers/readerPommelStrike.png"
 #define SPR_PommelStrike "assets/img/UI/uiSkillNormal.png"
+
+#define NS_HnS "Hide and Seek"
+#define I_HnS "assets/img/UI/skills/readers/readerHideandSeek.png"
+#define SPR_HnS "assets/img/UI/skills/HideandSeek.png"
+
+#define NS_TrickorTreat "Trick or Treat"
+#define I_TrickorTreat "assets/img/UI/skills/readers/readerTrickorTreat.png"
+#define SPR_TrickorTreat "assets/img/UI/uiSkillNormal.png"
+
+#define NS_SweetTreats "Sweet Treats"
+#define I_SweetTreats "assets/img/UI/skills/readers/readerSweetTreats.png"
+#define SPR_SweetTreats "assets/img/UI/uiSkillNormal.png"
+
+#define NS_AroundtheRosie "Around the Rosie"
+#define I_AroundtheRosie "assets/img/UI/skills/readers/readerAroundtheRosie.png"
+#define SPR_AroundtheRosie "assets/img/UI/uiSkillNormal.png"
+
+#define NS_TagYoureIt "Tag! You are It"
+#define I_TagYoureIt "assets/img/UI/skills/readers/readerTagYoureIt.png"
+#define SPR_TagYoureIt "assets/img/UI/uiSkillNormal.png"
+
 
 
 //=================Djinn=================
@@ -185,10 +203,17 @@ class Skill : public Component {
             BlindedbyFear,
             Solitude,
             MaternalInstincts,
-
-            HnS,
+            
+            
             PocketSand,
             NanaNanaNa,
+            TrickorTreat,
+            HnS,
+            SweetTreats,
+            AroundtheRosie,
+            TagYoureIt,
+
+            
 
             InstantRegret,
             AMillionStabs,
@@ -300,7 +325,7 @@ class Skill : public Component {
         static void InitializeSkills();
 
         void CreateTagCount();
-
+        void BlankTagCount(bool isBlank);
         static void AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange = Skill::EMPTY);
 
     private:

@@ -50,7 +50,6 @@ void CombatState::Update(float dt){
     if(!CombatState::InteractionSCreenActivate){
         if(!toggleState){// Checks with needs to resume the state
             toggleState = true;
-            Resume();
         }
         // other Conditional for pausing the game
         if(Enemies::enemiesCount == 0){
@@ -72,7 +71,6 @@ void CombatState::Update(float dt){
     else{
         if(toggleState){
             toggleState = false;
-            Pause(); 
         }
 
         // Handle Interaction Screen updates
@@ -143,6 +141,7 @@ void CombatState::LoadAssets(){
 
 void CombatState::Render(){     
     RenderArray();
+    State::Render();
 }
 
 void CombatState::Start(){

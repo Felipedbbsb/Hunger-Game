@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include <memory>
+#include <SDL2/SDL.h>
 
 class State{
     public:
@@ -32,6 +33,9 @@ class State{
         bool popRequested;
         bool quitRequested;
         bool started;
+
+        bool fadingOut;  // Flag to indicate whether the screen is fading out
+        float fadeFactor; // Factor to control the alpha value for fading
 
         std::vector<std::shared_ptr<GameObject>> objectArray;
 

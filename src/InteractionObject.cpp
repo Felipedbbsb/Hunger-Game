@@ -78,9 +78,12 @@ void InteractionObject::Start() {
             }
             else{  
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    Sprite *obj_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
-                    obj_spr->SetScale(1.35, 1.35);
+                    //Sprite *obj_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+                    //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
+                    //obj_spr->SetScale(1.35, 1.35);
+                    iconPath = MOTHER_SPRITE_BUFF;
+                    Sprite* obj_spr = new Sprite(associated, iconPath); 
+                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
 
                     //CREATES BUFF
                     CreateEffect("BUFF", true);
@@ -115,9 +118,13 @@ void InteractionObject::Start() {
             } 
             else{
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    Sprite *obj_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
+                    //Sprite *obj_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
+                    //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    //obj_spr->SetScale(1.35, 1.35);
+
+                    iconPath = DAUGHTER_SPRITE_BUFF;
+                    Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
-                    obj_spr->SetScale(1.35, 1.35);
 
                     //CREATES BUFF
                     CreateEffect("BUFF", true);
