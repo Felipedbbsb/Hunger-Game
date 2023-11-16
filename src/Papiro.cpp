@@ -42,8 +42,8 @@ void Papiro::Start() {
 
     if (movingRight) {
         // Move Papiro to the left initially
-        associated.box.x -= associated.box.w; 
-        papiroVelocity = 2*(associated.box.w / (INTERACTION_COOLDOWN * 0.25));
+        associated.box.x -= RESOLUTION_WIDTH * Game::resizer;
+        papiroVelocity = 2*(RESOLUTION_WIDTH * Game::resizer / (INTERACTION_COOLDOWN * 0.25));
     } else {
         // Move Papiro to the right initially
         associated.box.x += RESOLUTION_WIDTH * Game::resizer;
@@ -73,7 +73,7 @@ void Papiro::Start() {
     //offeset precisely made by sprite reference   
     backgroundOffsetX = 50;  
     if (!movingRight){ 
-        backgroundOffsetX = 100;
+        backgroundOffsetX = 170;
     }  
 
 

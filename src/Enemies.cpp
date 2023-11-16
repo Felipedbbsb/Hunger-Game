@@ -494,8 +494,7 @@ void Enemies::ApplySkillToEnemy() {
         DeleteEnemyIndicator();
 
     }
-
-
+    Mother::damageDjinn = tempSkillInfo.damageBack;
 
 }
 

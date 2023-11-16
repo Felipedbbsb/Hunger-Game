@@ -7,6 +7,7 @@
 #include "CombatState.h"
 
 int Mother::hp = MOTHER_HP; 
+int Mother::damageDjinn = 0;
 std::vector<Tag::Tags> Mother::tags = {};
 bool Mother::activateRampage = false;
 bool Mother::activateWeak = false;
@@ -42,7 +43,7 @@ void Mother::Start()
     associated.box.x -= (associated.box.w/MOTHER_FC - motherHitbox.w )/2;
 
     //==================================LifeBar====================================
-    lifeBarMother = new LifeBar(associated, hp, hp, motherHitbox.w, motherHitbox.x); //width from hitbox
+    lifeBarMother = new LifeBar(associated, GameData::hpMax, hp, motherHitbox.w, motherHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarMother));
 
     //If enemies starts with tags
@@ -84,8 +85,12 @@ void Mother::Update(float dt)
     //} 
 
 
+    if(damageDjinn != 0){
+        hp -= damageDjinn;
+        lifeBarMother->SetCurrentHP(hp);
+        damageDjinn = 0;
+    }
 
- 
     //ENEMY TURN
     if(GameData::playerTurn == false){
         DeleteIntention();
@@ -166,6 +171,7 @@ void Mother::Update(float dt)
                     if (motherHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
+                        Mother::damageDjinn = tempSkillInfo.damageBack;
                         selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                         selectedSkill->Deselect();
 
@@ -197,9 +203,9 @@ void Mother::Update(float dt)
         //=============================Skill back sector=================================
         //Sector to manipulate interections involving enemies being attacked
 
-        if (skillBack != nullptr) {
+        if (skillBack != nullptr) { 
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApplySkillToMother(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+            ApplySkillToMother(0, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    

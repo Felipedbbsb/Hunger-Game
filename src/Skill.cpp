@@ -413,21 +413,20 @@ void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
   
 }
 
+
 //Starter skills
 void Skill::InitializeSkills() {
     //Adding skills
         skillArray.push_back(Skill::HnS);
-        skillArray.push_back(Skill::Stinger);
-        skillArray.push_back(Skill::Helmbreaker);
+        skillArray.push_back(Skill::RiskyManeuver);
+        skillArray.push_back(Skill::InstantRegret);
         skillArray.push_back(Skill::Rockabye);
-        skillArray.push_back(Skill::Rockabye);
+        skillArray.push_back(Skill::AMillionStabs);
 
-        skillArray.push_back(Skill::MotherlyLove);
+        skillArray.push_back(Skill::DanseMacabre);
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
- 
 
-        
 }
  
 void Skill::InitializeSkillInfoMap() {
@@ -444,7 +443,7 @@ void Skill::InitializeSkillInfoMap() {
 
     //==================================MOTHER SKILLS==================================
     //Helmbreaker (2AP): Deal 6 damage; Apply 2 Vulnerable. 
-    skillInfoMap[Helmbreaker] = {2, Skill::StateProtected::NOCHANGES,      6, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR};
+    skillInfoMap.insert({Helmbreaker, {2, Skill::StateProtected::NOCHANGES,      6, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR}});
 
     //Rockabye (1AP): Apply 1 Resilience to your daughter.
     skillInfoMap[Rockabye] =  {1, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::RESILIENCE}, 0, {},                          NS_Rockabye, I_Rockabye, SPR_Rockabye,           BUFF_INDIVIDUAL, MOTHER,          NONE, IRR };
@@ -516,13 +515,13 @@ void Skill::InitializeSkillInfoMap() {
 
     //==================================DJINN SKILLS==================================
     //Instant Regret (3AP): Deal 20 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
-    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      20, {},     0, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      20, {},     7, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
 
     //A million stabs (2AP): Deal 8 damage to all enemies; Expose your daughter; Lose 10 HP.
-    skillInfoMap[AMillionStabs] = {2, Skill::StateProtected::EXPOSED,      8, {},     0, {},                     NS_AMillionStabs, I_AMillionStabs, SPR_AMillionStabs,          ATTACK_ALL, MOTHER,        NONE, IRR} ;
+    skillInfoMap[AMillionStabs] = {2, Skill::StateProtected::EXPOSED,      8, {},     10, {},                     NS_AMillionStabs, I_AMillionStabs, SPR_AMillionStabs,          ATTACK_ALL, MOTHER,        NONE, IRR} ;
 
     //Danse Macabre (3AP): Deal 12 damage to all enemies; Gain 2 Dodge; Apply 2 Vulnerable to all enemies; Lose 15 HP.
-    skillInfoMap[DanseMacabre] = {3, Skill::StateProtected::NOCHANGES,      12, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {Tag::Tags::DODGE, Tag::Tags::DODGE},                     NS_DanseMacabre, I_DanseMacabre, SPR_DanseMacabre,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
+    skillInfoMap[DanseMacabre] = {3, Skill::StateProtected::NOCHANGES,      12, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     15, {Tag::Tags::DODGE, Tag::Tags::DODGE},                     NS_DanseMacabre, I_DanseMacabre, SPR_DanseMacabre,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
 
     //Hellfire* (2AP): Deal 3 damage; Apply 4 stacks of curse; Lose 5 HP
     skillInfoMap[Hellfire] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},                     NS_Hellfire, I_Hellfire, SPR_Hellfire,          ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR} ;

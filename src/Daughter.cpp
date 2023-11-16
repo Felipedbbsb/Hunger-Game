@@ -1,5 +1,6 @@
 #include "Daughter.h"
 #include "GameData.h"
+#include "Mother.h"
 #include "Enemies.h"
 #include "Camera.h"
 #include "Game.h"
@@ -15,7 +16,7 @@
 #endif //DEBUG
 
 
-int Daughter::hp = DAUGHTER_HP; 
+int Daughter::hp = GameData::life; 
 std::vector<Tag::Tags> Daughter::tags = {};
 bool Daughter::activateRampage = false;
 bool Daughter::activateWeak = false;
@@ -45,7 +46,7 @@ void Daughter::Start()
     associated.box.x -= (associated.box.w/DAUGHTER_FC - daughterHitbox.w )/2;
 
     //==================================LifeBar========= ===========================
-    lifeBarDaughter = new LifeBar(associated, hp, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
+    lifeBarDaughter = new LifeBar(associated, GameData::lifeMax, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarDaughter));
 
     //If enemies starts with tags
@@ -168,6 +169,7 @@ void Daughter::Update(float dt)
                     if (daughterHitbox.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
+                        Mother::damageDjinn = tempSkillInfo.damageBack;
                         selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                         selectedSkill->Deselect();
 
@@ -198,7 +200,9 @@ void Daughter::Update(float dt)
 
         if (skillBack != nullptr) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApplySkillToDaughter(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+            //Checks with the skill is djinn like
+
+            ApplySkillToDaughter(0, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
@@ -376,7 +380,7 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         if(damage > 0 || dodge){
             lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar
         }
- 
+
 }
  
 void Daughter::ApplyTags(std::vector<Tag::Tags> skillTags) {

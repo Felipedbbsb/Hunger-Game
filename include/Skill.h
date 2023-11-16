@@ -261,6 +261,7 @@ class Skill : public Component {
         enum TargetType {
             MOTHER,
             DAUGHTER, 
+            DJINN,
             IRR //irrelevant
         };
 
@@ -284,8 +285,9 @@ class Skill : public Component {
             TargetType targetTypeAttacker; //who is attacking
             AttackType attackTypeBack;
             TargetType targetTypeBack;
+                
         };
-        
+
  
 
         Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel = true);

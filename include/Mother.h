@@ -54,6 +54,7 @@ class Mother : public Component{
     GameObject* intention; 
 
     static int hp;
+    static int damageDjinn;
     static std::vector<Tag::Tags> tags;
 
     static bool activateRampage;
