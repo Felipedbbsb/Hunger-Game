@@ -8,3 +8,4 @@ int  GameData::hpMax = MOTHER_HP;
 int  GameData::hpCorrupted = 0; 
 int  GameData::life = DAUGHTER_HP; 
 int  GameData::lifeMax = DAUGHTER_HP; 
+ 

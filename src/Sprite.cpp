@@ -20,9 +20,10 @@ Sprite::Sprite(GameObject &associated, std::string file, int frameCount, float f
     // Define o tempo entre frames e o número total de frames
     this->frameTime = frameTime;
     this->frameCount = frameCount;
-    //SetFrameCount(frameCount);
     this->secondsToSelfDestruct = secondsToSelfDestruct;
     Open(file);
+    //SetFrameCount(frameCount);
+    //SetFrame(currentFrame);
 }
 
 Sprite::~Sprite(){}
@@ -141,15 +142,22 @@ bool Sprite::IsOpen() {
 }
 
 void Sprite::Update(float dt) {
-
+    
     if (secondsToSelfDestruct > 0)
     {   
         selfDestructCount.Update(dt);
+
+        if(secondsToSelfDestruct - selfDestructCount.Get() <= VANISHING_TIME){
+            auto aplhaVanish = ((secondsToSelfDestruct - selfDestructCount.Get()) / VANISHING_TIME) * 255;
+            SetAlpha(aplhaVanish);
+        }
+        
+
         if (selfDestructCount.Get() >= secondsToSelfDestruct)
         {
             associated.RequestDelete();
-        }
-    }
+        } 
+    } 
 
 
     timeElapsed += dt; // Verifica em que momento de frame o sprite está

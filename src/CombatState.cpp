@@ -58,7 +58,7 @@ void CombatState::Update(float dt){
                 if(skillSelection == nullptr){
                     // Create a new skillSelection object for skillSelection Screen 
                     skillSelection = new GameObject();
-                    SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection);
+                    SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection, false);
                     skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
                     AddObject(skillSelection);
                 }       

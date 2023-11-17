@@ -190,12 +190,14 @@ void Skill::Update(float dt) {
 
                             //Scenerio where skills its djiin style, rules you can only choose normal skills to change
                             if(SkillSelection::selectionSkillDjinnStyle){
-                                //TODO
+                               if(id < Skill::InstantRegret || id == Skill::EMPTY){
+                                    skillToReward = this;
+                               }      
                             }
                             //Scenerio where skills it not djiin style
                             else{
                                 skillToReward = this;
-
+  
                             }
                             
                             
@@ -421,9 +423,9 @@ void Skill::InitializeSkills() {
         skillArray.push_back(Skill::RiskyManeuver);
         skillArray.push_back(Skill::InstantRegret);
         skillArray.push_back(Skill::Rockabye);
-        skillArray.push_back(Skill::AMillionStabs);
+        skillArray.push_back(Skill::Stinger);
 
-        skillArray.push_back(Skill::DanseMacabre);
+        skillArray.push_back(Skill::TrickorTreat);
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
 

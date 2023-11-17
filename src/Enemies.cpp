@@ -103,6 +103,9 @@ Enemies::~Enemies() {
         [this](const std::weak_ptr<GameObject>& enemy) {
             return enemy.lock().get() == &associated;
         }), enemiesArray.end());
+
+    
+
 }
 
 void Enemies::Update(float dt) {
@@ -120,6 +123,22 @@ void Enemies::Update(float dt) {
 
     auto selectedSkill = Skill::selectedSkill;
     
+    //=============================//=============================//=============================//=============================
+
+
+    // Check if the enemy's HP is zero or below and request deletion
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
+
 //=============================//=============================//=============================//=============================
     //Iterator for all skill types, counts number of left enemies to receive skill from player
     if(SkillAllenemies > 0){
@@ -161,15 +180,6 @@ void Enemies::Update(float dt) {
 
 
 
-//=============================//=============================//=============================//=============================
-
-
-    // Check if the enemy's HP is zero or below and request deletion
-    if (hp <= 0) {
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
-
-    } 
 
 //=============================//=============================//=============================//=============================
     //PLAYER TURN
@@ -553,9 +563,9 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
 
         }
         hp -= damage * tagMultiplier;
-        if(!dodge){
-            ApplyTags(tags);
-        }
+            
+        ApplyTags(tags);
+
 
 
 

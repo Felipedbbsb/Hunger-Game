@@ -62,6 +62,9 @@ Daughter::~Daughter()
             daughtertags.erase(daughtertags.begin() + i);
     }
     
+    DeleteIndicator();
+    DeleteIntention();
+
 }
 
 void Daughter::Update(float dt)
@@ -76,12 +79,23 @@ void Daughter::Update(float dt)
     auto selectedSkillEnemy = Skill::selectedSkillEnemy;
     auto skillBack = Skill::skillBackToDaughter;
 
+    //=============================//=============================//=============================//=============================
+
+
     // Check if the enemy's HP is zero or below and request deletion
-    //if (hp <= 0) {
-    //    DeleteEnemyIndicator();
-    //    associated.RequestDelete();
-    //    return; // Early exit if the enemy is no longer alive
-    //} 
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC, 1.5);
+
+        deadBody_spr->SetFrame(0);
+
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
 
 
     
@@ -373,9 +387,9 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-        if(!dodge){
-            ApplyTags(tags);
-        }
+
+        ApplyTags(tags);
+
 
         if(damage > 0 || dodge){
             lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar

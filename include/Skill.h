@@ -177,7 +177,7 @@
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
-#define SKILL_CLICK_COOLDOWN 0.1
+#define SKILL_CLICK_COOLDOWN 0.3
 //===================================================
 
 

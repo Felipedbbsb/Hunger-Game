@@ -10,6 +10,8 @@
 #include "Timer.h"
 #include "GameObject.h"
 
+#define VANISHING_TIME 1.5
+
 //Class responsible for load and render of images
 class Sprite : public Component{
   public:

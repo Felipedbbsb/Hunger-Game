@@ -7,16 +7,19 @@
 #include "CameraFollower.h"
 
 #include <cmath>
-LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx )
+LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx, int hpCorruptedCurrent)
     : Component(associated), 
     hpMax(hpMax),
     hpCurrent(hpCurrent),
+    hpCorruptedMax(hpMax),
+    hpCorruptedCurrent(hpCorruptedCurrent),
     posx(posx),  
     lifeBarWidth(lifeBarWidth),
     hpReader(nullptr)
     {
     barColor = {150, 15, 15, 255}; // Red color (RGBA)
-    UpdateLifeBarRect();
+    corruptedBarColor = {80, 15, 60, 255}; // Cor roxa (RGBA)
+    UpdateLifeBarRect(); 
 }
 
 LifeBar::~LifeBar() {
@@ -33,6 +36,9 @@ void LifeBar::Start() {
 void LifeBar::Update(float dt) { 
     lifeBarRect.x = posx + Camera::pos.x; 
     lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET + Camera::pos.y);
+
+    corruptedBarRect.x = lifeBarRect.x;
+    corruptedBarRect.y = lifeBarRect.y;
 }
 
 
@@ -40,19 +46,27 @@ void LifeBar::Update(float dt) {
 void LifeBar::Render() {
     SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
     // Calculates the radius of the semicircles based on half the height of the bar
-    int semicircleRadius = lifeBarRect.h / 2;
+    int semicircleRadius = lifeBarRect.h / 2; 
 
     
-    // Calculate the centers of semicircles
+    // Calculate the centers of semicircles 
     int leftSemicircleCenterX = lifeBarRect.x + semicircleRadius;
     int rightSemicircleCenterX = lifeBarRect.x + lifeBarRect.w - semicircleRadius;
-    int semicircleCenterY = lifeBarRect.y + lifeBarRect.h / 2;
+    int semicircleCenterY = lifeBarRect.y + lifeBarRect.h / 2; 
 
     // Sets the color of the semicircles based on the difference between hpMax and hpCurrent
     SDL_Color rightSemicircleColor = (hpMax == hpCurrent) ? barColor : SDL_Color{100, 100, 100, 255};
+    if(hpCorruptedCurrent > 0){
+        rightSemicircleColor = corruptedBarColor;
+    }
+
+    SDL_Color leftSemicircleColor = (hpCurrent > 0) ? barColor : SDL_Color{100, 100, 100, 255};
+    if(hpCorruptedCurrent > hpMax){
+        leftSemicircleColor = corruptedBarColor;
+    }
 
     // Render the semicircles at the ends of the health bar
-    RenderSemicircle(renderer, leftSemicircleCenterX, semicircleCenterY, -semicircleRadius, barColor);
+    RenderSemicircle(renderer, leftSemicircleCenterX, semicircleCenterY, -semicircleRadius, leftSemicircleColor);
     RenderSemicircle(renderer, rightSemicircleCenterX, semicircleCenterY, semicircleRadius, rightSemicircleColor);
 
     
@@ -63,8 +77,18 @@ void LifeBar::Render() {
     // Render the filled part of the health bar
     SDL_SetRenderDrawColor(renderer, barColor.r, barColor.g, barColor.b, barColor.a);
     SDL_Rect filledRect = lifeBarRect;
-    filledRect.w = static_cast<int>(static_cast<float>(hpCurrent) / hpMax * lifeBarWidth);
-    SDL_RenderFillRect(renderer, &filledRect); 
+    
+    if(hpCurrent > 0){
+        filledRect.w = static_cast<int>(static_cast<float>(hpCurrent + 0.1)/ hpMax * lifeBarWidth);
+        SDL_RenderFillRect(renderer, &filledRect); 
+    }
+    
+    
+
+    if(hpCorruptedCurrent > 0){
+        RenderCorruptedBar(renderer);
+    }
+    
       
 }
 
@@ -90,11 +114,25 @@ void LifeBar::RenderSemicircle(SDL_Renderer* renderer, int x, int y, int radius,
     }
 }
 
+void LifeBar::RenderCorruptedBar(SDL_Renderer* renderer) {
+    // Renderiza a parte preenchida da barra de vida corrompida
+    SDL_SetRenderDrawColor(renderer, corruptedBarColor.r, corruptedBarColor.g, corruptedBarColor.b, corruptedBarColor.a);
+    SDL_Rect corruptedFilledRect = corruptedBarRect;
+    int filledWidth = static_cast<int>(static_cast<float>(hpCorruptedCurrent) / hpCorruptedMax * lifeBarWidth);
+    corruptedFilledRect.x = corruptedBarRect.x + (lifeBarRect.w - filledWidth);
+    corruptedFilledRect.w = filledWidth;
+    SDL_RenderFillRect(renderer, &corruptedFilledRect);
+}
+
+
+
+
 bool LifeBar::Is(std::string type) {
     return (type == "LifeBar");
 }
    
 void LifeBar::SetCurrentHP(int hpCurrent) { 
+
     int hpChange = hpCurrent - this->hpCurrent;
     this->hpCurrent = hpCurrent;
     UpdateLifeBarRect();
@@ -106,7 +144,7 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
         changeText = (hpChange > 0) ? "+" + std::to_string(hpChange) : std::to_string(hpChange);
 
     }
-    else{
+    else{ 
         changeText = "DODGE!";
     }
     GameObject *hpChangeEffec_obj = new GameObject(associated.box.x + associated.box.w/2, lifeBarRect.y - associated.box.h); 
@@ -121,16 +159,31 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
     // Update the HP reader text 
     hpReaderRender();
 }
+
+int LifeBar::SetCorruptedHP(int hpCorruptedCurrent) {
+    this->hpCorruptedCurrent = hpCorruptedCurrent;
+    UpdateLifeBarRect();
+
+    if(hpCorruptedMax - this->hpCorruptedCurrent < hpCurrent){
+        SetCurrentHP(hpCorruptedMax - this->hpCorruptedCurrent);
+        return hpCorruptedMax - this->hpCorruptedCurrent;
+    }
+    // Update the HP reader text 
+    hpReaderRender();  
+    return 0;
+    
+    
+}
  
 void LifeBar::hpReaderRender() { 
     if (hpReader != nullptr){ 
         hpReader->RequestDelete();
         hpReader = nullptr;  
-    }  
+    }   
     //Creates Reader for hp
     //position middle of hp bar
     hpReader =  new GameObject(lifeBarRect.x, lifeBarRect.y); //posicao foi no olho...
-    std::string textHpReader = std::to_string(hpCurrent) + "/" +std::to_string(hpMax);
+    std::string textHpReader = std::to_string(hpCurrent) + "/" +std::to_string(hpMax - hpCorruptedCurrent);
     Text* hpReader_behaviour = new Text(*hpReader, TEXT_LIFEBAR_FONT, 
                                                       TEXT_LIFEBAR_SIZE,
                                                       Text::OUTLINE,
@@ -152,5 +205,10 @@ void LifeBar::UpdateLifeBarRect() {
     lifeBarRect.y = static_cast<int>(associated.box.y + associated.box.h + LIFEBAROFFSET+ Camera::pos.y); // Place it above the GameObject
     lifeBarRect.w = lifeBarWidth;
     lifeBarRect.h = lifeBarHeight;  
+
+    corruptedBarRect.x = lifeBarRect.x;
+    corruptedBarRect.y = lifeBarRect.y;
+    corruptedBarRect.w = lifeBarWidth;
+    corruptedBarRect.h = lifeBarHeight;
 } 
  

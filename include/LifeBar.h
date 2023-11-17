@@ -17,18 +17,19 @@
 
 class LifeBar : public Component {
 public:
-    LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx);
+    LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWidth, int posx,
+    int hpCorruptedCurrent = 0);
     ~LifeBar();
 
     void Start();
     void Update(float dt);
     void Render();
     
-    bool Is(std::string type);
+    bool Is(std::string type); 
 
     void hpReaderRender();
     void SetCurrentHP(int hpCurrent);
-  
+    int SetCorruptedHP(int hpCorruptedCurrent); //return possible damage from Djinn
 
 private:
     int hpMax;
@@ -36,10 +37,17 @@ private:
     SDL_Color barColor;
     SDL_Rect lifeBarRect;
 
+    int hpCorruptedMax;
+    int hpCorruptedCurrent;
+    SDL_Rect corruptedBarRect;
+    SDL_Color corruptedBarColor;
+
     int posx;
     int lifeBarWidth; // Width of the life bar
-    const int lifeBarHeight = 10; // Height of the life bar
+    const int lifeBarHeight = 13; // Height of the life bar
     
+    void RenderCorruptedBar(SDL_Renderer* renderer);
+
     void UpdateLifeBarRect();
     void RenderSemicircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color);
 

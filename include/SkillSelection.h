@@ -30,28 +30,29 @@
 
 class SkillSelection : public Component {
     public:
-        SkillSelection(GameObject &associated, bool isDjinn = false);
+        SkillSelection(GameObject &associated, bool isDjinn);
         ~SkillSelection();
         void Update(float dt);
         void Render();
-        void Start();
+        void Start(); 
         bool Is(std::string type);
         void CreateSkillOptions();
 
-        void CreateBackground();
+        void CreateBackground(); 
         void CreatePassButon();
 
         
 
         static bool skillSelectionActivated;
         static bool selectionSkillDjinnStyle;
+        static bool endSkillSelection;
 
     private:
         GameObject* background;
         GameObject* passButon;
         GameObject* SkillSelection_obj;
         bool toggleArrow;
-        bool endSkillSelection;
+        
         float objectsMoves;
         std::vector<std::weak_ptr<GameObject>> rewardArrayObj;
 

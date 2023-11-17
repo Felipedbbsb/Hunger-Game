@@ -6,7 +6,7 @@
 #include "Protected.h" 
 #include "CombatState.h"
 
-int Mother::hp = MOTHER_HP; 
+int Mother::hp = GameData::hp; 
 int Mother::damageDjinn = 0;
 std::vector<Tag::Tags> Mother::tags = {};
 bool Mother::activateRampage = false;
@@ -75,20 +75,28 @@ void Mother::Update(float dt)
     auto selectedSkillEnemy = Skill::selectedSkillEnemy;
     auto skillBack = Skill::skillBackToMother;
 
-  
+   
 
-    // Check if the enemy's HP is zero or below and request deletion
-    //if (hp <= 0) {
-    //    DeleteEnemyIndicator();
-    //    associated.RequestDelete();
-    //    return; // Early exit if the enemy is no longer alive
-    //} 
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC, 1.5);
+
+        deadBody_spr->SetFrame(0);
+
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
 
 
     if(damageDjinn != 0){
-        hp -= damageDjinn;
-        lifeBarMother->SetCurrentHP(hp);
+        GameData::hpCorrupted += damageDjinn;
+        int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
         damageDjinn = 0;
+        hp = corruptedDamage;
     }
 
     //ENEMY TURN
@@ -375,10 +383,8 @@ void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-
-        if(!dodge){
-            ApplyTags(tags);
-        }
+        
+        ApplyTags(tags);
         
 
         if(damage > 0 || dodge){

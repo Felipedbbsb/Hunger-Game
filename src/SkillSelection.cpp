@@ -15,13 +15,13 @@
 
 bool SkillSelection::skillSelectionActivated = false;
 bool SkillSelection::selectionSkillDjinnStyle = false;
+bool SkillSelection::endSkillSelection;
 
 SkillSelection::SkillSelection(GameObject &associated,  bool isDjinn)
     : Component(associated),
     background(nullptr), 
     passButon(nullptr),
     toggleArrow(false),
-    endSkillSelection(false),
     objectsMoves(0),
     rewardArrayObj({})
     {
@@ -29,13 +29,14 @@ SkillSelection::SkillSelection(GameObject &associated,  bool isDjinn)
 
         Skill::selectedSkill = nullptr; //generic 
 
-        Skill::selectedSkillEnemy = nullptr; //generic 
+        Skill::selectedSkillEnemy = nullptr; //generic  
 
         Skill::skillBackToMother = nullptr; //back effects
 
         Skill::skillBackToDaughter = nullptr; //back effects 
 
         SkillSelection::selectionSkillDjinnStyle = isDjinn;
+
 }
   
 void SkillSelection::Start() {
@@ -92,7 +93,7 @@ void SkillSelection::CreateSkillOptions() {
     //auto itEnd = Skill::skillInfoMap.end();
     auto itEnd = Skill::skillInfoMap.find(Skill::LOCKED1);
 
-    if (!selectionSkillDjinnStyle ) {
+    if (!selectionSkillDjinnStyle ) { 
         // If isDjinn is true, exclude skills that are before InstantRegret
         
         itBegin = Skill::skillInfoMap.begin();
@@ -100,8 +101,8 @@ void SkillSelection::CreateSkillOptions() {
     }
 
     std::vector<Skill::SkillId> validSkillIds;
-    for (auto it = itBegin; it != itEnd; ++it) {
-        validSkillIds.push_back(it->first);
+    for (auto it = itBegin; it != itEnd; ++it) { 
+        validSkillIds.push_back(it->first); 
     }
 
     // Remove skills that are already present in Skill::skillArray
