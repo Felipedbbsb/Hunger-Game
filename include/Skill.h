@@ -149,6 +149,54 @@
 #define I_Hellfire "assets/img/UI/skills/readers/readerHellfire.png"
 #define SPR_Hellfire "assets/img/UI/uiSkillDjinn.png"
 
+#define NS_Gravedigger "Gravedigger"
+#define I_Gravedigger "assets/img/UI/skills/readers/readerGravedigger.png"
+#define SPR_Gravedigger "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Combustion "Combustion"
+#define I_Combustion "assets/img/UI/skills/readers/readerCombustion.png"
+#define SPR_Combustion "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_DevilsTears "Devil's Tears"
+#define I_DevilsTears "assets/img/UI/skills/readers/readerDevilsTears.png"
+#define SPR_DevilsTears "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_FinalSacrifice "Final Sacrifice"
+#define I_FinalSacrifice "assets/img/UI/skills/readers/readerFinalSacrifice.png"
+#define SPR_FinalSacrifice "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_TormentedSoul "Tormented Soul"
+#define I_TormentedSoul "assets/img/UI/skills/readers/readerTormentedSoul.png"
+#define SPR_TormentedSoul "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_RainingBlood "Raining Blood"
+#define I_RainingBlood "assets/img/UI/skills/readers/readerRainingBlood.png"
+#define SPR_RainingBlood "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_MasterofPuppets "Master of Puppets"
+#define I_MasterofPuppets "assets/img/UI/skills/readers/readerMasterofPuppets.png"
+#define SPR_MasterofPuppets "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_IronMaiden "Iron Maiden"
+#define I_IronMaiden "assets/img/UI/skills/readers/readerIronMaiden.png"
+#define SPR_IronMaiden "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_DeafeningWhisper "Deafening Whisper"
+#define I_DeafeningWhisper "assets/img/UI/skills/readers/readerDeafeningWhisper.png"
+#define SPR_DeafeningWhisper "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_IntotheVoid "Into the Void"
+#define I_IntotheVoid "assets/img/UI/skills/readers/readerIntotheVoid.png"
+#define SPR_IntotheVoid "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_FearoftheDark "Fear of the Dark"
+#define I_FearoftheDark "assets/img/UI/skills/readers/readerFearoftheDark.png"
+#define SPR_FearoftheDark "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Elimination "Elimination"
+#define I_Elimination "assets/img/UI/skills/readers/readerElimination.png"
+#define SPR_Elimination "assets/img/UI/uiSkillDjinn.png"
+
 
 //=================Enemies=================
 #define NS_Generic "Attack1"
@@ -219,6 +267,19 @@ class Skill : public Component {
             AMillionStabs,
             DanseMacabre,
             Hellfire,
+            Gravedigger,
+            Combustion,
+            DevilsTears,
+            FinalSacrifice,
+            TormentedSoul,
+            RainingBlood,
+            MasterofPuppets,
+            IronMaiden,
+            DeafeningWhisper,
+            IntotheVoid,
+            FearoftheDark,
+            Elimination,
+
 
             LOCKED1,
             LOCKED2,

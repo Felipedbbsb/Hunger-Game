@@ -174,7 +174,7 @@ void CombatState::CreateBackground(std::string originalPath){
 
     floorPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - floorPathObj->box.w / 2; 
 
-    CameraParallax *floorPathObj_cmfl = new CameraParallax(*floorPathObj, 0.10);
+    CameraParallax *floorPathObj_cmfl = new CameraParallax(*floorPathObj, -0.10);
     floorPathObj->AddComponent((std::shared_ptr<CameraParallax>)floorPathObj_cmfl);
     
     AddObject(floorPathObj);
@@ -211,14 +211,14 @@ void CombatState::CreateBackground(std::string originalPath){
     GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
             Camera::Follow(focusCamera);
             CombatState::ChangingSides = true;
-      
-}
+       
+} 
 
 std::string CombatState::GeneratePath(std::string originalPath, std::string suffix) {
-
+ 
     size_t lastSlashPos = originalPath.find_last_of('/');
 
-    std::string fileName = originalPath.substr(lastSlashPos + 1);
+    std::string fileName = originalPath.substr(lastSlashPos + 1); 
 
     std::string path = originalPath.substr(0, lastSlashPos + 1);
 

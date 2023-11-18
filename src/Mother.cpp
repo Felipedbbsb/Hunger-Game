@@ -64,22 +64,19 @@ Mother::~Mother()
 }  
  
 void Mother::Update(float dt) 
-{   
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
-        return;
+{       
+
+    if(damageDjinn != 0){
+        GameData::hpCorrupted += damageDjinn;
+        int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
+        damageDjinn = 0;
+        std::cout << corruptedDamage << std::endl;
+
+        if(corruptedDamage > 0){
+           hp = corruptedDamage; 
+        }
+        
     }
-
-    IntentionAnimation(dt);
-    IndicatorAnimation(dt);
- 
-    auto& inputManager = InputManager::GetInstance();
-    Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY()); 
- 
-    auto selectedSkill = Skill::selectedSkill;
-    auto selectedSkillEnemy = Skill::selectedSkillEnemy;
-    auto skillBack = Skill::skillBackToMother;
-
-   
 
     if (hp <= 0) {
         GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
@@ -95,13 +92,21 @@ void Mother::Update(float dt)
 
     } 
 
-
-    if(damageDjinn != 0){
-        GameData::hpCorrupted += damageDjinn;
-        int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
-        damageDjinn = 0;
-        hp = corruptedDamage;
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+        return;
     }
+
+    IntentionAnimation(dt);
+    IndicatorAnimation(dt);
+ 
+    auto& inputManager = InputManager::GetInstance();
+    Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY()); 
+ 
+    auto selectedSkill = Skill::selectedSkill;
+    auto selectedSkillEnemy = Skill::selectedSkillEnemy;
+    auto skillBack = Skill::skillBackToMother;
+
+   
 
     //ENEMY TURN
     if(GameData::playerTurn == false){

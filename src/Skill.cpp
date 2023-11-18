@@ -467,11 +467,11 @@ void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
 void Skill::InitializeSkills() {
     //Adding skills
         skillArray.push_back(Skill::HnS);
-        skillArray.push_back(Skill::RiskyManeuver);
-        skillArray.push_back(Skill::InstantRegret);
-        skillArray.push_back(Skill::Rockabye);
-        skillArray.push_back(Skill::Stinger);
-        skillArray.push_back(Skill::MotherlyLove);
+        skillArray.push_back(Skill::FinalSacrifice);
+        skillArray.push_back(Skill::DeafeningWhisper);
+        skillArray.push_back(Skill::IntotheVoid);
+        skillArray.push_back(Skill::FearoftheDark);
+        skillArray.push_back(Skill::Elimination);
         
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
@@ -480,7 +480,7 @@ void Skill::InitializeSkills() {
  
 void Skill::InitializeSkillInfoMap() {
     //struct SkillInfo {
-    //    ap cost;     
+    //    ap cost;      
     //    damage; 
     //    tags;
     //    name; 
@@ -563,17 +563,55 @@ void Skill::InitializeSkillInfoMap() {
 
 
     //==================================DJINN SKILLS==================================
-    //Instant Regret (3AP): Deal 20 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 7HP
-    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      20, {},     7, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+    //Instant Regret (3AP): Deal 20 damage; Expose your daughter; Apply 1 Vulnerable to your daughter; Lose 4HP
+    skillInfoMap[InstantRegret] = {3, Skill::StateProtected::EXPOSED,      20, {},     4, {Tag::Tags::VULNERABLE},                     NS_InstantRegret, I_InstantRegret, SPR_InstantRegret,          ATTACK_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
 
-    //A million stabs (2AP): Deal 8 damage to all enemies; Expose your daughter; Lose 10 HP.
-    skillInfoMap[AMillionStabs] = {2, Skill::StateProtected::EXPOSED,      8, {},     10, {},                     NS_AMillionStabs, I_AMillionStabs, SPR_AMillionStabs,          ATTACK_ALL, MOTHER,        NONE, IRR} ;
+    //A million stabs (2AP): Deal 8 damage to all enemies; Expose your daughter; Lose 5 HP.
+    skillInfoMap[AMillionStabs] = {2, Skill::StateProtected::EXPOSED,      8, {},     5, {},                     NS_AMillionStabs, I_AMillionStabs, SPR_AMillionStabs,          ATTACK_ALL, MOTHER,        NONE, IRR} ;
 
-    //Danse Macabre (3AP): Deal 12 damage to all enemies; Gain 2 Dodge; Apply 2 Vulnerable to all enemies; Lose 15 HP.
-    skillInfoMap[DanseMacabre] = {3, Skill::StateProtected::NOCHANGES,      12, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     15, {Tag::Tags::DODGE, Tag::Tags::DODGE},                     NS_DanseMacabre, I_DanseMacabre, SPR_DanseMacabre,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
+    //Danse Macabre (3AP): Deal 12 damage to all enemies; Gain 2 Dodge; Apply 2 Vulnerable to all enemies; Lose 8 HP.
+    skillInfoMap[DanseMacabre] = {3, Skill::StateProtected::NOCHANGES,      12, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     8, {Tag::Tags::DODGE, Tag::Tags::DODGE},                     NS_DanseMacabre, I_DanseMacabre, SPR_DanseMacabre,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
 
-    //Hellfire* (2AP): Deal 3 damage; Apply 4 stacks of curse; Lose 5 HP
-    skillInfoMap[Hellfire] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},                     NS_Hellfire, I_Hellfire, SPR_Hellfire,          ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR} ;
+    //Hellfire* (2AP): Deal 3 damage; Apply 4 stacks of curse; Lose 3 HP
+    skillInfoMap[Hellfire] = {2, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},     3, {},                     NS_Hellfire, I_Hellfire, SPR_Hellfire,          ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR} ;
+
+    //Gravedigger (3AP): Gain 3 Rampage; Apply 3 Vulnerable to all enemies; Lose 4 max HP.
+    skillInfoMap[Gravedigger] = {3, Skill::StateProtected::NOCHANGES,      3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     4, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},                     NS_Gravedigger, I_Gravedigger, SPR_Gravedigger,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
+
+    //Combustion (1AP): Deal 6 damage; Expose your daughter; Lose 2 max HP
+    skillInfoMap[Combustion] = {1, Skill::StateProtected::EXPOSED,      6, {},     2, {},            NS_Combustion, I_Combustion, SPR_Combustion,          ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR} ;
+
+    //Devil’s Tears (1AP)*: Deal 1 damage to all enemies; Apply 4 curse; Lose 3 max HP.
+    skillInfoMap[DevilsTears] = {1, Skill::StateProtected::NOCHANGES,      1, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},     3, {},            NS_DevilsTears, I_DevilsTears, SPR_DevilsTears,          ATTACK_ALL, MOTHER,        NONE, IRR} ;
+
+    //Final Sacrifice (3AP): Expose your daughter and apply 2 vulnerable to her; Deal 25 damage to all enemies; Lose 10 max HP.
+    skillInfoMap[FinalSacrifice] = {3, Skill::StateProtected::EXPOSED,      25, {},     10, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},            NS_FinalSacrifice, I_FinalSacrifice, SPR_FinalSacrifice,          ATTACK_ALL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+
+    //Tormented Soul* (3AP): Apply 12 curse; Lose 5 max HP.
+    skillInfoMap[TormentedSoul] = {3, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::CURSE,Tag::Tags::CURSE,Tag::Tags::CURSE, Tag::Tags::CURSE,Tag::Tags::CURSE,Tag::Tags::CURSE, Tag::Tags::CURSE,Tag::Tags::CURSE,Tag::Tags::CURSE, Tag::Tags::CURSE,Tag::Tags::CURSE,Tag::Tags::CURSE},     5, {},            NS_TormentedSoul, I_TormentedSoul, SPR_TormentedSoul,          DEBUFF_INDIVIDUAL, MOTHER,        NONE, IRR} ;
+    
+    //Raining Blood (3AP): Deal 15 damage to all enemies; Gain 2 Rampage; Apply 2 Vulnerable; Lose 8 max HP.
+    skillInfoMap[RainingBlood] = {3, Skill::StateProtected::NOCHANGES,      15, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     8, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},            NS_RainingBlood, I_RainingBlood, SPR_RainingBlood,          ATTACK_ALL, MOTHER,        BUFF_INDIVIDUAL, MOTHER} ;
+
+    //Master of Puppets (2AP): Deal 20 damage; Lose 7 max HP.
+    skillInfoMap[MasterofPuppets] = {2, Skill::StateProtected::NOCHANGES,      20, {},     7, {},            NS_MasterofPuppets, I_MasterofPuppets, SPR_MasterofPuppets,          ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR} ;
+
+    //Iron Maiden (1AP): Protect your daughter, apply 5 vulnerable to her; Apply 3 Vulnerable and 3 Weak to one enemy; Lose 3 max HP
+    skillInfoMap[IronMaiden] = {1, Skill::StateProtected::PROTECTED,      0, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::WEAK},     3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},            NS_IronMaiden, I_IronMaiden, SPR_IronMaiden,          DEBUFF_INDIVIDUAL, MOTHER,        DEBUFF_INDIVIDUAL, DAUGHTER} ;
+
+    //Deafening Whisper (2AP): Deal 10 damage; Apply 2 Weak to target ; Lose 3 max HP
+    skillInfoMap[DeafeningWhisper] = {2, Skill::StateProtected::NOCHANGES,      10, {Tag::Tags::WEAK, Tag::Tags::WEAK},     3, {},            NS_DeafeningWhisper, I_DeafeningWhisper, SPR_DeafeningWhisper,          ATTACK_INDIVIDUAL, MOTHER,         NONE, IRR} ;
+
+    //Into the Void (3AP): Apply 5 Vulnerable to you and all enemies; Gain 2 Rampage; Lose 3 max HP.
+    skillInfoMap[IntotheVoid] = {3, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     3, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},            NS_IntotheVoid, I_IntotheVoid, SPR_IntotheVoid,          DEBUFF_ALL, MOTHER,          DEBUFF_INDIVIDUAL, MOTHER} ;
+
+    //Fear of the Dark (1AP): Apply 2 dodge to all enemies; Apply 3 weak and 3 vulnerable to all enemies. Lose 3 max HP
+    skillInfoMap[FearoftheDark] = {1, Skill::StateProtected::NOCHANGES,      0, {Tag::Tags::DODGE, Tag::Tags::DODGE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::WEAK},     3, {},            NS_FearoftheDark, I_FearoftheDark, SPR_FearoftheDark,          DEBUFF_ALL, MOTHER,          NONE, IRR} ;
+ 
+    //Elimination* (3AP): Deal 25 damage; Gain 15 Curse; Lose 2 max HP 
+    skillInfoMap[Elimination] = {3, Skill::StateProtected::NOCHANGES,      25, {},     
+                                    2, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},
+                                    NS_Elimination, I_Elimination, SPR_Elimination,          ATTACK_INDIVIDUAL, MOTHER,          DEBUFF_INDIVIDUAL, MOTHER} ;
 
 
     //==================================LOCKED==================================

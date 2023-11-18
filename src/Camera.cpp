@@ -27,13 +27,14 @@ void Camera::Update(float dt) {
         speed.x = CAMERA_SPEED;
         speed.y = CAMERA_SPEED;
 
-         // Calculate the difference between camera position and focus position
+        // Calculate the difference between camera position and focus position
         Vec2 diff;
         diff.x = focus->box.x - pos.x;
         diff.y = focus->box.y - pos.y;
 
+
         // Move the camera towards the focus position
-        if(std::abs(diff.x) < 1){
+        if(std::abs(diff.x) < 2){
             pos.x  = focus->box.x;
         }
         else{
@@ -41,7 +42,7 @@ void Camera::Update(float dt) {
         }
         
         // Move the camera towards the focus position
-        if(std::abs(diff.y) < 1){
+        if(std::abs(diff.y) < 2){
             pos.y  = focus->box.y;
             
         }

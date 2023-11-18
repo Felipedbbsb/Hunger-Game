@@ -109,6 +109,22 @@ Enemies::~Enemies() {
 }
 
 void Enemies::Update(float dt) {
+// Check if the enemy's HP is zero or below and request deletion
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
+    //=============================//=============================//=============================//=============================
+
+
+
     if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
         return;
     }
@@ -123,21 +139,6 @@ void Enemies::Update(float dt) {
 
     auto selectedSkill = Skill::selectedSkill;
     
-    //=============================//=============================//=============================//=============================
-
-
-    // Check if the enemy's HP is zero or below and request deletion
-    if (hp <= 0) {
-        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
-        Game::GetInstance().GetCurrentState().AddObject(deadBody);
-
-
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
-
-    } 
 
 //=============================//=============================//=============================//=============================
     //Iterator for all skill types, counts number of left enemies to receive skill from player
