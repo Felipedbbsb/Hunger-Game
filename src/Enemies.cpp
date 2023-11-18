@@ -109,7 +109,7 @@ Enemies::~Enemies() {
 }
 
 void Enemies::Update(float dt) {
-    if(CombatState::InteractionSCreenActivate){
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
         return;
     }
 

@@ -11,6 +11,7 @@
 #include "Skill.h" 
 #include "Papiro.h" 
 #include "SkillSelection.h" 
+#include "CameraParallax.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -22,6 +23,7 @@ Skill::TargetType CombatState::whoAttacks = Skill::TargetType::IRR;
 
 Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR probably palyer is attacking
 
+bool CombatState::ChangingSides = false;
 
 CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string spriteBackground) 
 : State::State(),
@@ -36,7 +38,6 @@ CombatState::~CombatState(){}
 void CombatState::Update(float dt){   
     InputManager& input = InputManager::GetInstance();
  
-    Camera::Update(dt);
  
     // If the event is quit, set the termination flag
     if ((input.KeyPress(ESCAPE_KEY)) || input.QuitRequested()){
@@ -65,7 +66,9 @@ void CombatState::Update(float dt){
             }
         }
         
+
         UpdateArray(dt); 
+        Camera::Update(dt);
         papiro = nullptr; 
     }
     else{
@@ -98,10 +101,8 @@ void CombatState::Update(float dt){
 
 void CombatState::LoadAssets(){
     //============================ Background ========================================
-    GameObject *bg = new GameObject();
-    Sprite* bgSprite= new Sprite(*bg, spriteBackground);
-    bg->AddComponent((std::shared_ptr<Component>)bgSprite);
-    AddObject(bg);
+
+    CreateBackground(spriteBackground);
 
     //============================ UI ========================================
     //UI takes up 1/3 of the box at the bottom
@@ -112,6 +113,25 @@ void CombatState::LoadAssets(){
     ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
     AddObject(ui);
 
+
+    
+
+}
+
+void CombatState::CreateEnemies(){
+    //============================ Enemies ========================================
+    for (int i = enemiesArray.size() - 1; i >= 0; i--) {
+        int offsetArray = enemiesArray.size() - i - 1;
+        GameObject* enemy = new GameObject(ENEMIES_POS1.x + 200 * offsetArray, ENEMIES_POS1.y);
+        // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
+        Enemies* enemy_behaviour = new Enemies(*enemy, enemiesArray[i]);
+        enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
+        std::weak_ptr<GameObject> weak_enemy = AddObject(enemy);
+        Enemies::enemiesArray.push_back(weak_enemy);
+    }
+}
+
+void CombatState::CreatePlayers(){
     //============================ Mother ========================================
     GameObject *mom = new GameObject(MOTHER_POS);
     Mother* mom_behaviour= new Mother(*mom);
@@ -125,19 +145,86 @@ void CombatState::LoadAssets(){
     daughter->AddComponent((std::shared_ptr<Daughter>)daughter_behaviour);
     std::weak_ptr<GameObject> weak_daughter = AddObject(daughter);
     Daughter::daughterInstance = weak_daughter;
-
-    //============================ Enemies ========================================
-    for (int i = enemiesArray.size() - 1; i >= 0; i--) {
-        int offsetArray = enemiesArray.size() - i - 1;
-        GameObject* enemy = new GameObject(ENEMIES_POS1.x + 200 * offsetArray, ENEMIES_POS1.y);
-        // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
-        Enemies* enemy_behaviour = new Enemies(*enemy, enemiesArray[i]);
-        enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
-        std::weak_ptr<GameObject> weak_enemy = AddObject(enemy);
-        Enemies::enemiesArray.push_back(weak_enemy);
-    }
-
 }
+
+//with enemies
+void CombatState::CreateBackground(std::string originalPath){     
+    
+    std::string floorPath = GeneratePath(originalPath, "floor");
+    std::string firstPath = GeneratePath(originalPath, "first");
+    std::string secondPath = GeneratePath(originalPath, "second");
+    std::string thirdPath = GeneratePath(originalPath, "third");
+
+
+    //================================== thirdPathObj ==============================================
+    GameObject *thirdPathObj = new GameObject();
+    Sprite* thirdPathSprite= new Sprite(*thirdPathObj, thirdPath);
+    thirdPathObj->AddComponent((std::shared_ptr<Component>)thirdPathSprite);
+
+    thirdPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - thirdPathObj->box.w / 2;
+
+    CameraParallax *thirdPathObj_cmfl = new CameraParallax(*thirdPathObj, 0.75);
+    thirdPathObj->AddComponent((std::shared_ptr<CameraParallax>)thirdPathObj_cmfl);
+    AddObject(thirdPathObj);
+
+    //================================== floorPathObj ==============================================
+    GameObject *floorPathObj = new GameObject();
+    Sprite* floorPathSprite= new Sprite(*floorPathObj, floorPath);
+    floorPathObj->AddComponent((std::shared_ptr<Component>)floorPathSprite);
+
+    floorPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - floorPathObj->box.w / 2; 
+
+    CameraParallax *floorPathObj_cmfl = new CameraParallax(*floorPathObj, 0.10);
+    floorPathObj->AddComponent((std::shared_ptr<CameraParallax>)floorPathObj_cmfl);
+    
+    AddObject(floorPathObj);
+    //================================== secondPathObj ==============================================
+    GameObject *secondPathObj = new GameObject();
+    Sprite* secondPathSprite= new Sprite(*secondPathObj, secondPath);
+    secondPathObj->AddComponent((std::shared_ptr<Component>)secondPathSprite);
+    secondPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - secondPathObj->box.w / 2;
+    
+    CameraParallax *secondPathObj_cmfl = new CameraParallax(*secondPathObj, 0.5);
+    secondPathObj->AddComponent((std::shared_ptr<CameraParallax>)secondPathObj_cmfl);
+
+    AddObject(secondPathObj);
+
+    //==================================
+    //create combat components
+    CreateEnemies();   
+    CreatePlayers();
+    //==================================
+
+
+    //================================== firstPathObj ==============================================
+    GameObject *firstPathObj = new GameObject();
+    Sprite* firstPathSprite= new Sprite(*firstPathObj, firstPath);
+    firstPathObj->AddComponent((std::shared_ptr<Component>)firstPathSprite);
+
+    firstPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - firstPathObj->box.w / 2;
+
+    CameraParallax *firstPathObj_cmfl = new CameraParallax(*firstPathObj, 0.25);
+    firstPathObj->AddComponent((std::shared_ptr<CameraParallax>)firstPathObj_cmfl);
+
+    AddObject(firstPathObj);
+ 
+    GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
+            Camera::Follow(focusCamera);
+            CombatState::ChangingSides = true;
+      
+}
+
+std::string CombatState::GeneratePath(std::string originalPath, std::string suffix) {
+
+    size_t lastSlashPos = originalPath.find_last_of('/');
+
+    std::string fileName = originalPath.substr(lastSlashPos + 1);
+
+    std::string path = originalPath.substr(0, lastSlashPos + 1);
+
+    return path + suffix + ".png";
+}
+
 
 void CombatState::Render(){     
     RenderArray();

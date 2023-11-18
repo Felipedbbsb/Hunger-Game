@@ -11,6 +11,7 @@
 #include "CameraFollower.h"
 #include "SkillSelection.h"
 #include "UI.h"
+#include "TagReader.h"
 
 Skill* Skill::skillFromReward = nullptr; //selection reward  
 Skill* Skill::skillToReward = nullptr; //selection reward  
@@ -107,7 +108,16 @@ void Skill::Update(float dt) {
         
         if(skillSelected == nullptr){
             skillSelected = new GameObject(associated.box.x + Camera::pos.x - 4, associated.box.y + Camera::pos.y -2);
-            Sprite* skillSelected_behaviour = new Sprite(*skillSelected, SKILL_SELECTED_OBJ);
+            
+            std::string haveJewel; 
+            if(createJewel){
+                haveJewel = SKILL_SELECTED_OBJ;
+            }
+            else{
+                haveJewel = SKILL_SELECTED_OBJ_REWARD;
+            }
+            
+            Sprite* skillSelected_behaviour = new Sprite(*skillSelected, haveJewel);
             skillSelected->AddComponent(std::make_shared<Sprite>(*skillSelected_behaviour));
 
             CameraFollower *skillSelected_cmfl = new CameraFollower(*skillSelected);
@@ -146,11 +156,48 @@ void Skill::Update(float dt) {
 
     if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)){ 
 
-            if (skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
-                if (!readerSkill) {
-                    readerSkill = new GameObject(associated.box.x + Camera::pos.x, associated.box.y + Camera::pos.y);
+            if (true) {
+                if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
+                    readerSkill = new GameObject(associated.box.x + associated.box.w/2 + Camera::pos.x, associated.box.y + associated.box.h/3 + Camera::pos.y);
                     Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
                     readerSkill->AddComponent(std::make_shared<Reader>(*readerSkill_behaviour));
+
+                    readerSkill->box.x -= readerSkill->box.w/2;
+
+                    //===============logic de tag reader =====================
+
+                    bool isReversed = false;
+                    if(readerSkill->box.x > RESOLUTION_WIDTH * Game::resizer * 0.6){
+                        isReversed = true;
+                    }
+
+
+                    Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
+
+                    bool auxExposedFeature = false;
+                    if(tempSkillInfo.isProtected != NOCHANGES){
+                        auxExposedFeature = true;
+                    }
+
+                    std::vector<Tag::Tags> mergedTags;
+                    mergedTags.reserve(tempSkillInfo.tags.size() + tempSkillInfo.tagsBack.size());
+                    mergedTags.insert(mergedTags.end(), tempSkillInfo.tags.begin(), tempSkillInfo.tags.end());
+                    mergedTags.insert(mergedTags.end(), tempSkillInfo.tagsBack.begin(), tempSkillInfo.tagsBack.end());
+
+                    // Ordenando e removendo elementos duplicados
+                    std::sort(mergedTags.begin(), mergedTags.end());
+                    mergedTags.erase(std::unique(mergedTags.begin(), mergedTags.end()), mergedTags.end());
+
+
+                    TagReader* tagReader_behaviour = new TagReader(*readerSkill,
+                                                            auxExposedFeature,
+                                                            mergedTags,
+                                                            readerSkill->box,
+                                                            isReversed);
+
+                    readerSkill->AddComponent(std::make_shared<TagReader>(*tagReader_behaviour)); 
+
+                    //===================================================================================
 
                     CameraFollower *readerSkill_cmfl = new CameraFollower(*readerSkill);
                     readerSkill->AddComponent(std::make_shared<CameraFollower>(*readerSkill_cmfl));
@@ -166,7 +213,7 @@ void Skill::Update(float dt) {
                     //Scenerio where combat its not alerady on skill selection
                     if(!SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
                         if (selectedSkill != nullptr && selectedSkill != this  ) {
-                        selectedSkill->Deselect();
+                        selectedSkill->Deselect(); 
                         }
                         selectedSkill = this;
 
@@ -424,8 +471,8 @@ void Skill::InitializeSkills() {
         skillArray.push_back(Skill::InstantRegret);
         skillArray.push_back(Skill::Rockabye);
         skillArray.push_back(Skill::Stinger);
-
-        skillArray.push_back(Skill::TrickorTreat);
+        skillArray.push_back(Skill::MotherlyLove);
+        
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
 

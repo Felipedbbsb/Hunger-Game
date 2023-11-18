@@ -13,9 +13,9 @@
 #include <stack>
 #include <iostream>
 #include <string>
-#include <memory>
+#include <memory> 
 
-#define COMBAT_IMAGE "assets/img/backgrounds/backgroundTemple.png"
+#define COMBAT_IMAGE "assets/img/Backgrounds/temple/background.png"
  
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080

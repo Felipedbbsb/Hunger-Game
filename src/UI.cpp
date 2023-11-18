@@ -7,6 +7,7 @@
 #include "Enemies.h"
 #include "GameData.h"
 #include "SkillSelection.h"
+#include "CombatState.h"
 
 // speed já está sendo inicializado pelo construtor de Vec2
 // UI.h
@@ -48,7 +49,6 @@ UI::~UI()
     for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
             Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
     }
-
 }
 
 void UI::CreateSkillsGO( AP* ap_behaviour) {
@@ -105,8 +105,8 @@ void UI::Start() {
     nextArrow = new GameObject();
     Sprite *nextArrow_spr = new Sprite(*nextArrow, UI_NEXT_SPRITE);
 
-    nextArrow->box.x = RESOLUTION_WIDTH - nextArrow->box.w * nextArrow_TIME_ANIMATION - Camera::pos.x;
-    nextArrow->box.y = RESOLUTION_HEIGHT * 2/3 - nextArrow->box.h * nextArrow_TIME_ANIMATION - Camera::pos.y;
+    nextArrow->box.x = RESOLUTION_WIDTH - nextArrow->box.w * nextArrow_TIME_ANIMATION + 87.5;
+    nextArrow->box.y = RESOLUTION_HEIGHT * 2/3 - nextArrow->box.h * nextArrow_TIME_ANIMATION;
 
     //CameraFollower *nextArrow_cmfl = new CameraFollower(*nextArrow);
     //nextArrow->AddComponent((std::shared_ptr<CameraFollower>)nextArrow_cmfl);
@@ -114,6 +114,8 @@ void UI::Start() {
     Game::GetInstance().GetCurrentState().AddObject(nextArrow);
 
 }
+
+
 
 void UI::Update(float dt) { 
     if (nextArrow != nullptr) {
@@ -162,6 +164,7 @@ void UI::Update(float dt) {
             nextArrow->box.x = posXenterX - nextArrow->box.w / 2;
             nextArrow->box.y = posXenterY - nextArrow->box.h / 2;
 
+            /*
             //muito confuso mexer na camera fiz macete
             if(Camera::pos.x != CameraPosBuffer.x){
                 nextArrow->box.x -= Camera::pos.x - CameraPosBuffer.x;
@@ -172,6 +175,7 @@ void UI::Update(float dt) {
                 CameraPosBuffer.y = Camera::pos.y;
                 
             }
+            */
         }
 
         
@@ -193,8 +197,13 @@ void UI::Update(float dt) {
                         if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
                             Enemies::enemiesToAttack = Enemies::enemiesCount;
                         } 
-                    }
-                    else{
+
+                        //Cameraa focus
+                        GameObject* focusCamera =  new GameObject(FOCUS_ENEMY, 0);
+                        Camera::Follow(focusCamera);
+                        CombatState::ChangingSides = true;
+                                
+                    }else{
                         SkillSelection::endSkillSelection = true;
                         
                     }

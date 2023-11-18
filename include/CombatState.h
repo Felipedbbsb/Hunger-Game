@@ -19,6 +19,8 @@
 
 #define OBJECT_STATS_OFFSET -75
  
+#define FOCUS_ENEMY 175
+
 #include <iostream>
 #include <memory>
 #include <algorithm> 
@@ -40,12 +42,18 @@ class CombatState : public State{
         void Start();
         void Pause();
         void Resume();
+        void CreateBackground(std::string originalPath);
+        std::string GeneratePath(std::string originalPath, std::string suffix);
+        void CreateEnemies();
+        void CreatePlayers();
 
         static bool InteractionSCreenActivate;
         static std::vector<Enemies::EnemyId> enemiesArrayIS;
         static Skill::AttackType attackType;
         static Skill::TargetType whoAttacks ;
         static Skill::TargetType whoReceives;
+
+        static bool ChangingSides;
 
     private:
         std::vector<Enemies::EnemyId> enemiesArray;  

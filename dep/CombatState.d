@@ -213,7 +213,7 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
  include/Mother.h include/Daughter.h include/Papiro.h \
- include/SkillSelection.h
+ include/SkillSelection.h include/CameraParallax.h
 
 include/CombatState.h:
 
@@ -746,3 +746,5 @@ include/Daughter.h:
 include/Papiro.h:
 
 include/SkillSelection.h:
+
+include/CameraParallax.h:

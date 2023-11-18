@@ -66,7 +66,10 @@ class Tag : public Component{
         void AcivateTag(std::string sprite);
         void ShowReader();
         void HideReader();
-        std::string GetTagMessage();
+        
+        static std::string GetTagMessageSprite(Tags tag);
+
+        std::string GetTagMessage(Tags tag);
         std::string GetTagName();
         std::string GetTagSprite(Tag::Tags tag);
         std::string GetTagInfo();

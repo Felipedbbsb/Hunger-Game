@@ -69,6 +69,10 @@ Daughter::~Daughter()
 
 void Daughter::Update(float dt)
 {   
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+        return;
+    }
+
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
 

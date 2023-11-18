@@ -18,7 +18,7 @@
 
 
 #define SKILL_SELECTED_OBJ "assets/img/UI/uiSkillSelected.png"
-
+#define SKILL_SELECTED_OBJ_REWARD "assets/img/UI/uiSkillSelectedReward.png"
 
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )

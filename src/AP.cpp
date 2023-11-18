@@ -9,6 +9,8 @@
 #include "Sprite.h"
 #include "CameraFollower.h"
 #include "SkillSelection.h"
+#include "CombatState.h"
+
 
 #include <algorithm> 
 
@@ -62,19 +64,34 @@ AP::~AP(){
 } 
 
 void AP::Update(float dt){  
+
+
     if(!SkillSelection::skillSelectionActivated){
+
+        //Change to enemy turn
         if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
         Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
             GameData::playerTurn = false;
             if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
                 Enemies::enemiesToAttack = Enemies::enemiesCount;
             } 
-        }
 
+            //Camera focus
+            GameObject* focusCamera =  new GameObject(FOCUS_ENEMY, 0);
+            Camera::Follow(focusCamera);
+            CombatState::ChangingSides = true;
+        }
+ 
+        //Change to player turn
         if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
             GameData::playerTurn = true;
             AP::apCount = AP_QUANTITY; //reset
             SetAPCount(AP::apCount);
+
+            //Camera focus
+            GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
+            Camera::Follow(focusCamera);
+            CombatState::ChangingSides = true;
 
             // Remove one count of all tag drom which enemy
             for (const std::weak_ptr<GameObject>& enemy : Enemies::enemiesArray) {
