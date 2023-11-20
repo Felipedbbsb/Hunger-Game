@@ -2,6 +2,7 @@
 #include "Text.h"
 #include "Game.h"
 #include "Reader.h"
+#include "Camera.h"
 
 Tag::Tag(GameObject &associated, Tags tag, std::weak_ptr<GameObject> enemyRef, int quantity)
 : Component::Component(associated),
@@ -9,9 +10,9 @@ enemyRef(enemyRef),
 quantity(quantity), 
 tag(tag),
 readerTag(nullptr),
-bigTag(nullptr),
+bigTag(nullptr), 
 tagCountNumber(nullptr)
-{   
+{    
     if (enemyRef.lock()){
         
         Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
@@ -25,7 +26,7 @@ tagCountNumber(nullptr)
     } 
 } 
  
-void Tag::Start() {     
+void Tag::Start() {      
    tagCountRender();
 }  
   
@@ -49,7 +50,7 @@ void Tag::Update(float dt){
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     if(auto ref = enemyRef.lock()){
-        if(associated.box.Contains(mousePos.x, mousePos.y)){
+        if(associated.box.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y)){
             ShowReader();
         } else {
             HideReader();
@@ -124,7 +125,7 @@ Tag::Tags Tag::GetTag(){
 void Tag::ShowReader(){
     if (!readerTag) {
         readerTag = new GameObject(associated.box.x, associated.box.y);
-        Reader* readerTag_behaviour = new Reader(*readerTag, GetTagMessage());
+        Reader* readerTag_behaviour = new Reader(*readerTag, GetTagMessageSprite(tag));
         readerTag->AddComponent(std::shared_ptr<Reader>(readerTag_behaviour));
         Game::GetInstance().GetCurrentState().AddObject(readerTag);
     }
@@ -137,8 +138,42 @@ void Tag::HideReader() {
     } 
 }
 
+std::string Tag::GetTagMessageSprite(Tags tag){
+    std::string tagName;
 
-std::string Tag::GetTagMessage() {
+    switch (tag) {
+        case Tags::RESILIENCE:
+            tagName = "assets/img/UI/tagReaders/tagReaderResilience.png";
+            break;
+        case Tags::DODGE:
+            tagName = "assets/img/UI/tagReaders/tagReaderDodge.png";
+            break;
+        case Tags::PROVOKE:
+            tagName = "assets/img/UI/tagReaders/tagReaderProvoke.png";
+            break;
+        case Tags::VULNERABLE:
+            tagName = "assets/img/UI/tagReaders/tagReaderVulnerable.png";
+            break;
+        case Tags::WEAK:
+            tagName = "assets/img/UI/tagReaders/tagReaderWeak.png";
+            break;
+        case Tags::RAMPAGE:
+            tagName = "assets/img/UI/tagReaders/tagReaderRampage.png";
+            break;
+        case Tags::PROTECTED: 
+            tagName = "assets/img/UI/tagReaders/tagReaderProtected.png";
+            break;
+        case Tags::CURSE: 
+            tagName = "assets/img/UI/tagReaders/tagReaderCurse.png";
+            break;        
+        default:
+            tagName = "Unknown";
+    }
+
+    return tagName;
+}
+
+std::string Tag::GetTagMessage(Tags tag) {
     std::string tagName = GetTagName();
     std::string message = tagName + " (" + std::to_string(quantity) + " Turns) \n" + GetTagInfo();
     return message; 

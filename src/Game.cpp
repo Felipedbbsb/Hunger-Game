@@ -228,14 +228,14 @@ void Game::Run() {
             stateStack.push((std::unique_ptr<State>)storedState); // Use std::move to transfer ownership
             stateStack.top()->Start();
             storedState = nullptr;
-        } 
+        }  
         else if (stateStack.empty()) {
 			break;
 		}
 
         CalculateDeltaTime();
         InputManager::GetInstance().Update();
-        auto& currentTopState = stateStack.top();
+        auto& currentTopState = stateStack.top(); 
         currentTopState->Update(dt);
         currentTopState->Render(); 
         SDL_RenderPresent(Game::GetInstance().GetRenderer());

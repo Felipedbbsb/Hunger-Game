@@ -103,10 +103,29 @@ Enemies::~Enemies() {
         [this](const std::weak_ptr<GameObject>& enemy) {
             return enemy.lock().get() == &associated;
         }), enemiesArray.end());
+
+    
+
 }
 
 void Enemies::Update(float dt) {
-    if(CombatState::InteractionSCreenActivate){
+// Check if the enemy's HP is zero or below and request deletion
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
+    //=============================//=============================//=============================//=============================
+
+
+
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
         return;
     }
 
@@ -120,6 +139,7 @@ void Enemies::Update(float dt) {
 
     auto selectedSkill = Skill::selectedSkill;
     
+
 //=============================//=============================//=============================//=============================
     //Iterator for all skill types, counts number of left enemies to receive skill from player
     if(SkillAllenemies > 0){
@@ -161,15 +181,6 @@ void Enemies::Update(float dt) {
 
 
 
-//=============================//=============================//=============================//=============================
-
-
-    // Check if the enemy's HP is zero or below and request deletion
-    if (hp <= 0) {
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
-
-    } 
 
 //=============================//=============================//=============================//=============================
     //PLAYER TURN
@@ -237,9 +248,10 @@ void Enemies::Update(float dt) {
                 
                 // Moves the selected skill to the end of the vector
                 std::swap(skills[randomSkillIndex], skills.back());
-                
+
+                GameObject* generic = new GameObject();
                 // Now, the selected skill is in the last position of the vector
-                Skill::selectedSkill = new Skill(associated, selectedSkillId, nullptr);
+                Skill::selectedSkill = new Skill(*generic, selectedSkillId, nullptr, false);
             }
 
 
@@ -493,8 +505,7 @@ void Enemies::ApplySkillToEnemy() {
         DeleteEnemyIndicator();
 
     }
-
-
+    Mother::damageDjinn = tempSkillInfo.damageBack;
 
 }
 
@@ -553,9 +564,9 @@ void Enemies::ApplySkillToSingleEnemy(int damage, std::vector<Tag::Tags> tags) {
 
         }
         hp -= damage * tagMultiplier;
-        if(!dodge){
-            ApplyTags(tags);
-        }
+            
+        ApplyTags(tags);
+
 
 
 
@@ -576,6 +587,9 @@ void Enemies::ApplyTags(std::vector<Tag::Tags> skillTags) {
         if (!(std::find(tags.begin(), tags.end(), tag) != tags.end())) {
             tags.push_back(tag);
             auto go_tag = AddObjTag(tag);
+            if(tag == Tag::Tags::PROVOKE){
+                provokedEnemies++;
+            }
         }
         tagCountMap[tag]++;
         // Iterate over the list of weak_ptr to the tag GameObjects
@@ -659,6 +673,9 @@ void Enemies::RemoveOneTagAll() {
                             tagsToRemove.push_back(tag);
                             tagGameObject->RequestDelete();
                             it = enemytags.erase(it);
+                            if(tag == Tag::Tags::PROVOKE){
+                                provokedEnemies--;
+                            }
                         } else {
                             ++it;
                         }
@@ -762,9 +779,9 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 10, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY2] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
-    enemyInfoMap[ENEMY3] = { 30, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
+    enemyInfoMap[ENEMY1] = { 5, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY2] = { 5, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
+    enemyInfoMap[ENEMY3] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
     enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
  

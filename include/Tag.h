@@ -29,10 +29,9 @@
 #define BIGTAG_APLHA 125
 #define BIGTAG_SCALE 2.5
 
-class Tag : public Component{
+class Tag : public Component{ 
 
     public:
-
  
         enum Tags {
             RESILIENCE, //Reduz o dano recebido em 50% (DONE)
@@ -67,7 +66,10 @@ class Tag : public Component{
         void AcivateTag(std::string sprite);
         void ShowReader();
         void HideReader();
-        std::string GetTagMessage();
+        
+        static std::string GetTagMessageSprite(Tags tag);
+
+        std::string GetTagMessage(Tags tag);
         std::string GetTagName();
         std::string GetTagSprite(Tag::Tags tag);
         std::string GetTagInfo();

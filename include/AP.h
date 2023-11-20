@@ -8,6 +8,7 @@
 #include "Sound.h"
 #include "Sprite.h"
 #include "Vec2.h"
+#include "Timer.h"
 
 #define TEXT_SKILL_FONT "assets/font/Play-Regular.ttf"
 
@@ -24,6 +25,8 @@
 #define AP_POS2 Vec2(279, 180)
 #define AP_POS3 Vec2(222, 146)
 
+#define DELAY_CHANGE_SIDES 1
+
 class AP : public Component {
     public:
         AP(GameObject &associated);
@@ -38,5 +41,7 @@ class AP : public Component {
 
         static std::vector<std::shared_ptr<GameObject>> apArray;
         static int apCount;
+    private:
+        Timer delayChangeSides;    
 
 };

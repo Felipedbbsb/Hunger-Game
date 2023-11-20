@@ -131,11 +131,10 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  include/Rect.h include/Vec2.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\math.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\cmath c:\mingw\include\math.h \
- include/Component.h include/Sprite.h include/SDL_include.h \
- C:/SDL2/include/SDL2/SDL.h C:/SDL2/include/SDL2/SDL_main.h \
- C:/SDL2/include/SDL2/SDL_stdinc.h C:/SDL2/include/SDL2/SDL_config.h \
- C:/SDL2/include/SDL2/SDL_platform.h C:/SDL2/include/SDL2/begin_code.h \
- C:/SDL2/include/SDL2/close_code.h \
+ include/Component.h C:/SDL2/include/SDL2/SDL.h \
+ C:/SDL2/include/SDL2/SDL_main.h C:/SDL2/include/SDL2/SDL_stdinc.h \
+ C:/SDL2/include/SDL2/SDL_config.h C:/SDL2/include/SDL2/SDL_platform.h \
+ C:/SDL2/include/SDL2/begin_code.h C:/SDL2/include/SDL2/close_code.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stdlib.h \
  C:/SDL2/include/SDL2/SDL_assert.h C:/SDL2/include/SDL2/SDL_atomic.h \
  C:/SDL2/include/SDL2/SDL_audio.h C:/SDL2/include/SDL2/SDL_error.h \
@@ -193,8 +192,8 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  C:/SDL2/include/SDL2/SDL_shape.h C:/SDL2/include/SDL2/SDL_system.h \
  C:/SDL2/include/SDL2/SDL_timer.h C:/SDL2/include/SDL2/SDL_version.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
- C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h include/Enemies.h \
+ include/Sprite.h include/SDL_include.h C:/SDL2/include/SDL2/SDL_image.h \
+ C:/SDL2/include/SDL2/SDL.h include/Timer.h include/Enemies.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
@@ -213,7 +212,9 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
- include/Mother.h include/Daughter.h include/Papiro.h
+ include/Mother.h include/Daughter.h include/Papiro.h \
+ include/SkillSelection.h include/CameraParallax.h include/Protected.h \
+ include/Mural.h
 
 include/CombatState.h:
 
@@ -499,10 +500,6 @@ c:\mingw\include\math.h:
 
 include/Component.h:
 
-include/Sprite.h:
-
-include/SDL_include.h:
-
 C:/SDL2/include/SDL2/SDL.h:
 
 C:/SDL2/include/SDL2/SDL_main.h:
@@ -675,6 +672,10 @@ C:/SDL2/include/SDL2/SDL_locale.h:
 
 C:/SDL2/include/SDL2/SDL_misc.h:
 
+include/Sprite.h:
+
+include/SDL_include.h:
+
 C:/SDL2/include/SDL2/SDL_image.h:
 
 C:/SDL2/include/SDL2/SDL.h:
@@ -744,3 +745,11 @@ include/Mother.h:
 include/Daughter.h:
 
 include/Papiro.h:
+
+include/SkillSelection.h:
+
+include/CameraParallax.h:
+
+include/Protected.h:
+
+include/Mural.h:

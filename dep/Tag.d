@@ -199,7 +199,7 @@ dep/Tag.d bin/Tag.o: src/Tag.cpp include/Tag.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/Reader.h
+ include/Reader.h include/Camera.h
 
 include/Tag.h:
 
@@ -686,3 +686,5 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 
 include/Reader.h:
+
+include/Camera.h:

@@ -17,8 +17,8 @@
 #define TEXT_TAGCOUNT2_SIZE 42
 
 
-
-
+#define SKILL_SELECTED_OBJ "assets/img/UI/uiSkillSelected.png"
+#define SKILL_SELECTED_OBJ_REWARD "assets/img/UI/uiSkillSelectedReward.png"
 
 //==================================================================
 //(Not "\n\n")  - (Yes "\n \n" )
@@ -42,40 +42,190 @@
 //I  = Info
 //SPR = Sprite
 
-//MOTHER SKILLS
+//=================MOTHER SKILLS=================
 #define NS_Helmbreaker "Helmbreaker"
-#define I_Helmbreaker "Deal 3 damage; \nApply 2 Vulnerable."
+#define I_Helmbreaker "assets/img/UI/skills/readers/readerHelmbreaker.png"
 #define SPR_Helmbreaker "assets/img/UI/skills/Helmbreaker.png"
 
 #define NS_Rockabye "Rockabye"
-#define I_Rockabye "Apply 1 Resilience \n to your daughter."
+#define I_Rockabye "assets/img/UI/skills/readers/readerRockabye.png"
 #define SPR_Rockabye "assets/img/UI/skills/Rockabye.png"
 
 #define NS_Stinger "Stinger"
-#define I_Stinger "Deal 5 Damage \n to all enemies; \n Expose your daughter."
+#define I_Stinger "assets/img/UI/skills/readers/readerStinger.png"
 #define SPR_Stinger "assets/img/UI/skills/Stinger.png"
 
-//Daughter
+#define NS_RecklessSlash "Reckless Slash"
+#define I_RecklessSlash "assets/img/UI/skills/readers/readerRecklessSlash.png"
+#define SPR_RecklessSlash "assets/img/UI/uiSkillNormal.png"
+
+#define NS_CautiousStrike "Cautious Strike"
+#define I_CautiousStrike "assets/img/UI/skills/readers/readerCautiousStrike.png"
+#define SPR_CautiousStrike "assets/img/UI/uiSkillNormal.png"
+
+#define NS_MotherlyLove "Motherly Love"
+#define I_MotherlyLove "assets/img/UI/skills/readers/readerMotherlyLove.png"
+#define SPR_MotherlyLove "assets/img/UI/uiSkillNormal.png"
+
+
+#define NS_PocketSand "Pocket Sand"
+#define I_PocketSand "assets/img/UI/skills/readers/readerPocketSand.png"
+#define SPR_PocketSand "assets/img/UI/uiSkillNormal.png"
+
+#define NS_HyperProtective "Hyper Protective"
+#define I_HyperProtective "assets/img/UI/skills/readers/readerHyperProtective.png"
+#define SPR_HyperProtective "assets/img/UI/uiSkillNormal.png"
+
+#define NS_RiskyManeuver "Risky Maneuver"
+#define I_RiskyManeuver "assets/img/UI/skills/readers/readerRiskyManeuver.png"
+#define SPR_RiskyManeuver "assets/img/UI/uiSkillNormal.png"
+
+#define NS_BattleHymn "Battle Hymn"
+#define I_BattleHymn "assets/img/UI/skills/readers/readerBattleHymn.png"
+#define SPR_BattleHymn "assets/img/UI/uiSkillNormal.png"
+
+#define NS_SwiftFooted "Swift Footed"
+#define I_SwiftFooted "assets/img/UI/skills/readers/readerSwiftFooted.png"
+#define SPR_SwiftFooted "assets/img/UI/uiSkillNormal.png"
+
+#define NS_BlindedbyFear "Blinded by Fear"
+#define I_BlindedbyFear "assets/img/UI/skills/readers/readerBlindedbyFear.png"
+#define SPR_BlindedbyFear "assets/img/UI/uiSkillNormal.png"
+
+#define NS_Solitude "Solitude"
+#define I_Solitude "assets/img/UI/skills/readers/readerSolitude.png"
+#define SPR_Solitude "assets/img/UI/uiSkillNormal.png"
+
+#define NS_MaternalInstincts "Maternal Instincts"
+#define I_MaternalInstincts "assets/img/UI/skills/readers/readerMaternalInstincts.png"
+#define SPR_MaternalInstincts "assets/img/UI/uiSkillNormal.png"
+
+//=================Daughter=================
+
+#define NS_NanaNanaNa "Nana Nana Na"
+#define I_NanaNanaNa "assets/img/UI/skills/readers/readerNanaNanaNa.png"
+#define SPR_NanaNanaNa "assets/img/UI/uiSkillNormal.png"
+
+#define NS_PommelStrike "Pommel Strike"
+#define I_PommelStrike "assets/img/UI/skills/readers/readerPommelStrike.png"
+#define SPR_PommelStrike "assets/img/UI/uiSkillNormal.png"
+
 #define NS_HnS "Hide and Seek"
-#define I_HnS "Apply 1 Dodge \n and 1 Vulnerable \n to Mother; \n Protect Daughter "
+#define I_HnS "assets/img/UI/skills/readers/readerHideandSeek.png"
 #define SPR_HnS "assets/img/UI/skills/HideandSeek.png"
 
-//Djinn
+#define NS_TrickorTreat "Trick or Treat"
+#define I_TrickorTreat "assets/img/UI/skills/readers/readerTrickorTreat.png"
+#define SPR_TrickorTreat "assets/img/UI/uiSkillNormal.png"
+
+#define NS_SweetTreats "Sweet Treats"
+#define I_SweetTreats "assets/img/UI/skills/readers/readerSweetTreats.png"
+#define SPR_SweetTreats "assets/img/UI/uiSkillNormal.png"
+
+#define NS_AroundtheRosie "Around the Rosie"
+#define I_AroundtheRosie "assets/img/UI/skills/readers/readerAroundtheRosie.png"
+#define SPR_AroundtheRosie "assets/img/UI/uiSkillNormal.png"
+
+#define NS_TagYoureIt "Tag! You are It"
+#define I_TagYoureIt "assets/img/UI/skills/readers/readerTagYoureIt.png"
+#define SPR_TagYoureIt "assets/img/UI/uiSkillNormal.png"
+
+
+
+//=================Djinn=================
 #define NS_InstantRegret "Instant Regret"
-#define I_InstantRegret "Deal 15 damage; \n Expose your daughter; \n Apply 1 Vulnerable to your daughter; \n Lose 7HP"
+#define I_InstantRegret "assets/img/UI/skills/readers/readerInstantRegret.png"
 #define SPR_InstantRegret "assets/img/UI/skills/InstantRegret.png"
 
-//Enemies
-#define NS_Generic "Attack1"
-#define I_Generic ""
-#define SPR_Generic ""
+#define NS_AMillionStabs "A Million Stabs"
+#define I_AMillionStabs "assets/img/UI/skills/readers/readerAMillionStabs.png"
+#define SPR_AMillionStabs "assets/img/UI/uiSkillDjinn.png"
 
+#define NS_DanseMacabre "Danse Macabre"
+#define I_DanseMacabre "assets/img/UI/skills/readers/readerDanseMacabre.png"
+#define SPR_DanseMacabre "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Hellfire "Hellfire"
+#define I_Hellfire "assets/img/UI/skills/readers/readerHellfire.png"
+#define SPR_Hellfire "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Gravedigger "Gravedigger"
+#define I_Gravedigger "assets/img/UI/skills/readers/readerGravedigger.png"
+#define SPR_Gravedigger "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Combustion "Combustion"
+#define I_Combustion "assets/img/UI/skills/readers/readerCombustion.png"
+#define SPR_Combustion "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_DevilsTears "Devil's Tears"
+#define I_DevilsTears "assets/img/UI/skills/readers/readerDevilsTears.png"
+#define SPR_DevilsTears "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_FinalSacrifice "Final Sacrifice"
+#define I_FinalSacrifice "assets/img/UI/skills/readers/readerFinalSacrifice.png"
+#define SPR_FinalSacrifice "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_TormentedSoul "Tormented Soul"
+#define I_TormentedSoul "assets/img/UI/skills/readers/readerTormentedSoul.png"
+#define SPR_TormentedSoul "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_RainingBlood "Raining Blood"
+#define I_RainingBlood "assets/img/UI/skills/readers/readerRainingBlood.png"
+#define SPR_RainingBlood "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_MasterofPuppets "Master of Puppets"
+#define I_MasterofPuppets "assets/img/UI/skills/readers/readerMasterofPuppets.png"
+#define SPR_MasterofPuppets "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_IronMaiden "Iron Maiden"
+#define I_IronMaiden "assets/img/UI/skills/readers/readerIronMaiden.png"
+#define SPR_IronMaiden "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_DeafeningWhisper "Deafening Whisper"
+#define I_DeafeningWhisper "assets/img/UI/skills/readers/readerDeafeningWhisper.png"
+#define SPR_DeafeningWhisper "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_IntotheVoid "Into the Void"
+#define I_IntotheVoid "assets/img/UI/skills/readers/readerIntotheVoid.png"
+#define SPR_IntotheVoid "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_FearoftheDark "Fear of the Dark"
+#define I_FearoftheDark "assets/img/UI/skills/readers/readerFearoftheDark.png"
+#define SPR_FearoftheDark "assets/img/UI/uiSkillDjinn.png"
+
+#define NS_Elimination "Elimination"
+#define I_Elimination "assets/img/UI/skills/readers/readerElimination.png"
+#define SPR_Elimination "assets/img/UI/uiSkillDjinn.png"
+
+
+//=================Enemies=================
+#define NS_Generic "Attack1"
+#define I_Generic "assets/img/UI/uiSkillDjinn.png"
+#define SPR_Generic "assets/img/UI/uiSkillDjinn.png"
+
+//LOCKED
+#define NS_LOCKED "LOCKED"
+#define I_LOCKED "Desbloqueado com Np1"
+#define SPR_LOCKED "assets/img/UI/skills/Locked.png"
+
+#define NS_LOCKED2 "LOCKED"
+#define I_LOCKED2 "Desbloqueado com Np2"
+#define SPR_LOCKED2 "assets/img/UI/skills/Locked.png"
+
+#define NS_LOCKED3 "LOCKED"
+#define I_LOCKED3 "Desbloqueado com Np3"
+#define SPR_LOCKED3 "assets/img/UI/skills/Locked.png"
+
+//EMPTY
+#define NS_EMPTY "EMPTY"
+#define I_EMPTY "EMPTY"
+#define SPR_EMPTY "assets/img/UI/skills/Empty.png"
 
 
 //-------------------------------------------------------------------
 #define SKILL_READER_SPRITE "assets/img/UI/uiSkillReader.png"
 
-#define SKILL_CLICK_COOLDOWN 0.1
+#define SKILL_CLICK_COOLDOWN 0.3
 //===================================================
 
 
@@ -90,10 +240,52 @@ class Skill : public Component {
             Helmbreaker,
             Rockabye,
             Stinger,
-
+            RecklessSlash,
+            CautiousStrike,
+            MotherlyLove,
+            PommelStrike,
+            HyperProtective,
+            RiskyManeuver,
+            BattleHymn,
+            SwiftFooted,
+            BlindedbyFear,
+            Solitude,
+            MaternalInstincts,
+            
+            
+            PocketSand,
+            NanaNanaNa,
+            TrickorTreat,
             HnS,
+            SweetTreats,
+            AroundtheRosie,
+            TagYoureIt,
+
+            
 
             InstantRegret,
+            AMillionStabs,
+            DanseMacabre,
+            Hellfire,
+            Gravedigger,
+            Combustion,
+            DevilsTears,
+            FinalSacrifice,
+            TormentedSoul,
+            RainingBlood,
+            MasterofPuppets,
+            IronMaiden,
+            DeafeningWhisper,
+            IntotheVoid,
+            FearoftheDark,
+            Elimination,
+
+
+            LOCKED1,
+            LOCKED2,
+            LOCKED3,
+
+            EMPTY,
 
             E1_Skill1,
             E1_Skill2,
@@ -105,6 +297,8 @@ class Skill : public Component {
 
             E3_Skill1,
             E3_Skill2,
+            
+            
 
             INVALID_SKILL
         };
@@ -128,6 +322,7 @@ class Skill : public Component {
         enum TargetType {
             MOTHER,
             DAUGHTER, 
+            DJINN,
             IRR //irrelevant
         };
 
@@ -151,11 +346,12 @@ class Skill : public Component {
             TargetType targetTypeAttacker; //who is attacking
             AttackType attackTypeBack;
             TargetType targetTypeBack;
+                
         };
-        
+
  
 
-        Skill(GameObject& associated, SkillId id, AP* ap);
+        Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel = true);
         ~Skill();
 
         void Start();
@@ -164,6 +360,9 @@ class Skill : public Component {
         bool Is(std::string type);
 
         SkillId GetId();
+
+        static Skill* skillFromReward;
+        static Skill* skillToReward;
 
         static Skill* selectedSkill;
 
@@ -183,11 +382,14 @@ class Skill : public Component {
 
         static std::map<SkillId, SkillInfo> skillInfoMap; 
         static std::vector<Skill::SkillId> skillArray;
+        static std::vector<std::weak_ptr<GameObject>> skillArrayObj;
 
         static void InitializeSkillInfoMap();
         static void InitializeSkills();
 
         void CreateTagCount();
+        void BlankTagCount(bool isBlank);
+        static void AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange = Skill::EMPTY);
 
     private:
         SkillId id;
@@ -198,5 +400,7 @@ class Skill : public Component {
         GameObject* jewelObj;
         GameObject* tagCount;
         bool toggleJewel;
+        bool createJewel;
+        GameObject* skillSelected;
 };
  

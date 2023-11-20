@@ -1,12 +1,18 @@
 #include "State.h"
+#include "Game.h"
+#include <cmath>
 
 State::State() : 
     popRequested(false),
     quitRequested(false), 
-    started(false)
+    started(false),
+    fadingOut(false),
+    fadeFactor(1)
 {}
 
-State::~State(){objectArray.clear();}
+State::~State(){
+    objectArray.clear();
+}
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* go){
     std::shared_ptr<GameObject> tmp(go);
@@ -40,12 +46,18 @@ void State::Start(){
         objectArray[i]->Start();
     }
     started = true;
+
+    fadingOut = true;
 }
 
 void State::Pause(){
+    fadingOut = true;
+    fadeFactor = 0.0f; // Initialize fade factor
 }
 
 void State::Resume(){
+    fadingOut = false;
+    fadeFactor = 1.0f; // Initialize fade factor
 }
 
 
@@ -56,12 +68,40 @@ void State::Resume(){
 //==================================================================
 
 void State::Update(float dt){
+    if (fadingOut) {
+        fadeFactor += dt * 0.75f; // Adjust the factor to control the speed of fade-out
+        if (fadeFactor >= 1.0f) {
+            fadeFactor = 1.0f;
+        }
+    } else {
+        fadeFactor -= dt * 0.75f; // Adjust the factor to control the speed of fade-in
+        if (fadeFactor <= 0.0f) {
+            fadeFactor = 0.0f;
+        }
+    }
+    
 }
 
 void State::Render(){
+    SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
+
+
+    if (renderer) {
+        // Set blending mode for transparency
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+
+        // Render the black overlay
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, static_cast<Uint8>(255 * fadeFactor));
+        SDL_RenderFillRect(renderer, nullptr);
+
+        // Reset blending mode
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    }    
+
 }
 
-//==================================================================
+//================================================================== 
 //These functions are used by Game
 //to control the change of states or the end of the game.
 //==================================================================
@@ -90,6 +130,7 @@ void State::UpdateArray(float dt){
             objectArray.erase(objectArray.begin() + i);
         }
     }
+
 }
 
 void State::RenderArray(){

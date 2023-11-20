@@ -25,9 +25,9 @@
 
 #define SPACING_PLAYERS  150
 
-#define PAPIRO_SCREEN Vec2(1132, 638) 
-#define BG_SCALE 0.5 
-#define INTERACTION_COOLDOWN 2.75 
+#define PAPIRO_SCREEN Vec2(1600 ,638) 
+#define BG_SCALE 0.45 
+#define INTERACTION_COOLDOWN 3 
 
 #define OBJECT_VELOCITY (RESOLUTION_WIDTH / 30) * Game::resizer 
 

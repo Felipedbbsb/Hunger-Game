@@ -10,8 +10,8 @@
 
 #define MOTHER_SPRITE_ATK "assets/img/mom/momMeleeAttack.png"
 #define MOTHER_SPRITE_DFS "assets/img/mom/momDamage.png"
-#define MOTHER_SPRITE_BUFF "assets/img/mom/momDamage.png"
-
+#define MOTHER_SPRITE_BUFF "assets/img/mom/momBuff.png"
+ 
 #define DAUGHTER_SPRITE_ATK "assets/img/daughter/daughterMeleeAttack.png"
 #define DAUGHTER_SPRITE_DFS "assets/img/daughter/daughterDamage.png"
 #define DAUGHTER_SPRITE_BUFF "assets/img/daughter/daughterBuff.png"

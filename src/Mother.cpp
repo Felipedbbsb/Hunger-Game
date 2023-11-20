@@ -6,7 +6,8 @@
 #include "Protected.h" 
 #include "CombatState.h"
 
-int Mother::hp = MOTHER_HP; 
+int Mother::hp = GameData::hp; 
+int Mother::damageDjinn = 0;
 std::vector<Tag::Tags> Mother::tags = {};
 bool Mother::activateRampage = false;
 bool Mother::activateWeak = false;
@@ -42,7 +43,7 @@ void Mother::Start()
     associated.box.x -= (associated.box.w/MOTHER_FC - motherHitbox.w )/2;
 
     //==================================LifeBar====================================
-    lifeBarMother = new LifeBar(associated, hp, hp, motherHitbox.w, motherHitbox.x); //width from hitbox
+    lifeBarMother = new LifeBar(associated, GameData::hpMax, hp, motherHitbox.w, motherHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarMother));
 
     //If enemies starts with tags
@@ -63,7 +64,38 @@ Mother::~Mother()
 }  
  
 void Mother::Update(float dt) 
-{   
+{       
+
+    if(damageDjinn != 0){
+        GameData::hpCorrupted += damageDjinn;
+        int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
+        damageDjinn = 0;
+        std::cout << corruptedDamage << std::endl;
+
+        if(corruptedDamage > 0){
+           hp = corruptedDamage; 
+        }
+        
+    }
+
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC, 1.5);
+
+        deadBody_spr->SetFrame(0);
+
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
+
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+        return;
+    }
+
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
  
@@ -74,18 +106,8 @@ void Mother::Update(float dt)
     auto selectedSkillEnemy = Skill::selectedSkillEnemy;
     auto skillBack = Skill::skillBackToMother;
 
-  
+   
 
-    // Check if the enemy's HP is zero or below and request deletion
-    //if (hp <= 0) {
-    //    DeleteEnemyIndicator();
-    //    associated.RequestDelete();
-    //    return; // Early exit if the enemy is no longer alive
-    //} 
-
-
-
- 
     //ENEMY TURN
     if(GameData::playerTurn == false){
         DeleteIntention();
@@ -158,7 +180,7 @@ void Mother::Update(float dt)
                                     objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
                                 }
                             }    
-                        }
+                        } 
 
                     }
                     // Check if the mouse is over the enemy and left mouse button is pressed
@@ -166,6 +188,8 @@ void Mother::Update(float dt)
                     if (motherHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
+                        Mother::damageDjinn = tempSkillInfo.damageBack;
+                        selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                         selectedSkill->Deselect();
 
                         if(tempSkillInfo.isProtected == Skill::StateProtected::PROTECTED){
@@ -196,9 +220,9 @@ void Mother::Update(float dt)
         //=============================Skill back sector=================================
         //Sector to manipulate interections involving enemies being attacked
 
-        if (skillBack != nullptr) {
+        if (skillBack != nullptr) { 
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApplySkillToMother(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+            ApplySkillToMother(0, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
@@ -254,10 +278,10 @@ void Mother::IndicatorAnimation(float dt) {
 
             // Postion correction
             indicator->box.x = posXenterX - indicator->box.w / 2;
-            indicator->box.y = posXenterY - indicator->box.h / 2;
+            indicator->box.y = posXenterY - indicator->box.h / 2; 
         }
     }
-} 
+}  
 
 void Mother::CreateIndicator() {
     indicator = new GameObject(motherHitbox.x + motherHitbox.w/2, motherHitbox.y + motherHitbox.h + LIFEBAROFFSET);
@@ -368,10 +392,8 @@ void Mother::ApplySkillToMother(int damage, std::vector<Tag::Tags> tags) {
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-
-        if(!dodge){
-            ApplyTags(tags);
-        }
+        
+        ApplyTags(tags);
         
 
         if(damage > 0 || dodge){

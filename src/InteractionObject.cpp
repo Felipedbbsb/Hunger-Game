@@ -61,6 +61,7 @@ void InteractionObject::Start() {
         
     }
     else{
+        //Mother is attacking
         if(targetType == Skill::TargetType::MOTHER){
             if(isAttacking){
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
@@ -73,13 +74,16 @@ void InteractionObject::Start() {
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
                 }
-                
+                 
             }
             else{  
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    Sprite *obj_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
-                    obj_spr->SetScale(1.35, 1.35);
+                    //Sprite *obj_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+                    //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
+                    //obj_spr->SetScale(1.35, 1.35);
+                    iconPath = MOTHER_SPRITE_BUFF;
+                    Sprite* obj_spr = new Sprite(associated, iconPath); 
+                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
 
                     //CREATES BUFF
                     CreateEffect("BUFF", true);
@@ -95,7 +99,6 @@ void InteractionObject::Start() {
                         CreateEffect("ATK", true);
                     };
                 }
-
             } 
             
         }
@@ -115,9 +118,13 @@ void InteractionObject::Start() {
             } 
             else{
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    Sprite *obj_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
+                    //Sprite *obj_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
+                    //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    //obj_spr->SetScale(1.35, 1.35);
+
+                    iconPath = DAUGHTER_SPRITE_BUFF;
+                    Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
-                    obj_spr->SetScale(1.35, 1.35);
 
                     //CREATES BUFF
                     CreateEffect("BUFF", true);
@@ -193,7 +200,6 @@ void InteractionObject::Update(float dt) {
         auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
         if(objComponentPtr){
             auto aplhaSprite = objComponentPtr->GetAlpha();
-            std::cout << aplhaSprite << std::endl; 
             if( effectDuration.Get() < INTERACTION_COOLDOWN * 0.8 ){
                 if(aplhaSprite <= 255){
                     objComponentPtr->SetAlpha(aplhaSprite +  velocityAplha * dt);
@@ -221,15 +227,25 @@ void InteractionObject::SetPos(int posX, int posY) {
         if(typeEffect == "ATK"){
             effect->box.x = posX + associated.box.w/2 - effect->box.w/2 - 10;
             effect->box.y = posY + associated.box.h/3 - effect->box.h/2;
+            if(targetType == Skill::TargetType::MOTHER){
+                effect->box.x = posX + associated.box.w/2 + 70;
+                effect->box.y = posY + associated.box.h/2 - effect->box.h/2;
+            }
         }
         else if(typeEffect == "BUFF") {
             effect->box.x = posX + associated.box.w/2 - effect->box.w/2;
             effect->box.y = posY + associated.box.h - effect->box.h - 10;
+
         } 
         else if(typeEffect == "DEBUFF") {
             effect->box.x = posX + associated.box.w/2 - effect->box.w/2;
             effect->box.y = posY + associated.box.h/2 - effect->box.h/2;
+            if(targetType == Skill::TargetType::MOTHER){
+                effect->box.x = posX + associated.box.w/2 + 70;
+                effect->box.y = posY + associated.box.h/2 - effect->box.h/2;
+            }
         } 
+
               
     }
 

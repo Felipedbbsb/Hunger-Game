@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
         std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
                                                        Enemies::ENEMY2, 
                                                        Enemies::ENEMY3 };
-
+ 
         CombatState* initialState = new CombatState(enemiesArray, COMBAT_IMAGE); // Pass the enemiesArray
 
         

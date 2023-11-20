@@ -72,6 +72,7 @@
         "gameobject.h": "c",
         "component.h": "c",
         "sprite.h": "c",
-        "enemies.h": "c"
+        "enemies.h": "c",
+        "sound.h": "c"
     }
 }

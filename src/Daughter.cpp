@@ -1,5 +1,6 @@
 #include "Daughter.h"
 #include "GameData.h"
+#include "Mother.h"
 #include "Enemies.h"
 #include "Camera.h"
 #include "Game.h"
@@ -15,7 +16,7 @@
 #endif //DEBUG
 
 
-int Daughter::hp = DAUGHTER_HP; 
+int Daughter::hp = GameData::life; 
 std::vector<Tag::Tags> Daughter::tags = {};
 bool Daughter::activateRampage = false;
 bool Daughter::activateWeak = false;
@@ -45,7 +46,7 @@ void Daughter::Start()
     associated.box.x -= (associated.box.w/DAUGHTER_FC - daughterHitbox.w )/2;
 
     //==================================LifeBar========= ===========================
-    lifeBarDaughter = new LifeBar(associated, hp, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
+    lifeBarDaughter = new LifeBar(associated, GameData::lifeMax, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
     associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarDaughter));
 
     //If enemies starts with tags
@@ -61,10 +62,17 @@ Daughter::~Daughter()
             daughtertags.erase(daughtertags.begin() + i);
     }
     
+    DeleteIndicator();
+    DeleteIntention();
+
 }
 
 void Daughter::Update(float dt)
 {   
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+        return;
+    }
+
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
 
@@ -75,12 +83,23 @@ void Daughter::Update(float dt)
     auto selectedSkillEnemy = Skill::selectedSkillEnemy;
     auto skillBack = Skill::skillBackToDaughter;
 
+    //=============================//=============================//=============================//=============================
+
+
     // Check if the enemy's HP is zero or below and request deletion
-    //if (hp <= 0) {
-    //    DeleteEnemyIndicator();
-    //    associated.RequestDelete();
-    //    return; // Early exit if the enemy is no longer alive
-    //} 
+    if (hp <= 0) {
+        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
+        Sprite* deadBody_spr = new Sprite(*deadBody, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC, 1.5);
+
+        deadBody_spr->SetFrame(0);
+
+        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+
+        associated.RequestDelete();
+        return; // Early exit if the enemy is no longer alive
+
+    } 
 
 
     
@@ -168,6 +187,8 @@ void Daughter::Update(float dt)
                     if (daughterHitbox.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
+                        Mother::damageDjinn = tempSkillInfo.damageBack;
+                        selectedSkill->SkillBack(tempSkillInfo.targetTypeBack);
                         selectedSkill->Deselect();
 
                         if(tempSkillInfo.isProtected == Skill::StateProtected::PROTECTED){
@@ -197,7 +218,9 @@ void Daughter::Update(float dt)
 
         if (skillBack != nullptr) {
             Skill::SkillInfo tempSkillInfo = Skill::skillInfoMap[skillBack->GetId()];
-            ApplySkillToDaughter(tempSkillInfo.damageBack, tempSkillInfo.tagsBack);
+            //Checks with the skill is djinn like
+
+            ApplySkillToDaughter(0, tempSkillInfo.tagsBack);
             skillBack->DeselectBack(tempSkillInfo.targetTypeBack);
         }
     }    
@@ -368,14 +391,14 @@ void Daughter::ApplySkillToDaughter(int damage, std::vector<Tag::Tags> tags) {
         }
         Skill::HasTagRampageOrWeak ={false, false}; //reset
         hp -= damage * tagMultiplier;
-        if(!dodge){
-            ApplyTags(tags);
-        }
+
+        ApplyTags(tags);
+
 
         if(damage > 0 || dodge){
             lifeBarDaughter->SetCurrentHP(hp);  // Update the enemy's HP bar
         }
- 
+
 }
  
 void Daughter::ApplyTags(std::vector<Tag::Tags> skillTags) {
