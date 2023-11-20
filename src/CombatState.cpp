@@ -12,6 +12,8 @@
 #include "Papiro.h" 
 #include "SkillSelection.h" 
 #include "CameraParallax.h"
+#include "Protected.h"
+#include "Mural.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -43,7 +45,7 @@ void CombatState::Update(float dt){
     if ((input.KeyPress(ESCAPE_KEY)) || input.QuitRequested()){
         quitRequested = true;
     }
-
+ 
 
     //============================ Checks whether to delete objects and updates ========================================
     
@@ -63,6 +65,15 @@ void CombatState::Update(float dt){
                     skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
                     AddObject(skillSelection);
                 }       
+            }
+
+            if(SkillSelection::endSkillSelection){
+                skillSelectionEnd.Update(dt);
+                if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
+                    Mural* new_stage = new Mural(spriteBackground);
+                    Game::GetInstance().Push(new_stage); 
+                    popRequested = true;
+                }
             }
         }
         
@@ -113,7 +124,13 @@ void CombatState::LoadAssets(){
     ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
     AddObject(ui);
 
-
+    //PROTECTED
+    GameObject* protected_UI = new GameObject(PROTECTED_POS);
+        Protected* protected_behaviour = new Protected(*protected_UI);
+        CameraFollower *protected_UI_cmfl = new CameraFollower(*protected_UI);
+        protected_UI->AddComponent((std::shared_ptr<CameraFollower>)protected_UI_cmfl);
+        protected_UI->AddComponent(std::shared_ptr<Protected>(protected_behaviour));
+        Game::GetInstance().GetCurrentState().AddObject(protected_UI);
     
 
 }

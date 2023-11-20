@@ -15,7 +15,7 @@
 
 bool SkillSelection::skillSelectionActivated = false;
 bool SkillSelection::selectionSkillDjinnStyle = false;
-bool SkillSelection::endSkillSelection;
+bool SkillSelection::endSkillSelection = false;
 
 SkillSelection::SkillSelection(GameObject &associated,  bool isDjinn)
     : Component(associated),
@@ -53,13 +53,14 @@ void SkillSelection::Start() {
     //Skills to be selected/changed/ignored
     CreateSkillOptions();
 
-
+    SkillSelection::endSkillSelection = false;
 }   
 
 
 
 SkillSelection::~SkillSelection() {
-    
+    SkillSelection::skillSelectionActivated = false;
+    SkillSelection::endSkillSelection = false;
 }
 
 void SkillSelection::CreateBackground() {

@@ -8,6 +8,7 @@
 #include "GameData.h"
 #include "SkillSelection.h"
 #include "CombatState.h"
+#include "Mural.h"
 
 // speed já está sendo inicializado pelo construtor de Vec2
 // UI.h
@@ -29,14 +30,6 @@ UI::UI(GameObject &associated)
         ap_UI->AddComponent((std::shared_ptr<CameraFollower>)ap_UI_cmfl);
         ap_UI->AddComponent(std::shared_ptr<AP>(ap_behaviour));
         Game::GetInstance().GetCurrentState().AddObject(ap_UI);
-  
-    //PROTECTED
-    GameObject* protected_UI = new GameObject(PROTECTED_POS);
-        Protected* protected_behaviour = new Protected(*protected_UI);
-        CameraFollower *protected_UI_cmfl = new CameraFollower(*protected_UI);
-        protected_UI->AddComponent((std::shared_ptr<CameraFollower>)protected_UI_cmfl);
-        protected_UI->AddComponent(std::shared_ptr<Protected>(protected_behaviour));
-        Game::GetInstance().GetCurrentState().AddObject(protected_UI);
  
     
     CreateSkillsGO(ap_behaviour);
@@ -190,9 +183,10 @@ void UI::Update(float dt) {
                 nextComponentPtr->SetAlpha(255);
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON)){
                     Skill::selectedSkill = nullptr; 
-                    
+
+                        std::cout << Mural::MuralState << std::endl;
                     //scenario of skill selection screen
-                    if(!SkillSelection::skillSelectionActivated){
+                    if(!Mural::MuralState && !SkillSelection::skillSelectionActivated){
                         GameData::playerTurn = false;
                         if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
                             Enemies::enemiesToAttack = Enemies::enemiesCount;
@@ -202,8 +196,13 @@ void UI::Update(float dt) {
                         GameObject* focusCamera =  new GameObject(FOCUS_ENEMY, 0);
                         Camera::Follow(focusCamera);
                         CombatState::ChangingSides = true;
-                                
-                    }else{
+                    }            
+
+                    else if(Mural::MuralState && !SkillSelection::skillSelectionActivated){
+                        Mural::MuralStateActivateReward = true;
+                    }
+
+                    else{
                         SkillSelection::endSkillSelection = true;
                         
                     }

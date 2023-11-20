@@ -1,5 +1,4 @@
-dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
- include/CombatState.h \
+dep/Mural.d bin/Mural.o: src/Mural.cpp include/Mural.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\c++config.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\os_defines.h \
@@ -212,11 +211,10 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
- include/Mother.h include/Daughter.h include/Papiro.h \
- include/SkillSelection.h include/CameraParallax.h include/Protected.h \
- include/Mural.h
+ include/Papiro.h include/Mother.h include/Daughter.h \
+ include/SkillSelection.h include/Protected.h
 
-include/CombatState.h:
+include/Mural.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:
 
@@ -740,16 +738,12 @@ include/Text.h:
 
 include/UI.h:
 
+include/Papiro.h:
+
 include/Mother.h:
 
 include/Daughter.h:
 
-include/Papiro.h:
-
 include/SkillSelection.h:
 
-include/CameraParallax.h:
-
 include/Protected.h:
-
-include/Mural.h:

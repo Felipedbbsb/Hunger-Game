@@ -34,10 +34,10 @@
 #include "Component.h"
 #include "Enemies.h"
 
-class CombatState : public State{
+class Mural : public State{
     public:
-        CombatState(std::vector<Enemies::EnemyId>, std::string spriteBackground);
-        ~CombatState();
+        Mural(std::string spriteBackground);
+        ~Mural();
         void LoadAssets();
         void Update(float dt);
         void Render();
@@ -45,24 +45,14 @@ class CombatState : public State{
         void Pause();
         void Resume();
         void CreateBackground(std::string originalPath);
-        std::string GeneratePath(std::string originalPath, std::string suffix);
-        void CreateEnemies();
-        void CreatePlayers();
 
-        static bool InteractionSCreenActivate;
-        static std::vector<Enemies::EnemyId> enemiesArrayIS;
-        static Skill::AttackType attackType;
-        static Skill::TargetType whoAttacks ;
-        static Skill::TargetType whoReceives;
 
-        static bool ChangingSides;
+        static bool MuralStateActivateReward;
+        static bool MuralState;
 
     private:
-        std::vector<Enemies::EnemyId> enemiesArray;  
-        GameObject* papiro;  
         GameObject* skillSelection; 
         std::string spriteBackground;
-        bool toggleState;
 
         Timer skillSelectionStart;
         Timer skillSelectionEnd;
