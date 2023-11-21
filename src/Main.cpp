@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include "Game.h"
 #include "CombatState.h"
+#include "Map.h"
 #include "Enemies.h"
 #include "Skill.h"
 
@@ -22,13 +23,15 @@ int main(int argc, char** argv) {
         Enemies::InitializeEnemyInfoMap();
 
         // ==========Enemies array==============
+        /*
         std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
                                                        Enemies::ENEMY2, 
                                                        Enemies::ENEMY3 };
  
         CombatState* initialState = new CombatState(enemiesArray, COMBAT_IMAGE); // Pass the enemiesArray
+        */
 
-        
+        Map* initialState = new Map();    
         game.Push(initialState);
  
         game.Run();
