@@ -56,8 +56,11 @@ void Map::LoadAssets() {
 
     AddObject(map_background);
 
+
+    int totalNodes =created_nodes.size();
+    int muralCount = 0;
     for (const auto& node : created_nodes) {
-        CreateNodeObj(node);
+        CreateNodeObj(node, RandomNodeType(totalNodes, muralCount));
     }
 }
 
@@ -157,9 +160,9 @@ bool Map::GenerateNode(std::pair<int, int> v1, std::pair<int, int> v2){
     }
 }
 
-void Map::CreateNodeObj(std::pair<int, int> v1) {     
+void Map::CreateNodeObj(std::pair<int, int> v1, NodeType type) {     
     GameObject *new_node = new GameObject();
-    Node* node_spr = new Node(*new_node, NodeType::MURAL, v1, GetUpperNeighbors(v1));
+    Node* node_spr = new Node(*new_node, type, v1, GetUpperNeighbors(v1));
     new_node->AddComponent((std::shared_ptr<Component>)node_spr);
 
     new_node->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - MAP_GRID_SIZE.x / 2; //Centralized
@@ -174,15 +177,31 @@ void Map::CreateNodeObj(std::pair<int, int> v1) {
     AddObject(new_node);
 }
 
+NodeType Map::RandomNodeType(int totalNodes, int& muralCount) {
+    // Gerar um número entre 1 e 100 (inclusive)
+    int randomPercent = std::rand() % 100 + 1;
+
+    // Verificar se deve ser um mural
+    if (randomPercent <= 20 && muralCount < totalNodes * 0.2) {
+        ++muralCount;
+        return NodeType::MURAL;
+    } else if (randomPercent <= 65) {
+        return NodeType::COMBAT; 
+    } else {
+        return NodeType::UNKNOWN;  // Substitua "UNKNOWN" pelo tipo correto de sala
+    }
+}
+
 std::vector<std::pair<int, int>> Map::GetUpperNeighbors(const std::pair<int, int>& v) {
     std::vector<std::pair<int, int>> upperNeighbors;
 
     // Iterar sobre as arestas criadas
     for (const auto& edge : created_edges) {
         // Iterar sobre os pontos da aresta
-        for (size_t i = 1; i < edge.size(); ++i) {
+        for (size_t i = 0; i < edge.size(); ++i) {
             // Verificar se o ponto atual é o mesmo que v
             if (edge[i] == v) {
+
                 // Adicionar o próximo ponto (vizinho de cima) ao vetor de vizinhos
                 if (i < edge.size() - 1) {
                     upperNeighbors.push_back(edge[i + 1]);
@@ -193,6 +212,7 @@ std::vector<std::pair<int, int>> Map::GetUpperNeighbors(const std::pair<int, int
 
     // Remover duplicatas no vetor de vizinhos
     upperNeighbors.erase(std::unique(upperNeighbors.begin(), upperNeighbors.end()), upperNeighbors.end());
+
 
     return upperNeighbors;
 }

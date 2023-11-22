@@ -8,7 +8,7 @@
 #include <algorithm> 
 #include "Map.h"
 
-std::vector<std::pair<int, int>> currentNeighbors = {};
+std::vector<std::pair<int, int>> Node::currentNeighbors = {};
 
 Node::Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors)
 : Component::Component(associated),
@@ -33,7 +33,7 @@ Node::~Node(){
 
 void Node::Update(float dt){  
     if(Map::mapPosition == std::make_pair(floor, column)){
-        currentNeighbors = neighbors;
+        Node::currentNeighbors = neighbors;
     }
 
 
@@ -44,8 +44,9 @@ void Node::Update(float dt){
         }
     }
     else{
-        auto it = std::find(currentNeighbors.begin(), currentNeighbors.end(), std::make_pair(floor, column));
-        if (it != currentNeighbors.end()) {
+
+        auto it = std::find(Node::currentNeighbors.begin(), Node::currentNeighbors.end(), std::make_pair(floor, column));
+        if (it != Node::currentNeighbors.end()) {
 
             canVisited = true;
         }

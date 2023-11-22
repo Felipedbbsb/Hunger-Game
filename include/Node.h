@@ -30,8 +30,8 @@ class Node : public Component {
         int GetFloor();
         std::string GetNodeSprite(NodeType node);
         bool Is(std::string type);
-
-
+        static std::vector<std::pair<int, int>> currentNeighbors;
+        
     private:
         bool canVisited;
         bool wasVisited;

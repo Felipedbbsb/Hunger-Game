@@ -46,8 +46,9 @@ class Map : public State{
         static std::vector<std::vector<std::pair<int, int>>> created_edges;
         static std::vector<std::pair<int, int>> created_nodes;
         static std::pair<int, int> mapPosition;
-        void CreateNodeObj(std::pair<int, int> v1); 
+        void CreateNodeObj(std::pair<int, int> v1, NodeType type); 
         std::vector<std::pair<int, int>> GetUpperNeighbors(const std::pair<int, int>& v);
+        NodeType RandomNodeType(int totalNodes, int& muralCount);
     
     private:
         void CreateMap();
