@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
         // Populate the map with enemies information during initialization.
         Enemies::InitializeEnemyInfoMap();
-
+ 
         // ==========Enemies array==============
         /*
         std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 

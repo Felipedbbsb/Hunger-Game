@@ -10,7 +10,7 @@
 #include "unordered_map"
 #include "State.h"
 
-#define MAP_COLUMNS 6
+#define MAP_COLUMNS 5
 #define MAP_FLOORS 15
 #define MIN_COLUMN_VALUE 1
 #define MAP_MAX_PATHS 4
@@ -23,19 +23,13 @@
 enum NodeType { MURAL, COMBAT, REST, UNKNOWN, BOSS };
 
 // Node Struct
-typedef struct Node {
+typedef struct NodeStats {
     int x;
     int y;
     NodeType type;
-    bool visited;
-//    std::weak_ptr<GameObject> gameObject = {};
-} Node;
+    std::weak_ptr<GameObject> gameObject = {};
+} NodeStats;
 
-typedef struct MapPath {
-    Node node;
-    MapPath* nextNode;
-    MapPath* prevNode;
-} MapPath;
 
 class Map : public State{
     public:
@@ -51,7 +45,10 @@ class Map : public State{
         static std::map<std::vector<std::pair<int, int>>, bool> banned_edge;
         static std::vector<std::vector<std::pair<int, int>>> created_edges;
         static std::vector<std::pair<int, int>> created_nodes;
+        static std::pair<int, int> mapPosition;
         void CreateNodeObj(std::pair<int, int> v1); 
+        std::vector<std::pair<int, int>> GetUpperNeighbors(const std::pair<int, int>& v);
+    
     private:
         void CreateMap();
         int CheckCorners(int current_column, int next_column, int current_floor);

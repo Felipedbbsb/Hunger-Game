@@ -184,7 +184,6 @@ void UI::Update(float dt) {
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON)){
                     Skill::selectedSkill = nullptr; 
 
-                        std::cout << Mural::MuralState << std::endl;
                     //scenario of skill selection screen
                     if(!Mural::MuralState && !SkillSelection::skillSelectionActivated){
                         GameData::playerTurn = false;

@@ -14,16 +14,16 @@
 #include "CameraParallax.h"
 #include "Protected.h"
 #include "Mural.h"
-#include "SDL_include.h"
+#include "Node.h"
+#include "SDL_include.h" 
 
 std::map<std::vector<std::pair<int, int>>, bool> Map::banned_edge;
 std::vector<std::vector<std::pair<int, int>>> Map::created_edges;
 std::vector<std::pair<int, int>> Map::created_nodes;
+std::pair<int, int> Map::mapPosition = std::make_pair(0, 0); 
 
 Map::Map() : State::State(){ 
     CreateMap();
-
-    
 
 }
   
@@ -159,7 +159,7 @@ bool Map::GenerateNode(std::pair<int, int> v1, std::pair<int, int> v2){
 
 void Map::CreateNodeObj(std::pair<int, int> v1) {     
     GameObject *new_node = new GameObject();
-    Sprite* node_spr = new Sprite(*new_node, MAP_COMBAT_SPRITE);
+    Node* node_spr = new Node(*new_node, NodeType::MURAL, v1, GetUpperNeighbors(v1));
     new_node->AddComponent((std::shared_ptr<Component>)node_spr);
 
     new_node->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - MAP_GRID_SIZE.x / 2; //Centralized
@@ -172,6 +172,29 @@ void Map::CreateNodeObj(std::pair<int, int> v1) {
     new_node->box.y -= new_node->box.h/2;
 
     AddObject(new_node);
+}
+
+std::vector<std::pair<int, int>> Map::GetUpperNeighbors(const std::pair<int, int>& v) {
+    std::vector<std::pair<int, int>> upperNeighbors;
+
+    // Iterar sobre as arestas criadas
+    for (const auto& edge : created_edges) {
+        // Iterar sobre os pontos da aresta
+        for (size_t i = 1; i < edge.size(); ++i) {
+            // Verificar se o ponto atual é o mesmo que v
+            if (edge[i] == v) {
+                // Adicionar o próximo ponto (vizinho de cima) ao vetor de vizinhos
+                if (i < edge.size() - 1) {
+                    upperNeighbors.push_back(edge[i + 1]);
+                }
+            }
+        }
+    }
+
+    // Remover duplicatas no vetor de vizinhos
+    upperNeighbors.erase(std::unique(upperNeighbors.begin(), upperNeighbors.end()), upperNeighbors.end());
+
+    return upperNeighbors;
 }
 
 void Map::Render() {      
@@ -195,13 +218,9 @@ void Map::Render() {
                 DrawLineMap(x1, y1, x2, y2);  
             }
             
-        } 
+        }  
     }
  
-
-
-
-
 
     State::Render();
 }
@@ -209,7 +228,7 @@ void Map::Render() {
 void Map::Start() {
     LoadAssets();
     StartArray();
-    started = true;
+    started = true;  
 }
  
 void Map::Pause() {
