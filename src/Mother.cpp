@@ -49,6 +49,7 @@ void Mother::Start()
     //If enemies starts with tags
     ApplyTags(tags); 
 
+    lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
     //lifeBarMother->SetCurrentHP(hp);  
 
 }

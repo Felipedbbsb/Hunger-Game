@@ -16,6 +16,8 @@ GameObject* UI::uiGO = nullptr;
 
 AP* UI::ap_behaviour = nullptr;
 
+bool UI::nextActivated = false;
+
 UI::UI(GameObject &associated)
     : Component(associated),
     nextArrow(nullptr),
@@ -182,21 +184,14 @@ void UI::Update(float dt) {
            && GameData::playerTurn == true){
                 nextComponentPtr->SetAlpha(255);
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON)){
-                    Skill::selectedSkill = nullptr; 
+                    //Skill::selectedSkill = nullptr; 
 
                     //scenario of skill selection screen
                     if(!Mural::MuralState && !SkillSelection::skillSelectionActivated){
-                        GameData::playerTurn = false;
-                        if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
-                            Enemies::enemiesToAttack = Enemies::enemiesCount;
-                        } 
+                        UI::nextActivated = true;
 
-                        //Cameraa focus
-                        GameObject* focusCamera =  new GameObject(FOCUS_ENEMY, 0);
-                        Camera::Follow(focusCamera);
-                        CombatState::ChangingSides = true;
                     }            
-
+ 
                     else if(Mural::MuralState && !SkillSelection::skillSelectionActivated){
                         Mural::MuralStateActivateReward = true;
                     }

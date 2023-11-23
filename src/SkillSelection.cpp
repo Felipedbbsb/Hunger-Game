@@ -54,6 +54,9 @@ void SkillSelection::Start() {
     CreateSkillOptions();
 
     SkillSelection::endSkillSelection = false;
+    GameData::playerTurn = true;
+
+
 }   
 
 
@@ -152,7 +155,7 @@ void SkillSelection::CreateSkillOptions() {
 
 
 void SkillSelection::Update(float dt) {
-
+    
     if(endSkillSelection){
         objectsMoves += objectsMoves_VELOCITY * dt;
     }

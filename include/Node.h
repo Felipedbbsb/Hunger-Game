@@ -31,8 +31,9 @@ class Node : public Component {
         std::string GetNodeSprite(NodeType node);
         bool Is(std::string type);
         static std::vector<std::pair<int, int>> currentNeighbors;
-        
+        void SetNewStage(NodeType node);
     private:
+        NodeType type;
         bool canVisited;
         bool wasVisited;
         int floor;

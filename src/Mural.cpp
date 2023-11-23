@@ -46,7 +46,14 @@ void Mural::Update(float dt){
                     SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection, true);
                     skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
                     AddObject(skillSelection);
-                }       
+                } 
+
+                if(SkillSelection::endSkillSelection){
+                skillSelectionEnd.Update(dt);
+                if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
+                    popRequested = true;
+                }
+            }      
             }
         }
         
@@ -76,9 +83,6 @@ void Mural::LoadAssets(){
 }
 
 
-
-
-
 void Mural::CreateBackground(std::string originalPath){     
     GameObject *bg = new GameObject();
     Sprite* bgSprite= new Sprite(*bg, originalPath);
@@ -104,6 +108,9 @@ void Mural::Start(){
 
     Mural::MuralStateActivateReward = false;
     Mural::MuralState = true;
+
+    GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
+    Camera::Follow(focusCamera);
 }
  
 void Mural::Pause(){

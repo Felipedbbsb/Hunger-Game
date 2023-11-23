@@ -10,7 +10,7 @@
 #include "CameraFollower.h"
 #include "SkillSelection.h"
 #include "CombatState.h"
-
+#include "UI.h"
 
 #include <algorithm> 
 
@@ -56,7 +56,7 @@ AP::AP(GameObject &associated)
 } 
    
 void AP::Start() {     
-    
+    AP::apCount = AP_QUANTITY;
 }  
  
 AP::~AP(){ 
@@ -69,11 +69,11 @@ void AP::Update(float dt){
     if(!SkillSelection::skillSelectionActivated){
 
         //Change to enemy turn
-        if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
-        Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
+        if((apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
+        Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr) || (UI::nextActivated && !SkillSelection::skillSelectionActivated)){
             
             delayChangeSides.Update(dt);
-            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES){
+            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES && CombatState::ChangingSides == false){
                 GameData::playerTurn = false;
                 if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
                     Enemies::enemiesToAttack = Enemies::enemiesCount;
@@ -84,6 +84,7 @@ void AP::Update(float dt){
                 Camera::Follow(focusCamera);
                 CombatState::ChangingSides = true;
                 delayChangeSides.Restart();
+                UI::nextActivated = false;
             }
 
             
@@ -93,7 +94,7 @@ void AP::Update(float dt){
         if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
             
             delayChangeSides.Update(dt);
-            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES){
+            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES && CombatState::ChangingSides == false){
                 GameData::playerTurn = true;
                 AP::apCount = AP_QUANTITY; //reset
                 SetAPCount(AP::apCount);

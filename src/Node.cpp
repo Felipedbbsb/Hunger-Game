@@ -7,11 +7,13 @@
 #include "Camera.h"
 #include <algorithm> 
 #include "Map.h"
-
+#include "Mural.h"
+#include "CombatState.h"
 std::vector<std::pair<int, int>> Node::currentNeighbors = {};
 
 Node::Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors)
 : Component::Component(associated),
+type(type),
 canVisited(false),
 wasVisited(false),
 floor(v1.first),
@@ -67,7 +69,7 @@ void Node::Update(float dt){
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){
                     //If can be visited go to state of node
                     Map::mapPosition = std::make_pair(floor, column);
-
+                    SetNewStage(type);
                    
                 }
             }else{
@@ -134,6 +136,40 @@ void Node::SetWasVisited(bool wasVisited){
 
 int Node::GetFloor(){
     return floor;
+}
+
+void Node::SetNewStage(NodeType node){
+    std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
+                                                   Enemies::ENEMY2, 
+                                                   Enemies::ENEMY3 };
+    
+    switch (node) {
+        case NodeType::MURAL: {
+            Mural* new_stage = new Mural(COMBAT_IMAGE); 
+            Game::GetInstance().Push(new_stage);
+            break;
+        }
+        case NodeType::COMBAT: {
+            CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 
+            Game::GetInstance().Push(new_stage);  
+            break;
+        }
+        case NodeType::REST: {
+            Mural* new_stage = new Mural(COMBAT_IMAGE); 
+            Game::GetInstance().Push(new_stage);
+            break;
+        }
+        case NodeType::UNKNOWN: {
+            Mural* new_stage = new Mural(COMBAT_IMAGE); 
+            Game::GetInstance().Push(new_stage);
+            break;
+        }
+        case NodeType::BOSS: {
+            Mural* new_stage = new Mural(COMBAT_IMAGE); 
+            Game::GetInstance().Push(new_stage);
+            break;
+        }
+    }
 }
 
 std::string Node::GetNodeSprite(NodeType node){

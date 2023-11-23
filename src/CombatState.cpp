@@ -14,6 +14,7 @@
 #include "CameraParallax.h"
 #include "Protected.h"
 #include "Mural.h"
+#include "GameData.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -59,7 +60,6 @@ void CombatState::Update(float dt){
             skillSelectionStart.Update(dt);
             if(skillSelectionStart.Get() >= SKILL_SELECTION_COOLDOWN_START){
                 if(skillSelection == nullptr){
-                    // Create a new skillSelection object for skillSelection Screen 
                     skillSelection = new GameObject();
                     SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection, false);
                     skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
@@ -70,8 +70,6 @@ void CombatState::Update(float dt){
             if(SkillSelection::endSkillSelection){
                 skillSelectionEnd.Update(dt);
                 if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
-                    Mural* new_stage = new Mural(spriteBackground);
-                    Game::GetInstance().Push(new_stage); 
                     popRequested = true;
                 }
             }
@@ -253,6 +251,27 @@ void CombatState::Start(){
     StartArray();
     started = true;
 
+    CombatState::InteractionSCreenActivate = false;
+    CombatState::enemiesArrayIS.clear();
+    CombatState::attackType = Skill::AttackType::NONE;
+    CombatState::whoAttacks = Skill::TargetType::IRR;
+    CombatState::whoReceives = Skill::TargetType::IRR;
+    GameData::playerTurn = true;
+    CombatState::ChangingSides = false;
+    
+
+
+    Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
+
+    Enemies::provokedEnemies = 0;//how many left enemies has provoke
+
+    Enemies::enemiesToAttack = 0;//how many left enemies to attack
+
+    Enemies::enemyAttacking = false;
+
+    SkillSelection::skillSelectionActivated = false;
+    SkillSelection::selectionSkillDjinnStyle = false;
+    SkillSelection::endSkillSelection = false;
 }
  
 void CombatState::Pause(){

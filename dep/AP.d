@@ -212,7 +212,7 @@ dep/AP.d bin/AP.o: src/AP.cpp include/AP.h \
  include/LifeBar.h include/Reader.h include/Skill.h \
  c:\mingw\include\time.h include/Tag.h include/Mother.h \
  include/Daughter.h include/CameraFollower.h include/Camera.h \
- include/SkillSelection.h include/CombatState.h
+ include/SkillSelection.h include/CombatState.h include/UI.h
 
 include/AP.h:
 
@@ -743,3 +743,5 @@ include/Camera.h:
 include/SkillSelection.h:
 
 include/CombatState.h:
+
+include/UI.h:
