@@ -60,7 +60,9 @@ void AP::Start() {
 }  
  
 AP::~AP(){ 
-    
+    for (int i = AP::apArray.size() - 1; i >= 0; i--) { //remove enemies tags
+            AP::apArray.erase(AP::apArray.begin() + i);
+    }
 } 
 
 void AP::Update(float dt){  
@@ -73,8 +75,9 @@ void AP::Update(float dt){
         Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr) || (UI::nextActivated && !SkillSelection::skillSelectionActivated)){
             
             delayChangeSides.Update(dt);
-            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES && CombatState::ChangingSides == false){
+            if((delayChangeSides.Get() > DELAY_CHANGE_SIDES || (UI::nextActivated && !SkillSelection::skillSelectionActivated)) && CombatState::ChangingSides == false){
                 GameData::playerTurn = false;
+                Skill::selectedSkill = nullptr;
                 if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
                     Enemies::enemiesToAttack = Enemies::enemiesCount;
                 } 

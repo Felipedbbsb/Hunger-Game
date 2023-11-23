@@ -202,7 +202,7 @@ void Enemies::Update(float dt) {
                 if(enemyIndicator != nullptr){
                     auto objComponent = enemyIndicator->GetComponent("Sprite");
                     auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
-                    if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                    if (enemyHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                         if (objComponentPtr) {
                             objComponentPtr->SetAlpha(255);                          
                         }

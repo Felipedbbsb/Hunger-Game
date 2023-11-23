@@ -24,12 +24,11 @@ void Camera::Update(float dt) {
 
     }
     else {
-        speed.x = CAMERA_SPEED;
-        speed.y = CAMERA_SPEED;
+        
 
         // Calculate the difference between camera position and focus position
         Vec2 diff;
-        diff.x = focus->box.x - pos.x;
+        diff.x = focus->box.x  - pos.x;
         diff.y = focus->box.y - pos.y;
 
 
@@ -52,14 +51,10 @@ void Camera::Update(float dt) {
 
         if(diff.x == 0 && diff.y == 0){
             CombatState::ChangingSides = false;
+            focus->RequestDelete();
         }
 
     }
-
-    
-
-    
-    
 
 }
 

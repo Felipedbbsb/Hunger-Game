@@ -165,7 +165,7 @@ void Map::CreateNodeObj(std::pair<int, int> v1, NodeType type) {
     Node* node_spr = new Node(*new_node, type, v1, GetUpperNeighbors(v1));
     new_node->AddComponent((std::shared_ptr<Component>)node_spr);
 
-    new_node->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - MAP_GRID_SIZE.x / 2; //Centralized
+    new_node->box.x = RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2; //Centralized
     new_node->box.x += v1.second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1);
 
     new_node->box.y = RESOLUTION_HEIGHT - v1.first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1); //Centralized
@@ -227,11 +227,11 @@ void Map::Render() {
             // Obter as coordenadas dos pontos da aresta
             if(edge[i].first <= MAP_FLOORS){
                 int x1 = edge[i - 1].second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1) +
-                         RESOLUTION_WIDTH * Game::resizer / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
+                         RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
                 int y1 = RESOLUTION_HEIGHT - edge[i - 1].first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1) + Camera::pos.y;
 
                 int x2 = edge[i].second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1) +
-                        RESOLUTION_WIDTH * Game::resizer / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
+                        RESOLUTION_WIDTH  / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
                 int y2 = RESOLUTION_HEIGHT - edge[i].first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1) + Camera::pos.y;
 
                 // Desenhar a linha
@@ -245,6 +245,7 @@ void Map::Render() {
     State::Render();
 }
 
+
 void Map::Start() {
     LoadAssets();
     StartArray();
@@ -257,6 +258,11 @@ void Map::Pause() {
 
 void Map::Resume() {
     State::Resume();
+
+    GameObject* focusCamera =  new GameObject(0, 0);
+    Camera::Follow(focusCamera);
+    Camera::pos.x = 0;
+    Camera::pos.y = 0;
 }
 
  

@@ -50,7 +50,7 @@ void Tag::Update(float dt){
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
 
     if(auto ref = enemyRef.lock()){
-        if(associated.box.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y)){
+        if(associated.box.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y - Camera::pos.y * Game::resizer)){
             ShowReader();
         } else {
             HideReader();

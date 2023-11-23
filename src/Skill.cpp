@@ -44,7 +44,7 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     toggleJewel(false),
     createJewel(createJewel),
     skillSelected(nullptr) {
-
+ 
     std::string spriteSkill;
     // Use skillInfoMap para obter informações da habilidade com base na ID
     const SkillInfo& skillInfo = skillInfoMap[id];
@@ -154,7 +154,7 @@ void Skill::Update(float dt) {
         
     }
 
-    if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)){ 
+    if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){ 
 
             if (true) {
                 if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {

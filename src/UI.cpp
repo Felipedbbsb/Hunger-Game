@@ -70,7 +70,7 @@ void UI::CreateSkillsGO( AP* ap_behaviour) {
 
     for (unsigned int i = 0; i < Skill::skillArray.size(); i++) {
         int offsetArray = i;
-        GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, uiGO->box.y + 123 );
+        GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, uiGO->box.y + 123);
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Skill::SkillId skillId = Skill::skillArray[i];
         Skill* skill_behaviour = new Skill(*normalSkill, skillId, ap_behaviour);
@@ -180,7 +180,7 @@ void UI::Update(float dt) {
         auto nextComponent = nextArrow->GetComponent("Sprite");
         auto nextComponentPtr = std::dynamic_pointer_cast<Sprite>(nextComponent);
         if(nextComponentPtr){
-           if (nextArrow->box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) 
+           if (nextArrow->box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer) 
            && GameData::playerTurn == true){
                 nextComponentPtr->SetAlpha(255);
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON)){
@@ -189,7 +189,6 @@ void UI::Update(float dt) {
                     //scenario of skill selection screen
                     if(!Mural::MuralState && !SkillSelection::skillSelectionActivated){
                         UI::nextActivated = true;
-
                     }            
  
                     else if(Mural::MuralState && !SkillSelection::skillSelectionActivated){
@@ -197,8 +196,9 @@ void UI::Update(float dt) {
                     }
 
                     else{
+                        Skill::skillFromReward = nullptr;
+                        Skill::skillToReward = nullptr;
                         SkillSelection::endSkillSelection = true;
-                        
                     }
                 }
             }else{

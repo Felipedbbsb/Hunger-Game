@@ -64,7 +64,7 @@ void Node::Update(float dt){
         auto nextComponent = associated.GetComponent("Sprite");
         auto nextComponentPtr = std::dynamic_pointer_cast<Sprite>(nextComponent);
         if(nextComponentPtr){
-           if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)){
+           if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                 nextComponentPtr->SetAlpha(255);
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){
                     //If can be visited go to state of node

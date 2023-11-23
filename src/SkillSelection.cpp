@@ -55,15 +55,23 @@ void SkillSelection::Start() {
 
     SkillSelection::endSkillSelection = false;
     GameData::playerTurn = true;
-
-
+    
+    GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
+    Camera::Follow(focusCamera);
 }   
 
 
 
 SkillSelection::~SkillSelection() {
     SkillSelection::skillSelectionActivated = false;
-    SkillSelection::endSkillSelection = false;
+    SkillSelection::selectionSkillDjinnStyle = false;
+
+    
+
+    for (int i = rewardArrayObj.size() - 1; i >= 0; i--) { //remove skills
+            rewardArrayObj.erase(rewardArrayObj.begin() + i);
+    }
+    std::cout <<"bye" << std::endl;
 }
 
 void SkillSelection::CreateBackground() {
@@ -102,7 +110,7 @@ void SkillSelection::CreateSkillOptions() {
         
         itBegin = Skill::skillInfoMap.begin();
         itEnd = Skill::skillInfoMap.find(Skill::InstantRegret);
-    }
+    } 
 
     std::vector<Skill::SkillId> validSkillIds;
     for (auto it = itBegin; it != itEnd; ++it) { 
@@ -156,7 +164,7 @@ void SkillSelection::CreateSkillOptions() {
 
 void SkillSelection::Update(float dt) {
     
-    if(endSkillSelection){
+    if(SkillSelection::endSkillSelection){
         objectsMoves += objectsMoves_VELOCITY * dt;
     }
     
@@ -229,14 +237,14 @@ void SkillSelection::Update(float dt) {
 
 
     if (passButon->box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)) {
-        if(InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON) && !endSkillSelection){
+        if(InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON) && !SkillSelection::endSkillSelection){
             if(Skill::skillFromReward != nullptr && Skill::skillToReward != nullptr){
                 auto skillFrom = Skill::skillFromReward->GetId();
                 auto skillTo = Skill::skillToReward->GetId();
                 Skill::AddSkill(skillFrom, skillTo);
                 Skill::skillFromReward = nullptr;
                 Skill::skillToReward = nullptr;
-                endSkillSelection = true;
+                SkillSelection::endSkillSelection = true;
 
             }
         }

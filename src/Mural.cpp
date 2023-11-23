@@ -47,13 +47,13 @@ void Mural::Update(float dt){
                     skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
                     AddObject(skillSelection);
                 } 
-
+                
                 if(SkillSelection::endSkillSelection){
-                skillSelectionEnd.Update(dt);
-                if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
-                    popRequested = true;
-                }
-            }      
+                    skillSelectionEnd.Update(dt);
+                    if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
+                        popRequested = true;
+                    }
+                }      
             }
         }
         
@@ -77,15 +77,14 @@ void Mural::LoadAssets(){
     CameraFollower *bg_cmfl = new CameraFollower(*ui);
     ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
     AddObject(ui);
-
-    
-
 }
 
 
 void Mural::CreateBackground(std::string originalPath){     
     GameObject *bg = new GameObject();
     Sprite* bgSprite= new Sprite(*bg, originalPath);
+    CameraFollower *bg_cmfl = new CameraFollower(*bg);
+    bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);       
     bg->AddComponent((std::shared_ptr<Component>)bgSprite);
 
     bg->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - bg->box.w / 2;
@@ -108,9 +107,13 @@ void Mural::Start(){
 
     Mural::MuralStateActivateReward = false;
     Mural::MuralState = true;
+    SkillSelection::endSkillSelection = false;
 
-    GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
-    Camera::Follow(focusCamera);
+    Camera::pos.x = 0;
+    Camera::pos.y = 0;
+
+    Camera::pos.x -= FOCUS_ENEMY;
+
 }
  
 void Mural::Pause(){

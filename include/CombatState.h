@@ -21,7 +21,7 @@
  
 #define PLAYERSX_STATS_OFFSET -50
 
-#define FOCUS_ENEMY 175
+#define FOCUS_ENEMY 175 
 
 #include <iostream>
 #include <memory>

@@ -169,7 +169,7 @@ void Daughter::Update(float dt)
                     else{
                         auto objComponent = indicator->GetComponent("Sprite");
                         auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
-                        if (daughterHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                        if (daughterHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                             if (objComponentPtr) {
                                 objComponentPtr->SetAlpha(255);                          
                             }
@@ -184,7 +184,7 @@ void Daughter::Update(float dt)
 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
-                    if (daughterHitbox.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (daughterHitbox.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                         Mother::damageDjinn = tempSkillInfo.damageBack;
