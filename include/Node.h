@@ -9,8 +9,8 @@
 #include "Sprite.h"
 #include "Map.h"
 
-#define NODE_TIME_ANIMATION 1.2f
-#define NODE_TIME_ANIMATION_V 0.375
+#define NODE_TIME_ANIMATION 1.5f
+#define NODE_TIME_ANIMATION_V 0.5
 
 #define MAP_MURAL_SPRITE "assets/img/UI/map/uiMapMural.png"
 #define MAP_COMBAT_SPRITE "assets/img/UI/map/uiMapFight.png"

@@ -41,6 +41,12 @@ UI::UI(GameObject &associated)
 
 UI::~UI() 
 {
+
+    if(nextArrow != nullptr){
+        nextArrow->RequestDelete();
+        nextArrow = nullptr;
+    }
+
     for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
             Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
     }
@@ -82,7 +88,7 @@ void UI::CreateSkillsGO( AP* ap_behaviour) {
     }  
 
     Game::GetInstance().GetCurrentState().AddObject(uiGO);
-
+    
 }
 
 
@@ -202,7 +208,7 @@ void UI::Update(float dt) {
                     }
                 }
             }else{
-                nextComponentPtr->SetAlpha(120);
+                nextComponentPtr->SetAlpha(120); 
             } 
         }
         

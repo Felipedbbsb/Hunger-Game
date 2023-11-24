@@ -52,6 +52,7 @@ void Camera::Update(float dt) {
         if(diff.x == 0 && diff.y == 0){
             CombatState::ChangingSides = false;
             focus->RequestDelete();
+            Camera::Unfollow();
         }
 
     }

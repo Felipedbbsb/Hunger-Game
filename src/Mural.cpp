@@ -21,8 +21,11 @@ spriteBackground(spriteBackground)
 {}
   
 Mural::~Mural(){
+    std::cout << "Destrutor EM MURAL" << std::endl;
     Mural::MuralStateActivateReward = false;
     Mural::MuralState = false;
+
+    
 }
 
 void Mural::Update(float dt){   
@@ -52,6 +55,11 @@ void Mural::Update(float dt){
                     skillSelectionEnd.Update(dt);
                     if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
                         popRequested = true;
+                        if(skillSelection != nullptr){
+                            skillSelection->RequestDelete();
+                            
+                        }
+
                     }
                 }      
             }
@@ -109,10 +117,11 @@ void Mural::Start(){
     Mural::MuralState = true;
     SkillSelection::endSkillSelection = false;
 
-    Camera::pos.x = 0;
-    Camera::pos.y = 0;
 
-    Camera::pos.x -= FOCUS_ENEMY;
+    Camera::Unfollow();
+    Camera::pos.x = -FOCUS_ENEMY;
+    Camera::pos.y = 0;
+    
 
 }
  

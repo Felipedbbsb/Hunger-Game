@@ -14,7 +14,7 @@
 
 #include <algorithm> 
 
-std::vector<std::shared_ptr<GameObject>> AP::apArray;
+std::vector<std::weak_ptr<GameObject>> AP::apArray;
 
 int AP::apCount = AP_QUANTITY;
 
@@ -23,7 +23,7 @@ AP::AP(GameObject &associated)
 
 {   
     for (int i = 0; i < AP_QUANTITY; ++i) {
-        std::shared_ptr<GameObject> apObj = std::make_shared<GameObject>(associated.box.x, associated.box.y - 20); // Use shared_ptr
+        GameObject *apObj = new GameObject(associated.box.x, associated.box.y - 20); // Use shared_ptr
         
         if(i == 0){
             apObj->box.x += AP_POS1.x ;
@@ -40,15 +40,15 @@ AP::AP(GameObject &associated)
 
         // Configure the sprites based on the value of apCount
         std::string spritePath = (apCount > i) ? AP_FULL_SPRITE : AP_EMPTY_SPRITE;
-        std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apObj, spritePath); // Use shared_ptr
-        apObj->AddComponent(ap_spr);
+        Sprite* ap_spr = new Sprite(*apObj, spritePath); // Use shared_ptr
+        apObj->AddComponent((std::shared_ptr<Component>)ap_spr);
 
-        std::shared_ptr<CameraFollower> ap_UI_cmfl = std::make_shared<CameraFollower>(*apObj);
-        apObj->AddComponent(ap_UI_cmfl);
+        CameraFollower* ap_UI_cmfl = new CameraFollower(*apObj);
+        apObj->AddComponent((std::shared_ptr<CameraFollower>)ap_UI_cmfl);
 
-        Game::GetInstance().GetCurrentState().AddObject(apObj.get());
+        auto weak_ap = Game::GetInstance().GetCurrentState().AddObject(apObj);
 
-        apArray.push_back(apObj);
+        apArray.push_back(weak_ap);
         
     } 
         
@@ -161,17 +161,17 @@ void AP::SetAPCount(int newAPCount) {
 void AP::UpdateVisualRepresentation() {
     int index = AP_QUANTITY;
     for (auto& apGameObject :apArray) {
-        if (apGameObject) {
+        if (apGameObject.lock()) {
         // Try to retrieve the "Sprite" component
-            auto spriteComponent = apGameObject->GetComponent("Sprite");
+            auto spriteComponent = apGameObject.lock()->GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                apGameObject->RemoveComponent(spriteComponentPtr);
+                apGameObject.lock()->RemoveComponent(spriteComponentPtr);
             }
 
             std::string spritePath = (apCount < index) ? AP_EMPTY_SPRITE : AP_FULL_SPRITE;
-            std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apGameObject, spritePath); // Use shared_ptr
-            apGameObject->AddComponent(ap_spr);
+            Sprite* ap_spr = new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
+            apGameObject.lock()->AddComponent((std::shared_ptr<Component>)ap_spr);
             index--;
         }
     }            
@@ -182,19 +182,19 @@ void AP::MirrorAPCount(int mirrorAPCount) {
     int index = AP_QUANTITY; 
     
     for (auto& apGameObject : apArray) {
-        if (apGameObject) {
+        if (apGameObject.lock()) {
             // Try to retrieve the "Sprite" component
-            auto spriteComponent = apGameObject->GetComponent("Sprite");
+            auto spriteComponent = apGameObject.lock()->GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                apGameObject->RemoveComponent(spriteComponentPtr);
+                apGameObject.lock()->RemoveComponent(spriteComponentPtr);
             }
 
             std::string spritePath = (fullCount < index) ? AP_MIRROR_SPRITE : AP_FULL_SPRITE;
             spritePath = (apCount < index) ? AP_EMPTY_SPRITE : spritePath;
             
-            std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apGameObject, spritePath);
-            apGameObject->AddComponent(ap_spr);
+            Sprite* ap_spr = new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
+            apGameObject.lock()->AddComponent((std::shared_ptr<Component>)ap_spr);
             index--;
         }
     }       

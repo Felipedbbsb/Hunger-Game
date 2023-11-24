@@ -24,7 +24,7 @@ ScaleNode(1)
     Sprite* map_background_spr= new Sprite(associated, GetNodeSprite(type));
     associated.AddComponent((std::shared_ptr<Component>)map_background_spr);
 } 
-   
+    
 void Node::Start() {     
 
 }   
@@ -97,7 +97,7 @@ void Node::Update(float dt){
                     // Set the scale to the target value and reverse the direction
                     scaleSprite.x = 1.0f;
                     ScaleNode = 1;
-                }
+                } 
 
                     
                 // Center position original

@@ -36,7 +36,16 @@ skillSelection(nullptr),
 spriteBackground(spriteBackground),
 toggleState(true){}
   
-CombatState::~CombatState(){}
+CombatState::~CombatState(){
+    if(skillSelection != nullptr){
+        skillSelection->RequestDelete();
+        skillSelection = nullptr;
+    }
+    if(papiro != nullptr){
+        papiro->RequestDelete();
+        papiro = nullptr;
+    }
+}
 
 void CombatState::Update(float dt){   
     InputManager& input = InputManager::GetInstance();
@@ -71,6 +80,7 @@ void CombatState::Update(float dt){
                 skillSelectionEnd.Update(dt);
                 if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
                     popRequested = true;
+                    skillSelectionEnd.Restart();
                 }
             }
         }
@@ -272,6 +282,11 @@ void CombatState::Start(){
     SkillSelection::skillSelectionActivated = false;
     SkillSelection::selectionSkillDjinnStyle = false;
     SkillSelection::endSkillSelection = false;
+
+    Camera::Unfollow();
+    Camera::pos.x = -FOCUS_ENEMY;
+    Camera::pos.y = 0;
+
 }
  
 void CombatState::Pause(){

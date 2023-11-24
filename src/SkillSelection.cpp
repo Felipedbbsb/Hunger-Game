@@ -58,6 +58,7 @@ void SkillSelection::Start() {
     
     GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
     Camera::Follow(focusCamera);
+    
 }   
 
 
@@ -66,12 +67,19 @@ SkillSelection::~SkillSelection() {
     SkillSelection::skillSelectionActivated = false;
     SkillSelection::selectionSkillDjinnStyle = false;
 
-    
+    if(passButon != nullptr){
+        passButon->RequestDelete();
+        passButon = nullptr;
+    }
+    if(background != nullptr){
+        background->RequestDelete();
+        background = nullptr;
+    }
 
     for (int i = rewardArrayObj.size() - 1; i >= 0; i--) { //remove skills
             rewardArrayObj.erase(rewardArrayObj.begin() + i);
     }
-    std::cout <<"bye" << std::endl;
+
 }
 
 void SkillSelection::CreateBackground() {
@@ -245,6 +253,7 @@ void SkillSelection::Update(float dt) {
                 Skill::skillFromReward = nullptr;
                 Skill::skillToReward = nullptr;
                 SkillSelection::endSkillSelection = true;
+                std::cout <<"=========================================================" << std::endl;
 
             }
         }
@@ -262,7 +271,6 @@ void SkillSelection::Update(float dt) {
                 // Calcula a nova largura e altura
                 passButon->box.x = posXenterX - passButon->box.w / 2;
                 passButon->box.y = posXenterY - passButon->box.h / 2;
-
         }        
        
     }else{

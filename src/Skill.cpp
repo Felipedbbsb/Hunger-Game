@@ -99,6 +99,10 @@ Skill::~Skill() {
             tagCount = nullptr;
         }
     }
+    if(skillSelected != nullptr){
+        skillSelected->RequestDelete();
+        skillSelected = nullptr;
+    }
 }
 
 void Skill::Update(float dt) {

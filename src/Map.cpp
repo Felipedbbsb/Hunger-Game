@@ -259,10 +259,11 @@ void Map::Pause() {
 void Map::Resume() {
     State::Resume();
 
-    GameObject* focusCamera =  new GameObject(0, 0);
-    Camera::Follow(focusCamera);
+    Camera::Unfollow();
     Camera::pos.x = 0;
-    Camera::pos.y = 0;
+    Camera::pos.y = mapPosition.first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1) - RESOLUTION_HEIGHT/2;
+    
+
 }
 
  
