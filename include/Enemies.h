@@ -18,10 +18,23 @@
 #define ENEMY_INTENTON_SPRITE "assets/img/UI/uiIntentionEnemy.png"
 
 #define ENEMY1_SPRITE "assets/img/enemies/enemyChickIdle.png"
-#define ENEMY2_SPRITE "assets/img/enemies/enemyDogIdle.png"
-#define ENEMY3_SPRITE "assets/img/enemies/enemyGhoulIdle.png"
-#define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
+    #define ENEMY1_SPRITE_ATK "assets/img/enemies/enemyChickAttack.png"
+    #define ENEMY1_SPRITE_DFS "assets/img/enemies/enemyChickDamage.png"
 
+#define ENEMY2_SPRITE "assets/img/enemies/enemyDogIdle.png"
+    #define ENEMY2_SPRITE_ATK "assets/img/enemies/enemyDogAttack.png"
+    #define ENEMY2_SPRITE_DFS "assets/img/enemies/enemyDogDamage.png"
+
+#define ENEMY3_SPRITE "assets/img/enemies/enemyGhoulIdle.png"
+    #define ENEMY3_SPRITE_ATK "assets/img/enemies/enemyGhoulAttack.png"
+    #define ENEMY3_SPRITE_DFS "assets/img/enemies/enemyGhoulDamage.png"
+
+#define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
+    #define ENEMY4_SPRITE_ATK "assets/img/enemies/enemySpiderAttack.png"
+    #define ENEMY4_SPRITE_DFS "assets/img/enemies/enemySpiderDamage.png"
+
+#define ENEMY_FT 1
+#define ENEMY_FC 1
 
 #define INTENTION_COOLDOWN 1.5
 
@@ -42,6 +55,8 @@ class Enemies : public Component {
             std::vector<Tag::Tags> tags;
             std::string name;
             std::string iconPath;
+            std::string iconPathATK;
+            std::string iconPathDFS;
             std::vector<Skill::SkillId> skills;
         };
 

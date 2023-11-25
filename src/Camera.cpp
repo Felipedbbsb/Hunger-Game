@@ -17,8 +17,8 @@ Vec2 Camera::speed;
 void Camera::Update(float dt) {
     if (focus == nullptr) {
         InputManager& input = InputManager::GetInstance();
-        speed.x = static_cast<float>((input.IsKeyDown(RIGHT_ARROW_KEY) - input.IsKeyDown(LEFT_ARROW_KEY)) * CAMERA_SPEED);
-        speed.y = static_cast<float>((input.IsKeyDown(DOWN_ARROW_KEY) - input.IsKeyDown(UP_ARROW_KEY)) * CAMERA_SPEED);
+        //speed.x = static_cast<float>((input.IsKeyDown(RIGHT_ARROW_KEY) - input.IsKeyDown(LEFT_ARROW_KEY)) * CAMERA_SPEED);
+        //speed.y = static_cast<float>((input.IsKeyDown(DOWN_ARROW_KEY) - input.IsKeyDown(UP_ARROW_KEY)) * CAMERA_SPEED);
         pos.x += dt * speed.x;
         pos.y += dt * speed.y;
 

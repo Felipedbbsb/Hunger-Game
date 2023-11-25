@@ -19,7 +19,8 @@ wasVisited(false),
 floor(v1.first),
 column(v1.second),
 neighbors(neighbors),
-ScaleNode(1)
+ScaleNode(1),
+iconVisited(nullptr)
 {     
     Sprite* map_background_spr= new Sprite(associated, GetNodeSprite(type));
     associated.AddComponent((std::shared_ptr<Component>)map_background_spr);
@@ -30,10 +31,29 @@ void Node::Start() {
 }   
   
 Node::~Node(){ 
-   
+   if(iconVisited != nullptr){
+        iconVisited->RequestDelete();
+        iconVisited = nullptr;
+    }
 } 
 
 void Node::Update(float dt){  
+    if(wasVisited){
+        if(iconVisited == nullptr){
+            CreateIconVisited();
+        }
+        
+
+
+    }
+    else{
+        if(iconVisited != nullptr){
+            iconVisited->RequestDelete();
+            iconVisited = nullptr;
+        }
+    }
+
+
     if(Map::mapPosition == std::make_pair(floor, column)){
         Node::currentNeighbors = neighbors;
     }
@@ -139,9 +159,14 @@ int Node::GetFloor(){
 }
 
 void Node::SetNewStage(NodeType node){
+
+    wasVisited = true;
+
     std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
                                                    Enemies::ENEMY2, 
                                                    Enemies::ENEMY3 };
+
+   //std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition - 1);                                               
     
     switch (node) {
         case NodeType::MURAL: {
@@ -158,11 +183,29 @@ void Node::SetNewStage(NodeType node){
             Mural* new_stage = new Mural(COMBAT_IMAGE); 
             Game::GetInstance().Push(new_stage);
             break;
-        }
+        } 
         case NodeType::UNKNOWN: {
-            Mural* new_stage = new Mural(COMBAT_IMAGE); 
-            Game::GetInstance().Push(new_stage);
-            break;
+            int randomizedEncounter = rand() % 3 + 1;
+            //COMBAT
+            if(randomizedEncounter == 1){
+                CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 
+                Game::GetInstance().Push(new_stage);  
+
+            }
+
+            //MURAL
+            else if(randomizedEncounter == 2){
+                Mural* new_stage = new Mural(COMBAT_IMAGE); 
+                Game::GetInstance().Push(new_stage);
+            }
+
+            //RANDOM ENCOUNTER
+            else if(randomizedEncounter == 3){
+                Mural* new_stage = new Mural(COMBAT_IMAGE); 
+                Game::GetInstance().Push(new_stage);
+            }
+
+           break;
         }
         case NodeType::BOSS: {
             Mural* new_stage = new Mural(COMBAT_IMAGE); 
@@ -170,6 +213,25 @@ void Node::SetNewStage(NodeType node){
             break;
         }
     }
+}
+
+void Node::CreateIconVisited(){
+    //first set the size from the node to 1
+    auto nextComponent = associated.GetComponent("Sprite");
+        auto nextComponentPtr = std::dynamic_pointer_cast<Sprite>(nextComponent);
+        if(nextComponentPtr){
+            nextComponentPtr->SetScale(1,1);
+        }
+
+
+    iconVisited = new GameObject(associated.box.x, associated.box.y);
+    Sprite* iconVisited_spr = new Sprite(*iconVisited, MAP_VISITED_SPRITE);
+    iconVisited->AddComponent(std::shared_ptr<Sprite>(iconVisited_spr));
+
+    iconVisited->box.x += associated.box.w / 2 - iconVisited->box.w / 2;
+    iconVisited->box.y += associated.box.h / 2 - iconVisited->box.h / 2;
+
+    Game::GetInstance().GetCurrentState().AddObject(iconVisited);
 }
 
 std::string Node::GetNodeSprite(NodeType node){

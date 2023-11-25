@@ -22,7 +22,7 @@ std::vector<std::vector<std::pair<int, int>>> Map::created_edges;
 std::vector<std::pair<int, int>> Map::created_nodes;
 std::pair<int, int> Map::mapPosition = std::make_pair(0, 0); 
 
-Map::Map() : State::State(){ 
+Map::Map() : State::State(){  
     CreateMap();
 
 }
@@ -32,10 +32,33 @@ Map::~Map() {}
 void Map::Update(float dt) {
     InputManager& input = InputManager::GetInstance();
  
-    // If the event is quit, set the termination flag
+
     if (input.KeyPress(ESCAPE_KEY) || input.QuitRequested()) {
         quitRequested = true;
     }
+
+     if ((input.IsKeyDown(W_KEY) || input.IsKeyDown(UP_ARROW_KEY)) && Camera::pos.y < MAP_GRID_SIZE.y - RESOLUTION_HEIGHT) {
+        Camera::pos.y += MAP_SCROLL_SPEED * dt;
+    }
+
+    // Se a tecla S ou a seta para baixo for pressionada e a posição da câmera não ultrapassar o limite inferior
+    if ((input.IsKeyDown(S_KEY) || input.IsKeyDown(DOWN_ARROW_KEY)) && Camera::pos.y > 0) {
+        Camera::pos.y -= MAP_SCROLL_SPEED * dt;
+    }
+
+    // Log scroll values
+    //std::cout << input.isMouseWheelScrolled()<<"  ScrollX: " << input.GetScrollX() << ", ScrollY: " << input.GetScrollY() << std::endl;
+
+
+    // Obtenha os valores atuais de scroll
+    //int scrollX = input.GetScrollX();
+    //int scrollY = input.GetScrollY();
+ 
+    // Mova a câmera com base no scroll
+    //if(input.isMouseWheelScrolled()){
+    //    Camera::pos.y += scrollY * MAP_SCROLL_SPEED * dt;
+    //}
+    
 
     UpdateArray(dt); 
     Camera::Update(dt);
@@ -45,25 +68,48 @@ void Map::Update(float dt) {
 
 void Map::LoadAssets() {
     //background
-    GameObject *map_background = new GameObject(-1000,-1000);
+    GameObject *map_background = new GameObject(0,0);
     Sprite* map_background_spr= new Sprite(*map_background, MAP_SPRITE);
     map_background->AddComponent((std::shared_ptr<Component>)map_background_spr);
 
-    //map_background->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - firstPathObj->box.w / 2;
+    map_background->box.x = RESOLUTION_WIDTH  / 2 - map_background->box.w / 2;
+    map_background->box.y = RESOLUTION_HEIGHT - map_background->box.h + MAP_GRID_SIZE.y / (MAP_FLOORS + 2);
 
-    CameraParallax *map_background_cmfl = new CameraParallax(*map_background, 1);
-    map_background->AddComponent((std::shared_ptr<CameraParallax>)map_background_cmfl);
+    //CameraParallax *map_background_cmfl = new CameraParallax(*map_background, 1);
+    //map_background->AddComponent((std::shared_ptr<CameraParallax>)map_background_cmfl);
 
     AddObject(map_background);
 
 
-    int totalNodes =created_nodes.size();
-    int muralCount = 0;
+    int totalNodes = created_nodes.size();
+    bool isMuralLastNode = false;
+    int muralCount = totalNodes * MAP_PORC_MURAL;
+    int combatCount = totalNodes * MAP_PORC_COMBAT;
+    int unknwonCount = totalNodes * MAP_PORC_UNKNOW;
     for (const auto& node : created_nodes) {
-        CreateNodeObj(node, RandomNodeType(totalNodes, muralCount));
+        CreateNodeObj(node, RandomNodeType(node, totalNodes, isMuralLastNode, muralCount, combatCount, unknwonCount));
     }
-}
 
+
+    //====================================BOSS===============================
+    GameObject *new_node = new GameObject();
+    Node* node_spr = new Node(*new_node, NodeType::BOSS, std::make_pair(MAP_FLOORS + 1, 1), {});
+    new_node->AddComponent((std::shared_ptr<Component>)node_spr);
+
+    new_node->box.x = RESOLUTION_WIDTH / 2; //Centralized
+    ;
+
+    new_node->box.y = RESOLUTION_HEIGHT - (MAP_FLOORS + 1) * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) + Camera::pos.y; //plus 2 for offset and BOSS
+
+    //Centralize in center of spirte
+    new_node->box.x -= new_node->box.w/2;
+    new_node->box.y -= new_node->box.h/2;
+ 
+    AddObject(new_node);
+
+
+}
+ 
 void Map::CreateMap(){
     for(int i=1; i<=MAP_MAX_PATHS; i++){
         int floors_made = 0;
@@ -168,28 +214,61 @@ void Map::CreateNodeObj(std::pair<int, int> v1, NodeType type) {
     new_node->box.x = RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2; //Centralized
     new_node->box.x += v1.second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1);
 
-    new_node->box.y = RESOLUTION_HEIGHT - v1.first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1); //Centralized
+    new_node->box.y = RESOLUTION_HEIGHT - v1.first * MAP_GRID_SIZE.y / (MAP_FLOORS + 2); //Centralized
 
     //Centralize in center of spirte
     new_node->box.x -= new_node->box.w/2;
     new_node->box.y -= new_node->box.h/2;
-
+ 
     AddObject(new_node);
 }
 
-NodeType Map::RandomNodeType(int totalNodes, int& muralCount) {
+NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &isMuralLastNode, int &muralCount, int &combatCount, int &unknwonCount) {
     // Gerar um número entre 1 e 100 (inclusive)
-    int randomPercent = std::rand() % 100 + 1;
+    int randomPercent = std::rand() % totalNodes + 1;
 
-    // Verificar se deve ser um mural
-    if (randomPercent <= 20 && muralCount < totalNodes * 0.2) {
-        ++muralCount;
+
+
+    //std::cout << totalNodes <<" " << isMuralLastNode<<" " << muralCount<<" " << combatCount<<" " <<unknwonCount << std::endl;
+    --totalNodes;
+
+
+    // O primeiro andar sempre é um combate
+    // O 15º andar sempre é um mural
+    // O 14º andar nunca é um mural.
+    // Não podem existir salas de mural consecutivas.
+
+    //floor exceptions
+    if(node.first == MAP_FLOORS){
+        --muralCount;
+        isMuralLastNode = false;
         return NodeType::MURAL;
-    } else if (randomPercent <= 65) {
+    }
+    else if(node.first == 1){
+        --combatCount;
+        isMuralLastNode = false;
         return NodeType::COMBAT; 
-    } else {
+    }
+
+
+    if (randomPercent <= muralCount && !isMuralLastNode && node.first != MAP_FLOORS - 1) {
+        --muralCount;
+        isMuralLastNode = true;
+        return NodeType::MURAL;
+    } 
+    else if (randomPercent <= muralCount + combatCount) {
+        --combatCount;
+        isMuralLastNode = false;
+        return NodeType::COMBAT; 
+    } 
+    else if(randomPercent <= muralCount + combatCount + unknwonCount) {
+        --unknwonCount;
+        isMuralLastNode = false;
         return NodeType::UNKNOWN;  // Substitua "UNKNOWN" pelo tipo correto de sala
     }
+    
+    //exception
+    return NodeType::COMBAT;
 }
 
 std::vector<std::pair<int, int>> Map::GetUpperNeighbors(const std::pair<int, int>& v) {
@@ -210,8 +289,14 @@ std::vector<std::pair<int, int>> Map::GetUpperNeighbors(const std::pair<int, int
         }
     }
 
+
+
     // Remover duplicatas no vetor de vizinhos
     upperNeighbors.erase(std::unique(upperNeighbors.begin(), upperNeighbors.end()), upperNeighbors.end());
+
+    if(v.first == MAP_FLOORS){
+        upperNeighbors.push_back(std::make_pair(MAP_FLOORS + 1, 1));
+    }
 
 
     return upperNeighbors;
@@ -221,26 +306,41 @@ void Map::Render() {
     RenderArray();
 
 
-    // Renderizar as linhas criadas
+    // Render created lines
     for (const auto& edge : created_edges) {
         for (size_t i = 1; i < edge.size(); ++i) {
             // Obter as coordenadas dos pontos da aresta
             if(edge[i].first <= MAP_FLOORS){
                 int x1 = edge[i - 1].second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1) +
                          RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
-                int y1 = RESOLUTION_HEIGHT - edge[i - 1].first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1) + Camera::pos.y;
+                int y1 = RESOLUTION_HEIGHT - edge[i - 1].first * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) + Camera::pos.y; 
 
                 int x2 = edge[i].second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1) +
                         RESOLUTION_WIDTH  / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
-                int y2 = RESOLUTION_HEIGHT - edge[i].first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1) + Camera::pos.y;
+                int y2 = RESOLUTION_HEIGHT - edge[i].first * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) + Camera::pos.y; //plus 2 for offset and BOSS
 
                 // Desenhar a linha
-                DrawLineMap(x1, y1, x2, y2);  
-            }
-            
+                DrawDashedLine(x1, y1, x2, y2, LINE_DASH_LENGHT, LINE_GAP_LENGHT);  
+
+                //Boss
+                if(edge[i].first == MAP_FLOORS){
+                    x1 = edge[i].second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1) +
+                    RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2 + Camera::pos.x;
+                    y1 = RESOLUTION_HEIGHT - edge[i].first * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) + Camera::pos.y; 
+
+                    x2 = RESOLUTION_WIDTH / 2 + Camera::pos.x;
+                    y2 = RESOLUTION_HEIGHT - (MAP_FLOORS + 1) * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) + Camera::pos.y; //plus 2 for offset and BOSS
+
+                    // Desenhar a linha
+                    DrawDashedLine(x1, y1, x2, y2, LINE_DASH_LENGHT, LINE_GAP_LENGHT);  
+
+                }
+
+            }  
+             
         }  
     }
- 
+    
 
     State::Render();
 }
@@ -261,7 +361,7 @@ void Map::Resume() {
 
     Camera::Unfollow();
     Camera::pos.x = 0;
-    Camera::pos.y = mapPosition.first * MAP_GRID_SIZE.y / (MAP_COLUMNS + 1) - RESOLUTION_HEIGHT/2;
+    Camera::pos.y = mapPosition.first * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) - RESOLUTION_HEIGHT/2;
     
 
 }
@@ -271,11 +371,42 @@ void Map::Resume() {
  
 void Map::DrawLineMap(int x1, int y1, int x2, int y2) {
     SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Cor preta (R, G, B, A)
-    
-    // Desenhar a linha
-    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-    
-    // Restaurar a cor original (opcional, dependendo do contexto)
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Cor branca (R, G, B, A)
-}  
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black color (R, G, B, A)
+
+    // Draw a thicker line by drawing multiple connected lines
+    int thickness = 5;  // Set the thickness of the line
+    for (int i = 0; i < thickness; ++i) {
+        SDL_RenderDrawLine(renderer, x1, y1 + i, x2, y2 + i);
+    }
+
+    // Restore the original color (optional, depending on the context)
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color (R, G, B, A)
+}
+
+// Function to draw a dashed line between two points
+void Map::DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gapLength) {
+    SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black color (R, G, B, A)
+
+    // Calculate the length and direction of the line
+    float length = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    float dx = (x2 - x1) / length;
+    float dy = (y2 - y1) / length;
+
+    // Draw the dashed line
+    float currentLength = 0;
+    bool drawDash = true;
+    while (currentLength <= length) {
+        if (drawDash) {
+            SDL_RenderDrawLine(renderer, x1 + currentLength * dx, y1 + currentLength * dy,
+                               x1 + fmin(currentLength + dashLength, length) * dx,
+                               y1 + fmin(currentLength + dashLength, length) * dy);
+        }
+
+        currentLength += dashLength + gapLength;
+        drawDash = !drawDash;
+    }
+
+    // Restore the original color (optional, depending on the context)
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color (R, G, B, A)
+}

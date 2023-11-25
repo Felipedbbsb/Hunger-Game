@@ -204,9 +204,7 @@ void Game::Run() {
         // Check if the top state wants to pop
         if (stateStack.top()->PopRequested()) {
             stateStack.top()->Pause();
-            std::cout << "Antes de stateStack.pop(). Tamanho da pilha: " << stateStack.size() << std::endl;
             stateStack.pop();
-            std::cout << "Depois de stateStack.pop(). Tamanho da pilha: " << stateStack.size() << std::endl;
             Resources::ClearImages();
 			Resources::ClearSounds();
 			Resources::ClearMusics();

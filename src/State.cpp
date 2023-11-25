@@ -11,12 +11,8 @@ State::State() :
 {}
 
 State::~State(){
-    std::cout << "Destrutor do Estado sendo chamado." << std::endl;
-    for (auto& obj : objectArray) {
-        std::cout << "Destruição de Objeto: " << typeid(obj).name() << std::endl;
-    }
     objectArray.clear();
-    std::cout << "Destrutor CONCLUIDO" << std::endl;
+
    
 }
 

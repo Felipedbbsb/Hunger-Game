@@ -13,7 +13,10 @@ mouseUpdate{0, 0, 0, 0, 0, 0},
 quitRequested(false),
 updateCounter(0),
 mouseX(0),
-mouseY(0){}
+mouseY(0),
+pMouseWheelScrolled(false),
+scrollX(0),
+scrollY(0){}
 
 InputManager::~InputManager(){}
 
@@ -23,7 +26,11 @@ void InputManager::Update() {
     updateCounter++;
     quitRequested = false;
 
+    
     while (SDL_PollEvent(&event)) {
+
+        onMouseWheelScroll(event);
+
         if (!event.key.repeat) {
             switch (event.type) {
                 case SDL_KEYDOWN:
@@ -56,6 +63,31 @@ int InputManager::GetMouseX() { return mouseX; }
 
 int InputManager::GetMouseY() { return mouseY; }
 
+void InputManager::onMouseWheelScroll(SDL_Event &event){
+
+    if(event.wheel.type == SDL_MOUSEWHEEL){
+        pMouseWheelScrolled = true;
+        scrollX = event.wheel.x;
+        scrollY = event.wheel.y;
+    }
+    else{
+        pMouseWheelScrolled = false;
+    }
+    
+}
+
+bool InputManager::isMouseWheelScrolled() {
+    return pMouseWheelScrolled;
+}
+
+int InputManager::GetScrollX() {
+    return scrollX;
+}
+
+int InputManager::GetScrollY() {
+    return scrollY;
+}
+
 
 //For next functions
 
@@ -63,6 +95,7 @@ int InputManager::GetMouseY() { return mouseY; }
 // in that frame, and should only return true in that case. Use vectors
 // ___Update and the updateCounter to know. Is___Down returns if the button/key
 // is pressed, regardless of when it occurred.
+
 
 
 bool InputManager::KeyPress(int key) {

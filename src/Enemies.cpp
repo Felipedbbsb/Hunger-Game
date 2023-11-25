@@ -58,7 +58,7 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
 }
  
 void Enemies::Start() {
-    Sprite* enemies_spr = new Sprite(associated, iconPath); 
+    Sprite* enemies_spr = new Sprite(associated, iconPath, ENEMY_FC, ENEMY_FT/ ENEMY_FC); 
     associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr)); 
     associated.box.y -= associated.box.h;
 
@@ -779,9 +779,9 @@ bool Enemies::Is(std::string type) {
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
     // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 5, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY2] = { 5, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
-    enemyInfoMap[ENEMY3] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
-    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY1] = { 5, {}, "Enemy 1", ENEMY1_SPRITE, ENEMY1_SPRITE_ATK, ENEMY1_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[ENEMY2] = { 5, {}, "Enemy 2", ENEMY2_SPRITE, ENEMY2_SPRITE_ATK, ENEMY2_SPRITE_DFS, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
+    enemyInfoMap[ENEMY3] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, ENEMY3_SPRITE_ATK, ENEMY3_SPRITE_DFS, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
+    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 }
- 
+   

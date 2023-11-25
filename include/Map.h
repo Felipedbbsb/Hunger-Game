@@ -10,14 +10,25 @@
 #include "unordered_map"
 #include "State.h"
 
-#define MAP_COLUMNS 5
+#define MAP_SCROLL_SPEED 750
+
+#define MAP_COLUMNS 7
 #define MAP_FLOORS 15
 #define MIN_COLUMN_VALUE 1
 #define MAP_MAX_PATHS 4
 #define MAP_SPRITE "assets/img/UI/map/uiMapBackground.png"
 #define MAP_COMBAT_SPRITE "assets/img/UI/map/uiMapFight.png"
 
-#define MAP_GRID_SIZE Vec2(1820, 2000)
+#define LINE_GAP_LENGHT  5
+#define LINE_DASH_LENGHT  8
+
+#define MAP_GRID_SIZE Vec2(1520, 3080)
+
+#define MAP_PORC_COMBAT  0.45
+#define MAP_PORC_MURAL  0.30
+#define MAP_PORC_UNKNOW  0.25
+
+#define LINE_DASH_LENGHT  8
 
 // Node possible types
 enum NodeType { MURAL, COMBAT, REST, UNKNOWN, BOSS };
@@ -48,15 +59,16 @@ class Map : public State{
         static std::pair<int, int> mapPosition;
         void CreateNodeObj(std::pair<int, int> v1, NodeType type); 
         std::vector<std::pair<int, int>> GetUpperNeighbors(const std::pair<int, int>& v);
-        NodeType RandomNodeType(int totalNodes, int& muralCount);
+        NodeType RandomNodeType(std::pair<int, int> node, int &totalNodes, 
+        bool &isMuralLastNode, int &muralCount, int &combatCount, int &unknwonCount);
     
     private:
         void CreateMap();
         int CheckCorners(int current_column, int next_column, int current_floor);
         void DrawLineMap(int x1, int y1, int x2, int y2);
-         
+        void DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gapLength); 
         //std::vector<MapPath> map;
-
+        
         
 }; 
 

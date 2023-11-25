@@ -35,6 +35,10 @@ class InputManager{
         bool IsMouseDown(int button);
         int GetMouseX();
         int GetMouseY();
+        void onMouseWheelScroll(SDL_Event &event);
+        bool isMouseWheelScrolled();
+        int GetScrollX();
+        int GetScrollY();
         bool QuitRequested();
         static InputManager &GetInstance();
         InputManager();
@@ -50,4 +54,7 @@ class InputManager{
         int updateCounter;
         int mouseX;
         int mouseY;
+        bool pMouseWheelScrolled;
+        int scrollX;
+        int scrollY;
 };

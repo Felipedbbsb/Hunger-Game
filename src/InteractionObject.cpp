@@ -30,24 +30,41 @@ InteractionObject::~InteractionObject() {
 void InteractionObject::Start() { 
     if(targetType == Skill::TargetType::IRR){
         Enemies::EnemyInfo& enemyInfo = Enemies::enemyInfoMap[enemyId]; 
-        iconPath = enemyInfo.iconPath;
-        Sprite* obj_spr = new Sprite(associated, iconPath); 
-        associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+        
 
         if(isAttacking){
             if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
+                iconPath = enemyInfo.iconPathDFS;
+                Sprite* obj_spr = new Sprite(associated, iconPath); 
+                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                
                 //CREATES BUFF
                 CreateEffect("BUFF", false);
                 
+                
             }
             else{
+                iconPath = enemyInfo.iconPathATK;
+                Sprite* obj_spr = new Sprite(associated, iconPath); 
+                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+
                 //CREATES NONE
             }
         }else{
             if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                //CREATES NONE
+                iconPath = enemyInfo.iconPathDFS;
+                Sprite* obj_spr = new Sprite(associated, iconPath); 
+                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                
+                //CREATES BUFF
+                CreateEffect("BUFF", false);
             }
             else{
+                iconPath = enemyInfo.iconPathDFS;
+                Sprite* obj_spr = new Sprite(associated, iconPath); 
+                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                
+
                 //CREATES DAMAGE OR DEBUFF
                 if(attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || attackType == Skill::AttackType::DEBUFF_ALL){
                     CreateEffect("DEBUFF", false); 

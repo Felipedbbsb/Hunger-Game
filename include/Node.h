@@ -17,6 +17,7 @@
 #define MAP_REST_SPRITE "assets/img/UI/map/uiMapFight.png"
 #define MAP_UNKNOWN_SPRITE "assets/img/UI/map/uiMapMistery.png"
 #define MAP_BOSS_SPRITE "assets/img/UI/map/uiMapBoss.png"
+#define MAP_VISITED_SPRITE "assets/img/UI/map/uiMapVisited.png"
 
 class Node : public Component {
     public:
@@ -32,6 +33,7 @@ class Node : public Component {
         bool Is(std::string type);
         static std::vector<std::pair<int, int>> currentNeighbors;
         void SetNewStage(NodeType node);
+        void CreateIconVisited();
     private:
         NodeType type;
         bool canVisited;
@@ -40,4 +42,5 @@ class Node : public Component {
         int column;
         std::vector<std::pair<int, int>> neighbors;
         int ScaleNode;
+        GameObject* iconVisited;
 };
