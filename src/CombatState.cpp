@@ -133,11 +133,13 @@ void CombatState::LoadAssets(){
     AddObject(ui);
 
     //PROTECTED
-    GameObject* protected_UI = new GameObject(PROTECTED_POS);
+    GameObject* protected_UI = new GameObject(DAUGHTER_POS);
         Protected* protected_behaviour = new Protected(*protected_UI);
-        CameraFollower *protected_UI_cmfl = new CameraFollower(*protected_UI);
-        protected_UI->AddComponent((std::shared_ptr<CameraFollower>)protected_UI_cmfl);
+        //CameraFollower *protected_UI_cmfl = new CameraFollower(*protected_UI);
+        //protected_UI->AddComponent((std::shared_ptr<CameraFollower>)protected_UI_cmfl);
         protected_UI->AddComponent(std::shared_ptr<Protected>(protected_behaviour));
+        protected_UI->box.x -= protected_UI->box.w/4;
+        protected_UI->box.y -= protected_UI->box.h + 300;
         Game::GetInstance().GetCurrentState().AddObject(protected_UI);
     
 

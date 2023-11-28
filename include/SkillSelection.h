@@ -24,6 +24,7 @@
 
 
 #define SKILL_SELECTION_BCKGROUND "assets/img/UI/uiRewardScreen.png"
+#define SKILL_SELECTION_MURAL_BCKGROUND "assets/img/UI/uiRewardScreenMural.png"
 
 #define SKILL_SELECTION_ARROW "assets/img/UI/uiRewardScreenArrow.png"
 #define SKILL_SELECTION_ARROW_ACTIVATED "assets/img/UI/uiRewardScreenArrowSelected.png"

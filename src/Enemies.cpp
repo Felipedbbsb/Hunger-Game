@@ -817,7 +817,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Guttural Scream: Apply 2 rampage to all allies
 
     */
-    enemyInfoMap[Parakeet] = { 25, {}, "Parakeet", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
+    enemyInfoMap[Parakeet] = { 25, {}, "Parakeet", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
 
     /*
     Rachorro (Brute):

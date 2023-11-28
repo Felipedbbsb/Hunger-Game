@@ -287,20 +287,20 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
    //Test release version 70%
     //encounters from 1-5
     encounterMap[1] = { Enemies::CultistGreen, Enemies::CultistGreen};
-    encounterMap[2] = { Enemies::CultistGreen, Enemies::CultistRed };
+    encounterMap[2] = { Enemies::CultistGreen, Enemies::CultistGreen };
     encounterMap[3] = { Enemies::CultistGreen, Enemies::CultistGreen };
     encounterMap[4] = { Enemies::CultistGreen, Enemies::CultistGreen};
     encounterMap[5] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistRed };
 
     //encounters from 6-10
-    encounterMap[6] = { Enemies::CultistRed, Enemies::CultistRed };
+    encounterMap[6] = { Enemies::CultistRed, Enemies::Parakeet};
     encounterMap[7] = { Enemies::CultistRed, Enemies::CultistRed };
     encounterMap[8] = { Enemies::CultistRed, Enemies::CultistGreen, Enemies::CultistRed };
-    encounterMap[9] = { Enemies::CultistRed, Enemies::CultistRed};
+    encounterMap[9] = { Enemies::CultistRed, Enemies::Parakeet};
     encounterMap[10] = { Enemies::CultistRed, Enemies::CultistRed, Enemies::CultistRed };
     
     //encounters from 11-15
-    encounterMap[11] = { Enemies::CultistPurple, Enemies::CultistPurple };
+    encounterMap[11] = { Enemies::CultistPurple, Enemies::Parakeet };
     encounterMap[12] = { Enemies::CultistRed, Enemies::CultistPurple };
     encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistGreen, Enemies::CultistPurple };
     encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple};

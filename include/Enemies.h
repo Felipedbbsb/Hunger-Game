@@ -46,9 +46,9 @@
     #define CultistPurple_SPRITE_ATK "assets/img/enemies/vizirCultistMeleeAttack.png"
     #define CultistPurple_SPRITE_DFS "assets/img/enemies/vizirCultistDamage.png"
 
-#define Parakeet_SPRITE "assets/img/enemies/vizirCultistIdle.png"
-    #define Parakeet_SPRITE_ATK "assets/img/enemies/vizirCultistMeleeAttack.png"
-    #define Parakeet_SPRITE_DFS "assets/img/enemies/vizirCultistDamage.png"
+#define Parakeet_SPRITE "assets/img/enemies/piriquitoIdle.png"
+    #define Parakeet_SPRITE_ATK "assets/img/enemies/piriquitoMeleeAttack.png"
+    #define Parakeet_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
 
 
 

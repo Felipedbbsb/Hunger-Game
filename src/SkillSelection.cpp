@@ -84,7 +84,16 @@ SkillSelection::~SkillSelection() {
 
 void SkillSelection::CreateBackground() {
     background = new GameObject();
-    Sprite* background_spr = new Sprite(*background, SKILL_SELECTION_BCKGROUND); 
+
+    std::string bg_type;
+    if(SkillSelection::selectionSkillDjinnStyle){
+        bg_type = SKILL_SELECTION_MURAL_BCKGROUND;
+    }
+    else{
+        bg_type = SKILL_SELECTION_BCKGROUND;
+    }
+
+    Sprite* background_spr = new Sprite(*background, bg_type); 
     background->AddComponent(std::shared_ptr<Sprite>(background_spr));    
     
     background->box.x = (RESOLUTION_WIDTH )/2 - background->box.w/2 - Camera::pos.x;   
