@@ -61,14 +61,13 @@ class Map : public State{
         std::vector<std::pair<int, int>> GetUpperNeighbors(const std::pair<int, int>& v);
         NodeType RandomNodeType(std::pair<int, int> node, int &totalNodes, 
         bool &isMuralLastNode, int &muralCount, int &combatCount, int &unknwonCount);
-    
-    private:
         void CreateMap();
         int CheckCorners(int current_column, int next_column, int current_floor);
         void DrawLineMap(int x1, int y1, int x2, int y2);
         void DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gapLength); 
-        //std::vector<MapPath> map;
-        
+    
+    private:
+
         
 }; 
 

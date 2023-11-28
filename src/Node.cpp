@@ -9,6 +9,8 @@
 #include "Map.h"
 #include "Mural.h"
 #include "CombatState.h"
+#include "Enemies.h"
+
 std::vector<std::pair<int, int>> Node::currentNeighbors = {};
 
 Node::Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors)
@@ -162,21 +164,15 @@ void Node::SetNewStage(NodeType node){
 
     wasVisited = true;
 
-    std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
-                                                   Enemies::ENEMY2, 
-                                                   Enemies::ENEMY3 };
 
-   //std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition - 1);                                               
-    
     switch (node) {
+
         case NodeType::MURAL: {
-            Mural* new_stage = new Mural(COMBAT_IMAGE); 
-            Game::GetInstance().Push(new_stage);
+            CreateMural();
             break;
         }
         case NodeType::COMBAT: {
-            CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 
-            Game::GetInstance().Push(new_stage);  
+            CreateCombat();  
             break;
         }
         case NodeType::REST: {
@@ -188,28 +184,24 @@ void Node::SetNewStage(NodeType node){
             int randomizedEncounter = rand() % 3 + 1;
             //COMBAT
             if(randomizedEncounter == 1){
-                CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 
-                Game::GetInstance().Push(new_stage);  
+                CreateCombat(); 
 
             }
-
+ 
             //MURAL
             else if(randomizedEncounter == 2){
-                Mural* new_stage = new Mural(COMBAT_IMAGE); 
-                Game::GetInstance().Push(new_stage);
+                CreateMural();
             }
 
             //RANDOM ENCOUNTER
             else if(randomizedEncounter == 3){
-                Mural* new_stage = new Mural(COMBAT_IMAGE); 
-                Game::GetInstance().Push(new_stage);
+                CreateMural();
             }
 
            break;
         }
         case NodeType::BOSS: {
-            Mural* new_stage = new Mural(COMBAT_IMAGE); 
-            Game::GetInstance().Push(new_stage);
+            CreateCombat();  
             break;
         }
     }
@@ -246,7 +238,100 @@ std::string Node::GetNodeSprite(NodeType node){
     return spriteNode ;   
 }
 
+void Node::CreateMural(){
+    int randomValue = std::rand() % 2 + 1;
+
+    // Append the random value to the sprite path
+    std::string spriteBg = MAP_MURAL_BACKGROUND;
+    spriteBg.insert(spriteBg.find_last_of('.'), std::to_string(randomValue));
+
+    Mural* new_stage = new Mural(spriteBg); 
+    Game::GetInstance().Push(new_stage);  
+}
+
+void Node::CreateCombat(){
+    std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition.first - 1);                                               
+    
+
+    CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 
+    Game::GetInstance().Push(new_stage);  
+}
+
+std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
+    
+    std::map< int, std::vector<Enemies::EnemyId>> encounterMap;
+
+    /*
+    //encounters from 1-5
+    encounterMap[1] = { Enemies::CultistGreen, Enemies::CultistGreen};
+    encounterMap[2] = { Enemies::CultistGreen, Enemies::CultistRed };
+    encounterMap[3] = { Enemies::Frog, Enemies::CultistGreen };
+    encounterMap[4] = { Enemies::Frog, Enemies::Radog};
+    encounterMap[5] = { Enemies::Frog, Enemies::Radog, Enemies::CultistGreen };
+
+    //encounters from 6-10
+    encounterMap[6] = { Enemies::Radog, Enemies::Cat };
+    encounterMap[7] = { Enemies::CultistRed, Enemies::Cat };
+    encounterMap[8] = { Enemies::CultistGreen, Enemies::CultistGreen, Enemies::Cat };
+    encounterMap[9] = { Enemies::Cat, Enemies::Cat};
+    encounterMap[10] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::Cat };
+    
+    //encounters from 11-15
+    encounterMap[11] = { Enemies::Parakeet, Enemies::Cat };
+    encounterMap[12] = { Enemies::CultistRed, Enemies::Cat };
+    encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistGreen, Enemies::Cat };
+    encounterMap[14] = { Enemies::Cat, Enemies::Cat};
+    encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::Cat };
+    */
+
+   //Test release version 70%
+    //encounters from 1-5
+    encounterMap[1] = { Enemies::CultistGreen, Enemies::CultistGreen};
+    encounterMap[2] = { Enemies::CultistGreen, Enemies::CultistRed };
+    encounterMap[3] = { Enemies::CultistGreen, Enemies::CultistGreen };
+    encounterMap[4] = { Enemies::CultistGreen, Enemies::CultistGreen};
+    encounterMap[5] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistRed };
+
+    //encounters from 6-10
+    encounterMap[6] = { Enemies::CultistRed, Enemies::CultistRed };
+    encounterMap[7] = { Enemies::CultistRed, Enemies::CultistRed };
+    encounterMap[8] = { Enemies::CultistRed, Enemies::CultistGreen, Enemies::CultistRed };
+    encounterMap[9] = { Enemies::CultistRed, Enemies::CultistRed};
+    encounterMap[10] = { Enemies::CultistRed, Enemies::CultistRed, Enemies::CultistRed };
+    
+    //encounters from 11-15
+    encounterMap[11] = { Enemies::CultistPurple, Enemies::CultistPurple };
+    encounterMap[12] = { Enemies::CultistRed, Enemies::CultistPurple };
+    encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistGreen, Enemies::CultistPurple };
+    encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple};
+    encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
+
+
+    int randomValue = std::rand() % 5 + 1;
+
+    //encounters from 1-5
+    if(floorPostion < 6){
+        
+        return encounterMap[randomValue];
+    }
+    //encounters from 6-10
+    else if(floorPostion < 11){
+        return encounterMap[randomValue + 5];
+    }
+    //encounters from 11-15
+    else if(floorPostion < 16){
+        return encounterMap[randomValue + 10];
+    }
+    //encounter BOSS
+    else if(floorPostion == 16){
+        return encounterMap[randomValue + 10];
+    }
+
+    return encounterMap[1];
+}
+
 bool Node::Is(std::string type){
     return (type == "Node");
 }
 
+ 

@@ -5,7 +5,7 @@
 #include "Map.h"
 #include "Enemies.h"
 #include "Skill.h"
-
+#include "Map.h"
 #include <iostream>
 #include <exception>
 
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
  
         // ==========Enemies array==============
         /*
-        std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
+        std::vector<Enemies::EnemyId> enemiesArray = { Enemies::CultistGreen, 
                                                        Enemies::ENEMY2, 
                                                        Enemies::ENEMY3 };
  

@@ -62,6 +62,7 @@ Daughter::~Daughter()
             daughtertags.erase(daughtertags.begin() + i);
     }
     
+    Daughter::tags.clear();
     DeleteIndicator();
     DeleteIntention();
 

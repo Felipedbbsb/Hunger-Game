@@ -778,10 +778,85 @@ bool Enemies::Is(std::string type) {
 
 // Implement the InitializeEnemyInfoMap function to populate enemy information
 void Enemies::InitializeEnemyInfoMap() { 
-    // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 5, {}, "Enemy 1", ENEMY1_SPRITE, ENEMY1_SPRITE_ATK, ENEMY1_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY2] = { 5, {}, "Enemy 2", ENEMY2_SPRITE, ENEMY2_SPRITE_ATK, ENEMY2_SPRITE_DFS, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
-    enemyInfoMap[ENEMY3] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, ENEMY3_SPRITE_ATK, ENEMY3_SPRITE_DFS, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
-    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+
+    /*
+    Cultista Verde (Debuffer):
+        10 HP
+        Cut: Deal 6 damage
+        Whip: Deal 3 damage; Apply 1 Frail to target.
+        Evil Chant: Apply 2 weak to target
+    */
+    enemyInfoMap[CultistGreen] = { 10, {}, "Green Cultist", CultistGreen_SPRITE, CultistGreen_SPRITE_ATK, CultistGreen_SPRITE_DFS, {Skill::E_Cut, Skill::E_Whip, Skill::E_Evil_Chant} };
+    
+    
+    /*
+    Cultista Vermelho (Debuffer):
+        15 HP
+        Shiv: Deal 9 damage 
+        Whip: Deal 3 damage; Apply 2 Frail to target.
+        Evil Chant: Apply 2 weak to target
+
+    */
+    enemyInfoMap[CultistRed] = { 15, {}, "Red Cultist", CultistRed_SPRITE, CultistRed_SPRITE_ATK, CultistRed_SPRITE_DFS, {Skill::E_Shiv, Skill::E_Whip, Skill::E_Evil_Chant} };
+    
+    /*
+    Cultista Roxo (Damage Dealer):
+        20 HP
+        Tentacle Strike: Deal 12 damage
+        Bite: Deal 9 damage 
+        Whip: Deal 3 damage; Apply 2 Frail to target
+    */
+    enemyInfoMap[CultistPurple] = { 20, {}, "Purple Cultist", CultistPurple_SPRITE, CultistPurple_SPRITE_ATK, CultistPurple_SPRITE_DFS, {Skill::E_Tentacle_Strike, Skill::E_Bite, Skill::E_Whip} };
+    
+    
+   /*
+    Pintinho (Offensive Support)
+        25HP
+        Beak: Deal 3 damage
+        Unnerving Presence: Apply 2 Weak and 2 Vulnerable to target
+        Guttural Scream: Apply 2 rampage to all allies
+
+    */
+    enemyInfoMap[Parakeet] = { 25, {}, "Parakeet", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
+
+    /*
+    Rachorro (Brute):
+        15 HP
+        Claw: Deal 6 damage
+        Growl: Gain 2 resilience
+        Bark: Gain 2 provoke
+
+    */
+    enemyInfoMap[Radog] = { 5, {}, "Enemy 1", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+
+    /*    
+    Gato Doido (Glass Cannon)
+        20 HP
+        Trucidate: Deal 10 Damage
+        Enrage: Deal 3 damage; Gain 3 Rampage
+    */
+    enemyInfoMap[Cat] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, ENEMY2_SPRITE_ATK, ENEMY2_SPRITE_DFS, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
+    
+    /*    
+    Sapo (Defensive Support)
+        20HP
+        Bubble Shield: Apply 3 resilience to all allies
+        Tongue Strike: Deal 3 damage; Apply 3 weak to target
+        Toxic Sludge: Apply 4 curse to one enemy
+
+    */
+    enemyInfoMap[Frog] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, ENEMY3_SPRITE_ATK, ENEMY3_SPRITE_DFS, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
+    
+    /*    
+    Aranha (Boss)
+        60HP
+        Infernal Scream: Apply 3 Weak and 3 Vulnerable to target
+        Exoskeleton: Deal 5 damage; Gain 3 Resilience
+        Enrage: Gain 3 rampage
+        Impale: Deal 15 damage
+
+    */
+    enemyInfoMap[Spider] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+
 }
    

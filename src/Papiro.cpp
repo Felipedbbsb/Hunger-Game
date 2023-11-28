@@ -245,7 +245,7 @@ void Papiro::Update(float dt) {
         interactionObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - interactionObjects[i].lock()->box.w/2 + objectsMoves + SPACING_ENEMIES * spacingEnemies + 50;
 
         if(!centralized){
-           interactionObjects[i].lock()->box.x += interactionObjects[i].lock()->box.w/2;
+           interactionObjects[i].lock()->box.x += PAPIRO_SCREEN.x/6 ;
         }
 
         interactionObjects[i].lock()->box.y = background->box.y +  background->box.h - interactionObjects[i].lock()->box.h-Camera::pos.y;
@@ -269,7 +269,7 @@ void Papiro::Update(float dt) {
         PLayerObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - PLayerObjects[i].lock()->box.w/2 + objectsMoves + SPACING_PLAYERS * spacingplayers;
         
         if(!centralized){
-           PLayerObjects[i].lock()->box.x += PAPIRO_SCREEN.x/4 - PAPIRO_SCREEN.x/2 ;
+           PLayerObjects[i].lock()->box.x -= PAPIRO_SCREEN.x/6 ;
         }
 
         PLayerObjects[i].lock()->box.y = background->box.y +  background->box.h - PLayerObjects[i].lock()->box.h-Camera::pos.y;

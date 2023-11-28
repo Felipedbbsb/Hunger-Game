@@ -33,6 +33,25 @@
     #define ENEMY4_SPRITE_ATK "assets/img/enemies/enemySpiderAttack.png"
     #define ENEMY4_SPRITE_DFS "assets/img/enemies/enemySpiderDamage.png"
 
+
+#define CultistGreen_SPRITE "assets/img/enemies/birdCultistIdle.png"
+    #define CultistGreen_SPRITE_ATK "assets/img/enemies/birdCultistMeleeAttack.png"
+    #define CultistGreen_SPRITE_DFS "assets/img/enemies/birdCultistDamage.png"
+
+#define CultistRed_SPRITE "assets/img/enemies/cultistIdle.png"
+    #define CultistRed_SPRITE_ATK "assets/img/enemies/cultistMeleeAttack.png"
+    #define CultistRed_SPRITE_DFS "assets/img/enemies/cultistDamage.png"
+
+#define CultistPurple_SPRITE "assets/img/enemies/vizirCultistIdle.png"
+    #define CultistPurple_SPRITE_ATK "assets/img/enemies/vizirCultistMeleeAttack.png"
+    #define CultistPurple_SPRITE_DFS "assets/img/enemies/vizirCultistDamage.png"
+
+#define Parakeet_SPRITE "assets/img/enemies/vizirCultistIdle.png"
+    #define Parakeet_SPRITE_ATK "assets/img/enemies/vizirCultistMeleeAttack.png"
+    #define Parakeet_SPRITE_DFS "assets/img/enemies/vizirCultistDamage.png"
+
+
+
 #define ENEMY_FT 1
 #define ENEMY_FC 1
 
@@ -44,8 +63,15 @@ class Enemies : public Component {
             ENEMY1,
             ENEMY2,
             ENEMY3,
-            ENEMY4,
 
+            CultistGreen,
+            CultistRed,
+            CultistPurple,
+            Parakeet,
+            Radog,
+            Cat,
+            Frog,
+            Spider,
             INVALID_ENEMY
         };
 

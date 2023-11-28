@@ -470,12 +470,12 @@ void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
 //Starter skills
 void Skill::InitializeSkills() {
     //Adding skills
-        skillArray.push_back(Skill::HnS);
-        skillArray.push_back(Skill::FinalSacrifice);
-        skillArray.push_back(Skill::DeafeningWhisper);
-        skillArray.push_back(Skill::IntotheVoid);
-        skillArray.push_back(Skill::FearoftheDark);
-        skillArray.push_back(Skill::Elimination);
+        skillArray.push_back(Skill::RecklessSlash);
+        skillArray.push_back(Skill::CautiousStrike);
+        skillArray.push_back(Skill::MotherlyLove);
+        skillArray.push_back(Skill::PocketSand);
+        skillArray.push_back(Skill::NanaNanaNa);
+        skillArray.push_back(Skill::DanseMacabre);
         
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
@@ -654,6 +654,36 @@ void Skill::InitializeSkillInfoMap() {
     //Apply Rampage in all allies 
     skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
 
-    
+
+
+    // Cut: Deal 6 damage
+    skillInfoMap[E_Cut] = {0, Skill::StateProtected::NOCHANGES,   6, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Whip: Deal 3 damage; Apply 2 Frail to target.
+    skillInfoMap[E_Whip] = {0, Skill::StateProtected::NOCHANGES,   3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+  
+    //Evil Chant: Apply 2 weak to target
+    skillInfoMap[E_Evil_Chant] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    // Shiv: Deal 9 damage 
+    skillInfoMap[E_Shiv] = {0, Skill::StateProtected::NOCHANGES,   9, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Tentacle Strike: Deal 12 damage
+    skillInfoMap[E_Tentacle_Strike] = {0, Skill::StateProtected::NOCHANGES,   12, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Bite: Deal 9 damage 
+    skillInfoMap[E_Bite] = {0, Skill::StateProtected::NOCHANGES,   9, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    //Beak: Deal 3 damage
+    skillInfoMap[E_Beak] = {0, Skill::StateProtected::NOCHANGES,   3, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Unnerving Presence: Apply 2 Weak and 2 Vulnerable to target
+    skillInfoMap[E_Unnerving_Presence] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE,},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Guttural Scream: Apply 2 rampage to all allies
+    skillInfoMap[E_Guttural_Scream] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
+
 } 
        

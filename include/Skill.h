@@ -298,7 +298,15 @@ class Skill : public Component {
             E3_Skill1,
             E3_Skill2,
             
-            
+            E_Cut,
+            E_Whip,
+            E_Evil_Chant,
+            E_Shiv,
+            E_Tentacle_Strike,
+            E_Bite, 
+            E_Beak,
+            E_Unnerving_Presence,
+            E_Guttural_Scream,
 
             INVALID_SKILL
         };

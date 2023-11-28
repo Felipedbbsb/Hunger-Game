@@ -60,6 +60,8 @@ Mother::~Mother()
             mothertags.erase(mothertags.begin() + i);
     }
 
+    Mother::tags.clear();
+
     DeleteIndicator();
     DeleteIntention();
 }  
@@ -71,7 +73,6 @@ void Mother::Update(float dt)
         GameData::hpCorrupted += damageDjinn;
         int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
         damageDjinn = 0;
-        std::cout << corruptedDamage << std::endl;
 
         if(corruptedDamage > 0){
            hp = corruptedDamage; 

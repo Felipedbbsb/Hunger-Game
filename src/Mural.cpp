@@ -21,7 +21,6 @@ spriteBackground(spriteBackground)
 {}
   
 Mural::~Mural(){
-    std::cout << "Destrutor EM MURAL" << std::endl;
     Mural::MuralStateActivateReward = false;
     Mural::MuralState = false;
 

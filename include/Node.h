@@ -8,6 +8,7 @@
 #include "Sound.h"
 #include "Sprite.h"
 #include "Map.h"
+#include "Enemies.h"
 
 #define NODE_TIME_ANIMATION 1.5f
 #define NODE_TIME_ANIMATION_V 0.5
@@ -18,6 +19,8 @@
 #define MAP_UNKNOWN_SPRITE "assets/img/UI/map/uiMapMistery.png"
 #define MAP_BOSS_SPRITE "assets/img/UI/map/uiMapBoss.png"
 #define MAP_VISITED_SPRITE "assets/img/UI/map/uiMapVisited.png"
+
+#define MAP_MURAL_BACKGROUND "assets/img/UI/mural/Mural.png"
 
 class Node : public Component {
     public:
@@ -35,6 +38,10 @@ class Node : public Component {
         void SetNewStage(NodeType node);
         void CreateIconVisited();
     private:
+        void CreateMural();
+        void CreateCombat();
+            std::vector<Enemies::EnemyId> GetRandomEncounter(int floorPostion);
+
         NodeType type;
         bool canVisited;
         bool wasVisited;

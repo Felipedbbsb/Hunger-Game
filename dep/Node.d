@@ -197,22 +197,21 @@ dep/Node.d bin/Node.o: src/Node.cpp include/Node.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h \
- include/State.h include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h \
- include/Game.h include/InputManager.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
+ include/State.h include/Enemies.h include/LifeBar.h include/Reader.h \
+ include/Skill.h c:\mingw\include\time.h include/Tag.h include/AP.h \
+ include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h include/Game.h \
+ include/InputManager.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\deque \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/Reader.h include/Camera.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
+ include/Camera.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Mural.h \
- include/Enemies.h include/LifeBar.h include/Skill.h \
- c:\mingw\include\time.h include/Tag.h include/AP.h include/CombatState.h
+ include/CombatState.h
 
 include/Node.h:
 
@@ -690,6 +689,20 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h:
 
 include/State.h:
 
+include/Enemies.h:
+
+include/LifeBar.h:
+
+include/Reader.h:
+
+include/Skill.h:
+
+c:\mingw\include\time.h:
+
+include/Tag.h:
+
+include/AP.h:
+
 include/Text.h:
 
 C:/SDL2/include/SDL2/SDL_ttf.h:
@@ -708,8 +721,6 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 
-include/Reader.h:
-
 include/Camera.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm:
@@ -725,17 +736,5 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h:
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
 
 include/Mural.h:
-
-include/Enemies.h:
-
-include/LifeBar.h:
-
-include/Skill.h:
-
-c:\mingw\include\time.h:
-
-include/Tag.h:
-
-include/AP.h:
 
 include/CombatState.h:

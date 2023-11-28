@@ -232,7 +232,6 @@ NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &is
     //std::cout << totalNodes <<" " << isMuralLastNode<<" " << muralCount<<" " << combatCount<<" " <<unknwonCount << std::endl;
     --totalNodes;
 
-
     // O primeiro andar sempre é um combate
     // O 15º andar sempre é um mural
     // O 14º andar nunca é um mural.
@@ -380,7 +379,7 @@ void Map::DrawLineMap(int x1, int y1, int x2, int y2) {
     }
 
     // Restore the original color (optional, depending on the context)
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color (R, G, B, A)
+    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color (R, G, B, A)
 }
 
 // Function to draw a dashed line between two points
