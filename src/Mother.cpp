@@ -15,7 +15,7 @@ bool Mother::activateWeak = false;
 std::weak_ptr<GameObject> Mother::motherInstance;
 
 #ifdef DEBUG
-
+ 
 #include <SDL2/SDL.h> 
 #endif //DEBUG
 

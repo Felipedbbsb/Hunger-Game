@@ -475,7 +475,7 @@ void Skill::InitializeSkills() {
         skillArray.push_back(Skill::MotherlyLove);
         skillArray.push_back(Skill::PocketSand);
         skillArray.push_back(Skill::NanaNanaNa);
-        skillArray.push_back(Skill::DanseMacabre);
+        skillArray.push_back(Skill::InstantRegret);
         
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
@@ -544,7 +544,7 @@ void Skill::InitializeSkillInfoMap() {
 
     //Nana Nana Na [filha] (1AP): Apply 1 Vulnerable and 1 Weak to one enemy
     skillInfoMap[NanaNanaNa] =  {1, Skill::StateProtected::NOCHANGES,       0, {Tag::Tags::VULNERABLE, Tag::Tags::WEAK},     0, {},   NS_NanaNanaNa, I_NanaNanaNa, SPR_NanaNanaNa,        DEBUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
-    
+     
     //Trick or Treat (1AP): Deal 1 damage; Gain 1 Dodge; Expose Daughter
     skillInfoMap[TrickorTreat] =  {1, Skill::StateProtected::EXPOSED,       1, {},     0, {Tag::Tags::DODGE},   NS_TrickorTreat, I_TrickorTreat, SPR_TrickorTreat,                        ATTACK_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, DAUGHTER} ;
 

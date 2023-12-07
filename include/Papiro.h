@@ -25,6 +25,8 @@
 
 #define SPACING_PLAYERS  150
 
+#define PAPIRO_OFFSET 100 // o quanto o papiro sai da tela
+
 #define PAPIRO_SCREEN Vec2(1600 ,638) 
 #define BG_SCALE 0.45 
 #define INTERACTION_COOLDOWN 3 

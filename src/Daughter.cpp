@@ -32,7 +32,7 @@ tagSpaceCount(0),
 ScaleIntention(1),
 ScaleIndicator(1){ 
  
-} 
+}  
 
 void Daughter::Start() 
 {

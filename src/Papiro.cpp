@@ -42,12 +42,12 @@ void Papiro::Start() {
 
     if (movingRight) {
         // Move Papiro to the left initially
-        associated.box.x -= RESOLUTION_WIDTH * Game::resizer;
-        papiroVelocity = 2*(RESOLUTION_WIDTH * Game::resizer / (INTERACTION_COOLDOWN * 0.25));
+        associated.box.x -= RESOLUTION_WIDTH;
+        papiroVelocity = 2*(RESOLUTION_WIDTH  / (INTERACTION_COOLDOWN * 0.25));
     } else {
         // Move Papiro to the right initially
-        associated.box.x += RESOLUTION_WIDTH * Game::resizer;
-        papiroVelocity = 2*(RESOLUTION_WIDTH * Game::resizer / (INTERACTION_COOLDOWN * 0.25)) ;
+        associated.box.x += RESOLUTION_WIDTH ;
+        papiroVelocity = 2*(RESOLUTION_WIDTH  / (INTERACTION_COOLDOWN * 0.25)) ;
     }
     papiro_obj->box.x = associated.box.x-Camera::pos.x;
     papiro_obj->box.y = -Camera::pos.y;
@@ -191,10 +191,14 @@ void Papiro::Update(float dt) {
 
     if (movingRight) {
         // Mother or Daughter is attacking, move Papiro to the right 
-         if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25) {
+         if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25 && associated.box.x <= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET) {
             associated.box.x += papiroVelocity * dt;
             papiroVelocity -= papiroAc * dt;
+            if(associated.box.x >= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET){
+                associated.box.x = RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET;
+            }
         }
+        
         else{
             if(interactionTime.Get() >= INTERACTION_COOLDOWN * 0.75){
                 associated.box.x += papiroVelocity * dt;
@@ -203,15 +207,18 @@ void Papiro::Update(float dt) {
                     associated.RequestDelete(); // Remove when it disappears
                     CombatState::InteractionSCreenActivate = false; 
                 }
-            }
+            } 
         } 
 
        
     } else { 
         // Other characters are attacking, move Papiro to the left
-        if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25) {
+        if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25  && associated.box.x >= -PAPIRO_OFFSET) {
             associated.box.x -= papiroVelocity * dt;
             papiroVelocity -= papiroAc * dt;
+            if(associated.box.x <= -PAPIRO_OFFSET){
+                associated.box.x = -PAPIRO_OFFSET;
+            }
         }
         else{
             if(interactionTime.Get() >= INTERACTION_COOLDOWN * 0.75){

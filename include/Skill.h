@@ -205,15 +205,15 @@
 
 //LOCKED
 #define NS_LOCKED "LOCKED"
-#define I_LOCKED "Desbloqueado com Np1"
+#define I_LOCKED "assets/img/UI/skills/readers/uiReaderLocked1.png"
 #define SPR_LOCKED "assets/img/UI/skills/Locked.png"
 
 #define NS_LOCKED2 "LOCKED"
-#define I_LOCKED2 "Desbloqueado com Np2"
+#define I_LOCKED2 "assets/img/UI/skills/readers/uiReaderLocked2.png"
 #define SPR_LOCKED2 "assets/img/UI/skills/Locked.png"
 
 #define NS_LOCKED3 "LOCKED"
-#define I_LOCKED3 "Desbloqueado com Np3"
+#define I_LOCKED3 "assets/img/UI/skills/readers/uiReaderLocked3.png"
 #define SPR_LOCKED3 "assets/img/UI/skills/Locked.png"
 
 //EMPTY

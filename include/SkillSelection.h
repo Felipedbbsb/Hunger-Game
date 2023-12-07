@@ -20,7 +20,7 @@
 
 #define SCALE_ARROW 1.1
 
-#define OFFSET_SKILL_SELECTION_ARROW Vec2(50, 50)
+#define OFFSET_SKILL_SELECTION_ARROW Vec2(200, 50)
 
 
 #define SKILL_SELECTION_BCKGROUND "assets/img/UI/uiRewardScreen.png"

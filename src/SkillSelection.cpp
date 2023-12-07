@@ -36,7 +36,6 @@ SkillSelection::SkillSelection(GameObject &associated,  bool isDjinn)
         Skill::skillBackToDaughter = nullptr; //back effects 
 
         SkillSelection::selectionSkillDjinnStyle = isDjinn;
-
 }
   
 void SkillSelection::Start() {
@@ -182,11 +181,12 @@ void SkillSelection::CreateSkillOptions() {
 void SkillSelection::Update(float dt) {
     
     if(SkillSelection::endSkillSelection){
-        objectsMoves += objectsMoves_VELOCITY * dt;
+        objectsMoves += objectsMoves_VELOCITY * dt; 
     }
     
     background->box.x = objectsMoves + (RESOLUTION_WIDTH )/2 - background->box.w/2 - Camera::pos.x; 
-    passButon->box.x = background->box.x + background->box.w - passButon->box.w - OFFSET_SKILL_SELECTION_ARROW.x;
+    passButon->box.x =  background->box.x + background->box.w  - OFFSET_SKILL_SELECTION_ARROW.x - passButon->box.w/2;
+   
 
     for(int i = rewardArrayObj.size() - 1; i >= 0; i-- ){
         rewardArrayObj[i].lock()->box.x =  background->box.x + background->box.w / 2 - rewardArrayObj[i].lock()->box.w / 2 - OFFSET_SKILL_OPTIONS  + OFFSET_SKILL_OPTIONS * i;
@@ -262,7 +262,6 @@ void SkillSelection::Update(float dt) {
                 Skill::skillFromReward = nullptr;
                 Skill::skillToReward = nullptr;
                 SkillSelection::endSkillSelection = true;
-                std::cout <<"=========================================================" << std::endl;
 
             }
         }
@@ -270,12 +269,18 @@ void SkillSelection::Update(float dt) {
         if(passButon != nullptr){
             auto arrowComponent = passButon->GetComponent("Sprite"); 
             auto arrowComponentPtr = std::dynamic_pointer_cast<Sprite>(arrowComponent);
+               
+               
+               
+               
                 // Center position original
                 auto posXenterX = passButon->box.x + passButon->box.w / 2;
                 auto posXenterY = passButon->box.y + passButon->box.h / 2;
 
-                // Call SetScale with the correct number of arguments
                 arrowComponentPtr->SetScale(SCALE_ARROW, SCALE_ARROW);
+
+
+                
 
                 // Calcula a nova largura e altura
                 passButon->box.x = posXenterX - passButon->box.w / 2;
