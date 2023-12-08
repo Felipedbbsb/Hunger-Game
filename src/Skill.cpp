@@ -161,7 +161,7 @@ void Skill::Update(float dt) {
     if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){ 
 
             if (true) {
-                if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
+                if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN && id != Skill::EMPTY) {
                     readerSkill = new GameObject(associated.box.x + associated.box.w/2 + Camera::pos.x, associated.box.y + associated.box.h/3 + Camera::pos.y);
                     Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
                     readerSkill->AddComponent(std::make_shared<Reader>(*readerSkill_behaviour));
@@ -178,10 +178,7 @@ void Skill::Update(float dt) {
 
                     Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
 
-                    bool auxExposedFeature = false;
-                    if(tempSkillInfo.isProtected != NOCHANGES){
-                        auxExposedFeature = true;
-                    }
+                    Skill::StateProtected auxExposedFeature = tempSkillInfo.isProtected;
 
                     std::vector<Tag::Tags> mergedTags;
                     mergedTags.reserve(tempSkillInfo.tags.size() + tempSkillInfo.tagsBack.size());
@@ -257,12 +254,9 @@ void Skill::Update(float dt) {
                                 skillFromReward = nullptr;
                             } 
                             skillFromReward = this;
-                        }
-                        
+                        }             
                     }
-
-                }
-                
+                }        
             }
 
     } else {
@@ -282,6 +276,23 @@ void Skill::Update(float dt) {
     if(SkillSelection::skillSelectionActivated){ // combat ended, no need for desaturation
         available = true;
     }
+
+    if(SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
+        //Scenerio where skills its djiin style, rules you can only choose normal skills to change
+        if(SkillSelection::selectionSkillDjinnStyle){
+            if(id < Skill::InstantRegret || id == Skill::EMPTY){
+                available = true;
+            } 
+            else{
+                if(createJewel){
+                   available = false; 
+                }
+                else{
+                    available = true; 
+                }
+            }     
+        }
+    }    
 
 
     auto spriteComponent = associated.GetComponent("Sprite");

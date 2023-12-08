@@ -7,7 +7,8 @@ State::State() :
     quitRequested(false), 
     started(false),
     fadingOut(false),
-    fadeFactor(1)
+    fadeFactor(1),
+    fadeTime(0.5)
 {}
 
 State::~State(){
@@ -53,15 +54,24 @@ void State::Start(){
 }
 
 void State::Pause(){
-    fadingOut = true;
-    fadeFactor = 0.0f; // Initialize fade factor
+    FadeScreen(true, 0.0f);
+    SetFadeTime();
 }
 
 void State::Resume(){
-    fadingOut = false;
-    fadeFactor = 1.0f; // Initialize fade factor
+    FadeScreen(false, 1.0f);
+    SetFadeTime();
 }
 
+
+void State::FadeScreen(bool fadingOut, float fadeFactor){
+    this->fadingOut = fadingOut;
+    this->fadeFactor = fadeFactor;
+}
+
+void State::SetFadeTime(float fadeTime){
+    this->fadeTime = fadeTime;
+}
 
 //==================================================================
 //These functions are called by Game every frame. They are pure
@@ -71,12 +81,12 @@ void State::Resume(){
 
 void State::Update(float dt){
     if (fadingOut) {
-        fadeFactor += dt * 0.75f; // Adjust the factor to control the speed of fade-out
+        fadeFactor += dt * fadeTime; // Adjust the factor to control the speed of fade-out
         if (fadeFactor >= 1.0f) {
             fadeFactor = 1.0f;
         }
     } else {
-        fadeFactor -= dt * 0.75f; // Adjust the factor to control the speed of fade-in
+        fadeFactor -= dt * fadeTime; // Adjust the factor to control the speed of fade-in
         if (fadeFactor <= 0.0f) {
             fadeFactor = 0.0f;
         }

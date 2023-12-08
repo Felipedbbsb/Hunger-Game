@@ -188,7 +188,7 @@ void Papiro::Update(float dt) {
     }
 
     papiro_obj->Update(dt);
-
+ 
     if (movingRight) {
         // Mother or Daughter is attacking, move Papiro to the right 
          if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25 && associated.box.x <= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET) {

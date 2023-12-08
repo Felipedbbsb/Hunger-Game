@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define SKILL_SELECTION_COOLDOWN_START 2
 
 #define INTENTION_TIME_ANIMATION 1.2f
@@ -54,6 +55,7 @@ class CombatState : public State{
         static Skill::AttackType attackType;
         static Skill::TargetType whoAttacks ;
         static Skill::TargetType whoReceives;
+        static bool motherTransition;
 
         static bool ChangingSides;
 
@@ -63,7 +65,7 @@ class CombatState : public State{
         GameObject* skillSelection; 
         std::string spriteBackground;
         bool toggleState;
-
+        bool toggleStateNP;
         Timer skillSelectionStart;
         Timer skillSelectionEnd;
 };

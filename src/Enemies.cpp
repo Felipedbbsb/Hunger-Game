@@ -125,7 +125,7 @@ void Enemies::Update(float dt) {
 
 
 
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
         return;
     }
 
@@ -216,7 +216,7 @@ void Enemies::Update(float dt) {
                 }
 
                 // Check if the mouse is over the enemy and left mouse button is pressed
-                if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                if (enemyHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y - Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
                         ApplySkillToEnemy();

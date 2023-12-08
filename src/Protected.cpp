@@ -19,6 +19,7 @@ reader(nullptr)
     std::string spritePath = (Protected::isProtected == true) ? PROTECTED_PROTECTED_SPRITE : PROTECTED_EXPOSED_SPRITE;
     Sprite *Protected_spr = new Sprite(associated, spritePath); 
     Protected_spr->SetScale(0.5, 0.5);
+    Protected_spr->SetAlpha(150);
     associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
 } 
    
@@ -41,6 +42,7 @@ void Protected::Update(float dt){
         std::string spritePath = (Protected::isProtected == true) ? PROTECTED_PROTECTED_SPRITE : PROTECTED_EXPOSED_SPRITE;
         Sprite *Protected_spr = new Sprite(associated, spritePath); // Use shared_ptr
         Protected_spr->SetScale(0.5, 0.5);
+        Protected_spr->SetAlpha(150);
         associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
     }
  

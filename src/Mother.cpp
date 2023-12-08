@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Protected.h" 
 #include "CombatState.h"
+#include "NP.h"
 
 int Mother::hp = GameData::hp; 
 int Mother::damageDjinn = 0;
@@ -15,7 +16,7 @@ bool Mother::activateWeak = false;
 std::weak_ptr<GameObject> Mother::motherInstance;
 
 #ifdef DEBUG
- 
+  
 #include <SDL2/SDL.h> 
 #endif //DEBUG
 
@@ -33,7 +34,7 @@ ScaleIndicator(1){
  
 void Mother::Start()  
 {  
-    Sprite *mother_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+    Sprite *mother_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
     associated.AddComponent((std::shared_ptr<Sprite>)mother_spr); 
     associated.box.y -= associated.box.h;
 
@@ -79,22 +80,70 @@ void Mother::Update(float dt)
         }
         
     }
+    std::cout << deathTransitionTime.Get() << std::endl;
+    if (hp <= 0 ) {
 
-    if (hp <= 0) {
-        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC, 1.5);
+        if(deathTransitionTime.Get() == 0){
+            auto spriteComponent = associated.GetComponent("Sprite");
+            auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+            if (spriteComponentPtr) {
+                associated.RemoveComponent(spriteComponentPtr);
+            }           
+            Sprite* deadBody_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+        
+            deadBody_spr->SetFrame(0);
 
-        deadBody_spr->SetFrame(0);
+            associated.AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
 
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
-        Game::GetInstance().GetCurrentState().AddObject(deadBody);
+            CombatState::motherTransition = true;    
+        }
+        else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
+            //Increment np level
+            GameData::npLevel++;
+            
+            //Update life
+            float multiplerNP = 0;
+            if(GameData::npLevel == 1){
+                multiplerNP = 0.25f;
+                Skill::AddSkill(Skill::SkillId::EMPTY, Skill::SkillId::LOCKED1);
+            }
+            else if(GameData::npLevel == 2){
+                multiplerNP = 0.35f;
+                Skill::AddSkill(Skill::SkillId::EMPTY, Skill::SkillId::LOCKED2);
+            }
 
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
+            //Update NP_UI
+            NP::ChangeNPLevel();
 
+            GameData::hpCorrupted = GameData::hpMax * multiplerNP;
+            hp = GameData::hpMax - GameData::hpCorrupted;
+            lifeBarMother->SetCurrentHP(hp);  
+            lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
+
+            associated.box.y += associated.box.h;
+
+            //PROCESS new sprite
+            auto spriteComponent = associated.GetComponent("Sprite");
+            auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+            if (spriteComponentPtr) {
+                associated.RemoveComponent(spriteComponentPtr);
+            }  
+            Sprite* deadBody_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+            deadBody_spr->SetFrame(0); 
+            associated.AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+
+           associated.box.y -= associated.box.h;
+
+           CombatState::motherTransition = false;
+        }
+        
+        deathTransitionTime.Update(dt);
     } 
+    else{
+        deathTransitionTime.Restart();
+    }
 
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
         return;
     }
 
@@ -184,7 +233,7 @@ void Mother::Update(float dt)
                             }    
                         } 
 
-                    }
+                    } 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
                     if (motherHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
@@ -284,6 +333,22 @@ void Mother::IndicatorAnimation(float dt) {
         }
     }
 }  
+
+std::string Mother::GetSpriteMother() {
+    if(GameData::npLevel == 0){
+        return MOTHER_SPRITE;
+    }
+    else if(GameData::npLevel == 1){
+        return MOTHER_SPRITE_NP1;
+    }
+    else if(GameData::npLevel == 2){ 
+        return MOTHER_SPRITE_NP2;
+    }
+    else{
+        return MOTHER_SPRITE_NP2;
+    }
+
+}
 
 void Mother::CreateIndicator() {
     indicator = new GameObject(motherHitbox.x + motherHitbox.w/2, motherHitbox.y + motherHitbox.h + LIFEBAROFFSET);

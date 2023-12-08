@@ -20,6 +20,7 @@
 #define TAG_WEAK_SPRITE "assets/img/UI/uiIconWeak.png"
 #define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"
 #define TAG_PROTECTED_SPRITE "assets/img/UI/uiIconProtected.png"
+#define TAG_EXPOSED_SPRITE "assets/img/UI/uiIconProtected.png"
 #define TAG_CURSE_SPRITE "assets/img/UI/uiIconProtected.png"
 
 #define TAGS_SPACING_X 40.0f
@@ -41,6 +42,7 @@ class Tag : public Component{
             PROVOKE,//Força os inimigos a atacarem este alvo (DONE)
             DODGE, //50% de chance de evitar todo o dano do próximo golpe
             PROTECTED,//Não pode ser alvejado
+            EXPOSED, //Pode ser alvejado
             CURSE
         };
 

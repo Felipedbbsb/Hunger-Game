@@ -211,7 +211,7 @@ dep/Mother.d bin/Mother.o: src/Mother.cpp include/Mother.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/Protected.h include/CombatState.h
+ include/Protected.h include/CombatState.h include/NP.h
 
 include/Mother.h:
 
@@ -736,3 +736,5 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 include/Protected.h:
 
 include/CombatState.h:
+
+include/NP.h:

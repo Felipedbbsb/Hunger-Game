@@ -94,6 +94,7 @@ std::string Tag::GetTagSprite(Tag::Tags tag){
             case Tag::Tags::WEAK: spriteTag = TAG_WEAK_SPRITE; break;
             case Tag::Tags::RAMPAGE: spriteTag = TAG_RAMPAGE_SPRITE; break;
             case Tag::Tags::PROTECTED: spriteTag = TAG_PROTECTED_SPRITE; break;
+            case Tag::Tags::EXPOSED: spriteTag = TAG_EXPOSED_SPRITE; break;
             case Tag::Tags::CURSE: spriteTag = TAG_CURSE_SPRITE; break;
         }
     return spriteTag ;   
@@ -163,6 +164,9 @@ std::string Tag::GetTagMessageSprite(Tags tag){
         case Tags::PROTECTED: 
             tagName = "assets/img/UI/tagReaders/tagReaderProtected.png";
             break;
+        case Tags::EXPOSED: 
+            tagName = "assets/img/UI/tagReaders/tagReaderExposed.png";
+            break;
         case Tags::CURSE: 
             tagName = "assets/img/UI/tagReaders/tagReaderCurse.png";
             break;        
@@ -204,6 +208,9 @@ std::string Tag::GetTagInfo() {
         case Tags::PROTECTED: 
             tagName = "Nao pode ser alvejado";
             break;
+        case Tags::EXPOSED: 
+            tagName = "Pode ser alvejado";
+            break;    
         case Tags::CURSE: 
             tagName = "Curse";
             break;        
@@ -240,6 +247,10 @@ std::string Tag::GetTagName() {
         case Tags::PROTECTED: 
             tagName = "Protected";
             break;
+        case Tags::EXPOSED: 
+            tagName = "Exposed";
+            break;
+
         case Tags::CURSE: 
             tagName = "Curse";
             break;    

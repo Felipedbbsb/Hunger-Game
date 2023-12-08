@@ -8,6 +8,7 @@
 #include "Component.h"
 #include "Sound.h"
 #include "Sprite.h"
+#include "Skill.h"
 #include "Tag.h"
 
 #define TEXT_SKILL_FONT "assets/font/Play-Regular.ttf"
@@ -22,7 +23,7 @@ class TagReader : public Component{
 
     public:
         TagReader(GameObject &associated,
-                bool ExposedFeatures,
+                Skill::StateProtected ExposedFeatures,
                 std::vector<Tag::Tags> tags,
                 Rect reference,
                 bool isReversed);
@@ -36,7 +37,7 @@ class TagReader : public Component{
         bool Is(std::string type);
 
     private: 
-        bool ExposedFeatures;
+        Skill::StateProtected ExposedFeatures;
         std::vector<Tag::Tags> tags;
         Rect reference; // its the corner of the reader from skill
         bool isReversed;

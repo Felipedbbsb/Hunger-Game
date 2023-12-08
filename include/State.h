@@ -4,6 +4,7 @@
 #include <memory>
 #include <SDL2/SDL.h>
 
+
 class State{
     public:
         State();
@@ -16,6 +17,9 @@ class State{
         virtual void Start();
         virtual void Pause();
         virtual void Resume();
+
+        virtual void FadeScreen(bool fadingOut, float fadeFactor);
+        virtual void SetFadeTime(float fadeTime = 0.5); //Default
 
         virtual std::weak_ptr<GameObject> AddObject(GameObject* go);
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
@@ -36,6 +40,7 @@ class State{
 
         bool fadingOut;  // Flag to indicate whether the screen is fading out
         float fadeFactor; // Factor to control the alpha value for fading
+        float fadeTime; // Factor to control the alpha value for fading
 
         std::vector<std::shared_ptr<GameObject>> objectArray;
 

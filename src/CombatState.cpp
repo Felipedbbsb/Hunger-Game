@@ -15,6 +15,7 @@
 #include "Protected.h"
 #include "Mural.h"
 #include "GameData.h"
+#include "NP.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -28,13 +29,16 @@ Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR pr
 
 bool CombatState::ChangingSides = false;
 
+bool CombatState::motherTransition = false;
+
 CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string spriteBackground) 
 : State::State(),
 enemiesArray(enemiesArray),
 papiro(nullptr),
 skillSelection(nullptr),
 spriteBackground(spriteBackground),
-toggleState(true){}
+toggleState(true),
+toggleStateNP(true){}
   
 CombatState::~CombatState(){
     if(skillSelection != nullptr){
@@ -48,6 +52,18 @@ CombatState::~CombatState(){
 }
 
 void CombatState::Update(float dt){   
+
+    if(CombatState::motherTransition && toggleStateNP){
+        State::FadeScreen(true, 0.0f);
+        State::SetFadeTime(0.5f);
+        toggleStateNP = false;
+    }
+    else if(!CombatState::motherTransition && !toggleStateNP){
+        State::FadeScreen(false, 1.0f);
+        State::SetFadeTime(0.5f);
+        toggleStateNP = true;
+    }
+
     InputManager& input = InputManager::GetInstance();
  
  
@@ -142,8 +158,16 @@ void CombatState::LoadAssets(){
         protected_UI->box.y -= protected_UI->box.h + 300;
         Game::GetInstance().GetCurrentState().AddObject(protected_UI);
     
+     //NP
+    GameObject* NP_UI = new GameObject(0, 0);
+        NP* NP_behaviour = new NP(*NP_UI);
+        NP_UI->AddComponent(std::shared_ptr<NP>(NP_behaviour));
+        
 
-}
+        Game::GetInstance().GetCurrentState().AddObject(NP_UI);
+    
+
+} 
 
 void CombatState::CreateEnemies(){
     //============================ Enemies ========================================

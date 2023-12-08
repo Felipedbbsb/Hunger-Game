@@ -109,17 +109,17 @@ void SkillSelection::CreatePassButon() {
     passButon->AddComponent(std::shared_ptr<Sprite>(passButon_spr));    
 
     
-    passButon->box.x =  background->box.x + background->box.w - passButon->box.w - OFFSET_SKILL_SELECTION_ARROW.x - Camera::pos.x;   
-    passButon->box.y = background->box.y + background->box.h - passButon->box.h - OFFSET_SKILL_SELECTION_ARROW.y - Camera::pos.y; 
+    passButon->box.x =  background->box.x + (background->box.w ) - (passButon->box.w * SCALE_ARROW) - Camera::pos.x - OFFSET_SKILL_SELECTION_ARROW.x;   
+    passButon->box.y = background->box.y + background->box.h - (passButon->box.h * SCALE_ARROW)  - Camera::pos.y - OFFSET_SKILL_SELECTION_ARROW.y; 
  
     Game::GetInstance().GetCurrentState().AddObject(passButon); 
-}
-
+} 
+  
 void SkillSelection::CreateSkillOptions() {
     // Get all skill IDs from Skill::skillInfoMap up to LOCKED1 (exclusive)
     auto itBegin = Skill::skillInfoMap.find(Skill::InstantRegret);
     //auto itEnd = Skill::skillInfoMap.end();
-    auto itEnd = Skill::skillInfoMap.find(Skill::LOCKED1);
+    auto itEnd = Skill::skillInfoMap.find(Skill::LOCKED1); 
 
     if (!selectionSkillDjinnStyle ) { 
         // If isDjinn is true, exclude skills that are before InstantRegret
@@ -191,8 +191,14 @@ void SkillSelection::Update(float dt) {
     for(int i = rewardArrayObj.size() - 1; i >= 0; i-- ){
         rewardArrayObj[i].lock()->box.x =  background->box.x + background->box.w / 2 - rewardArrayObj[i].lock()->box.w / 2 - OFFSET_SKILL_OPTIONS  + OFFSET_SKILL_OPTIONS * i;
         rewardArrayObj[i].lock()->box.y = background->box.y + OFFSET_SKILL_OPTIONSY;  
-    }
 
+        auto spriteComponent = rewardArrayObj[i].lock()->GetComponent("Sprite");
+        auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+        if (spriteComponentPtr) {
+            // Apply the desaturation effect
+            spriteComponentPtr->SetDesaturation(true);
+        }    
+    }
 
 
     if (Skill::skillFromReward != nullptr) {

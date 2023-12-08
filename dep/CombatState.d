@@ -214,7 +214,7 @@ dep/CombatState.d bin/CombatState.o: src/CombatState.cpp \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
  include/Mother.h include/Daughter.h include/Papiro.h \
  include/SkillSelection.h include/CameraParallax.h include/Protected.h \
- include/Mural.h include/GameData.h
+ include/Mural.h include/GameData.h include/NP.h
 
 include/CombatState.h:
 
@@ -755,3 +755,5 @@ include/Protected.h:
 include/Mural.h:
 
 include/GameData.h:
+
+include/NP.h:
