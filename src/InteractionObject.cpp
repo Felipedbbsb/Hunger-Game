@@ -7,7 +7,7 @@
 #include "Enemies.h"
 #include "Mother.h"
 #include "Daughter.h"
-
+#include "GameData.h"
 
 InteractionObject::InteractionObject(GameObject &associated, Skill::AttackType attackType, Skill::TargetType targetType, Enemies::EnemyId enemyId, bool isAttacking)
     : Component::Component(associated), 
@@ -82,12 +82,38 @@ void InteractionObject::Start() {
         if(targetType == Skill::TargetType::MOTHER){
             if(isAttacking){
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    iconPath = MOTHER_SPRITE_BUFF;
+                    
+                    if(GameData::npLevel == 0){
+                        iconPath =  MOTHER_SPRITE_BUFF;
+                    }
+                    else if(GameData::npLevel == 1){
+                        iconPath =  MOTHER_SPRITE_BUFF_NP1;
+                    } 
+                    else if(GameData::npLevel == 2){ 
+                        iconPath =  MOTHER_SPRITE_BUFF_NP2;
+                    }
+                    else{
+                        iconPath =  MOTHER_SPRITE_BUFF_NP2;
+                    }
+
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
                 }
                 else{
-                    iconPath = MOTHER_SPRITE_ATK;
+
+                    if(GameData::npLevel == 0){
+                        iconPath =  MOTHER_SPRITE_ATK;
+                    }
+                    else if(GameData::npLevel == 1){
+                        iconPath =  MOTHER_SPRITE_ATK_NP1;
+                    } 
+                    else if(GameData::npLevel == 2){  
+                        iconPath =  MOTHER_SPRITE_ATK_NP2;
+                    }
+                    else{
+                        iconPath =  MOTHER_SPRITE_ATK_NP2;
+                    }
+
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
                 }
@@ -98,7 +124,20 @@ void InteractionObject::Start() {
                     //Sprite *obj_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
                     //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
                     //obj_spr->SetScale(1.35, 1.35);
-                    iconPath = MOTHER_SPRITE_BUFF;
+
+                    if(GameData::npLevel == 0){
+                        iconPath =  MOTHER_SPRITE_BUFF;
+                    }
+                    else if(GameData::npLevel == 1){
+                        iconPath =  MOTHER_SPRITE_BUFF_NP1;
+                    } 
+                    else if(GameData::npLevel == 2){ 
+                        iconPath =  MOTHER_SPRITE_BUFF_NP2;
+                    }
+                    else{
+                        iconPath =  MOTHER_SPRITE_BUFF_NP2;
+                    }
+
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
 
@@ -106,7 +145,19 @@ void InteractionObject::Start() {
                     CreateEffect("BUFF", true);
                 }
                 else{
-                    iconPath = MOTHER_SPRITE_DFS;
+                    if(GameData::npLevel == 0){
+                        iconPath =  MOTHER_SPRITE_DFS;
+                    }
+                    else if(GameData::npLevel == 1){
+                        iconPath =  MOTHER_SPRITE_DFS_NP1;
+                    } 
+                    else if(GameData::npLevel == 2){ 
+                        iconPath =  MOTHER_SPRITE_DFS_NP2;
+                    }
+                    else{ 
+                        iconPath =  MOTHER_SPRITE_DFS_NP2;
+                    }
+
                     Sprite* obj_spr = new Sprite(associated, iconPath); 
                     associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
                     //CREATES DAMAGE OR DEBUFF

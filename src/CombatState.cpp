@@ -16,6 +16,7 @@
 #include "Mural.h"
 #include "GameData.h"
 #include "NP.h"
+#include "EndState.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -30,6 +31,8 @@ Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR pr
 bool CombatState::ChangingSides = false;
 
 bool CombatState::motherTransition = false;
+
+bool CombatState::popRequestedEndState = false;
 
 CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string spriteBackground) 
 : State::State(),
@@ -52,6 +55,13 @@ CombatState::~CombatState(){
 }
 
 void CombatState::Update(float dt){   
+
+    if(CombatState::popRequestedEndState){
+        CombatState::popRequestedEndState = false;
+        EndState* new_stage = new EndState();
+        Game::GetInstance().Push(new_stage); 
+        popRequested = true;
+    }
 
     if(CombatState::motherTransition && toggleStateNP){
         State::FadeScreen(true, 0.0f);
@@ -294,7 +304,7 @@ void CombatState::Start(){
     CombatState::whoReceives = Skill::TargetType::IRR;
     GameData::playerTurn = true;
     CombatState::ChangingSides = false;
-    
+    CombatState::popRequestedEndState = false;
 
 
     Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
@@ -327,7 +337,7 @@ void CombatState::Resume(){
     CombatState::attackType = Skill::AttackType::NONE;
     CombatState::whoAttacks = Skill::TargetType::IRR;
     CombatState::whoReceives = Skill::TargetType::IRR;
-
+    CombatState::popRequestedEndState = false;
 
 }
 

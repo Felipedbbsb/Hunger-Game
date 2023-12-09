@@ -6,6 +6,8 @@
 #include "Protected.h" 
 #include "CombatState.h"
 #include "NP.h"
+#include "EndState.h"
+
 
 int Mother::hp = GameData::hp; 
 int Mother::damageDjinn = 0;
@@ -80,26 +82,20 @@ void Mother::Update(float dt)
         }
         
     }
-    std::cout << deathTransitionTime.Get() << std::endl;
     if (hp <= 0 ) {
 
         if(deathTransitionTime.Get() == 0){
-            auto spriteComponent = associated.GetComponent("Sprite");
-            auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
-            if (spriteComponentPtr) {
-                associated.RemoveComponent(spriteComponentPtr);
-            }           
-            Sprite* deadBody_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
-        
-            deadBody_spr->SetFrame(0);
-
-            associated.AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
-
             CombatState::motherTransition = true;    
         }
         else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
+            
             //Increment np level
             GameData::npLevel++;
+
+            if(GameData::npLevel == 3){
+                CombatState::popRequestedEndState = true;
+                return; //block this code
+            }
             
             //Update life
             float multiplerNP = 0;

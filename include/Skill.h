@@ -16,7 +16,6 @@
 
 #define TEXT_TAGCOUNT2_SIZE 42
 
-
 #define SKILL_SELECTED_OBJ "assets/img/UI/uiSkillSelected.png"
 #define SKILL_SELECTED_OBJ_REWARD "assets/img/UI/uiSkillSelectedReward.png"
 

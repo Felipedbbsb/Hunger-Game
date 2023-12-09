@@ -44,9 +44,6 @@ void Node::Update(float dt){
         if(iconVisited == nullptr){
             CreateIconVisited();
         }
-        
-
-
     }
     else{
         if(iconVisited != nullptr){
@@ -121,7 +118,6 @@ void Node::Update(float dt){
                     ScaleNode = 1;
                 } 
 
-                    
                 // Center position original
                 auto posXenterX = associated.box.x + associated.box.w / 2;
                 auto posXenterY = associated.box.y + associated.box.h / 2;
@@ -137,11 +133,8 @@ void Node::Update(float dt){
             else{
                 nextComponentPtr->SetScale(1, 1);
             }
-
         }    
-
 }
-
 
 
 void Node::Render(){
@@ -185,7 +178,6 @@ void Node::SetNewStage(NodeType node){
             //COMBAT
             if(randomizedEncounter == 1){
                 CreateCombat(); 
-
             }
  
             //MURAL

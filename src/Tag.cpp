@@ -13,7 +13,7 @@ readerTag(nullptr),
 bigTag(nullptr), 
 tagCountNumber(nullptr)
 {    
-    if (enemyRef.lock()){
+    if(enemyRef.lock()){
         
         Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
         associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));

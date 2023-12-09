@@ -56,7 +56,8 @@ class CombatState : public State{
         static Skill::TargetType whoAttacks ;
         static Skill::TargetType whoReceives;
         static bool motherTransition;
-
+        static bool popRequestedEndState;
+        
         static bool ChangingSides;
 
     private:

@@ -480,6 +480,8 @@ void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
 
 //Starter skills
 void Skill::InitializeSkills() {
+    skillArray.clear();
+
     //Adding skills
         skillArray.push_back(Skill::RecklessSlash);
         skillArray.push_back(Skill::CautiousStrike);

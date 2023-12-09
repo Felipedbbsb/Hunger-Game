@@ -75,4 +75,5 @@ private:
   void IndicatorAnimation(float dt);
   int ScaleIndicator; //If 1 is growing, -1 the opposite
 
+  Timer deathTransitionTime;
 };

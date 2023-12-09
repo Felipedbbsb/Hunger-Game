@@ -70,9 +70,6 @@ Daughter::~Daughter()
 
 void Daughter::Update(float dt)
 {   
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
-        return;
-    }
 
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
@@ -86,24 +83,28 @@ void Daughter::Update(float dt)
 
     //=============================//=============================//=============================//=============================
 
-
     // Check if the enemy's HP is zero or below and request deletion
-    if (hp <= 0) {
-        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC, 1.5);
+    if (hp <= 0 ) {
 
-        deadBody_spr->SetFrame(0);
+        if(deathTransitionTime.Get() == 0){
+            CombatState::motherTransition = true;    
+        }
+        else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
+            CombatState::popRequestedEndState = true;
+            return; //block this code
+            
+        }
+        
+        deathTransitionTime.Update(dt);
+    }   
+    else{
+        deathTransitionTime.Restart();
+    }
 
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
-        Game::GetInstance().GetCurrentState().AddObject(deadBody);
 
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
-
-    } 
-
-
-    
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
+        return;
+    }
 
 
     //ENEMY TURN
