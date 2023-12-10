@@ -17,17 +17,19 @@
 #include "Node.h"
 #include "SDL_include.h" 
 
-std::map<std::vector<std::pair<int, int>>, bool> Map::banned_edge;
-std::vector<std::vector<std::pair<int, int>>> Map::created_edges;
-std::vector<std::pair<int, int>> Map::created_nodes;
+
 std::pair<int, int> Map::mapPosition = std::make_pair(0, 0); 
 
 Map::Map() : State::State(){  
     CreateMap();
 
+    Map::mapPosition = std::make_pair(0, 0); 
+
 }
   
-Map::~Map() {}
+Map::~Map() {
+    
+}
 
 void Map::Update(float dt) {
     InputManager& input = InputManager::GetInstance();
@@ -85,9 +87,10 @@ void Map::LoadAssets() {
     bool isMuralLastNode = false;
     int muralCount = totalNodes * MAP_PORC_MURAL;
     int combatCount = totalNodes * MAP_PORC_COMBAT;
-    int unknwonCount = totalNodes * MAP_PORC_UNKNOW;
+    int restCount = totalNodes * MAP_PORC_COMBAT;
+    int unknwonCount = totalNodes * MAP_PORC_REST;
     for (const auto& node : created_nodes) {
-        CreateNodeObj(node, RandomNodeType(node, totalNodes, isMuralLastNode, muralCount, combatCount, unknwonCount));
+        CreateNodeObj(node, RandomNodeType(node, totalNodes, isMuralLastNode, muralCount, combatCount, restCount, unknwonCount));
     }
 
 
@@ -223,13 +226,11 @@ void Map::CreateNodeObj(std::pair<int, int> v1, NodeType type) {
     AddObject(new_node);
 }
 
-NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &isMuralLastNode, int &muralCount, int &combatCount, int &unknwonCount) {
+NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &isMuralLastNode, int &muralCount, int &combatCount, int &restCount,int &unknwonCount) {
     // Gerar um número entre 1 e 100 (inclusive)
     int randomPercent = std::rand() % totalNodes + 1;
 
 
-
-    //std::cout << totalNodes <<" " << isMuralLastNode<<" " << muralCount<<" " << combatCount<<" " <<unknwonCount << std::endl;
     --totalNodes;
 
     // O primeiro andar sempre é um combate
@@ -239,9 +240,9 @@ NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &is
 
     //floor exceptions
     if(node.first == MAP_FLOORS){
-        --muralCount;
+        --restCount;
         isMuralLastNode = false;
-        return NodeType::MURAL;
+        return NodeType::REST;
     }
     else if(node.first == 1){
         --combatCount;
@@ -250,9 +251,9 @@ NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &is
     }
 
 
-    if (randomPercent <= muralCount && !isMuralLastNode && node.first != MAP_FLOORS - 1) {
+    if (randomPercent <= muralCount && !isMuralLastNode) {
         --muralCount;
-        isMuralLastNode = true;
+        isMuralLastNode = true; 
         return NodeType::MURAL;
     } 
     else if (randomPercent <= muralCount + combatCount) {
@@ -263,11 +264,16 @@ NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &is
     else if(randomPercent <= muralCount + combatCount + unknwonCount) {
         --unknwonCount;
         isMuralLastNode = false;
-        return NodeType::UNKNOWN;  // Substitua "UNKNOWN" pelo tipo correto de sala
+        return NodeType::UNKNOWN;  
+    }
+    else if(randomPercent <= muralCount + combatCount + unknwonCount + restCount && node.first != MAP_FLOORS - 1 && !isMuralLastNode) {
+        --restCount;
+        isMuralLastNode = true;
+        return NodeType::REST;  
     }
     
     //exception
-    return NodeType::COMBAT;
+    return NodeType::UNKNOWN;
 }
 
 std::vector<std::pair<int, int>> Map::GetUpperNeighbors(const std::pair<int, int>& v) {
@@ -360,8 +366,12 @@ void Map::Resume() {
 
     Camera::Unfollow();
     Camera::pos.x = 0;
+
+
     Camera::pos.y = mapPosition.first * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) - RESOLUTION_HEIGHT/2;
-    
+    if(Camera::pos.y  < 0){
+        Camera::pos.y = 0;
+    }
 
 }
 

@@ -47,7 +47,7 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
  
     std::string spriteSkill;
     // Use skillInfoMap para obter informações da habilidade com base na ID
-    const SkillInfo& skillInfo = skillInfoMap[id];
+    const SkillInfo& skillInfo = skillInfoMap[id]; 
 
     spriteSkill = skillInfo.iconPath;
     textSkill = skillInfo.info;

@@ -5,7 +5,7 @@
 #include "Map.h"
 #include "Enemies.h"
 #include "Skill.h"
-#include "Map.h"
+#include "MenuState.h"
 #include <iostream>
 #include <exception>
 
@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
         CombatState* initialState = new CombatState(enemiesArray, COMBAT_IMAGE); // Pass the enemiesArray
         */
 
-        Map* initialState = new Map();    
+        MenuState* initialState = new MenuState();    
         game.Push(initialState);
  
         game.Run();

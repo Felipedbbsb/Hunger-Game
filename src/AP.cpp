@@ -70,6 +70,7 @@ void AP::Update(float dt){
 
     if(!SkillSelection::skillSelectionActivated){
 
+
         //Change to enemy turn
         if((apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
         Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr) || (UI::nextActivated && !SkillSelection::skillSelectionActivated)){
@@ -88,6 +89,7 @@ void AP::Update(float dt){
                 CombatState::ChangingSides = true;
                 delayChangeSides.Restart();
                 UI::nextActivated = false;
+
             }
 
             

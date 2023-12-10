@@ -12,9 +12,12 @@
 #include "Sprite.h"
 #include "Component.h"
 #include "Enemies.h"
+#include "MenuState.h"
 
 #define END_BG "assets/img/Backgrounds/menuBg.png"
-#define PRESS_SPACE_SPRITE "assets/img/Backgrounds/pressSpacebar.png"
+#define END_HEADER "assets/img/Backgrounds/gameOverTitle.png"
+
+
 
 class EndState : public State{
     public:
@@ -32,5 +35,6 @@ class EndState : public State{
 
     private:
         GameObject* pressBar; 
+        GameObject* header;
 
 };

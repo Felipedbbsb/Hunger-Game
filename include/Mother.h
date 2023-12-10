@@ -22,7 +22,7 @@
 #define MOTHER_SPRITE_NP1 "assets/img/mom/momIdleNP1.png"
 #define MOTHER_SPRITE_NP2 "assets/img/mom/momIdleNP2.png"
 #define MOTHER_FC 14
-#define MOTHER_FT 1.0
+#define MOTHER_FT 1.25
 
 #define MOTHER_HP 50
 

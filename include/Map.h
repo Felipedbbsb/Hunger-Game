@@ -25,8 +25,14 @@
 #define MAP_GRID_SIZE Vec2(1520, 3080)
 
 #define MAP_PORC_COMBAT  0.45
-#define MAP_PORC_MURAL  0.30
-#define MAP_PORC_UNKNOW  0.25
+#define MAP_PORC_MURAL  0.20
+#define MAP_PORC_UNKNOW  0.3
+#define MAP_PORC_REST  0.1
+
+//#define MAP_PORC_COMBAT  0.0
+//#define MAP_PORC_MURAL  0.0
+//#define MAP_PORC_UNKNOW  0.3
+//#define MAP_PORC_REST  0.0
 
 #define LINE_DASH_LENGHT  8
 
@@ -52,15 +58,15 @@ class Map : public State{
         void Pause();
         void Resume();
         void LoadAssets();
-        static bool GenerateNode(std::pair<int, int> v1, std::pair<int, int> v2);
-        static std::map<std::vector<std::pair<int, int>>, bool> banned_edge;
-        static std::vector<std::vector<std::pair<int, int>>> created_edges;
-        static std::vector<std::pair<int, int>> created_nodes;
+        bool GenerateNode(std::pair<int, int> v1, std::pair<int, int> v2);
+        std::map<std::vector<std::pair<int, int>>, bool> banned_edge;
+        std::vector<std::vector<std::pair<int, int>>> created_edges;
+        std::vector<std::pair<int, int>> created_nodes;
         static std::pair<int, int> mapPosition;
         void CreateNodeObj(std::pair<int, int> v1, NodeType type); 
         std::vector<std::pair<int, int>> GetUpperNeighbors(const std::pair<int, int>& v);
         NodeType RandomNodeType(std::pair<int, int> node, int &totalNodes, 
-        bool &isMuralLastNode, int &muralCount, int &combatCount, int &unknwonCount);
+        bool &isMuralLastNode, int &muralCount, int &combatCount, int &restCount,int &unknwonCount);
         void CreateMap();
         int CheckCorners(int current_column, int next_column, int current_floor);
         void DrawLineMap(int x1, int y1, int x2, int y2);

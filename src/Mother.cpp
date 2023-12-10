@@ -31,7 +31,12 @@ lifeBarMother(nullptr),
 tagSpaceCount(0),
 ScaleIntention(1),
 ScaleIndicator(1){
- 
+
+    Mother::hp = GameData::hp; 
+    Mother::damageDjinn = 0;
+    Mother::tags = {};
+    Mother::activateRampage = false;
+    Mother::activateWeak = false;
 }  
  
 void Mother::Start()  
@@ -51,7 +56,7 @@ void Mother::Start()
 
     //If enemies starts with tags
     ApplyTags(tags); 
-
+    
     lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
     //lifeBarMother->SetCurrentHP(hp);  
 
@@ -67,6 +72,8 @@ Mother::~Mother()
 
     DeleteIndicator();
     DeleteIntention();
+
+    GameData::hp = hp;
 }  
  
 void Mother::Update(float dt) 
@@ -74,26 +81,31 @@ void Mother::Update(float dt)
 
     if(damageDjinn != 0){
         GameData::hpCorrupted += damageDjinn;
+        
         int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
         damageDjinn = 0;
 
-        if(corruptedDamage > 0){
+        if(corruptedDamage != 0){
            hp = corruptedDamage; 
+           GameData::hp = corruptedDamage; 
         }
         
-    }
-    if (hp <= 0 ) {
+    } 
+
+    
+    if (hp <= 0 && !(CombatState::InteractionSCreenActivate || CombatState::ChangingSides)) {
 
         if(deathTransitionTime.Get() == 0){
             CombatState::motherTransition = true;    
         }
         else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
-            
+             
             //Increment np level
             GameData::npLevel++;
 
             if(GameData::npLevel == 3){
                 CombatState::popRequestedEndState = true;
+                deathTransitionTime.Restart();
                 return; //block this code
             }
             
@@ -113,6 +125,7 @@ void Mother::Update(float dt)
 
             GameData::hpCorrupted = GameData::hpMax * multiplerNP;
             hp = GameData::hpMax - GameData::hpCorrupted;
+            GameData::hp = hp;
             lifeBarMother->SetCurrentHP(hp);  
             lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
 
@@ -122,17 +135,17 @@ void Mother::Update(float dt)
             auto spriteComponent = associated.GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                associated.RemoveComponent(spriteComponentPtr);
+                associated.RemoveComponent(spriteComponentPtr); 
             }  
             Sprite* deadBody_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
             deadBody_spr->SetFrame(0); 
             associated.AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
 
-           associated.box.y -= associated.box.h;
+           associated.box.y -= associated.box.h; 
 
            CombatState::motherTransition = false;
-        }
-        
+        } 
+         
         deathTransitionTime.Update(dt);
     } 
     else{

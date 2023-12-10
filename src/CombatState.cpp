@@ -17,6 +17,7 @@
 #include "GameData.h"
 #include "NP.h"
 #include "EndState.h"
+#include "Protected.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -58,7 +59,8 @@ void CombatState::Update(float dt){
 
     if(CombatState::popRequestedEndState){
         CombatState::popRequestedEndState = false;
-        EndState* new_stage = new EndState();
+        CombatState::motherTransition = false;
+        EndState* new_stage = new EndState(); 
         Game::GetInstance().Push(new_stage); 
         popRequested = true;
     }
@@ -305,7 +307,9 @@ void CombatState::Start(){
     GameData::playerTurn = true;
     CombatState::ChangingSides = false;
     CombatState::popRequestedEndState = false;
+    CombatState::motherTransition = false;
 
+    Protected::isProtected = false;
 
     Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
 
@@ -338,6 +342,8 @@ void CombatState::Resume(){
     CombatState::whoAttacks = Skill::TargetType::IRR;
     CombatState::whoReceives = Skill::TargetType::IRR;
     CombatState::popRequestedEndState = false;
-
+    CombatState::motherTransition = false;
+    
+    
 }
 

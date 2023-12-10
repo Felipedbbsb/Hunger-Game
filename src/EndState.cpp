@@ -3,14 +3,15 @@
 #include "InputManager.h" 
 #include "CameraFollower.h"
 #include "Camera.h"
-
-
-//#include "StartState.h"
-
+#include "GameData.h"
+#include "Map.h"
+#include "MenuState.h"
 
 
 EndState::EndState() 
-: State::State()
+: State::State(),
+pressBar(nullptr),
+header(nullptr)
 {
 
 }
@@ -31,11 +32,36 @@ void EndState::Update(float dt){
     }
 
     if (input.KeyPress(SPACEBAR_KEY)){
-        //StartState* new_stage = new StartState();
-        //Game::GetInstance().Push(new_stage); 
+        MenuState* initialState = new MenuState();    
+        Game::GetInstance().Push(initialState); 
         popRequested = true;
     }
-        
+
+
+    auto nextComponent = header->GetComponent("Sprite");
+    auto nextComponentPtr = std::dynamic_pointer_cast<Sprite>(nextComponent);
+    if(nextComponentPtr){
+        if(nextComponentPtr->GetAlpha() != 255){
+            nextComponentPtr->SetAlpha((nextComponentPtr->GetAlpha() + dt) * (APLHA_FADEOUT - 0.1 * (nextComponentPtr->GetAlpha() / 255) ));
+            if(nextComponentPtr->GetAlpha() > 255){
+                nextComponentPtr->SetAlpha(255);
+            }
+        }
+        else{
+            nextComponent = pressBar->GetComponent("Sprite");
+            nextComponentPtr = std::dynamic_pointer_cast<Sprite>(nextComponent);
+            if(nextComponentPtr->GetAlpha() != 255){
+            nextComponentPtr->SetAlpha((nextComponentPtr->GetAlpha() + dt) * APLHA_FADEOUT);
+            if(nextComponentPtr->GetAlpha() > 255){
+                nextComponentPtr->SetAlpha(255);
+            }
+        }
+
+        }
+    } 
+     
+
+         
 
     UpdateArray(dt); 
     Camera::Update(dt);
@@ -57,18 +83,32 @@ void EndState::LoadAssets(){
     AddObject(bg);
 
     //============================ UI ========================================
-    //UI takes up 1/3 of the box at the bottom
-    GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    Sprite* ui_behaviour = new Sprite(*ui, PRESS_SPACE_SPRITE); 
-    ui->AddComponent((std::shared_ptr<Sprite>)ui_behaviour); 
+    pressBar = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
+    Sprite* ui_behaviour = new Sprite(*pressBar, PRESS_SPACE_SPRITE); 
+    pressBar->AddComponent((std::shared_ptr<Sprite>)ui_behaviour); 
 
-    ui->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - ui->box.w / 2;
-    ui->box.y = (RESOLUTION_HEIGHT * Game::resizer) * 0.75;
+    ui_behaviour->SetAlpha(0);
+    pressBar->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - pressBar->box.w / 2;
+    pressBar->box.y = (RESOLUTION_HEIGHT * Game::resizer) * 0.75;
 
 
-    CameraFollower *ui_cmfl = new CameraFollower(*ui);
-    ui->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
-    AddObject(ui);
+    CameraFollower *ui_cmfl = new CameraFollower(*pressBar);
+    pressBar->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
+    AddObject(pressBar);
+
+    //===================================================================
+    header = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
+    Sprite* header_behaviour = new Sprite(*header, END_HEADER); 
+    header->AddComponent((std::shared_ptr<Sprite>)header_behaviour); 
+
+    header_behaviour->SetAlpha(0);
+    header->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - header->box.w / 2;
+    header->box.y = (RESOLUTION_HEIGHT * Game::resizer) * 0.35 - header->box.h / 2;
+
+
+    CameraFollower *header_cmfl = new CameraFollower(*header);
+    header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
+    AddObject(header);
 }
 
 

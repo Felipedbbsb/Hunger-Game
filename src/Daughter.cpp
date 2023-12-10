@@ -27,12 +27,16 @@ Daughter::Daughter(GameObject &associated) :
 Component::Component(associated),
 indicator(nullptr),
 intention(nullptr), 
-lifeBarDaughter(nullptr),
+lifeBarDaughter(nullptr), 
 tagSpaceCount(0),
 ScaleIntention(1),
 ScaleIndicator(1){ 
- 
-}  
+    
+    Daughter::hp = GameData::life;  
+    Daughter::tags = {};
+    Daughter::activateRampage = false;
+    Daughter::activateWeak = false;
+}   
 
 void Daughter::Start() 
 {
@@ -66,6 +70,7 @@ Daughter::~Daughter()
     DeleteIndicator();
     DeleteIntention();
 
+    GameData::life = hp;
 }
 
 void Daughter::Update(float dt)
@@ -91,6 +96,8 @@ void Daughter::Update(float dt)
         }
         else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
             CombatState::popRequestedEndState = true;
+            CombatState::motherTransition = false;
+            deathTransitionTime.Restart();
             return; //block this code
             
         }

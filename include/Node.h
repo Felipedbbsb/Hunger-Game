@@ -15,7 +15,7 @@
 
 #define MAP_MURAL_SPRITE "assets/img/UI/map/uiMapMural.png"
 #define MAP_COMBAT_SPRITE "assets/img/UI/map/uiMapFight.png"
-#define MAP_REST_SPRITE "assets/img/UI/map/uiMapFight.png"
+#define MAP_REST_SPRITE "assets/img/UI/map/uiMapVisited.png"
 #define MAP_UNKNOWN_SPRITE "assets/img/UI/map/uiMapMistery.png"
 #define MAP_BOSS_SPRITE "assets/img/UI/map/uiMapBoss.png"
 #define MAP_VISITED_SPRITE "assets/img/UI/map/uiMapVisited.png"
@@ -38,6 +38,7 @@ class Node : public Component {
         void SetNewStage(NodeType node);
         void CreateIconVisited();
     private:
+        void CreateRest();
         void CreateMural();
         void CreateCombat();
             std::vector<Enemies::EnemyId> GetRandomEncounter(int floorPostion);

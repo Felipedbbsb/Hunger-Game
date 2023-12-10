@@ -14,4 +14,5 @@ class GameData{
         static int  life; 
         static int  lifeMax; 
         static int  npLevel; 
+
 }; 

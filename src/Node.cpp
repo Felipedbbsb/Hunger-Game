@@ -169,25 +169,27 @@ void Node::SetNewStage(NodeType node){
             break;
         }
         case NodeType::REST: {
-            Mural* new_stage = new Mural(COMBAT_IMAGE); 
-            Game::GetInstance().Push(new_stage);
+            CreateRest();
             break;
         } 
         case NodeType::UNKNOWN: {
-            int randomizedEncounter = rand() % 3 + 1;
+            int randomizedEncounter = rand() % 100 + 1;
             //COMBAT
-            if(randomizedEncounter == 1){
+            if(randomizedEncounter < 50){
                 CreateCombat(); 
             }
  
             //MURAL
-            else if(randomizedEncounter == 2){
+            else if(randomizedEncounter > 80){
                 CreateMural();
             }
 
-            //RANDOM ENCOUNTER
-            else if(randomizedEncounter == 3){
-                CreateMural();
+            //REST
+            else if(randomizedEncounter > 100){
+                CreateRest();
+            }
+            else{
+                CreateCombat(); 
             }
 
            break;
@@ -240,6 +242,17 @@ void Node::CreateMural(){
     Mural* new_stage = new Mural(spriteBg); 
     Game::GetInstance().Push(new_stage);  
 }
+
+void Node::CreateRest(){
+    int randomValue = std::rand() % 2 + 1;
+
+    // Append the random value to the sprite path
+    std::string spriteBg = MAP_MURAL_BACKGROUND;
+    spriteBg.insert(spriteBg.find_last_of('.'), std::to_string(randomValue));
+
+    Mural* new_stage = new Mural(spriteBg); 
+    Game::GetInstance().Push(new_stage);  
+} 
 
 void Node::CreateCombat(){
     std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition.first - 1);                                               
@@ -298,6 +311,8 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
     encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple};
     encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
 
+    encounterMap[16] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
+
 
     int randomValue = std::rand() % 5 + 1;
 
@@ -316,7 +331,7 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
     }
     //encounter BOSS
     else if(floorPostion == 16){
-        return encounterMap[randomValue + 10];
+        return encounterMap[16];
     }
 
     return encounterMap[1];

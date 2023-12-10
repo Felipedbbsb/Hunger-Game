@@ -27,6 +27,7 @@ LifeBar::~LifeBar() {
         hpReader->RequestDelete();
         hpReader = nullptr;
     }  
+
 }
  
 void LifeBar::Start() { 
@@ -166,6 +167,7 @@ int LifeBar::SetCorruptedHP(int hpCorruptedCurrent) {
 
     if(hpCorruptedMax - this->hpCorruptedCurrent < hpCurrent){
         SetCurrentHP(hpCorruptedMax - this->hpCorruptedCurrent);
+        hpReaderRender();  
         return hpCorruptedMax - this->hpCorruptedCurrent;
     }
     // Update the HP reader text 
