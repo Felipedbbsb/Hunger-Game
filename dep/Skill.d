@@ -193,7 +193,7 @@ dep/Skill.d bin/Skill.o: src/Skill.cpp include/Skill.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
  include/Timer.h c:\mingw\include\time.h include/Tag.h include/AP.h \
- include/Reader.h include/Camera.h include/InputManager.h \
+ include/Music.h include/Reader.h include/Camera.h include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -213,7 +213,7 @@ dep/Skill.d bin/Skill.o: src/Skill.cpp include/Skill.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits \
  include/CameraFollower.h include/SkillSelection.h include/Mother.h \
  include/LifeBar.h include/Daughter.h include/Enemies.h include/UI.h \
- include/TagReader.h
+ include/TagReader.h include/CombatState.h
 
 include/Skill.h:
 
@@ -685,6 +685,8 @@ include/Tag.h:
 
 include/AP.h:
 
+include/Music.h:
+
 include/Reader.h:
 
 include/Camera.h:
@@ -746,3 +748,5 @@ include/Enemies.h:
 include/UI.h:
 
 include/TagReader.h:
+
+include/CombatState.h:

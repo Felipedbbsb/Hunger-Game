@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "Map.h"
 #include "Enemies.h"
+#include "Music.h"
 
 #define NODE_TIME_ANIMATION 1.5f
 #define NODE_TIME_ANIMATION_V 0.5
@@ -51,4 +52,5 @@ class Node : public Component {
         std::vector<std::pair<int, int>> neighbors;
         int ScaleNode;
         GameObject* iconVisited;
+        Music* selectSFX;
 };

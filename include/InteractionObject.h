@@ -5,6 +5,8 @@
 #include "Timer.h"
 #include "Component.h"
 #include "Papiro.h"
+#include "Sound.h"
+#include "Music.h"
 
 #define EFFECT_COOLDOWN 3
 
@@ -31,6 +33,10 @@
 #define ATK_SPRITE_R "assets/img/UI/effectDamageR.png"
 #define DEBUFF_SPRITE_R "assets/img/UI/effectDebuff.png" 
 #define BUFF_SPRITE_R "assets/img/UI/effectBuffR.png"
+
+#define ATK_SOUND "assets/audio/sfxAttack.mp3" 
+#define DEBUFF_SOUND "assets/audio/sfxDebuff.mp3"
+#define BUFF_SOUND "assets/audio/sfxBuff.mp3"
 
 class InteractionObject : public Component {
     public:

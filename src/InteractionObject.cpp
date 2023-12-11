@@ -219,24 +219,31 @@ void InteractionObject::Start() {
 
 void InteractionObject::CreateEffect(std::string TypeEffect, bool isPlayer) {
     effect = new GameObject();
-    Sprite* effect_spr = nullptr; // Declare a variável aqui
-
+    Sprite* effect_spr = nullptr; 
+    Sound *effect_sound = nullptr;
     if(isPlayer){
         if (TypeEffect == "BUFF") {
             effect_spr = new Sprite(*effect, BUFF_SPRITE_R); 
+            effect_sound = new Sound(*effect, BUFF_SOUND);
+    
         } else if (TypeEffect == "ATK") {
             effect_spr = new Sprite(*effect, ATK_SPRITE_R);
+            effect_sound = new Sound(*effect, ATK_SOUND);
         } else if (TypeEffect == "DEBUFF") {
             effect_spr = new Sprite(*effect, DEBUFF_SPRITE_R);
+            effect_sound = new Sound(*effect, DEBUFF_SOUND);
         }
     }
     else{
         if (TypeEffect == "BUFF") {
             effect_spr = new Sprite(*effect, BUFF_SPRITE); 
+            effect_sound = new Sound(*effect, BUFF_SOUND);
         } else if (TypeEffect == "ATK") {
             effect_spr = new Sprite(*effect, ATK_SPRITE);
+            effect_sound = new Sound(*effect, ATK_SOUND);
         } else if (TypeEffect == "DEBUFF") {
             effect_spr = new Sprite(*effect, DEBUFF_SPRITE);
+            effect_sound = new Sound(*effect, DEBUFF_SOUND); 
         }
     }
     
@@ -246,17 +253,22 @@ void InteractionObject::CreateEffect(std::string TypeEffect, bool isPlayer) {
         effect->AddComponent(std::shared_ptr<Sprite>(effect_spr)); 
         effect_spr->SetAlpha(1);
     }
+    if (effect_sound) { 
+        effect->AddComponent((std::shared_ptr<Sound>)effect_sound);
+    }
+    
+
 
     effect->box.x = associated.box.x + associated.box.w/2 - effect->box.w/2;
     effect->box.y = associated.box.y + associated.box.h/2 - effect->box.h/2;
     
 
     Game::GetInstance().GetCurrentState().AddObject(effect);
-
+    effect_sound->Play();
     typeEffect = TypeEffect;
 }
 
-
+ 
  
 void InteractionObject::Update(float dt) {
     if(effect != nullptr){

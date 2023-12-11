@@ -199,7 +199,8 @@ dep/GameData.d bin/GameData.o: src/GameData.cpp include/GameData.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
  include/Timer.h include/LifeBar.h include/Reader.h include/Skill.h \
- c:\mingw\include\time.h include/Tag.h include/AP.h include/Daughter.h
+ c:\mingw\include\time.h include/Tag.h include/AP.h include/Music.h \
+ include/Daughter.h
 
 include/GameData.h:
 
@@ -690,5 +691,7 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
+
+include/Music.h:
 
 include/Daughter.h:

@@ -109,6 +109,10 @@ void EndState::LoadAssets(){
     CameraFollower *header_cmfl = new CameraFollower(*header);
     header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
     AddObject(header);
+
+    Music overMusic;
+    //overMusic.Open("assets/audio/songGameOver.mp3");
+    //overMusic.Play();  
 }
 
 

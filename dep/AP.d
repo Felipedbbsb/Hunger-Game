@@ -210,7 +210,7 @@ dep/AP.d bin/AP.o: src/AP.cpp include/AP.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
  include/LifeBar.h include/Reader.h include/Skill.h \
- c:\mingw\include\time.h include/Tag.h include/Mother.h \
+ c:\mingw\include\time.h include/Tag.h include/Music.h include/Mother.h \
  include/Daughter.h include/CameraFollower.h include/Camera.h \
  include/SkillSelection.h include/CombatState.h include/UI.h
 
@@ -731,6 +731,8 @@ include/Skill.h:
 c:\mingw\include\time.h:
 
 include/Tag.h:
+
+include/Music.h:
 
 include/Mother.h:
 

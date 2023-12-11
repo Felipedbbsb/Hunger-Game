@@ -24,6 +24,8 @@
 
 #define FOCUS_ENEMY 175 
 
+#define Combat_Music "assets/audio/songCombat.mp3"
+
 #include <iostream>
 #include <memory>
 #include <algorithm> 

@@ -12,6 +12,7 @@
 #include "Sprite.h"
 #include "Component.h"
 #include "Enemies.h"
+#include "Music.h"
 
 #define MENU_BG "assets/img/Backgrounds/menuBg.png"
 #define HEADER_MENU_BG "assets/img/Backgrounds/Logo.png"
@@ -31,5 +32,6 @@ class MenuState : public State{
 
     private:
         GameObject* pressBar; 
-        GameObject* header;
+        GameObject* header; 
+        
 };

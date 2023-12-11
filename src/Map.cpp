@@ -119,6 +119,11 @@ void Map::LoadAssets() {
     AddObject(new_node);
 
 
+    Music noncombatMusic;
+    noncombatMusic.Open("assets/audio/songNonCombat.mp3");
+    noncombatMusic.Play();     
+
+
 }
  
 void Map::CreateMap(){

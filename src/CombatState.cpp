@@ -18,6 +18,7 @@
 #include "NP.h"
 #include "EndState.h"
 #include "Protected.h"
+#include "Music.h"
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -176,11 +177,14 @@ void CombatState::LoadAssets(){
         NP_UI->AddComponent(std::shared_ptr<NP>(NP_behaviour));
         
 
-        Game::GetInstance().GetCurrentState().AddObject(NP_UI);
-    
+        Game::GetInstance().GetCurrentState().AddObject(NP_UI); 
+     
+    Music combatMusic;
+    combatMusic.Open("assets/audio/sfxNP.mp3");
+    combatMusic.Play();    
 
-} 
-
+}  
+ 
 void CombatState::CreateEnemies(){
     //============================ Enemies ========================================
     for (int i = enemiesArray.size() - 1; i >= 0; i--) {

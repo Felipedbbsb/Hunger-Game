@@ -193,8 +193,9 @@ dep/TagReader.d bin/TagReader.o: src/TagReader.cpp include/TagReader.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
  include/Timer.h include/Skill.h c:\mingw\include\time.h include/Tag.h \
- include/AP.h include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h \
- include/Game.h include/State.h include/InputManager.h \
+ include/AP.h include/Music.h include/Text.h \
+ C:/SDL2/include/SDL2/SDL_ttf.h include/Game.h include/State.h \
+ include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -677,6 +678,8 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
+
+include/Music.h:
 
 include/Text.h:
 

@@ -13,6 +13,7 @@
 #include "Time.h"
 #include "Tag.h" 
 #include "AP.h" 
+#include "Music.h"
 
 #define TEXT_TAGCOUNT2_SIZE 42
 
@@ -226,7 +227,9 @@
 
 #define SKILL_CLICK_COOLDOWN 0.1
 //===================================================
+#define SKILL_SELECTION "assets/audio/sfxSelection.mp3"
 
+#define SKILL_SELECTION_CONFIRMED "assets/audio/sfxSelectionConfirm.mp3"
 
 class Skill : public Component {
     public:
@@ -406,8 +409,9 @@ class Skill : public Component {
         AP* apInstance;
         GameObject* jewelObj;
         GameObject* tagCount;
-        bool toggleJewel;
+        bool toggleJewel; 
         bool createJewel;
         GameObject* skillSelected;
+        Music* selectSFX;
 };
  

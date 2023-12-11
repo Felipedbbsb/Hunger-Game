@@ -28,6 +28,8 @@
 
 #define MOTHER_DEATH_TIME 3
 
+#define MOTHER_NP_SOUND "assets/audio/sfxNP.mp3"
+
 class Mother : public Component{
 
   public:

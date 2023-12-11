@@ -210,10 +210,10 @@ dep/Map.d bin/Map.o: src/Map.cpp include/Map.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Sound.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h include/Skill.h c:\mingw\include\time.h \
- include/Tag.h include/AP.h include/Mother.h include/LifeBar.h \
- include/Reader.h include/Daughter.h include/Enemies.h include/Papiro.h \
- include/SkillSelection.h include/CameraParallax.h include/Protected.h \
- include/Mural.h include/Node.h include/SDL_include.h \
+ include/Tag.h include/AP.h include/Music.h include/Mother.h \
+ include/LifeBar.h include/Reader.h include/Daughter.h include/Enemies.h \
+ include/Papiro.h include/SkillSelection.h include/CameraParallax.h \
+ include/Protected.h include/Mural.h include/Node.h include/SDL_include.h \
  include/VictoryState.h include/MenuState.h include/EndState.h
 
 include/Map.h:
@@ -733,6 +733,8 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
+
+include/Music.h:
 
 include/Mother.h:
 

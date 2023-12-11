@@ -15,12 +15,12 @@
 #include "MenuState.h"
 
 #define VICTORY_BG "assets/img/Backgrounds/gameOverBackground.png"
-#define VICTORY_HEADER "assets/img/Backgrounds/gameOverTitle.png"
+#define VICTORY_HEADER "assets/img/Backgrounds/victoryTitle.png"
 
 
 
 class VictoryState : public State{
-    public:
+    public: 
         VictoryState();
         ~VictoryState();
         void LoadAssets();

@@ -9,7 +9,7 @@
 #include "Papiro.h" 
 #include "SkillSelection.h" 
 #include "Protected.h"
-
+#include "Music.h"
 
 bool Mural::MuralStateActivateReward = false;
 bool Mural::MuralState = false;
@@ -97,6 +97,11 @@ void Mural::CreateBackground(std::string originalPath){
     bg->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - bg->box.w / 2;
 
     AddObject(bg);
+
+
+    Music noncombatMusic;
+    //noncombatMusic.Open("assets/audio/songNonCombat.mp3");
+    //noncombatMusic.Play();  
        
 } 
 

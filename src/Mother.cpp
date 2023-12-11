@@ -7,6 +7,7 @@
 #include "CombatState.h"
 #include "NP.h"
 #include "EndState.h"
+#include "Sound.h"
 
 
 int Mother::hp = GameData::hp; 
@@ -60,7 +61,10 @@ void Mother::Start()
     lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
     //lifeBarMother->SetCurrentHP(hp);  
 
-}
+
+    Sound *np_sound = new Sound(associated, MOTHER_NP_SOUND); 
+    associated.AddComponent((std::shared_ptr<Sound>)np_sound);
+}   
 
 Mother::~Mother()
 {
@@ -96,12 +100,24 @@ void Mother::Update(float dt)
     if (hp <= 0 && !(CombatState::InteractionSCreenActivate || CombatState::ChangingSides)) {
 
         if(deathTransitionTime.Get() == 0){
-            CombatState::motherTransition = true;    
+            CombatState::motherTransition = true;
+            
+            
+        }
+        else if(deathTransitionTime.Get() < MOTHER_DEATH_TIME * 0.1){
+            //play np sound
+            auto soundComponent = associated.GetComponent("Sound");
+            auto soundComponentPtr = std::dynamic_pointer_cast<Sound>(soundComponent);
+            if (soundComponentPtr) {
+                soundComponentPtr->Play(); 
+            }    
         }
         else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
              
             //Increment np level
             GameData::npLevel++;
+
+            
 
             if(GameData::npLevel == 3){
                 CombatState::popRequestedEndState = true;
@@ -141,7 +157,7 @@ void Mother::Update(float dt)
             deadBody_spr->SetFrame(0); 
             associated.AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
 
-           associated.box.y -= associated.box.h; 
+            associated.box.y -= associated.box.h; 
 
            CombatState::motherTransition = false;
         } 

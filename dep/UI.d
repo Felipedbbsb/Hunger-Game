@@ -199,8 +199,9 @@ dep/UI.d bin/UI.o: src/UI.cpp include/UI.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_tree.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_map.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
- c:\mingw\include\time.h include/Tag.h include/AP.h include/Game.h \
- C:/SDL2/include/SDL2/SDL_ttf.h include/State.h include/InputManager.h \
+ c:\mingw\include\time.h include/Tag.h include/AP.h include/Music.h \
+ include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h include/State.h \
+ include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\hashtable_policy.h \
@@ -698,6 +699,8 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
+
+include/Music.h:
 
 include/Game.h:
 

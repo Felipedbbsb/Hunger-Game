@@ -22,7 +22,8 @@ floor(v1.first),
 column(v1.second),
 neighbors(neighbors),
 ScaleNode(1),
-iconVisited(nullptr)
+iconVisited(nullptr),
+selectSFX(nullptr)
 {     
     Sprite* map_background_spr= new Sprite(associated, GetNodeSprite(type));
     associated.AddComponent((std::shared_ptr<Component>)map_background_spr);
@@ -85,7 +86,17 @@ void Node::Update(float dt){
         if(nextComponentPtr){
            if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                 nextComponentPtr->SetAlpha(255);
-                if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){
+
+                if(selectSFX == nullptr){
+                    selectSFX = new Music(SKILL_SELECTION);
+                    selectSFX->Play(1);
+                }
+
+                if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){ 
+                    Music selectedSFX;
+                    selectedSFX.Open(SKILL_SELECTION_CONFIRMED);
+                    selectedSFX.Play(1);
+
                     //If can be visited go to state of node
                     Map::mapPosition = std::make_pair(floor, column);
                     SetNewStage(type);
@@ -93,6 +104,7 @@ void Node::Update(float dt){
                 }
             }else{
                 nextComponentPtr->SetAlpha(120);
+                selectSFX = nullptr;
             } 
             
             //if can be visited create animation expanding
@@ -291,11 +303,11 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
 
    //Test release version 70%
     //encounters from 1-5
-    encounterMap[1] = { Enemies::CatStone, Enemies::CatGold};
-    encounterMap[2] = { Enemies::CatStone, Enemies::CatGold };
+    encounterMap[1] = { Enemies::CultistGreen, Enemies::CatGold};
+    encounterMap[2] = { Enemies::Radog, Enemies::FrogMom };
     encounterMap[3] = { Enemies::CatStone, Enemies::CatGold };
-    encounterMap[4] = { Enemies::CatStone, Enemies::CatGold};
-    encounterMap[5] = { Enemies::CatStone, Enemies::CatGold, Enemies::CultistRed };
+    encounterMap[4] = { Enemies::CatStone, Enemies::Radog};
+    encounterMap[5] = { Enemies::CatGold, Enemies::CatStone, Enemies::Radog };
 
     //encounters from 6-10
     encounterMap[6] = { Enemies::CultistRed, Enemies::Parakeet};

@@ -80,7 +80,7 @@ void LifeBar::Render() {
     SDL_Rect filledRect = lifeBarRect;
     
     if(hpCurrent > 0){
-        filledRect.w = static_cast<int>(static_cast<float>(hpCurrent + 0.1)/ hpMax * lifeBarWidth);
+        filledRect.w = static_cast<int>(static_cast<float>(hpCurrent + 0.2)/ hpMax * lifeBarWidth);
         SDL_RenderFillRect(renderer, &filledRect); 
     }
     

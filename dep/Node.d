@@ -199,8 +199,9 @@ dep/Node.d bin/Node.o: src/Node.cpp include/Node.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\unordered_map.h \
  include/State.h include/Enemies.h include/LifeBar.h include/Reader.h \
  include/Skill.h c:\mingw\include\time.h include/Tag.h include/AP.h \
- include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h include/Game.h \
- include/InputManager.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
+ include/Music.h include/Text.h C:/SDL2/include/SDL2/SDL_ttf.h \
+ include/Game.h include/InputManager.h \
+ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\deque \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
@@ -702,6 +703,8 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
+
+include/Music.h:
 
 include/Text.h:
 

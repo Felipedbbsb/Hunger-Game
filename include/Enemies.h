@@ -52,23 +52,23 @@
 
 #define CatGold_SPRITE "assets/img/enemies/catGoldIdle.png"
     #define CatGold_SPRITE_ATK "assets/img/enemies/catGoldAttack.png"
-    #define CatGold_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
+    #define CatGold_SPRITE_DFS "assets/img/enemies/catGoldDamage.png"
 
 #define CatStone_SPRITE "assets/img/enemies/catStoneIdle.png"
     #define CatStone_SPRITE_ATK "assets/img/enemies/catStoneAttack.png"
-    #define CatStone_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
+    #define CatStone_SPRITE_DFS "assets/img/enemies/catStoneDamage.png"
 
 #define frogMom_SPRITE "assets/img/enemies/frogMomIdle.png"
     #define frogMom_SPRITE_ATK "assets/img/enemies/frogMomAttack.png"
-    #define frogMom_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
+    #define frogMom_SPRITE_DFS "assets/img/enemies/frogMomDamage.png"
 
 #define frogDad_SPRITE "assets/img/enemies/frogDadIdle.png"
     #define frogDad_SPRITE_ATK "assets/img/enemies/frogDadAttack.png"
-    #define frogDad_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
+    #define frogDad_SPRITE_DFS "assets/img/enemies/frogDadDamage.png"
 
 #define radog_SPRITE "assets/img/enemies/radogIdle.png"
     #define radog_SPRITE_ATK "assets/img/enemies/radogAttack.png"
-    #define radog_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
+    #define radog_SPRITE_DFS "assets/img/enemies/radogDamage.png"
 
 
 #define ENEMY_FT 1

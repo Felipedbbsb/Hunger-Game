@@ -776,13 +776,13 @@ bool Enemies::Is(std::string type) {
     return (type == "Enemies"); 
 }
 
-// Implement the InitializeEnemyInfoMap function to populate enemy information
+// Implement the InitializeEnemyInfoMap function to populate enemy information 
 void Enemies::InitializeEnemyInfoMap() { 
 
     /*
     Cultista Verde (Debuffer):
         10 HP
-        Cut: Deal 6 damage
+        Cut: Deal 6 damage 
         Whip: Deal 3 damage; Apply 1 Frail to target.
         Evil Chant: Apply 2 weak to target
     */

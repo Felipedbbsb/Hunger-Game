@@ -12,6 +12,8 @@
 #include "SkillSelection.h"
 #include "UI.h"
 #include "TagReader.h"
+#include "CombatState.h"
+
 
 Skill* Skill::skillFromReward = nullptr; //selection reward  
 Skill* Skill::skillToReward = nullptr; //selection reward  
@@ -40,10 +42,11 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     readerSkill(nullptr),
     apInstance(ap),
     jewelObj(nullptr),
-    tagCount(nullptr),
+    tagCount(nullptr), 
     toggleJewel(false),
     createJewel(createJewel),
-    skillSelected(nullptr) {
+    skillSelected(nullptr),
+    selectSFX(nullptr) {
  
     std::string spriteSkill;
     // Use skillInfoMap para obter informações da habilidade com base na ID
@@ -54,6 +57,8 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
  
     Sprite* skillSprite = new Sprite(associated, spriteSkill);
     associated.AddComponent(std::make_shared<Sprite>(*skillSprite));
+
+    
     
 }
 
@@ -103,12 +108,14 @@ Skill::~Skill() {
         skillSelected->RequestDelete();
         skillSelected = nullptr;
     }
+
+    selectSFX = nullptr;
 }
 
 void Skill::Update(float dt) {
 
     //Creates border to sinalize selection of skill
-    if(Skill::skillFromReward == this || Skill::skillToReward == this || Skill::selectedSkill == this){
+    if(((Skill::skillFromReward == this || Skill::skillToReward == this || Skill::selectedSkill == this) &&  !CombatState::ChangingSides)){
         
         if(skillSelected == nullptr){
             skillSelected = new GameObject(associated.box.x + Camera::pos.x - 4, associated.box.y + Camera::pos.y -2);
@@ -158,7 +165,12 @@ void Skill::Update(float dt) {
         
     }
 
-    if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){ 
+    if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)  &&  !CombatState::ChangingSides){ 
+            
+            if(selectSFX == nullptr && id != Skill::EMPTY){
+                selectSFX = new Music(SKILL_SELECTION);
+                selectSFX->Play(1);
+            }
 
             if (true) {
                 if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN && id != Skill::EMPTY) {
@@ -205,7 +217,7 @@ void Skill::Update(float dt) {
 
                     Game::GetInstance().GetCurrentState().AddObject(readerSkill);
 
-
+                      
                 }
 
                 
@@ -214,7 +226,7 @@ void Skill::Update(float dt) {
                     //Scenerio where combat its not alerady on skill selection
                     if(!SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
                         if (selectedSkill != nullptr && selectedSkill != this  ) {
-                        selectedSkill->Deselect(); 
+                            selectedSkill->Deselect(); 
                         }
                         selectedSkill = this;
 
@@ -227,6 +239,11 @@ void Skill::Update(float dt) {
                         } else {
                             selectedSkill->Deselect();
                         }
+
+                        Music selectSFX;
+                        selectSFX.Open(SKILL_SELECTION_CONFIRMED);
+                        selectSFX.Play(1);  
+
                     }
 
                     //Scenerio where combat its  alerady on skill selection
@@ -247,6 +264,10 @@ void Skill::Update(float dt) {
                                 skillToReward = this;
   
                             }
+
+                            Music selectSFX;
+                            selectSFX.Open(SKILL_SELECTION_CONFIRMED);
+                            selectSFX.Play(1);  
                             
                             
                         }else{
@@ -254,6 +275,10 @@ void Skill::Update(float dt) {
                                 skillFromReward = nullptr;
                             } 
                             skillFromReward = this;
+
+                            Music selectSFX;
+                            selectSFX.Open(SKILL_SELECTION_CONFIRMED);
+                            selectSFX.Play(1);  
                         }             
                     }
                 }        
@@ -266,6 +291,8 @@ void Skill::Update(float dt) {
             readerSkill = nullptr;
 
         } 
+
+        selectSFX = nullptr;
     }
 
 

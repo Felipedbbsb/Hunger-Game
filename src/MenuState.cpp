@@ -17,10 +17,10 @@ header(nullptr)
 {
 
 }
-  
+   
 MenuState::~MenuState(){
-    
 
+    
     
 }
 
@@ -40,9 +40,9 @@ void MenuState::Update(float dt){
           Skill::InitializeSkills();
 
           GameData::playerTurn = true; // victory condition 
-          GameData::hp = MOTHER_HP;  
+          GameData::hpCorrupted = 49; 
+          GameData::hp = MOTHER_HP - GameData::hpCorrupted;  
           GameData::hpMax = MOTHER_HP; 
-          GameData::hpCorrupted = 0; 
           GameData::life = DAUGHTER_HP; 
           GameData::lifeMax = DAUGHTER_HP;  
           GameData::npLevel = 0; //init 
@@ -51,6 +51,10 @@ void MenuState::Update(float dt){
         Map* initialState = new Map();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
+
+        Music noncombatMusic;
+        noncombatMusic.Open("assets/audio/sfxGameStart.mp3");
+        noncombatMusic.Play(); 
     }
         
 
@@ -119,10 +123,19 @@ void MenuState::LoadAssets(){
     header->box.x = RESOLUTION_WIDTH   / 2 - header->box.w / 2;
     header->box.y = (RESOLUTION_HEIGHT ) * 0.35 - header->box.h / 2;
 
+    Sound *header_sound = new Sound(*header, "assets/audio/sfxGameStart.mp3");
+    header->AddComponent((std::shared_ptr<Sound>)header_sound);
+
+    header_sound->Play();
 
     CameraFollower *header_cmfl = new CameraFollower(*header);
     header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
     AddObject(header);
+
+
+    Music noncombatMusic;
+    noncombatMusic.Open("assets/audio/songNonCombat.mp3");
+    noncombatMusic.Play();  
 }
 
 

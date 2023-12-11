@@ -75,7 +75,7 @@ void VictoryState::LoadAssets(){
     GameObject *bg = new GameObject();
     Sprite* bgSprite= new Sprite(*bg, VICTORY_BG);
     CameraFollower *bg_cmfl = new CameraFollower(*bg);
-    bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);       
+    bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);        
     bg->AddComponent((std::shared_ptr<Component>)bgSprite);
 
     bg->box.x = RESOLUTION_WIDTH  / 2 - bg->box.w / 2;
@@ -109,6 +109,10 @@ void VictoryState::LoadAssets(){
     CameraFollower *header_cmfl = new CameraFollower(*header);
     header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
     AddObject(header);
+
+    Music noncombatMusic;
+    noncombatMusic.Open("assets/audio/songNonCombat.mp3");
+    noncombatMusic.Play();  
 }
 
 
