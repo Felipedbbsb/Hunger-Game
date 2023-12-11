@@ -291,11 +291,11 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
 
    //Test release version 70%
     //encounters from 1-5
-    encounterMap[1] = { Enemies::CultistGreen, Enemies::CultistGreen};
-    encounterMap[2] = { Enemies::CultistGreen, Enemies::CultistGreen };
-    encounterMap[3] = { Enemies::CultistGreen, Enemies::CultistGreen };
-    encounterMap[4] = { Enemies::CultistGreen, Enemies::CultistGreen};
-    encounterMap[5] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistRed };
+    encounterMap[1] = { Enemies::CatStone, Enemies::CatGold};
+    encounterMap[2] = { Enemies::CatStone, Enemies::CatGold };
+    encounterMap[3] = { Enemies::CatStone, Enemies::CatGold };
+    encounterMap[4] = { Enemies::CatStone, Enemies::CatGold};
+    encounterMap[5] = { Enemies::CatStone, Enemies::CatGold, Enemies::CultistRed };
 
     //encounters from 6-10
     encounterMap[6] = { Enemies::CultistRed, Enemies::Parakeet};

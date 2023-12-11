@@ -213,7 +213,8 @@ dep/Map.d bin/Map.o: src/Map.cpp include/Map.h \
  include/Tag.h include/AP.h include/Mother.h include/LifeBar.h \
  include/Reader.h include/Daughter.h include/Enemies.h include/Papiro.h \
  include/SkillSelection.h include/CameraParallax.h include/Protected.h \
- include/Mural.h include/Node.h include/SDL_include.h
+ include/Mural.h include/Node.h include/SDL_include.h \
+ include/VictoryState.h include/MenuState.h include/EndState.h
 
 include/Map.h:
 
@@ -756,3 +757,9 @@ include/Mural.h:
 include/Node.h:
 
 include/SDL_include.h:
+
+include/VictoryState.h:
+
+include/MenuState.h:
+
+include/EndState.h:

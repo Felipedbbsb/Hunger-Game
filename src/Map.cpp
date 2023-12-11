@@ -16,24 +16,33 @@
 #include "Mural.h"
 #include "Node.h"
 #include "SDL_include.h" 
-
+#include "VictoryState.h" 
+#include "EndState.h" 
 
 std::pair<int, int> Map::mapPosition = std::make_pair(0, 0); 
 
 Map::Map() : State::State(){  
+    Map::mapPosition = std::make_pair(0, 0); 
     CreateMap();
 
-    Map::mapPosition = std::make_pair(0, 0); 
+    
 
 }
   
-Map::~Map() {
-    
+Map::~Map() { 
+    Map::mapPosition = std::make_pair(0, 0); 
 }
 
 void Map::Update(float dt) {
+    if(Map::mapPosition.first == MAP_FLOORS + 1){
+        EndState* newState = new EndState();    
+        Game::GetInstance().Push(newState);  
+        popRequested = true;
+    }
+
     InputManager& input = InputManager::GetInstance();
  
+    
 
     if (input.KeyPress(ESCAPE_KEY) || input.QuitRequested()) {
         quitRequested = true;
@@ -100,14 +109,13 @@ void Map::LoadAssets() {
     new_node->AddComponent((std::shared_ptr<Component>)node_spr);
 
     new_node->box.x = RESOLUTION_WIDTH / 2; //Centralized
-    ;
 
-    new_node->box.y = RESOLUTION_HEIGHT - (MAP_FLOORS + 1) * MAP_GRID_SIZE.y / (MAP_FLOORS + 2) + Camera::pos.y; //plus 2 for offset and BOSS
+    new_node->box.y = RESOLUTION_HEIGHT - (MAP_FLOORS + 1) * MAP_GRID_SIZE.y / (MAP_FLOORS + 2); //plus 2 for offset and BOSS
 
     //Centralize in center of spirte
     new_node->box.x -= new_node->box.w/2;
     new_node->box.y -= new_node->box.h/2;
- 
+  
     AddObject(new_node);
 
 

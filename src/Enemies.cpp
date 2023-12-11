@@ -827,26 +827,47 @@ void Enemies::InitializeEnemyInfoMap() {
         Bark: Gain 2 provoke
 
     */
-    enemyInfoMap[Radog] = { 5, {}, "Enemy 1", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[Radog] = { 15, {}, "Enemy 1", radog_SPRITE, radog_SPRITE_ATK, radog_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
 
     /*    
-    Gato Doido (Glass Cannon)
+    Cat Stone (Glass Cannon)
         20 HP
         Trucidate: Deal 10 Damage
         Enrage: Deal 3 damage; Gain 3 Rampage
     */
-    enemyInfoMap[Cat] = { 20, {}, "Enemy 2", ENEMY2_SPRITE, ENEMY2_SPRITE_ATK, ENEMY2_SPRITE_DFS, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
+    enemyInfoMap[CatStone] = { 20, {}, "Cat Stone", CatStone_SPRITE, CatStone_SPRITE_ATK, CatStone_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
     
     /*    
-    Sapo (Defensive Support)
+    Gato Gold (Glass Cannon)
+        20 HP
+        Trucidate: Deal 10 Damage
+        Enrage: Deal 3 damage; Gain 3 Rampage
+    */
+    enemyInfoMap[CatGold] = { 20, {}, "Cat Gold", CatGold_SPRITE, CatGold_SPRITE_ATK, CatGold_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    
+
+    /*    
+    Sapo mãe (Defensive Support)
         20HP
         Bubble Shield: Apply 3 resilience to all allies
         Tongue Strike: Deal 3 damage; Apply 3 weak to target
         Toxic Sludge: Apply 4 curse to one enemy
 
     */
-    enemyInfoMap[Frog] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, ENEMY3_SPRITE_ATK, ENEMY3_SPRITE_DFS, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
+    enemyInfoMap[FrogMom] = { 20, {}, "Frog Mom", frogMom_SPRITE, frogMom_SPRITE_ATK, frogMom_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
     
+
+    /*    
+    Sapo PAI (Defensive Support)
+        20HP
+        Bubble Shield: Apply 3 resilience to all allies
+        Tongue Strike: Deal 3 damage; Apply 3 weak to target
+        Toxic Sludge: Apply 4 curse to one enemy
+
+    */
+    enemyInfoMap[FrogDad] = { 20, {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    
+
     /*    
     Aranha (Boss)
         60HP
@@ -856,7 +877,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Impale: Deal 15 damage
 
     */
-    enemyInfoMap[Spider] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[Spider] = { 60, {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 
 }
    

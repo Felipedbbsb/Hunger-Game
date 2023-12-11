@@ -78,7 +78,7 @@ void EndState::LoadAssets(){
     bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);       
     bg->AddComponent((std::shared_ptr<Component>)bgSprite);
 
-    bg->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - bg->box.w / 2;
+    bg->box.x = RESOLUTION_WIDTH  / 2 - bg->box.w / 2;
 
     AddObject(bg);
 
@@ -88,8 +88,8 @@ void EndState::LoadAssets(){
     pressBar->AddComponent((std::shared_ptr<Sprite>)ui_behaviour); 
 
     ui_behaviour->SetAlpha(0);
-    pressBar->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - pressBar->box.w / 2;
-    pressBar->box.y = (RESOLUTION_HEIGHT * Game::resizer) * 0.75;
+    pressBar->box.x = RESOLUTION_WIDTH  / 2 - pressBar->box.w / 2;
+    pressBar->box.y = (RESOLUTION_HEIGHT ) * 0.75;
 
 
     CameraFollower *ui_cmfl = new CameraFollower(*pressBar);
@@ -102,8 +102,8 @@ void EndState::LoadAssets(){
     header->AddComponent((std::shared_ptr<Sprite>)header_behaviour); 
 
     header_behaviour->SetAlpha(0);
-    header->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - header->box.w / 2;
-    header->box.y = (RESOLUTION_HEIGHT * Game::resizer) * 0.35 - header->box.h / 2;
+    header->box.x = RESOLUTION_WIDTH  / 2 - header->box.w / 2;
+    header->box.y = (RESOLUTION_HEIGHT ) * 0.35 - header->box.h / 2;
 
 
     CameraFollower *header_cmfl = new CameraFollower(*header);
