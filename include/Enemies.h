@@ -98,7 +98,7 @@ class Enemies : public Component {
 
         // Structure to store enemy information
         struct EnemyInfo {
-            int hp;
+            std::pair< int, int> hp; // first:: min hp, second: max hp
             std::vector<Tag::Tags> tags;
             std::string name;
             std::string iconPath;

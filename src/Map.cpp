@@ -35,7 +35,7 @@ Map::~Map() {
 
 void Map::Update(float dt) {
     if(Map::mapPosition.first == MAP_FLOORS + 1){
-        EndState* newState = new EndState();    
+        VictoryState* newState = new VictoryState();    
         Game::GetInstance().Push(newState);  
         popRequested = true;
     }
@@ -118,10 +118,8 @@ void Map::LoadAssets() {
   
     AddObject(new_node);
 
-
-    Music noncombatMusic;
-    noncombatMusic.Open("assets/audio/songNonCombat.mp3");
-    noncombatMusic.Play();      
+    //noncombatMusic.Open("assets/audio/songNonCombat.mp3");
+    //noncombatMusic.Play();      
 
 
 }
@@ -372,6 +370,7 @@ void Map::Start() {
  
 void Map::Pause() {
     State::Pause();
+
 }
 
 void Map::Resume() {
@@ -385,7 +384,8 @@ void Map::Resume() {
     if(Camera::pos.y  < 0){
         Camera::pos.y = 0;
     }
-
+  
+    //noncombatMusic.Play();
 }
 
  

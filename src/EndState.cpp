@@ -35,6 +35,11 @@ void EndState::Update(float dt){
         MenuState* initialState = new MenuState();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
+
+        GameObject* selectedSFX = new GameObject();
+        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+         selectSFX_sound->Play(1);
     }
 
 
@@ -111,8 +116,8 @@ void EndState::LoadAssets(){
     AddObject(header);
 
     Music overMusic;
-    //overMusic.Open("assets/audio/songGameOver.mp3");
-    //overMusic.Play();  
+    overMusic.Open("assets/audio/songGameOver.mp3");
+    overMusic.Play();  
 }
 
 

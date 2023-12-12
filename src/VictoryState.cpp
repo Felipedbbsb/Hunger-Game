@@ -35,6 +35,11 @@ void VictoryState::Update(float dt){
         MenuState* initialState = new MenuState();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
+
+        GameObject* selectedSFX = new GameObject();
+        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+         selectSFX_sound->Play(1);
     }
 
 
@@ -112,7 +117,7 @@ void VictoryState::LoadAssets(){
 
     Music noncombatMusic;
     noncombatMusic.Open("assets/audio/songNonCombat.mp3");
-    noncombatMusic.Play();  
+    noncombatMusic.Play();
 }
 
 

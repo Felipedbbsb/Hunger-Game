@@ -27,8 +27,6 @@ selectSFX(nullptr)
 {     
     Sprite* map_background_spr= new Sprite(associated, GetNodeSprite(type));
     associated.AddComponent((std::shared_ptr<Component>)map_background_spr);
-
-    
 } 
     
 void Node::Start() {     
@@ -316,29 +314,29 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
     encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::Cat };
     */
 
-   //Test release version 70%
+    //Test release version 70%
     //encounters from 1-5
-    encounterMap[1] = { Enemies::CultistGreen, Enemies::CatGold};
-    encounterMap[2] = { Enemies::Radog, Enemies::FrogMom };
-    encounterMap[3] = { Enemies::CatStone, Enemies::CatGold };
-    encounterMap[4] = { Enemies::CatStone, Enemies::Radog};
-    encounterMap[5] = { Enemies::CatGold, Enemies::CatStone, Enemies::Radog };
+    encounterMap[1] = { Enemies::CultistGreen, Enemies::CultistGreen};
+    encounterMap[2] = { Enemies::CultistGreen, Enemies::FrogDad };
+    encounterMap[3] = { Enemies::CultistGreen, Enemies::FrogMom };
+    encounterMap[4] = { Enemies::FrogDad, Enemies::FrogMom};
+    encounterMap[5] = { Enemies::CultistGreen, Enemies::FrogDad, Enemies::FrogMom };
 
     //encounters from 6-10
-    encounterMap[6] = { Enemies::CultistRed, Enemies::Parakeet};
-    encounterMap[7] = { Enemies::CultistRed, Enemies::CultistRed };
-    encounterMap[8] = { Enemies::CultistRed, Enemies::CultistGreen, Enemies::CultistRed };
-    encounterMap[9] = { Enemies::CultistRed, Enemies::Parakeet};
-    encounterMap[10] = { Enemies::CultistRed, Enemies::CultistRed, Enemies::CultistRed };
+    encounterMap[6] = { Enemies::FrogDad, Enemies::CatStone};
+    encounterMap[7] = { Enemies::CultistRed, Enemies::CatStone };
+    encounterMap[8] = { Enemies::CultistRed, Enemies::CultistGreen, Enemies::CatStone };
+    encounterMap[9] = { Enemies::CatGold, Enemies::CatStone};
+    encounterMap[10] = { Enemies::CultistRed, Enemies::FrogDad, Enemies::CatGold }; 
     
-    //encounters from 11-15
+    //encounters from 11-15 
     encounterMap[11] = { Enemies::CultistPurple, Enemies::Parakeet };
     encounterMap[12] = { Enemies::CultistRed, Enemies::CultistPurple };
     encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistGreen, Enemies::CultistPurple };
     encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple};
     encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
 
-    encounterMap[16] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
+    encounterMap[16] = { Enemies::Radog, Enemies::CultistPurple, Enemies::CultistPurple };
 
 
     int randomValue = std::rand() % 5 + 1;

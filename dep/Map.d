@@ -194,9 +194,9 @@ dep/Map.d bin/Map.o: src/Map.cpp include/Map.h \
  C:/SDL2/include/SDL2/SDL_shape.h C:/SDL2/include/SDL2/SDL_system.h \
  C:/SDL2/include/SDL2/SDL_timer.h C:/SDL2/include/SDL2/SDL_version.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
- include/Game.h include/SDL_include.h C:/SDL2/include/SDL2/SDL_ttf.h \
- C:/SDL2/include/SDL2/SDL.h include/InputManager.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
+ include/Music.h include/SDL_include.h C:/SDL2/include/SDL2/SDL_mixer.h \
+ include/Game.h C:/SDL2/include/SDL2/SDL_ttf.h C:/SDL2/include/SDL2/SDL.h \
+ include/InputManager.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\stack \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\deque \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
@@ -208,9 +208,8 @@ dep/Map.d bin/Map.o: src/Map.cpp include/Map.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Sound.h \
- C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
- C:/SDL2/include/SDL2/SDL_image.h include/Skill.h c:\mingw\include\time.h \
- include/Tag.h include/AP.h include/Music.h include/Mother.h \
+ include/Sprite.h C:/SDL2/include/SDL2/SDL_image.h include/Skill.h \
+ c:\mingw\include\time.h include/Tag.h include/AP.h include/Mother.h \
  include/LifeBar.h include/Reader.h include/Daughter.h include/Enemies.h \
  include/Papiro.h include/SkillSelection.h include/CameraParallax.h \
  include/Protected.h include/Mural.h include/Node.h include/SDL_include.h \
@@ -676,9 +675,13 @@ C:/SDL2/include/SDL2/SDL_locale.h:
 
 C:/SDL2/include/SDL2/SDL_misc.h:
 
-include/Game.h:
+include/Music.h:
 
 include/SDL_include.h:
+
+C:/SDL2/include/SDL2/SDL_mixer.h:
+
+include/Game.h:
 
 C:/SDL2/include/SDL2/SDL_ttf.h:
 
@@ -720,8 +723,6 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
 
 include/Sound.h:
 
-C:/SDL2/include/SDL2/SDL_mixer.h:
-
 include/Sprite.h:
 
 C:/SDL2/include/SDL2/SDL_image.h:
@@ -733,8 +734,6 @@ c:\mingw\include\time.h:
 include/Tag.h:
 
 include/AP.h:
-
-include/Music.h:
 
 include/Mother.h:
 

@@ -84,6 +84,11 @@ void Mural::LoadAssets(){
     CameraFollower *bg_cmfl = new CameraFollower(*ui);
     ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
     AddObject(ui);
+
+
+    Music noncombatMusic;
+    noncombatMusic.Open("assets/audio/songNonCombat.mp3");
+    noncombatMusic.Play(); 
 }
 
 
@@ -99,9 +104,6 @@ void Mural::CreateBackground(std::string originalPath){
     AddObject(bg);
 
 
-    Music noncombatMusic;
-    //noncombatMusic.Open("assets/audio/songNonCombat.mp3");
-    //noncombatMusic.Play();  
        
 } 
 

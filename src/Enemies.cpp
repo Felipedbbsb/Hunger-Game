@@ -47,11 +47,13 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     ScaleIndicator(1)
     {  
         EnemyInfo& enemyInfo = enemyInfoMap[id];
-        hp = enemyInfo.hp;
+        std::cout << "123" << std::endl;
+        hp = enemyInfo.hp.first + rand() % (enemyInfo.hp.second - enemyInfo.hp.first + 1);
+        std::cout << "123" << std::endl;
         tags = enemyInfo.tags;
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
-        skills = enemyInfo.skills;
+        skills = enemyInfo.skills; 
  
     
         enemiesCount += 1;    //one more enemy 
@@ -633,7 +635,7 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
+    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]); 
     tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
 
     tagObject->box.x = enemyHitbox.x + TAGS_SPACING_X * tagSpaceCount;
@@ -786,7 +788,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Whip: Deal 3 damage; Apply 1 Frail to target.
         Evil Chant: Apply 2 weak to target
     */
-    enemyInfoMap[CultistGreen] = { 10, {}, "Green Cultist", CultistGreen_SPRITE, CultistGreen_SPRITE_ATK, CultistGreen_SPRITE_DFS, {Skill::E_Cut, Skill::E_Whip, Skill::E_Evil_Chant} };
+    enemyInfoMap[CultistGreen] = { std::make_pair(6, 10), {}, "Green Cultist", CultistGreen_SPRITE, CultistGreen_SPRITE_ATK, CultistGreen_SPRITE_DFS, {Skill::E_Cut, Skill::E_Whip, Skill::E_Evil_Chant} };
     
     
     /*
@@ -797,7 +799,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Evil Chant: Apply 2 weak to target
 
     */
-    enemyInfoMap[CultistRed] = { 15, {}, "Red Cultist", CultistRed_SPRITE, CultistRed_SPRITE_ATK, CultistRed_SPRITE_DFS, {Skill::E_Shiv, Skill::E_Whip, Skill::E_Evil_Chant} };
+    enemyInfoMap[CultistRed] = { std::make_pair(15, 18), {}, "Red Cultist", CultistRed_SPRITE, CultistRed_SPRITE_ATK, CultistRed_SPRITE_DFS, {Skill::E_Shiv, Skill::E_Whip, Skill::E_Evil_Chant} };
     
     /*
     Cultista Roxo (Damage Dealer):
@@ -806,7 +808,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Bite: Deal 9 damage 
         Whip: Deal 3 damage; Apply 2 Frail to target
     */
-    enemyInfoMap[CultistPurple] = { 20, {}, "Purple Cultist", CultistPurple_SPRITE, CultistPurple_SPRITE_ATK, CultistPurple_SPRITE_DFS, {Skill::E_Tentacle_Strike, Skill::E_Bite, Skill::E_Whip} };
+    enemyInfoMap[CultistPurple] = { std::make_pair(20, 25), {}, "Purple Cultist", CultistPurple_SPRITE, CultistPurple_SPRITE_ATK, CultistPurple_SPRITE_DFS, {Skill::E_Tentacle_Strike, Skill::E_Bite, Skill::E_Whip} };
     
     
    /*
@@ -817,7 +819,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Guttural Scream: Apply 2 rampage to all allies
 
     */
-    enemyInfoMap[Parakeet] = { 25, {}, "Parakeet", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
+    enemyInfoMap[Parakeet] = { std::make_pair(25, 30), {}, "Parakeet", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
 
     /*
     Rachorro (Brute):
@@ -827,7 +829,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Bark: Gain 2 provoke
 
     */
-    enemyInfoMap[Radog] = { 15, {}, "Enemy 1", radog_SPRITE, radog_SPRITE_ATK, radog_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[Radog] = { std::make_pair(60, 60), {}, "Enemy 1", radog_SPRITE, radog_SPRITE_ATK, radog_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
 
     /*    
     Cat Stone (Glass Cannon)
@@ -835,7 +837,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Trucidate: Deal 10 Damage
         Enrage: Deal 3 damage; Gain 3 Rampage
     */
-    enemyInfoMap[CatStone] = { 20, {}, "Cat Stone", CatStone_SPRITE, CatStone_SPRITE_ATK, CatStone_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[CatStone] = { std::make_pair(20, 25), {}, "Cat Stone", CatStone_SPRITE, CatStone_SPRITE_ATK, CatStone_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
     
     /*    
     Gato Gold (Glass Cannon)
@@ -843,7 +845,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Trucidate: Deal 10 Damage
         Enrage: Deal 3 damage; Gain 3 Rampage
     */
-    enemyInfoMap[CatGold] = { 20, {}, "Cat Gold", CatGold_SPRITE, CatGold_SPRITE_ATK, CatGold_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[CatGold] = { std::make_pair(20, 25), {}, "Cat Gold", CatGold_SPRITE, CatGold_SPRITE_ATK, CatGold_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
     
 
     /*    
@@ -854,7 +856,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Toxic Sludge: Apply 4 curse to one enemy
 
     */
-    enemyInfoMap[FrogMom] = { 20, {}, "Frog Mom", frogMom_SPRITE, frogMom_SPRITE_ATK, frogMom_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[FrogMom] = { std::make_pair(7, 12), {}, "Frog Mom", frogMom_SPRITE, frogMom_SPRITE_ATK, frogMom_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
     
 
     /*    
@@ -865,7 +867,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Toxic Sludge: Apply 4 curse to one enemy
 
     */
-    enemyInfoMap[FrogDad] = { 20, {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[FrogDad] = { std::make_pair(15, 20), {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
     
 
     /*    
@@ -877,7 +879,7 @@ void Enemies::InitializeEnemyInfoMap() {
         Impale: Deal 15 damage
 
     */
-    enemyInfoMap[Spider] = { 60, {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+    enemyInfoMap[Spider] = { std::make_pair(60, 60), {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
 
 }
    

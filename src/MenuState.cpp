@@ -40,21 +40,24 @@ void MenuState::Update(float dt){
           Skill::InitializeSkills();
 
           GameData::playerTurn = true; // victory condition 
-          GameData::hpCorrupted = 49; 
+          GameData::hpCorrupted = 0; 
           GameData::hp = MOTHER_HP - GameData::hpCorrupted;  
           GameData::hpMax = MOTHER_HP; 
           GameData::life = DAUGHTER_HP; 
           GameData::lifeMax = DAUGHTER_HP;  
-          GameData::npLevel = 0; //init 
+          GameData::npLevel = 2; //init 
          
 
         Map* initialState = new Map();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
 
-        Music noncombatMusic;
-        noncombatMusic.Open("assets/audio/sfxGameStart.mp3");
-        noncombatMusic.Play(); 
+        GameObject* selectedSFX = new GameObject();
+        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+         selectSFX_sound->Play(1);
+
+
     }
         
 
@@ -126,7 +129,7 @@ void MenuState::LoadAssets(){
     Sound *header_sound = new Sound(*header, "assets/audio/sfxGameStart.mp3");
     header->AddComponent((std::shared_ptr<Sound>)header_sound);
 
-    header_sound->Play();
+    header_sound->Play(1);
 
     CameraFollower *header_cmfl = new CameraFollower(*header);
     header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);

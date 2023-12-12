@@ -9,11 +9,12 @@
 #include "GameObject.h"
 #include "unordered_map"
 #include "State.h"
+#include "Music.h"
 
 #define MAP_SCROLL_SPEED 750
 
 #define MAP_COLUMNS 7
-#define MAP_FLOORS 15
+#define MAP_FLOORS 3
 #define MIN_COLUMN_VALUE 1
 #define MAP_MAX_PATHS 4
 #define MAP_SPRITE "assets/img/UI/map/uiMapBackground.png"
@@ -73,7 +74,7 @@ class Map : public State{
         void DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gapLength); 
     
     private:
-        
+        Music noncombatMusic;
         
 }; 
 
