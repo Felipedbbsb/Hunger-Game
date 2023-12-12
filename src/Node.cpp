@@ -108,6 +108,7 @@ void Node::Update(float dt){
                     //If can be visited go to state of node
                     Map::mapPosition = std::make_pair(floor, column);
                     SetNewStage(type);
+
                    
                 }
             }else{
@@ -147,7 +148,6 @@ void Node::Update(float dt){
                 auto posXenterX = associated.box.x + associated.box.w / 2;
                 auto posXenterY = associated.box.y + associated.box.h / 2;
 
-                // Call SetScale with the correct number of arguments
                     nextComponentPtr->SetScale(scaleSprite.x, scaleSprite.x);
 
 
@@ -156,7 +156,19 @@ void Node::Update(float dt){
                 associated.box.y = posXenterY - associated.box.h / 2;
             }
             else{
-                nextComponentPtr->SetScale(1, 1);
+
+                // Center position original
+                auto posXenterX = associated.box.x + associated.box.w / 2;
+                auto posXenterY = associated.box.y + associated.box.h / 2;
+
+
+                    nextComponentPtr->SetScale(1, 1);
+
+
+                // Postion correction
+                associated.box.x = posXenterX - associated.box.w / 2;
+                associated.box.y = posXenterY - associated.box.h / 2;
+                
             }
         }    
 }
@@ -331,9 +343,9 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
     
     //encounters from 11-15 
     encounterMap[11] = { Enemies::CultistPurple, Enemies::Parakeet };
-    encounterMap[12] = { Enemies::CultistRed, Enemies::CultistPurple };
-    encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistGreen, Enemies::CultistPurple };
-    encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple};
+    encounterMap[12] = { Enemies::CultistPurple, Enemies::CultistRed, Enemies::Parakeet };
+    encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
+    encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple, Enemies::CultistPurple};
     encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
 
     encounterMap[16] = { Enemies::Radog, Enemies::CultistPurple, Enemies::CultistPurple };

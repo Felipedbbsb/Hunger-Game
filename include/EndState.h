@@ -36,5 +36,5 @@ class EndState : public State{
     private:
         GameObject* pressBar; 
         GameObject* header;
-
+        Music overMusic;
 };

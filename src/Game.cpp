@@ -201,6 +201,9 @@ void Game::Run() {
 	}
 
     while (!stateStack.empty() && !stateStack.top()->QuitRequested() ) {
+       
+        bool popAll = stateStack.top()->PopRequestAll();
+        
         // Check if the top state wants to pop
         if (stateStack.top()->PopRequested()) {
             stateStack.top()->Pause();
@@ -214,8 +217,25 @@ void Game::Run() {
                 stateStack.top()->Resume();
             }
 
-            
         }
+
+
+        // Check if the top state wants to pop, made all for do for all states but due to time made only for a "double" pop
+        if(!stateStack.empty()){
+            if (popAll) {
+                stateStack.top()->Pause();
+                stateStack.pop();
+                Resources::ClearImages();
+                Resources::ClearSounds();
+                Resources::ClearMusics();
+                Resources::ClearFonts();
+
+                if (!stateStack.empty()) {
+                    stateStack.top()->Resume();
+                }
+            }
+        }
+
         // Check if there's a stored state to push
         if (storedState != nullptr) { 
             if (!stateStack.empty()) {

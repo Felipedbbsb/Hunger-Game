@@ -44,7 +44,8 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     thisEnemyAttacked(false),
     intentionTimer(),
     ScaleIntention(1),
-    ScaleIndicator(1)
+    ScaleIndicator(1),
+    selectSFX(nullptr) 
     {  
         EnemyInfo& enemyInfo = enemyInfoMap[id];
         std::cout << "123" << std::endl;
@@ -106,7 +107,10 @@ Enemies::~Enemies() {
             return enemy.lock().get() == &associated;
         }), enemiesArray.end());
 
-    
+    if(selectSFX != nullptr){
+        selectSFX->RequestDelete();
+        selectSFX = nullptr;
+    }
 
 }
 
@@ -206,13 +210,25 @@ void Enemies::Update(float dt) {
                     auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
                     if (enemyHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                         if (objComponentPtr) {
-                            objComponentPtr->SetAlpha(255);                          
+                            objComponentPtr->SetAlpha(255);  
+                            if(selectSFX == nullptr){
+                                selectSFX = new GameObject();
+                                Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
+                                selectSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                                selectSFX_sound->Play(1);
+                            }     
                         }
                         else{
                             if (objComponentPtr) {
                                 objComponentPtr->SetAlpha(INDICATOR_ALPHA);                          
                             }
                         }    
+                    }
+                    else{
+                        if(selectSFX != nullptr){
+                            selectSFX->RequestDelete();
+                            selectSFX = nullptr;
+                        }
                     }
 
                 }
@@ -222,6 +238,10 @@ void Enemies::Update(float dt) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
                         ApplySkillToEnemy();
+                        GameObject* selectedSFX = new GameObject();
+                        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                        selectSFX_sound->Play(1);
 
                     }
                 } 

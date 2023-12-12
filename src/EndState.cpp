@@ -17,7 +17,7 @@ header(nullptr)
 }
   
 EndState::~EndState(){
-    
+    overMusic.Stop();
 
     
 }
@@ -35,6 +35,7 @@ void EndState::Update(float dt){
         MenuState* initialState = new MenuState();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
+        popRequestAll = true;
 
         GameObject* selectedSFX = new GameObject();
         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
@@ -115,7 +116,7 @@ void EndState::LoadAssets(){
     header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
     AddObject(header);
 
-    Music overMusic;
+    
     overMusic.Open("assets/audio/songGameOver.mp3");
     overMusic.Play();  
 }
@@ -139,6 +140,7 @@ void EndState::Start(){
  
 void EndState::Pause(){
     State::Pause();
+    overMusic.Stop();
 }
 
 void EndState::Resume(){

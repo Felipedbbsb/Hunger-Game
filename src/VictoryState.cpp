@@ -35,6 +35,7 @@ void VictoryState::Update(float dt){
         MenuState* initialState = new MenuState();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
+        popRequestAll = true;
 
         GameObject* selectedSFX = new GameObject();
         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 

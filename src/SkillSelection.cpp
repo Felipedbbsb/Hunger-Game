@@ -57,6 +57,7 @@ void SkillSelection::Start() {
     
     GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
     Camera::Follow(focusCamera);
+    CombatState::ChangingSides = true;
     
 }   
 

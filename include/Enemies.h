@@ -189,4 +189,6 @@ class Enemies : public Component {
         int ScaleIntention; //If 1 is growing, -1 the opposite
         void IndicatorAnimation(float dt);
         int ScaleIndicator; //If 1 is growing, -1 the opposite
+
+        GameObject* selectSFX;
 };

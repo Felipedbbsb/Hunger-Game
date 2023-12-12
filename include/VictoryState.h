@@ -36,5 +36,6 @@ class VictoryState : public State{
     private:
         GameObject* pressBar; 
         GameObject* header;
+        
 
 };

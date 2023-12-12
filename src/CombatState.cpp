@@ -54,6 +54,8 @@ CombatState::~CombatState(){
         papiro->RequestDelete();
         papiro = nullptr;
     }
+
+        
 }
 
 void CombatState::Update(float dt){   

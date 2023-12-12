@@ -45,7 +45,7 @@ void MenuState::Update(float dt){
           GameData::hpMax = MOTHER_HP; 
           GameData::life = DAUGHTER_HP; 
           GameData::lifeMax = DAUGHTER_HP;  
-          GameData::npLevel = 2; //init 
+          GameData::npLevel = 0; //init 
          
 
         Map* initialState = new Map();    

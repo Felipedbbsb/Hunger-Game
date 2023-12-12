@@ -84,12 +84,16 @@ void Mother::Update(float dt)
 {       
 
     if(damageDjinn != 0){
+
         GameData::hpCorrupted += damageDjinn;
-        
+        if(GameData::hpCorrupted > GameData::hpMax){
+            GameData::hpCorrupted = GameData::hpMax;
+        }
+
         int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
         damageDjinn = 0;
 
-        if(corruptedDamage != 0){
+        if(corruptedDamage != 0 || GameData::hpCorrupted == GameData::hpMax){
            hp = corruptedDamage; 
            GameData::hp = corruptedDamage; 
         }
@@ -102,7 +106,7 @@ void Mother::Update(float dt)
         if(deathTransitionTime.Get() == 0){
             CombatState::motherTransition = true;
             
-            
+             
         }
         else if(deathTransitionTime.Get() < MOTHER_DEATH_TIME * 0.1){
             //play np sound

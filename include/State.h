@@ -25,6 +25,7 @@ class State{
         virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
 
         bool PopRequested();
+        bool PopRequestAll();
         bool QuitRequested();
 
         
@@ -35,6 +36,7 @@ class State{
         void virtual UpdateArray(float dt);
         void virtual RenderArray();
         bool popRequested;
+        bool popRequestAll;
         bool quitRequested;
         bool started;
 

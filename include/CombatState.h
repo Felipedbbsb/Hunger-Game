@@ -71,4 +71,5 @@ class CombatState : public State{
         bool toggleStateNP;
         Timer skillSelectionStart;
         Timer skillSelectionEnd;
+        
 };

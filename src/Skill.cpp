@@ -526,7 +526,7 @@ void Skill::InitializeSkills() {
         skillArray.push_back(Skill::MotherlyLove);
         skillArray.push_back(Skill::PocketSand);
         skillArray.push_back(Skill::NanaNanaNa);
-        skillArray.push_back(Skill::InstantRegret);
+        skillArray.push_back(Skill::FinalSacrifice);
         
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);

@@ -62,7 +62,7 @@ void LifeBar::Render() {
     }
 
     SDL_Color leftSemicircleColor = (hpCurrent > 0) ? barColor : SDL_Color{100, 100, 100, 255};
-    if(hpCorruptedCurrent > hpMax){
+    if(hpCorruptedCurrent >= hpMax){
         leftSemicircleColor = corruptedBarColor;
     }
 

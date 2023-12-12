@@ -4,6 +4,7 @@
 
 State::State() : 
     popRequested(false),
+    popRequestAll(false),
     quitRequested(false), 
     started(false),
     fadingOut(false),
@@ -120,6 +121,8 @@ void State::Render(){
 
 bool State::PopRequested(){return popRequested;}
 
+bool State::PopRequestAll(){return popRequestAll;}
+ 
 bool State::QuitRequested(){return quitRequested;}
 
 //==================================================================

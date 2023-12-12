@@ -35,16 +35,16 @@ Map::~Map() {
 
 void Map::Update(float dt) {
     if(Map::mapPosition.first == MAP_FLOORS + 1){
-        VictoryState* newState = new VictoryState();    
+        VictoryState* newState = new VictoryState();     
         Game::GetInstance().Push(newState);  
         popRequested = true;
-    }
-
+    } 
+    //std::cout << "oiii2" <, std::endl;
     InputManager& input = InputManager::GetInstance();
  
     
 
-    if (input.KeyPress(ESCAPE_KEY) || input.QuitRequested()) {
+    if (input.KeyPress(ESCAPE_KEY) || input.QuitRequested()) { 
         quitRequested = true;
     }
 
@@ -67,7 +67,7 @@ void Map::Update(float dt) {
  
     // Mova a câmera com base no scroll
     //if(input.isMouseWheelScrolled()){
-    //    Camera::pos.y += scrollY * MAP_SCROLL_SPEED * dt;
+    //    Camera::pos.y += scrollY * MAP_SCROLL_SPEED * dt; 
     //}
     
 
@@ -117,12 +117,12 @@ void Map::LoadAssets() {
     new_node->box.y -= new_node->box.h/2;
   
     AddObject(new_node);
-
+ 
     //noncombatMusic.Open("assets/audio/songNonCombat.mp3");
     //noncombatMusic.Play();      
 
 
-}
+}  
  
 void Map::CreateMap(){
     for(int i=1; i<=MAP_MAX_PATHS; i++){
@@ -262,22 +262,22 @@ NodeType Map::RandomNodeType(std::pair<int, int> node, int &totalNodes, bool &is
     }
 
 
-    if (randomPercent <= muralCount && !isMuralLastNode) {
+    if (randomPercent < muralCount && !isMuralLastNode) {
         --muralCount;
         isMuralLastNode = true; 
         return NodeType::MURAL;
     } 
-    else if (randomPercent <= muralCount + combatCount) {
+    else if (randomPercent < muralCount + combatCount) {
         --combatCount;
         isMuralLastNode = false;
         return NodeType::COMBAT; 
     } 
-    else if(randomPercent <= muralCount + combatCount + unknwonCount) {
+    else if(randomPercent < muralCount + combatCount + unknwonCount) {
         --unknwonCount;
         isMuralLastNode = false;
         return NodeType::UNKNOWN;  
     }
-    else if(randomPercent <= muralCount + combatCount + unknwonCount + restCount && node.first != MAP_FLOORS - 1 && !isMuralLastNode) {
+    else if(randomPercent < muralCount + combatCount + unknwonCount + restCount && node.first != MAP_FLOORS - 1 && !isMuralLastNode) {
         --restCount;
         isMuralLastNode = true;
         return NodeType::REST;  
@@ -370,9 +370,10 @@ void Map::Start() {
  
 void Map::Pause() {
     State::Pause();
+    
 
 }
-
+ 
 void Map::Resume() {
     State::Resume();
 
@@ -386,6 +387,7 @@ void Map::Resume() {
     }
   
     //noncombatMusic.Play();
+
 }
 
  
