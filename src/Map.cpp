@@ -121,7 +121,7 @@ void Map::LoadAssets() {
 
     Music noncombatMusic;
     noncombatMusic.Open("assets/audio/songNonCombat.mp3");
-    noncombatMusic.Play();     
+    noncombatMusic.Play();      
 
 
 }

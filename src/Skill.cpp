@@ -109,7 +109,10 @@ Skill::~Skill() {
         skillSelected = nullptr;
     }
 
-    selectSFX = nullptr;
+    if(selectSFX != nullptr){
+        selectSFX->RequestDelete();
+        selectSFX = nullptr;
+    }
 }
 
 void Skill::Update(float dt) {
@@ -168,8 +171,10 @@ void Skill::Update(float dt) {
     if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)  &&  !CombatState::ChangingSides){ 
             
             if(selectSFX == nullptr && id != Skill::EMPTY){
-                selectSFX = new Music(SKILL_SELECTION);
-                selectSFX->Play(1);
+                selectSFX = new GameObject();
+                Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
+                selectSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                selectSFX_sound->Play(1);
             }
 
             if (true) {
@@ -240,9 +245,10 @@ void Skill::Update(float dt) {
                             selectedSkill->Deselect();
                         }
 
-                        Music selectSFX;
-                        selectSFX.Open(SKILL_SELECTION_CONFIRMED);
-                        selectSFX.Play(1);  
+                        GameObject* selectedSFX = new GameObject();
+                        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                        selectSFX_sound->Play(1);
 
                     }
 
@@ -265,9 +271,10 @@ void Skill::Update(float dt) {
   
                             }
 
-                            Music selectSFX;
-                            selectSFX.Open(SKILL_SELECTION_CONFIRMED);
-                            selectSFX.Play(1);  
+                            GameObject* selectedSFX = new GameObject();
+                            Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                            selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                            selectSFX_sound->Play(1);
                             
                             
                         }else{
@@ -276,9 +283,10 @@ void Skill::Update(float dt) {
                             } 
                             skillFromReward = this;
 
-                            Music selectSFX;
-                            selectSFX.Open(SKILL_SELECTION_CONFIRMED);
-                            selectSFX.Play(1);  
+                            GameObject* selectedSFX = new GameObject();
+                            Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                            selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                            selectSFX_sound->Play(1); 
                         }             
                     }
                 }        
@@ -292,7 +300,10 @@ void Skill::Update(float dt) {
 
         } 
 
-        selectSFX = nullptr;
+        if(selectSFX != nullptr){
+            selectSFX->RequestDelete();
+            selectSFX = nullptr;
+        }
     }
 
 

@@ -52,5 +52,5 @@ class Node : public Component {
         std::vector<std::pair<int, int>> neighbors;
         int ScaleNode;
         GameObject* iconVisited;
-        Music* selectSFX;
-};
+        GameObject* selectSFX; 
+}; 

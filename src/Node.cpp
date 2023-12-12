@@ -27,6 +27,8 @@ selectSFX(nullptr)
 {     
     Sprite* map_background_spr= new Sprite(associated, GetNodeSprite(type));
     associated.AddComponent((std::shared_ptr<Component>)map_background_spr);
+
+    
 } 
     
 void Node::Start() {     
@@ -37,6 +39,11 @@ Node::~Node(){
    if(iconVisited != nullptr){
         iconVisited->RequestDelete();
         iconVisited = nullptr;
+    }
+
+    if(selectSFX != nullptr){
+        selectSFX->RequestDelete();
+        selectSFX = nullptr;
     }
 } 
 
@@ -88,14 +95,17 @@ void Node::Update(float dt){
                 nextComponentPtr->SetAlpha(255);
 
                 if(selectSFX == nullptr){
-                    selectSFX = new Music(SKILL_SELECTION);
-                    selectSFX->Play(1);
+                    selectSFX = new GameObject();
+                    Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
+                    selectSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                    selectSFX_sound->Play(1);
                 }
 
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){ 
-                    Music selectedSFX;
-                    selectedSFX.Open(SKILL_SELECTION_CONFIRMED);
-                    selectedSFX.Play(1);
+                    GameObject* selectedSFX = new GameObject();
+                    Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                    selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+                    selectSFX_sound->Play(1);
 
                     //If can be visited go to state of node
                     Map::mapPosition = std::make_pair(floor, column);
@@ -104,7 +114,12 @@ void Node::Update(float dt){
                 }
             }else{
                 nextComponentPtr->SetAlpha(120);
-                selectSFX = nullptr;
+                if(selectSFX != nullptr){
+                    selectSFX->RequestDelete();
+                    selectSFX = nullptr;
+                }
+                
+                
             } 
             
             //if can be visited create animation expanding

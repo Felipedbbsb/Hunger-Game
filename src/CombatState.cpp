@@ -180,7 +180,7 @@ void CombatState::LoadAssets(){
         Game::GetInstance().GetCurrentState().AddObject(NP_UI); 
      
     Music combatMusic;
-    combatMusic.Open("assets/audio/sfxNP.mp3");
+    combatMusic.Open("assets/audio/songCombat.mp3");
     combatMusic.Play();    
 
 }  

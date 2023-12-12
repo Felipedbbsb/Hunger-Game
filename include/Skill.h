@@ -412,6 +412,6 @@ class Skill : public Component {
         bool toggleJewel; 
         bool createJewel;
         GameObject* skillSelected;
-        Music* selectSFX;
+        GameObject* selectSFX;
 };
  
