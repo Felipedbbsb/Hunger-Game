@@ -201,28 +201,21 @@ void Game::Run() {
 	}
 
     while (!stateStack.empty() && !stateStack.top()->QuitRequested() ) {
-        std::cout << "-1" << std::endl;
+
         bool popAll;
         if (!stateStack.empty()) {
             popAll = stateStack.top()->PopRequestAll();
         }
-        std::cout << "-123" << std::endl;
+
         // Check if the top state wants to pop
         if(!stateStack.empty()){
             if (stateStack.top()->PopRequested()) {
-                std::cout << "-1234" << std::endl;
                 stateStack.top()->Pause();
-                std::cout << "-12345" << std::endl;
                 stateStack.pop();
-                std::cout << "-1 a dentro" << std::endl;
                 Resources::ClearImages();
-                std::cout << "-2 a dentro" << std::endl;
                 Resources::ClearSounds();
-                std::cout << "-3 a dentro" << std::endl;
                 Resources::ClearMusics();
-                std::cout << "-4 a dentro" << std::endl;
                 Resources::ClearFonts();
-                std::cout << "-5 a dentro" << std::endl;
 
                 if (!stateStack.empty()) {
                     stateStack.top()->Resume();
@@ -230,7 +223,7 @@ void Game::Run() {
 
             }
         }
-        std::cout << "-2" << std::endl;
+
         // Check if the top state wants to pop, made all for do for all states but due to time made only for a "double" pop
         if(!stateStack.empty()){
             if (popAll) {
@@ -246,7 +239,7 @@ void Game::Run() {
                 }
             }
         }
-        std::cout << "-3" << std::endl;
+
         // Check if there's a stored state to push
         if (storedState != nullptr) { 
             if (!stateStack.empty()) {
@@ -261,17 +254,11 @@ void Game::Run() {
 		}
         
         CalculateDeltaTime();
-        std::cout << "1" << std::endl;
         InputManager::GetInstance().Update();
-        std::cout << "2" << std::endl;
         auto& currentTopState = stateStack.top();
-        std::cout << "3" << std::endl;
         currentTopState->Update(dt);
-        std::cout << "4" << std::endl;
         currentTopState->Render(); 
-        std::cout << "5" << std::endl;
         SDL_RenderPresent(Game::GetInstance().GetRenderer());
-        std::cout << "6" << std::endl;;
     }   
 
    
@@ -288,7 +275,7 @@ void Game::CalculateDeltaTime(){
 
 
     dt = (time_delta - frameStart) / 1000.0; // converting time from miliseconds to seconds
-    std::cout << "Frames = " << 1000/dt <<std::endl; 
+    //std::cout << "Frames = " << 1000/dt <<std::endl; 
     frameStart = time_delta;
 }
 

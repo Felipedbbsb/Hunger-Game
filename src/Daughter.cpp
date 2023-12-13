@@ -39,9 +39,10 @@ ScaleIndicator(1){
 }   
 
 void Daughter::Start() 
-{
-    Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
-    associated.AddComponent((std::shared_ptr<Sprite>)daughter_spr); 
+{   
+    std::cout << "aqq4 daughter start" << std::endl;  
+    new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
+
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
@@ -51,18 +52,19 @@ void Daughter::Start()
 
     //==================================LifeBar========= ===========================
     lifeBarDaughter = new LifeBar(associated, GameData::lifeMax, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
-    associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarDaughter));
 
     //If enemies starts with tags
     ApplyTags(tags);   
  
     //lifeBarDaughter->SetCurrentHP(hp);   
+
+    
  
 } 
  
 Daughter::~Daughter()
 {
-    std::cout << "aaaaaaaa daughter start" << std::endl;
+
     for (int i = daughtertags.size() - 1; i >= 0; i--) { //remove enemies tags
             daughtertags.erase(daughtertags.begin() + i);
     }
@@ -71,13 +73,16 @@ Daughter::~Daughter()
     DeleteIndicator();
     DeleteIntention();
 
+    delete indicator;
+    delete intention;
+
     GameData::life = hp;
-    std::cout << "aaaaaaaa daughter end" << std::endl;
+
 }
 
 void Daughter::Update(float dt)
 {   
-
+        std::cout << "aqq4" << std::endl;  
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
 
@@ -89,7 +94,7 @@ void Daughter::Update(float dt)
     auto skillBack = Skill::skillBackToDaughter;
 
     //=============================//=============================//=============================//=============================
-
+    std::cout << "aqq4" << std::endl;  
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0 ) {
 
@@ -115,7 +120,7 @@ void Daughter::Update(float dt)
         return;
     }
 
-
+    std::cout << "aqq4" << std::endl;  
     //ENEMY TURN
     if(GameData::playerTurn == false){
         DeleteIntention();
@@ -294,14 +299,11 @@ void Daughter::IndicatorAnimation(float dt) {
 
 void Daughter::CreateIndicator() {
     indicator = new GameObject(daughterHitbox.x + daughterHitbox.w/2, daughterHitbox.y + daughterHitbox.h + LIFEBAROFFSET);
-    Sprite* indicator_spr = new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
+    new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
 
     indicator->box.x -= indicator->box.w/2;
     indicator->box.y -= indicator->box.h;
-    // Scale the enemy indicator
-    //float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
-    //indicator_spr->SetScale(percentageEnemyWidth, 1);
-    indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
+
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
 
@@ -355,8 +357,7 @@ void Daughter::IntentionAnimation(float dt) {
 
 void Daughter::CreateIntention() {
     intention = new GameObject(daughterHitbox.x+ daughterHitbox.w/2, daughterHitbox.y);
-    Sprite* intention_spr = new Sprite(*intention, DAUGHTER_INTENTON_SPRITE);
-    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    new Sprite(*intention, DAUGHTER_INTENTON_SPRITE);
     intention->box.x -= intention->box.w/2;
     intention->box.y -= intention->box.h/2;
     Game::GetInstance().GetCurrentState().AddObject(intention);
@@ -460,8 +461,8 @@ std::weak_ptr<GameObject>  Daughter::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
-    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
+    new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
+
 
     tagObject->box.x = daughterHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = daughterHitbox.y + daughterHitbox.h + TAGS_SPACING_Y;

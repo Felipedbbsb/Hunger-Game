@@ -42,8 +42,8 @@ ScaleIndicator(1){
  
 void Mother::Start()  
 {  
-    Sprite *mother_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
-    associated.AddComponent((std::shared_ptr<Sprite>)mother_spr); 
+    new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
@@ -53,7 +53,6 @@ void Mother::Start()
 
     //==================================LifeBar====================================
     lifeBarMother = new LifeBar(associated, GameData::hpMax, hp, motherHitbox.w, motherHitbox.x); //width from hitbox
-    associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarMother));
 
     //If enemies starts with tags
     ApplyTags(tags); 
@@ -67,8 +66,6 @@ Mother::~Mother()
 {
 
     
-
-    std::cout << "aaaaaaaa mother start" << std::endl;
     for (int i = mothertags.size() - 1; i >= 0; i--) { //remove enemies tags
             mothertags.erase(mothertags.begin() + i);
     }
@@ -78,13 +75,15 @@ Mother::~Mother()
     DeleteIndicator();
     DeleteIntention();
 
+    delete indicator;
+    delete intention;
+
     GameData::hp = hp;
-    std::cout << "aaaaaaaa mother end" << std::endl;
+
 }  
  
 void Mother::Update(float dt) 
 {       
-
     if(damageDjinn != 0){
 
         GameData::hpCorrupted += damageDjinn;
@@ -114,12 +113,10 @@ void Mother::Update(float dt)
             //play np sound
             GameObject* selectedSFX = new GameObject();
             Sound *selectSFX_sound = new Sound(*selectedSFX, MOTHER_NP_SOUND); 
-            selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
             selectSFX_sound->Play(1);
             
         }
         else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
-             std::cout << "start (mother)" << std::endl;
             //Increment np level
             GameData::npLevel++;
 
@@ -157,16 +154,14 @@ void Mother::Update(float dt)
             auto spriteComponent = associated.GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                associated.RemoveComponent(spriteComponentPtr); 
+                associated.RemoveComponent(spriteComponentPtr.get()); 
             }  
             Sprite* deadBody_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
             deadBody_spr->SetFrame(0); 
-            associated.AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
 
             associated.box.y -= associated.box.h; 
 
            CombatState::motherTransition = false;
-           std::cout << "end (mother)" << std::endl;
         } 
          
         deathTransitionTime.Update(dt);
@@ -384,12 +379,12 @@ std::string Mother::GetSpriteMother() {
 
 void Mother::CreateIndicator() {
     indicator = new GameObject(motherHitbox.x + motherHitbox.w/2, motherHitbox.y + motherHitbox.h + LIFEBAROFFSET);
-    Sprite* indicator_spr = new Sprite(*indicator, MOTHER_INDICATOR_SPRITE);
+    new Sprite(*indicator, MOTHER_INDICATOR_SPRITE);
 
     indicator->box.x -= indicator->box.w/2;
     indicator->box.y -= indicator->box.h;
 
-    indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
+
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
 
@@ -442,8 +437,8 @@ void Mother::IntentionAnimation(float dt) {
 
 void Mother::CreateIntention() { 
     intention = new GameObject(motherHitbox.x+ motherHitbox.w/2, motherHitbox.y); 
-    Sprite* intention_spr = new Sprite(*intention, MOTHER_INTENTON_SPRITE);
-    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    new Sprite(*intention, MOTHER_INTENTON_SPRITE);
+
     intention->box.x -= intention->box.w/2;
     intention->box.y -= intention->box.h/2;
     Game::GetInstance().GetCurrentState().AddObject(intention);
@@ -550,8 +545,7 @@ std::weak_ptr<GameObject>  Mother::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
-    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
+    new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
 
     tagObject->box.x = motherHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = motherHitbox.y + motherHitbox.h + TAGS_SPACING_Y;

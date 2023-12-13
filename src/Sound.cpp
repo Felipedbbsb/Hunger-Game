@@ -45,14 +45,11 @@ void Sound::Open(std::string file) {
 }
 
 Sound::~Sound() {
-    std::cout << "cgegou sound aps" << std::endl;
     if (chunk != nullptr) {
-        std::cout << "2" << std::endl;
         Mix_HaltChannel(channel);
         chunk = nullptr;
-        std::cout << "23" << std::endl;
     }
-    std::cout << "cgegou sound end" << std::endl;
+
 }
 
 bool Sound::Is(std::string type) {

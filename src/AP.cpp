@@ -40,11 +40,9 @@ AP::AP(GameObject &associated)
 
         // Configure the sprites based on the value of apCount
         std::string spritePath = (apCount > i) ? AP_FULL_SPRITE : AP_EMPTY_SPRITE;
-        Sprite* ap_spr = new Sprite(*apObj, spritePath); // Use shared_ptr
-        apObj->AddComponent((std::shared_ptr<Component>)ap_spr);
+        new Sprite(*apObj, spritePath); // Use shared_ptr
 
-        CameraFollower* ap_UI_cmfl = new CameraFollower(*apObj);
-        apObj->AddComponent((std::shared_ptr<CameraFollower>)ap_UI_cmfl);
+        new CameraFollower(*apObj);
 
         auto weak_ap = Game::GetInstance().GetCurrentState().AddObject(apObj);
 
@@ -60,11 +58,9 @@ void AP::Start() {
 }  
  
 AP::~AP(){ 
-    std::cout << "cgegou aq22io aps" << std::endl;
     for (int i = AP::apArray.size() - 1; i >= 0; i--) { //remove enemies tags
             AP::apArray.erase(AP::apArray.begin() + i);
     }
-    std::cout << "cgegou aq22io ape" << std::endl;
 } 
 
 void AP::Update(float dt){  
@@ -170,12 +166,12 @@ void AP::UpdateVisualRepresentation() {
             auto spriteComponent = apGameObject.lock()->GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                apGameObject.lock()->RemoveComponent(spriteComponentPtr);
+                apGameObject.lock()->RemoveComponent(spriteComponentPtr.get());
             }
 
             std::string spritePath = (apCount < index) ? AP_EMPTY_SPRITE : AP_FULL_SPRITE;
-            Sprite* ap_spr = new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
-            apGameObject.lock()->AddComponent((std::shared_ptr<Component>)ap_spr);
+            new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
+
             index--;
         }
     }            
@@ -191,14 +187,13 @@ void AP::MirrorAPCount(int mirrorAPCount) {
             auto spriteComponent = apGameObject.lock()->GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                apGameObject.lock()->RemoveComponent(spriteComponentPtr);
+                apGameObject.lock()->RemoveComponent(spriteComponentPtr.get());
             }
 
             std::string spritePath = (fullCount < index) ? AP_MIRROR_SPRITE : AP_FULL_SPRITE;
             spritePath = (apCount < index) ? AP_EMPTY_SPRITE : spritePath;
             
-            Sprite* ap_spr = new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
-            apGameObject.lock()->AddComponent((std::shared_ptr<Component>)ap_spr);
+            new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
             index--;
         }
     }       

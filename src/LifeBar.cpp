@@ -23,12 +23,12 @@ LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWi
 }
 
 LifeBar::~LifeBar() {
-    std::cout << "aaaaaaaa lifebar start" << std::endl;
+
     if (hpReader != nullptr){
         hpReader->RequestDelete();
         hpReader = nullptr;
     }  
-    std::cout << "aaaaaaaa lifebar end" << std::endl;
+    delete hpReader;
 }
  
 void LifeBar::Start() { 
@@ -150,8 +150,8 @@ void LifeBar::SetCurrentHP(int hpCurrent) {
         changeText = "DODGE!";
     }
     GameObject *hpChangeEffec_obj = new GameObject(associated.box.x + associated.box.w/2, lifeBarRect.y - associated.box.h); 
-    hpChangeEffect* hpReader_behaviour = new hpChangeEffect(*hpChangeEffec_obj, changeText, lifeBarRect.y);
-    hpChangeEffec_obj->AddComponent(std::shared_ptr<hpChangeEffect>(hpReader_behaviour));
+    new hpChangeEffect(*hpChangeEffec_obj, changeText, lifeBarRect.y);
+
 
     hpChangeEffec_obj->box.x -= hpChangeEffec_obj->box.w / 2;
     //hpChangeEffect->box.y += (lifeBarRect.h - hpChangeEffect->box.h) / 2 - 1;
@@ -187,7 +187,8 @@ void LifeBar::hpReaderRender() {
     //position middle of hp bar
     hpReader =  new GameObject(lifeBarRect.x, lifeBarRect.y); //posicao foi no olho...
     std::string textHpReader = std::to_string(hpCurrent) + "/" +std::to_string(hpMax - hpCorruptedCurrent);
-    Text* hpReader_behaviour = new Text(*hpReader, TEXT_LIFEBAR_FONT, 
+    
+    new Text(*hpReader,                               TEXT_LIFEBAR_FONT, 
                                                       TEXT_LIFEBAR_SIZE,
                                                       Text::OUTLINE,
                                                       textHpReader, 
@@ -197,7 +198,7 @@ void LifeBar::hpReaderRender() {
     hpReader->box.x += (lifeBarRect.w - hpReader->box.w)/2 - Camera::pos.x;                                                
     hpReader->box.y += (lifeBarRect.h - hpReader->box.h)/2 - 1 - Camera::pos.y;     
 
-    hpReader->AddComponent(std::shared_ptr<Text>(hpReader_behaviour));
+
     Game::GetInstance().GetCurrentState().AddObject(hpReader);
 
 }

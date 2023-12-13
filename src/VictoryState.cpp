@@ -39,7 +39,6 @@ void VictoryState::Update(float dt){
 
         GameObject* selectedSFX = new GameObject();
         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
          selectSFX_sound->Play(1);
     }
 
@@ -79,10 +78,8 @@ void VictoryState::LoadAssets(){
     //============================ Background ========================================
 
     GameObject *bg = new GameObject();
-    Sprite* bgSprite= new Sprite(*bg, VICTORY_BG);
-    CameraFollower *bg_cmfl = new CameraFollower(*bg);
-    bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);        
-    bg->AddComponent((std::shared_ptr<Component>)bgSprite);
+    new Sprite(*bg, VICTORY_BG);
+    new CameraFollower(*bg);
 
     bg->box.x = RESOLUTION_WIDTH  / 2 - bg->box.w / 2;
 
@@ -90,30 +87,28 @@ void VictoryState::LoadAssets(){
 
     //============================ UI ========================================
     pressBar = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    Sprite* ui_behaviour = new Sprite(*pressBar, PRESS_SPACE_SPRITE); 
-    pressBar->AddComponent((std::shared_ptr<Sprite>)ui_behaviour); 
+    Sprite *ui_behaviour = new Sprite(*pressBar, PRESS_SPACE_SPRITE); 
 
     ui_behaviour->SetAlpha(0);
     pressBar->box.x = RESOLUTION_WIDTH  / 2 - pressBar->box.w / 2;
     pressBar->box.y = (RESOLUTION_HEIGHT ) * 0.75;
 
 
-    CameraFollower *ui_cmfl = new CameraFollower(*pressBar);
-    pressBar->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
+    new CameraFollower(*pressBar);
+
     AddObject(pressBar);
 
     //===================================================================
     header = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    Sprite* header_behaviour = new Sprite(*header, VICTORY_HEADER); 
-    header->AddComponent((std::shared_ptr<Sprite>)header_behaviour); 
+    Sprite *header_behaviour = new Sprite(*header, VICTORY_HEADER); 
 
     header_behaviour->SetAlpha(0);
     header->box.x = RESOLUTION_WIDTH  / 2 - header->box.w / 2;
     header->box.y = (RESOLUTION_HEIGHT ) * 0.35 - header->box.h / 2;
 
 
-    CameraFollower *header_cmfl = new CameraFollower(*header);
-    header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
+    new CameraFollower(*header);
+
     AddObject(header);
 
     Music noncombatMusic;

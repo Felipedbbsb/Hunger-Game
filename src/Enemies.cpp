@@ -59,8 +59,8 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
 }
  
 void Enemies::Start() {
-    Sprite* enemies_spr = new Sprite(associated, iconPath, ENEMY_FC, ENEMY_FT/ ENEMY_FC); 
-    associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr)); 
+    new Sprite(associated, iconPath, ENEMY_FC, ENEMY_FT/ ENEMY_FC); 
+
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
@@ -70,7 +70,7 @@ void Enemies::Start() {
 
     //==================================LifeBar====================================
     lifeBarEnemy = new LifeBar(associated, hp, hp, enemyHitbox.w, enemyHitbox.x); //width from hitbox
-    associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarEnemy));
+
 
     //If enemies starts with tags
     ApplyTags(tags);
@@ -84,7 +84,7 @@ void Enemies::Start() {
 }
 
 Enemies::~Enemies() { 
-    std::cout << "aaaaaaaa enemies s" << std::endl;
+
     for (int i = enemytags.size() - 1; i >= 0; i--) { //remove enemies tags
             enemytags.erase(enemytags.begin() + i);
     }
@@ -96,6 +96,9 @@ Enemies::~Enemies() {
     DeleteEnemyIndicator();
     DeleteIntention();
 
+    delete intention;
+    delete enemyIndicator;
+    
     enemiesCount -= 1;
     enemiesToAttack-= 1;
 
@@ -108,17 +111,18 @@ Enemies::~Enemies() {
     if(selectSFX != nullptr){
         selectSFX->RequestDelete();
         selectSFX = nullptr;
+        
     }
 
-    std::cout << "aaaaaaaa enemies end" << std::endl;
+    delete selectSFX ;
 }
 
 void Enemies::Update(float dt) {
 // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
+
         Game::GetInstance().GetCurrentState().AddObject(deadBody);
 
 
@@ -213,7 +217,6 @@ void Enemies::Update(float dt) {
                             if(selectSFX == nullptr){
                                 selectSFX = new GameObject();
                                 Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
-                                selectSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
                                 selectSFX_sound->Play(1);
                             }     
                         }
@@ -239,7 +242,7 @@ void Enemies::Update(float dt) {
                         ApplySkillToEnemy();
                         GameObject* selectedSFX = new GameObject();
                         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-                        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+
                         selectSFX_sound->Play(1);
 
                     }
@@ -425,12 +428,12 @@ void Enemies::IndicatorAnimation(float dt) {
  
 void Enemies::CreateEnemyIndicator() {
     enemyIndicator = new GameObject(enemyHitbox.x + enemyHitbox.w/2, enemyHitbox.y + enemyHitbox.h+ LIFEBAROFFSET);
-    Sprite* enemyIndicator_spr = new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
+    new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
 
     enemyIndicator->box.x -= enemyIndicator->box.w/2;
     enemyIndicator->box.y -= enemyIndicator->box.h;
 
-    enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
+
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }
 
@@ -487,8 +490,8 @@ void Enemies::IntentionAnimation(float dt) {
 
 void Enemies::CreateIntention() {
     intention = new GameObject(enemyHitbox.x+ enemyHitbox.w/2, enemyHitbox.y);
-    Sprite* intention_spr = new Sprite(*intention, ENEMY_INTENTON_SPRITE);
-    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    new Sprite(*intention, ENEMY_INTENTON_SPRITE);
+
     intention->box.x -= intention->box.w/2;
     intention->box.y -= intention->box.h/2;
     Game::GetInstance().GetCurrentState().AddObject(intention);
@@ -654,8 +657,8 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]); 
-    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
+    new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]); 
+
 
     tagObject->box.x = enemyHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = enemyHitbox.y + enemyHitbox.h + TAGS_SPACING_Y;

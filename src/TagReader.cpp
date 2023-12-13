@@ -24,16 +24,14 @@ void TagReader::Start() {
 
     if(ExposedFeatures != Skill::StateProtected::NOCHANGES){
         GameObject* tagReader = new GameObject();
-        Sprite* tagReader_spr;
 
         if(ExposedFeatures == Skill::StateProtected::PROTECTED){
-            tagReader_spr = new Sprite(*tagReader, Tag::GetTagMessageSprite(Tag::Tags::PROTECTED));
+            new Sprite(*tagReader, Tag::GetTagMessageSprite(Tag::Tags::PROTECTED));
         } 
         else if(ExposedFeatures == Skill::StateProtected::EXPOSED){
-            tagReader_spr = new Sprite(*tagReader, Tag::GetTagMessageSprite(Tag::Tags::EXPOSED));
+            new Sprite(*tagReader, Tag::GetTagMessageSprite(Tag::Tags::EXPOSED));
         }
         
-        tagReader->AddComponent((std::shared_ptr<Sprite>)tagReader_spr); 
 
         if(isReversed){
             tagReader->box.x = reference.x - tagReader->box.w;
@@ -45,8 +43,7 @@ void TagReader::Start() {
         tagReader->box.y = reference.y + reference.h - tagReader->box.h * (countTag + 1);
 
 
-        CameraFollower *tagReader_cmfl = new CameraFollower(*tagReader);
-        tagReader->AddComponent(std::shared_ptr<CameraFollower>(tagReader_cmfl));
+        new CameraFollower(*tagReader);
 
         auto weak_obj = Game::GetInstance().GetCurrentState().AddObject(tagReader);
         readerTags.push_back(weak_obj);
@@ -56,8 +53,7 @@ void TagReader::Start() {
 
     for (auto& tag : tags){
         GameObject* tagReader = new GameObject();
-        Sprite* tagReader_spr = new Sprite(*tagReader, Tag::GetTagMessageSprite(tag));
-        tagReader->AddComponent((std::shared_ptr<Sprite>)tagReader_spr); 
+        new Sprite(*tagReader, Tag::GetTagMessageSprite(tag));
 
         if(isReversed){
             tagReader->box.x = reference.x - tagReader->box.w;
@@ -69,8 +65,7 @@ void TagReader::Start() {
         tagReader->box.y = reference.y + reference.h - tagReader->box.h * (countTag + 1);
 
 
-        CameraFollower *tagReader_cmfl = new CameraFollower(*tagReader);
-        tagReader->AddComponent(std::shared_ptr<CameraFollower>(tagReader_cmfl));
+        new CameraFollower(*tagReader);
 
         auto weak_obj = Game::GetInstance().GetCurrentState().AddObject(tagReader);
         readerTags.push_back(weak_obj);

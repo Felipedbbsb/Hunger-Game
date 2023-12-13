@@ -25,8 +25,8 @@ ScaleNode(1),
 iconVisited(nullptr),
 selectSFX(nullptr)
 {     
-    Sprite* map_background_spr= new Sprite(associated, GetNodeSprite(type));
-    associated.AddComponent((std::shared_ptr<Component>)map_background_spr);
+    new Sprite(associated, GetNodeSprite(type));
+
 } 
     
 void Node::Start() {     
@@ -43,6 +43,9 @@ Node::~Node(){
         selectSFX->RequestDelete();
         selectSFX = nullptr;
     }
+
+    delete iconVisited;
+    delete selectSFX;
 } 
 
 void Node::Update(float dt){  
@@ -75,7 +78,7 @@ void Node::Update(float dt){
         auto it = std::find(Node::currentNeighbors.begin(), Node::currentNeighbors.end(), std::make_pair(floor, column));
         if (it != Node::currentNeighbors.end()) {
 
-            canVisited = true;
+            canVisited = true; 
         }
         else{
             canVisited = false;
@@ -95,14 +98,13 @@ void Node::Update(float dt){
                 if(selectSFX == nullptr){
                     selectSFX = new GameObject();
                     Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
-                    selectSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+ 
                     selectSFX_sound->Play(1);
                 }
 
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){ 
                     GameObject* selectedSFX = new GameObject();
                     Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-                    selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
                     selectSFX_sound->Play(1);
 
                     //If can be visited go to state of node
@@ -248,8 +250,8 @@ void Node::CreateIconVisited(){
 
 
     iconVisited = new GameObject(associated.box.x, associated.box.y);
-    Sprite* iconVisited_spr = new Sprite(*iconVisited, MAP_VISITED_SPRITE);
-    iconVisited->AddComponent(std::shared_ptr<Sprite>(iconVisited_spr));
+    new Sprite(*iconVisited, MAP_VISITED_SPRITE);
+
 
     iconVisited->box.x += associated.box.w / 2 - iconVisited->box.w / 2;
     iconVisited->box.y += associated.box.h / 2 - iconVisited->box.h / 2;

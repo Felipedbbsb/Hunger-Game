@@ -93,8 +93,7 @@ void SkillSelection::CreateBackground() {
         bg_type = SKILL_SELECTION_BCKGROUND;
     }
 
-    Sprite* background_spr = new Sprite(*background, bg_type); 
-    background->AddComponent(std::shared_ptr<Sprite>(background_spr));    
+    new Sprite(*background, bg_type); 
     
     background->box.x = (RESOLUTION_WIDTH )/2 - background->box.w/2 - Camera::pos.x;   
     background->box.y = - Camera::pos.y; 
@@ -106,10 +105,8 @@ void SkillSelection::CreateBackground() {
 
 void SkillSelection::CreatePassButon() {
     passButon = new GameObject(0, 0);
-    Sprite* passButon_spr = new Sprite(*passButon, SKILL_SELECTION_ARROW); 
-    passButon->AddComponent(std::shared_ptr<Sprite>(passButon_spr));    
+    new Sprite(*passButon, SKILL_SELECTION_ARROW); 
 
-    
     passButon->box.x =  background->box.x + (background->box.w ) - (passButon->box.w * SCALE_ARROW) - Camera::pos.x - OFFSET_SKILL_SELECTION_ARROW.x;   
     passButon->box.y = background->box.y + background->box.h - (passButon->box.h * SCALE_ARROW)  - Camera::pos.y - OFFSET_SKILL_SELECTION_ARROW.y; 
  
@@ -165,8 +162,7 @@ void SkillSelection::CreateSkillOptions() {
 
         // Create a GameObject for the skill
         GameObject *skillObject = new GameObject();
-        Skill *skillSprite = new Skill(*skillObject, skillId, UI::ap_behaviour, false);
-        skillObject->AddComponent(std::shared_ptr<Skill>(skillSprite));
+        new Skill(*skillObject, skillId, UI::ap_behaviour, false);
 
         // Set the position and add to the current state
         skillObject->box.x = background->box.x + background->box.w / 2 - skillObject->box.w / 2 - OFFSET_SKILL_OPTIONS  + OFFSET_SKILL_OPTIONS * i;
@@ -235,9 +231,8 @@ void SkillSelection::Update(float dt) {
             auto arrowComponent = passButon->GetComponent("Sprite");
             auto arrowComponentPtr = std::dynamic_pointer_cast<Sprite>(arrowComponent);
             if (arrowComponentPtr) {
-                passButon->RemoveComponent(arrowComponentPtr);
-                Sprite *passButon_spr = new Sprite(*passButon, SKILL_SELECTION_ARROW_ACTIVATED); 
-                passButon->AddComponent(std::make_shared<Sprite>(*passButon_spr)); 
+                passButon->RemoveComponent(arrowComponentPtr.get());
+                new Sprite(*passButon, SKILL_SELECTION_ARROW_ACTIVATED); 
             } 
         }       
     }
@@ -249,9 +244,9 @@ void SkillSelection::Update(float dt) {
             auto arrowComponent = passButon->GetComponent("Sprite"); 
             auto arrowComponentPtr = std::dynamic_pointer_cast<Sprite>(arrowComponent);
             if (arrowComponentPtr) {
-                passButon->RemoveComponent(arrowComponentPtr);
-                Sprite *passButon_spr = new Sprite(*passButon, SKILL_SELECTION_ARROW); 
-                passButon->AddComponent(std::make_shared<Sprite>(*passButon_spr)); 
+                passButon->RemoveComponent(arrowComponentPtr.get());
+                new Sprite(*passButon, SKILL_SELECTION_ARROW); 
+
             }
         }    
     }

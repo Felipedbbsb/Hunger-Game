@@ -34,13 +34,11 @@ Map::~Map() {
 }
 
 void Map::Update(float dt) {
-    std::cout << "start map (update)" << std::endl;
     if(Map::mapPosition.first == MAP_FLOORS + 1){
         VictoryState* newState = new VictoryState();     
         Game::GetInstance().Push(newState);  
         popRequested = true;
     } 
-    //std::cout << "oiii2" <, std::endl;
     InputManager& input = InputManager::GetInstance();
  
     
@@ -62,20 +60,18 @@ void Map::Update(float dt) {
     Camera::Update(dt);
 
     State::Update(dt);
-    std::cout << "end map (update)" << std::endl;
 } 
 
 void Map::LoadAssets() {
     //background
     GameObject *map_background = new GameObject(0,0);
-    Sprite* map_background_spr= new Sprite(*map_background, MAP_SPRITE);
-    map_background->AddComponent((std::shared_ptr<Component>)map_background_spr);
+    new Sprite(*map_background, MAP_SPRITE);
+
 
     map_background->box.x = RESOLUTION_WIDTH  / 2 - map_background->box.w / 2;
     map_background->box.y = RESOLUTION_HEIGHT - map_background->box.h + MAP_GRID_SIZE.y / (MAP_FLOORS + 2);
 
-    //CameraParallax *map_background_cmfl = new CameraParallax(*map_background, 1);
-    //map_background->AddComponent((std::shared_ptr<CameraParallax>)map_background_cmfl);
+
 
     AddObject(map_background);
 
@@ -93,8 +89,8 @@ void Map::LoadAssets() {
 
     //====================================BOSS===============================
     GameObject *new_node = new GameObject();
-    Node* node_spr = new Node(*new_node, NodeType::BOSS, std::make_pair(MAP_FLOORS + 1, 1), {});
-    new_node->AddComponent((std::shared_ptr<Component>)node_spr);
+    new Node(*new_node, NodeType::BOSS, std::make_pair(MAP_FLOORS + 1, 1), {});
+
 
     new_node->box.x = RESOLUTION_WIDTH / 2; //Centralized
 
@@ -210,8 +206,7 @@ bool Map::GenerateNode(std::pair<int, int> v1, std::pair<int, int> v2){
 
 void Map::CreateNodeObj(std::pair<int, int> v1, NodeType type) {     
     GameObject *new_node = new GameObject();
-    Node* node_spr = new Node(*new_node, type, v1, GetUpperNeighbors(v1));
-    new_node->AddComponent((std::shared_ptr<Component>)node_spr);
+    new Node(*new_node, type, v1, GetUpperNeighbors(v1));
 
     new_node->box.x = RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2; //Centralized
     new_node->box.x += v1.second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1);
@@ -378,7 +373,7 @@ void Map::Resume() {
     }
 
     //noncombatMusic.Play();
-    std::cout << "start map (resume)" << std::endl;
+
 
 }
 

@@ -24,7 +24,12 @@ Mural::~Mural(){
     Mural::MuralStateActivateReward = false;
     Mural::MuralState = false;
 
-    
+
+    if(skillSelection != nullptr){
+        skillSelection->RequestDelete();
+        skillSelection = nullptr;
+    }
+    delete skillSelection;
 }
 
 void Mural::Update(float dt){   
@@ -45,8 +50,7 @@ void Mural::Update(float dt){
                 if(skillSelection == nullptr){
                     // Create a new skillSelection object for skillSelection Screen 
                     skillSelection = new GameObject();
-                    SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection, true);
-                    skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
+                    new SkillSelection(*skillSelection, true);
                     AddObject(skillSelection);
                 } 
                 
@@ -79,10 +83,8 @@ void Mural::LoadAssets(){
     //============================ UI ========================================
     //UI takes up 1/3 of the box at the bottom
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    UI* ui_behaviour = new UI(*ui); 
-    ui->AddComponent((std::shared_ptr<UI>)ui_behaviour); 
-    CameraFollower *bg_cmfl = new CameraFollower(*ui);
-    ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
+    new UI(*ui); 
+    new CameraFollower(*ui);
     AddObject(ui);
 
 
@@ -94,10 +96,9 @@ void Mural::LoadAssets(){
 
 void Mural::CreateBackground(std::string originalPath){     
     GameObject *bg = new GameObject();
-    Sprite* bgSprite= new Sprite(*bg, originalPath);
-    CameraFollower *bg_cmfl = new CameraFollower(*bg);
-    bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);       
-    bg->AddComponent((std::shared_ptr<Component>)bgSprite);
+    new Sprite(*bg, originalPath);
+    new CameraFollower(*bg);
+
 
     bg->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - bg->box.w / 2;
 

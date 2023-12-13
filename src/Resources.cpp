@@ -35,9 +35,7 @@ SDL_Texture* Resources::GetImage(std::string file) {
 }
 
 void Resources::ClearImages() {
-    std::cout << "aaaaaaaa" << std::endl;
     int i = 0;
-    std::cout << "aaaaaaaa"<<imageTable.size() << std::endl;
     for (auto it = imageTable.begin(); it != imageTable.end(); ++i) {
         std::cout << "Cleaning image memory -> (" << i + 1 << ") File: " << it->first << std::endl;
         it = imageTable.erase(it); // Correção aqui

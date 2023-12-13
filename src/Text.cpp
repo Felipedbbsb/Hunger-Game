@@ -19,11 +19,9 @@ Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle
 }
 
 Text::~Text() {
-    std::cout << "aaaaaaaa text start" << std::endl;
     if (texture != nullptr) { 
         SDL_DestroyTexture(texture);
     }
-    std::cout << "aaaaaaaa text end" << std::endl;
 }
 
 void Text::Update(float dt) {

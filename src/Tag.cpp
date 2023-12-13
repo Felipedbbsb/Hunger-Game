@@ -15,9 +15,7 @@ tagCountNumber(nullptr)
 {    
     if(enemyRef.lock()){
         
-        Sprite* tag_spr = new Sprite(associated, GetTagSprite(tag));
-        associated.AddComponent(std::shared_ptr<Sprite>(tag_spr));
-        //tag_spr->SetScale(0.8, 0.8);
+        new Sprite(associated, GetTagSprite(tag));
         AcivateTag(GetTagSprite(tag));
         
     }
@@ -31,7 +29,6 @@ void Tag::Start() {
 }  
   
 Tag::~Tag(){ 
-    std::cout << "aaaaaaaa tag start" << std::endl;
     HideReader();
 
     if(bigTag != nullptr ){
@@ -42,7 +39,6 @@ Tag::~Tag(){
         tagCountNumber->RequestDelete();
         tagCountNumber = nullptr;   
     }  
-    std::cout << "aaaaaaaa tag  end" << std::endl;
 } 
 
 
@@ -106,7 +102,6 @@ void Tag::AcivateTag(std::string sprite){
         if(bigTag == nullptr ){
             bigTag = new GameObject(associated.box.x, associated.box.y);
             Sprite* bigTag_spr = new Sprite(*bigTag, sprite);
-            bigTag->AddComponent(std::shared_ptr<Sprite>(bigTag_spr)); 
             bigTag_spr->SetScale(BIGTAG_SCALE, BIGTAG_SCALE); //  two times bigger
             bigTag_spr->SetAlpha(BIGTAG_APLHA); // APLHA
 
@@ -128,8 +123,7 @@ Tag::Tags Tag::GetTag(){
 void Tag::ShowReader(){
     if (!readerTag) {
         readerTag = new GameObject(associated.box.x, associated.box.y);
-        Reader* readerTag_behaviour = new Reader(*readerTag, GetTagMessageSprite(tag));
-        readerTag->AddComponent(std::shared_ptr<Reader>(readerTag_behaviour));
+        new Reader(*readerTag, GetTagMessageSprite(tag));
         Game::GetInstance().GetCurrentState().AddObject(readerTag);
     }
 }
@@ -272,17 +266,16 @@ void Tag::tagCountRender() {
     //position middle of hp bar
     tagCountNumber =  new GameObject(associated.box.x + associated.box.w, associated.box.y + associated.box.h); //posicao foi no olho...
     std::string textNumber = std::to_string(quantity);
-    Text* tagCountNumber_behaviour = new Text(*tagCountNumber, TEXT_TAGCOUNT_FONT, 
-                                                      TEXT_TAGCOUNT_SIZE,
-                                                      Text::OUTLINE2,
-                                                      textNumber, 
-                                                      TEXT_TAGCOUNT_FONT_COLOR, 
-                                                      0);  
+    new Text(*tagCountNumber, TEXT_TAGCOUNT_FONT, 
+                              TEXT_TAGCOUNT_SIZE,
+                              Text::OUTLINE2,
+                              textNumber, 
+                              TEXT_TAGCOUNT_FONT_COLOR, 
+                              0);  
  
     tagCountNumber->box.x -= tagCountNumber->box.w;                                                 
     tagCountNumber->box.y -= tagCountNumber->box.h;     
 
-    tagCountNumber->AddComponent(std::shared_ptr<Text>(tagCountNumber_behaviour));
     Game::GetInstance().GetCurrentState().AddObject(tagCountNumber);
 
 }

@@ -55,8 +55,8 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     spriteSkill = skillInfo.iconPath;
     textSkill = skillInfo.info;
  
-    Sprite* skillSprite = new Sprite(associated, spriteSkill);
-    associated.AddComponent(std::make_shared<Sprite>(*skillSprite));
+    new Sprite(associated, spriteSkill);
+
 
     
     
@@ -71,20 +71,17 @@ void Skill::Start() {
 
     if(jewelObj == nullptr && createJewel){
         jewelObj = new GameObject(associated.box.x, associated.box.y);
-        Sprite* jewelObj_behaviour;
         if(skillInfo.apCost != 0){
-            jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
+           new Sprite(*jewelObj, AP_FULL_SPRITE);
         }
         else{
-            jewelObj_behaviour = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+            new Sprite(*jewelObj, AP_EMPTY_SPRITE);
         }
-        jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
  
         jewelObj->box.x += associated.box.w - jewelObj->box.w/2;
         jewelObj->box.y += associated.box.h/2 - jewelObj->box.h/2;
         
-        CameraFollower *jewelObj_cmfl = new CameraFollower(*jewelObj);
-        jewelObj->AddComponent(std::make_shared<CameraFollower>(*jewelObj_cmfl));
+        new CameraFollower(*jewelObj);
         
         Game::GetInstance().GetCurrentState().AddObject(jewelObj);
 
@@ -96,7 +93,6 @@ void Skill::Start() {
 }
 
 Skill::~Skill() {
-    std::cout << "aaaaaaaa skill start" << std::endl;
     if(jewelObj != nullptr){
         jewelObj->RequestDelete();
         jewelObj = nullptr;
@@ -114,7 +110,6 @@ Skill::~Skill() {
         selectSFX->RequestDelete();
         selectSFX = nullptr;
     }
-        std::cout << "aaaaaaaa skill end" << std::endl;
 
 }
 
@@ -134,11 +129,9 @@ void Skill::Update(float dt) {
                 haveJewel = SKILL_SELECTED_OBJ_REWARD;
             }
             
-            Sprite* skillSelected_behaviour = new Sprite(*skillSelected, haveJewel);
-            skillSelected->AddComponent(std::make_shared<Sprite>(*skillSelected_behaviour));
+            new Sprite(*skillSelected, haveJewel);
 
-            CameraFollower *skillSelected_cmfl = new CameraFollower(*skillSelected);
-            skillSelected->AddComponent(std::make_shared<CameraFollower>(*skillSelected_cmfl));
+            new CameraFollower(*skillSelected);
 
             Game::GetInstance().GetCurrentState().AddObject(skillSelected); 
 
@@ -176,15 +169,13 @@ void Skill::Update(float dt) {
             if(selectSFX == nullptr && id != Skill::EMPTY){
                 selectSFX = new GameObject();
                 Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
-                selectSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
                 selectSFX_sound->Play(1);
             }
 
             if (true) {
                 if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN && id != Skill::EMPTY) {
                     readerSkill = new GameObject(associated.box.x + associated.box.w/2 + Camera::pos.x, associated.box.y + associated.box.h/3 + Camera::pos.y);
-                    Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
-                    readerSkill->AddComponent(std::make_shared<Reader>(*readerSkill_behaviour));
+                    new Reader(*readerSkill, textSkill);
 
                     readerSkill->box.x -= readerSkill->box.w/2;
 
@@ -210,18 +201,17 @@ void Skill::Update(float dt) {
                     mergedTags.erase(std::unique(mergedTags.begin(), mergedTags.end()), mergedTags.end());
 
 
-                    TagReader* tagReader_behaviour = new TagReader(*readerSkill,
-                                                            auxExposedFeature,
-                                                            mergedTags,
-                                                            readerSkill->box,
-                                                            isReversed);
+                    new TagReader(*readerSkill,
+                                    auxExposedFeature,
+                                    mergedTags,
+                                    readerSkill->box,
+                                    isReversed);
 
-                    readerSkill->AddComponent(std::make_shared<TagReader>(*tagReader_behaviour)); 
+
 
                     //===================================================================================
 
-                    CameraFollower *readerSkill_cmfl = new CameraFollower(*readerSkill);
-                    readerSkill->AddComponent(std::make_shared<CameraFollower>(*readerSkill_cmfl));
+                    new CameraFollower(*readerSkill);
 
                     Game::GetInstance().GetCurrentState().AddObject(readerSkill);
 
@@ -250,7 +240,6 @@ void Skill::Update(float dt) {
 
                         GameObject* selectedSFX = new GameObject();
                         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-                        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
                         selectSFX_sound->Play(1);
 
                     }
@@ -276,7 +265,7 @@ void Skill::Update(float dt) {
 
                             GameObject* selectedSFX = new GameObject();
                             Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-                            selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+
                             selectSFX_sound->Play(1);
                             
                             
@@ -288,7 +277,6 @@ void Skill::Update(float dt) {
 
                             GameObject* selectedSFX = new GameObject();
                             Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-                            selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
                             selectSFX_sound->Play(1); 
                         }             
                     }
@@ -354,24 +342,21 @@ void Skill::Update(float dt) {
         if (spriteComponentPtr) {
             if (!available) {
                 if (!toggleJewel) {
-                    jewelObj->RemoveComponent(spriteComponentPtr);
-                    Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
-                    jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour2));
+                    jewelObj->RemoveComponent(spriteComponentPtr.get());
+                    new Sprite(*jewelObj, AP_EMPTY_SPRITE);
                     toggleJewel = true;  
                     BlankTagCount(true);
                 }
             } else { 
                 if (toggleJewel) {
-                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    jewelObj->RemoveComponent(spriteComponentPtr.get());
                     const SkillInfo& skillInfo = skillInfoMap[id];
-                    Sprite* jewelObj_behaviour;
                     if(skillInfo.apCost != 0){
-                        jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
+                        new Sprite(*jewelObj, AP_FULL_SPRITE);
                     }
                     else{
-                        jewelObj_behaviour = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+                        new Sprite(*jewelObj, AP_EMPTY_SPRITE);
                     }
-                    jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
                     toggleJewel = false;  
                     BlankTagCount(false);
                 } 
@@ -432,23 +417,23 @@ void Skill::BlankTagCount(bool isBlank) {
             auto textComponent = tagCount->GetComponent("Text");
             auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
             if(textComponentPtr){
-                tagCount->RemoveComponent(textComponentPtr);
+                tagCount->RemoveComponent(textComponentPtr.get());
             }
             std::string textNumber = std::to_string(skillInfo.apCost);
-            Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
-                                                                 TEXT_TAGCOUNT2_SIZE,
-                                                                 Text::OUTLINE3,
-                                                                 textNumber, 
-                                                                 TEXT_TAGCOUNT_FONT_COLOR,
-                                                                 0);  
-            tagCount->AddComponent(std::make_shared<Text>(*tagCountNumber_behaviour));                                                                 
+            new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                TEXT_TAGCOUNT2_SIZE,
+                                Text::OUTLINE3,
+                                textNumber, 
+                                TEXT_TAGCOUNT_FONT_COLOR,
+                                0);  
+                                                             
             
         }
         else if(tagCount != nullptr && isBlank){
             auto textComponent = tagCount->GetComponent("Text");
             auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
             if(textComponentPtr){
-                tagCount->RemoveComponent(textComponentPtr);
+                tagCount->RemoveComponent(textComponentPtr.get());
             }    
         } 
     }
@@ -463,12 +448,12 @@ void Skill::CreateTagCount() {
         if(tagCount == nullptr){ 
             tagCount =  new GameObject(jewelObj->box.x , jewelObj->box.y); //posicao foi no olho...
             std::string textNumber = std::to_string(skillInfo.apCost);
-            Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
-                                                                TEXT_TAGCOUNT2_SIZE,
-                                                                Text::OUTLINE3,
-                                                                textNumber, 
-                                                                TEXT_TAGCOUNT_FONT_COLOR,
-                                                                0);   
+            new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                TEXT_TAGCOUNT2_SIZE,
+                                Text::OUTLINE3,
+                                textNumber, 
+                                TEXT_TAGCOUNT_FONT_COLOR,
+                                0);   
 
             //Centralize
             if(skillInfo.apCost == 1){
@@ -485,10 +470,8 @@ void Skill::CreateTagCount() {
             }
 
 
-            tagCount->AddComponent(std::make_shared<Text>(*tagCountNumber_behaviour));
 
-            CameraFollower *tagCountj_cmfl = new CameraFollower(*tagCount);
-            tagCount->AddComponent(std::make_shared<CameraFollower>(*tagCountj_cmfl));
+            new CameraFollower(*tagCount);
 
             Game::GetInstance().GetCurrentState().AddObject(tagCount);
         }

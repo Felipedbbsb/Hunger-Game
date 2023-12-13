@@ -20,7 +20,7 @@ reader(nullptr)
     Sprite *Protected_spr = new Sprite(associated, spritePath); 
     Protected_spr->SetScale(0.5, 0.5);
     Protected_spr->SetAlpha(150);
-    associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
+
 } 
    
 void Protected::Start() {     
@@ -28,11 +28,7 @@ void Protected::Start() {
 }   
   
 Protected::~Protected(){ 
-        std::cout << "aaaaaaaa protected start" << std::endl;
-
     HideReader();
-
-        std::cout << "aaaaaaaa protected end" << std::endl;
 
 } 
 
@@ -42,13 +38,13 @@ void Protected::Update(float dt){
         auto spriteComponent = associated.GetComponent("Sprite");
         auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
         if (spriteComponentPtr) {
-            associated.RemoveComponent(spriteComponentPtr);
+            associated.RemoveComponent(spriteComponentPtr.get());
         }
         std::string spritePath = (Protected::isProtected == true) ? PROTECTED_PROTECTED_SPRITE : PROTECTED_EXPOSED_SPRITE;
         Sprite *Protected_spr = new Sprite(associated, spritePath); // Use shared_ptr
         Protected_spr->SetScale(0.5, 0.5);
         Protected_spr->SetAlpha(150);
-        associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
+
     }
  
     auto& inputManager = InputManager::GetInstance();
@@ -77,8 +73,8 @@ void Protected::ShowReader(){
             message = MESSAGE_EXPOSED;
         }
 
-        Reader* reader_behaviour = new Reader(*reader, message);
-        reader->AddComponent(std::shared_ptr<Reader>(reader_behaviour));
+        new Reader(*reader, message);
+
         Game::GetInstance().GetCurrentState().AddObject(reader);
 
         reader->box.x = associated.box.x + associated.box.w/2 - reader->box.w/2;

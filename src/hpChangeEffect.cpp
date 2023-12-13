@@ -21,7 +21,7 @@ hpChangeEffect::hpChangeEffect(GameObject& associated, std::string number, int l
 }
 
 hpChangeEffect::~hpChangeEffect() {
-    std::cout << "aaaaaaaa hpchange end" << std::endl;
+
 }
 
 void hpChangeEffect::Start() { 
@@ -30,8 +30,7 @@ void hpChangeEffect::Start() {
                                         Text::SOLID,
                                         number, 
                                         TEXT_hpChangeEffect_FONT_COLOR,
-                                        0); 
-    associated.AddComponent(std::shared_ptr<Text>(hpReader_behaviour));       
+                                        0);   
     hpReader_behaviour->SetAlpha(alpha);   
 
     initialXPosition = associated.box.x;

@@ -34,14 +34,14 @@ reader(nullptr)
 
     Sprite* NP_spr = new Sprite(*NP_Oj, stringPath); 
     NP_spr->SetAlpha(225);
-    NP_Oj->AddComponent((std::shared_ptr<Sprite>)NP_spr); 
+
 
     NP_spr->SetScale(0.75, 0.75);
     NP_Oj->box.x = RESOLUTION_WIDTH/2 - NP_Oj->box.w/2;
     NP_Oj->box.y = 0;
 
-    CameraFollower *NP_UI_cmfl = new CameraFollower(*NP_Oj);
-    NP_Oj->AddComponent((std::shared_ptr<CameraFollower>)NP_UI_cmfl);
+    new CameraFollower(*NP_Oj);
+
     Game::GetInstance().GetCurrentState().AddObject(NP_Oj);
 } 
    
@@ -50,13 +50,15 @@ void NP::Start() {
 }   
   
 NP::~NP(){ 
-    std::cout << "aaaaaaaa np start" << std::endl;
+    
     HideReader();
     if(NP_Oj != nullptr){
         NP_Oj->RequestDelete();
         NP_Oj = nullptr;
     }
-    std::cout << "aaaaaaaa np end" << std::endl;
+
+    delete reader;
+    delete NP_Oj;
 } 
  
 void NP::Update(float dt){  
@@ -76,13 +78,13 @@ void NP::ChangeNPLevel(){
     auto spriteComponent = NP_Oj->GetComponent("Sprite");
     auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
     if (spriteComponentPtr) {
-        NP_Oj->RemoveComponent(spriteComponentPtr);
+        NP_Oj->RemoveComponent(spriteComponentPtr.get());
     }   
 
     auto CameraFollowerComponent = NP_Oj->GetComponent("CameraFollower");
     auto CameraFollowerComponentPtr = std::dynamic_pointer_cast<CameraFollower>(CameraFollowerComponent);
     if (CameraFollowerComponentPtr) {
-        NP_Oj->RemoveComponent(CameraFollowerComponentPtr);
+        NP_Oj->RemoveComponent(CameraFollowerComponentPtr.get());
     }            
 
     std::string stringPath;
@@ -101,22 +103,21 @@ void NP::ChangeNPLevel(){
 
     Sprite* NP_spr = new Sprite(*NP_Oj, stringPath); 
     NP_spr->SetAlpha(225);
-    NP_Oj->AddComponent((std::shared_ptr<Sprite>)NP_spr); 
 
     NP_spr->SetScale(0.75, 0.75);
     NP_Oj->box.x = RESOLUTION_WIDTH/2 - NP_Oj->box.w/2;
     NP_Oj->box.y = 0;
 
-    CameraFollower *NP_UI_cmfl = new CameraFollower(*NP_Oj);
-    NP_Oj->AddComponent((std::shared_ptr<CameraFollower>)NP_UI_cmfl);
+    new CameraFollower(*NP_Oj);
+
 }
 
 void NP::ShowReader(){
     if (!reader) {
         reader = new GameObject(NP_Oj->box.x , NP_Oj->box.y);
 
-        Reader* reader_behaviour = new Reader(*reader, MESSAGE_NP);
-        reader->AddComponent(std::shared_ptr<Reader>(reader_behaviour));
+        new Reader(*reader, MESSAGE_NP);
+
         Game::GetInstance().GetCurrentState().AddObject(reader);
 
         reader->box.x = NP_Oj->box.x + NP_Oj->box.w/2 - reader->box.w/2;

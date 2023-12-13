@@ -20,7 +20,8 @@ header(nullptr)
    
 MenuState::~MenuState(){
 
-    
+    delete pressBar;
+    delete header;
     
 }
 
@@ -54,7 +55,6 @@ void MenuState::Update(float dt){
 
         GameObject* selectedSFX = new GameObject();
         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-        selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
          selectSFX_sound->Play(1);
 
 
@@ -94,10 +94,9 @@ void MenuState::LoadAssets(){
     //============================ Background ========================================
 
     GameObject *bg = new GameObject();
-    Sprite* bgSprite= new Sprite(*bg, MENU_BG);
-    CameraFollower *bg_cmfl = new CameraFollower(*bg);
-    bg->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);       
-    bg->AddComponent((std::shared_ptr<Component>)bgSprite);
+    new Sprite(*bg, MENU_BG);
+    new CameraFollower(*bg);
+
 
     bg->box.x = RESOLUTION_WIDTH  / 2 - bg->box.w / 2;
 
@@ -106,33 +105,30 @@ void MenuState::LoadAssets(){
     //============================ UI ========================================
     pressBar = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
     Sprite* ui_behaviour = new Sprite(*pressBar, PRESS_SPACE_SPRITE); 
-    pressBar->AddComponent((std::shared_ptr<Sprite>)ui_behaviour); 
+
 
     ui_behaviour->SetAlpha(0);
     pressBar->box.x = RESOLUTION_WIDTH / 2 - pressBar->box.w / 2;
     pressBar->box.y = (RESOLUTION_HEIGHT ) * 0.75;
 
 
-    CameraFollower *ui_cmfl = new CameraFollower(*pressBar);
-    pressBar->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
+    new CameraFollower(*pressBar);
     AddObject(pressBar);
 
     //===================================================================
     header = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
     Sprite* header_behaviour = new Sprite(*header, HEADER_MENU_BG); 
-    header->AddComponent((std::shared_ptr<Sprite>)header_behaviour); 
 
     header_behaviour->SetAlpha(0);
     header->box.x = RESOLUTION_WIDTH   / 2 - header->box.w / 2;
     header->box.y = (RESOLUTION_HEIGHT ) * 0.35 - header->box.h / 2;
 
     Sound *header_sound = new Sound(*header, "assets/audio/sfxGameStart.mp3");
-    header->AddComponent((std::shared_ptr<Sound>)header_sound);
 
     header_sound->Play(1);
 
-    CameraFollower *header_cmfl = new CameraFollower(*header);
-    header->AddComponent((std::shared_ptr<CameraFollower>)header_cmfl);
+    new CameraFollower(*header);
+
     AddObject(header);
 
 

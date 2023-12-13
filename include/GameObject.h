@@ -21,8 +21,8 @@ class GameObject{
     bool IsDead();
     void RequestDelete();
     /// ----------------
-    void AddComponent(std::shared_ptr<Component> cpt);
-    void RemoveComponent(std::shared_ptr<Component> cpt);
+    void AddComponent(Component* cpt);
+    void RemoveComponent(Component* cpt);
     std::shared_ptr<Component> GetComponent(std::string type);
     double angleDeg;
     Rect box;

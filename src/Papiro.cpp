@@ -34,8 +34,7 @@ void Papiro::Start() {
         : PAPIRO_ENEMY_SPRITE;
 
     papiro_obj = new GameObject();
-    Sprite *Papiro_spr = new Sprite(*papiro_obj, spritePath); 
-    papiro_obj->AddComponent(std::shared_ptr<Sprite>(Papiro_spr));    
+    new Sprite(*papiro_obj, spritePath); 
 
     associated.box.w = papiro_obj->box.w;
     associated.box.h = papiro_obj->box.h;
@@ -62,7 +61,6 @@ void Papiro::Start() {
  
     background = new GameObject(associated.box.x , 221);
     Sprite *background_spr = new Sprite(*background, spriteBackground);
-    background->AddComponent(std::shared_ptr<Sprite>(background_spr));
 
     background_spr->SetClip(0, 0, PAPIRO_SCREEN.x/BG_SCALE, PAPIRO_SCREEN.y/BG_SCALE); // Define um ponto central de 1x1 pixel
     background_spr->SetScale(BG_SCALE,BG_SCALE);
@@ -125,8 +123,8 @@ void Papiro::CreateEnemyObject(bool acting){
     if(!enemiesArrayIS.empty()){
         for (const auto &enemyId : enemiesArrayIS) {
             GameObject* interactionObj = new GameObject(-10000,-10000);
-            InteractionObject* interactionObj_behaviour = new InteractionObject(*interactionObj, attackType, Skill::TargetType::IRR, enemyId, acting);
-            interactionObj->AddComponent(std::shared_ptr<InteractionObject>(interactionObj_behaviour));
+            new InteractionObject(*interactionObj, attackType, Skill::TargetType::IRR, enemyId, acting);
+            
             interactionObj->box.x -= interactionObj->box.w;
 
 
@@ -143,8 +141,7 @@ void Papiro::CreatePlayerObject(Skill::TargetType targetType,  Skill::TargetType
     if(targetType == targetReceiver ){
         tempRight = !tempRight;
     }
-    InteractionObject* interactionObjP_behaviour = new InteractionObject(*interactionObjP, attackType, targetType, Enemies::EnemyId::INVALID_ENEMY, tempRight);   
-    interactionObjP->AddComponent(std::shared_ptr<InteractionObject>(interactionObjP_behaviour));
+    new InteractionObject(*interactionObjP, attackType, targetType, Enemies::EnemyId::INVALID_ENEMY, tempRight);   
     interactionObjP->box.x -= interactionObjP->box.w;
 
 
@@ -161,11 +158,20 @@ Papiro::~Papiro() {
     for (int i = interactionObjects.size() - 1; i >= 0; i--) {
         interactionObjects[i].lock()->RequestDelete();
     }
-
-    background->RequestDelete();
-    papiro_obj->RequestDelete();
-
     
+
+    if(background != nullptr){
+        background->RequestDelete();
+        background = nullptr;
+    }
+
+    if(papiro_obj != nullptr){
+        papiro_obj->RequestDelete();
+        papiro_obj = nullptr;
+    }
+
+    delete background;
+    delete papiro_obj;
 
     CombatState::enemiesArrayIS = {};
     

@@ -25,6 +25,7 @@ InteractionObject::~InteractionObject() {
         effect->RequestDelete();
         effect = nullptr;
     }
+    delete effect;
 }
  
 void InteractionObject::Start() { 
@@ -35,8 +36,7 @@ void InteractionObject::Start() {
         if(isAttacking){
             if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
                 iconPath = enemyInfo.iconPathDFS;
-                Sprite* obj_spr = new Sprite(associated, iconPath); 
-                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                new Sprite(associated, iconPath); 
                 
                 //CREATES BUFF
                 CreateEffect("BUFF", false);
@@ -45,24 +45,21 @@ void InteractionObject::Start() {
             }
             else{
                 iconPath = enemyInfo.iconPathATK;
-                Sprite* obj_spr = new Sprite(associated, iconPath); 
-                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                new Sprite(associated, iconPath); 
 
                 //CREATES NONE
             }
         }else{
             if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
                 iconPath = enemyInfo.iconPathDFS;
-                Sprite* obj_spr = new Sprite(associated, iconPath); 
-                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                new Sprite(associated, iconPath); 
                 
                 //CREATES BUFF
                 CreateEffect("BUFF", false);
             }
             else{
                 iconPath = enemyInfo.iconPathDFS;
-                Sprite* obj_spr = new Sprite(associated, iconPath); 
-                associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                new Sprite(associated, iconPath); 
                 
 
                 //CREATES DAMAGE OR DEBUFF
@@ -96,8 +93,7 @@ void InteractionObject::Start() {
                         iconPath =  MOTHER_SPRITE_BUFF_NP2;
                     }
 
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
                 }
                 else{
 
@@ -114,16 +110,13 @@ void InteractionObject::Start() {
                         iconPath =  MOTHER_SPRITE_ATK_NP2;
                     }
 
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
+
                 }
                  
             }
             else{  
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    //Sprite *obj_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
-                    //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
-                    //obj_spr->SetScale(1.35, 1.35);
 
                     if(GameData::npLevel == 0){
                         iconPath =  MOTHER_SPRITE_BUFF;
@@ -138,8 +131,7 @@ void InteractionObject::Start() {
                         iconPath =  MOTHER_SPRITE_BUFF_NP2;
                     }
 
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
 
                     //CREATES BUFF
                     CreateEffect("BUFF", true);
@@ -158,8 +150,8 @@ void InteractionObject::Start() {
                         iconPath =  MOTHER_SPRITE_DFS_NP2;
                     }
 
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr)); 
+                    new Sprite(associated, iconPath); 
+
                     //CREATES DAMAGE OR DEBUFF
                     if(attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || attackType == Skill::AttackType::DEBUFF_ALL){
                     CreateEffect("DEBUFF", true); 
@@ -174,33 +166,29 @@ void InteractionObject::Start() {
             if(isAttacking){
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
                     iconPath = DAUGHTER_SPRITE_BUFF;
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
+
                 }
                 else{
                     iconPath = DAUGHTER_SPRITE_ATK;
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
+
                 }
                 
             } 
             else{
                 if(attackType == Skill::AttackType::BUFF_INDIVIDUAL || attackType == Skill::AttackType::BUFF_ALL){
-                    //Sprite *obj_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
-                    //associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
-                    //obj_spr->SetScale(1.35, 1.35);
 
                     iconPath = DAUGHTER_SPRITE_BUFF;
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
 
                     //CREATES BUFF
                     CreateEffect("BUFF", true);
                 }
                 else{
                     iconPath = DAUGHTER_SPRITE_DFS;
-                    Sprite* obj_spr = new Sprite(associated, iconPath); 
-                    associated.AddComponent(std::shared_ptr<Sprite>(obj_spr));
+                    new Sprite(associated, iconPath); 
+
                     //CREATES DAMAGE OR DEBUFF
                     if(attackType == Skill::AttackType::DEBUFF_INDIVIDUAL || attackType == Skill::AttackType::DEBUFF_ALL){
                     CreateEffect("DEBUFF", true);
@@ -250,13 +238,9 @@ void InteractionObject::CreateEffect(std::string TypeEffect, bool isPlayer) {
 
     // Verifique se effect_spr não é nulo antes de adicioná-lo 
     if (effect_spr) { 
-        effect->AddComponent(std::shared_ptr<Sprite>(effect_spr)); 
         effect_spr->SetAlpha(1);
     }
-    if (effect_sound) { 
-        effect->AddComponent((std::shared_ptr<Sound>)effect_sound);
-    }
-    
+
 
 
     effect->box.x = associated.box.x + associated.box.w/2 - effect->box.w/2;
