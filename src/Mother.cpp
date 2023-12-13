@@ -61,13 +61,14 @@ void Mother::Start()
     lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
     //lifeBarMother->SetCurrentHP(hp);  
 
-
-    Sound *np_sound = new Sound(associated, MOTHER_NP_SOUND); 
-    associated.AddComponent((std::shared_ptr<Sound>)np_sound);
 }   
 
 Mother::~Mother()
 {
+
+    
+
+    std::cout << "aaaaaaaa mother start" << std::endl;
     for (int i = mothertags.size() - 1; i >= 0; i--) { //remove enemies tags
             mothertags.erase(mothertags.begin() + i);
     }
@@ -78,6 +79,7 @@ Mother::~Mother()
     DeleteIntention();
 
     GameData::hp = hp;
+    std::cout << "aaaaaaaa mother end" << std::endl;
 }  
  
 void Mother::Update(float dt) 
@@ -110,14 +112,14 @@ void Mother::Update(float dt)
         }
         else if(deathTransitionTime.Get() < MOTHER_DEATH_TIME * 0.1){
             //play np sound
-            auto soundComponent = associated.GetComponent("Sound");
-            auto soundComponentPtr = std::dynamic_pointer_cast<Sound>(soundComponent);
-            if (soundComponentPtr) {
-                soundComponentPtr->Play(); 
-            }    
+            GameObject* selectedSFX = new GameObject();
+            Sound *selectSFX_sound = new Sound(*selectedSFX, MOTHER_NP_SOUND); 
+            selectedSFX->AddComponent((std::shared_ptr<Sound>)selectSFX_sound);
+            selectSFX_sound->Play(1);
+            
         }
         else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
-             
+             std::cout << "start (mother)" << std::endl;
             //Increment np level
             GameData::npLevel++;
 
@@ -164,6 +166,7 @@ void Mother::Update(float dt)
             associated.box.y -= associated.box.h; 
 
            CombatState::motherTransition = false;
+           std::cout << "end (mother)" << std::endl;
         } 
          
         deathTransitionTime.Update(dt);

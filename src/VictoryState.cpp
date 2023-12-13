@@ -20,7 +20,7 @@ VictoryState::~VictoryState(){
     
 
     
-}
+} 
 
 void VictoryState::Update(float dt){   
     InputManager& input = InputManager::GetInstance();

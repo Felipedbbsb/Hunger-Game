@@ -31,6 +31,7 @@ void Tag::Start() {
 }  
   
 Tag::~Tag(){ 
+    std::cout << "aaaaaaaa tag start" << std::endl;
     HideReader();
 
     if(bigTag != nullptr ){
@@ -41,6 +42,7 @@ Tag::~Tag(){
         tagCountNumber->RequestDelete();
         tagCountNumber = nullptr;   
     }  
+    std::cout << "aaaaaaaa tag  end" << std::endl;
 } 
 
 

@@ -292,7 +292,7 @@ void Node::CreateRest(){
 } 
 
 void Node::CreateCombat(){
-    std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition.first - 1);                                               
+    std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition.first);                                               
     
 
     CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 

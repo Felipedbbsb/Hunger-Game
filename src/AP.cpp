@@ -60,9 +60,11 @@ void AP::Start() {
 }  
  
 AP::~AP(){ 
+    std::cout << "cgegou aq22io aps" << std::endl;
     for (int i = AP::apArray.size() - 1; i >= 0; i--) { //remove enemies tags
             AP::apArray.erase(AP::apArray.begin() + i);
     }
+    std::cout << "cgegou aq22io ape" << std::endl;
 } 
 
 void AP::Update(float dt){  

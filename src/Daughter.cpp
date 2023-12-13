@@ -62,15 +62,17 @@ void Daughter::Start()
  
 Daughter::~Daughter()
 {
+    std::cout << "aaaaaaaa daughter start" << std::endl;
     for (int i = daughtertags.size() - 1; i >= 0; i--) { //remove enemies tags
             daughtertags.erase(daughtertags.begin() + i);
     }
-    
+
     Daughter::tags.clear();
     DeleteIndicator();
     DeleteIntention();
 
     GameData::life = hp;
+    std::cout << "aaaaaaaa daughter end" << std::endl;
 }
 
 void Daughter::Update(float dt)

@@ -41,7 +41,7 @@ UI::UI(GameObject &associated)
 
 UI::~UI() 
 {
-
+    std::cout << "cgegou aq22io uis" << std::endl;
     if(nextArrow != nullptr){
         nextArrow->RequestDelete();
         nextArrow = nullptr;
@@ -50,6 +50,14 @@ UI::~UI()
     for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
             Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
     }
+
+    UI::ap_behaviour = nullptr;
+
+    if(UI::uiGO != nullptr){
+        UI::uiGO->RequestDelete();
+        UI::uiGO = nullptr;
+    }
+    std::cout << "cgegou aq22io uie" << std::endl;
 }
 
 void UI::CreateSkillsGO( AP* ap_behaviour) {

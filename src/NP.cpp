@@ -50,11 +50,13 @@ void NP::Start() {
 }   
   
 NP::~NP(){ 
+    std::cout << "aaaaaaaa np start" << std::endl;
     HideReader();
     if(NP_Oj != nullptr){
         NP_Oj->RequestDelete();
         NP_Oj = nullptr;
     }
+    std::cout << "aaaaaaaa np end" << std::endl;
 } 
  
 void NP::Update(float dt){  

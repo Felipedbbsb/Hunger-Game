@@ -23,11 +23,12 @@ LifeBar::LifeBar(GameObject& associated, int hpMax, int hpCurrent, int lifeBarWi
 }
 
 LifeBar::~LifeBar() {
+    std::cout << "aaaaaaaa lifebar start" << std::endl;
     if (hpReader != nullptr){
         hpReader->RequestDelete();
         hpReader = nullptr;
     }  
-
+    std::cout << "aaaaaaaa lifebar end" << std::endl;
 }
  
 void LifeBar::Start() { 

@@ -34,6 +34,7 @@ Map::~Map() {
 }
 
 void Map::Update(float dt) {
+    std::cout << "start map (update)" << std::endl;
     if(Map::mapPosition.first == MAP_FLOORS + 1){
         VictoryState* newState = new VictoryState();     
         Game::GetInstance().Push(newState);  
@@ -57,24 +58,11 @@ void Map::Update(float dt) {
         Camera::pos.y -= MAP_SCROLL_SPEED * dt;
     }
 
-    // Log scroll values
-    //std::cout << input.isMouseWheelScrolled()<<"  ScrollX: " << input.GetScrollX() << ", ScrollY: " << input.GetScrollY() << std::endl;
-
-
-    // Obtenha os valores atuais de scroll
-    //int scrollX = input.GetScrollX();
-    //int scrollY = input.GetScrollY();
- 
-    // Mova a câmera com base no scroll
-    //if(input.isMouseWheelScrolled()){
-    //    Camera::pos.y += scrollY * MAP_SCROLL_SPEED * dt; 
-    //}
-    
-
     UpdateArray(dt); 
     Camera::Update(dt);
 
     State::Update(dt);
+    std::cout << "end map (update)" << std::endl;
 } 
 
 void Map::LoadAssets() {
@@ -385,8 +373,12 @@ void Map::Resume() {
     if(Camera::pos.y  < 0){
         Camera::pos.y = 0;
     }
-  
+    if(Camera::pos.y  > MAP_GRID_SIZE.y){
+        Camera::pos.y = MAP_GRID_SIZE.y;
+    }
+
     //noncombatMusic.Play();
+    std::cout << "start map (resume)" << std::endl;
 
 }
 

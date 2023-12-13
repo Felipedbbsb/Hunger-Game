@@ -96,6 +96,7 @@ void Skill::Start() {
 }
 
 Skill::~Skill() {
+    std::cout << "aaaaaaaa skill start" << std::endl;
     if(jewelObj != nullptr){
         jewelObj->RequestDelete();
         jewelObj = nullptr;
@@ -113,6 +114,8 @@ Skill::~Skill() {
         selectSFX->RequestDelete();
         selectSFX = nullptr;
     }
+        std::cout << "aaaaaaaa skill end" << std::endl;
+
 }
 
 void Skill::Update(float dt) {

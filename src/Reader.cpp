@@ -40,10 +40,13 @@ void Reader::Start() {
 }  
  
 Reader::~Reader(){ 
+        std::cout << "aaaaaaaa reader start" << std::endl;
+
     if (textSkillObj) {
         textSkillObj->RequestDelete(); // Delete  textSkillObj with exists
     }
-    
+        std::cout << "aaaaaaaa reader end" << std::endl;
+
 } 
 
 void Reader::Update(float dt){  

@@ -48,9 +48,7 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     selectSFX(nullptr) 
     {  
         EnemyInfo& enemyInfo = enemyInfoMap[id];
-        std::cout << "123" << std::endl;
         hp = enemyInfo.hp.first + rand() % (enemyInfo.hp.second - enemyInfo.hp.first + 1);
-        std::cout << "123" << std::endl;
         tags = enemyInfo.tags;
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
@@ -86,7 +84,7 @@ void Enemies::Start() {
 }
 
 Enemies::~Enemies() { 
-
+    std::cout << "aaaaaaaa enemies s" << std::endl;
     for (int i = enemytags.size() - 1; i >= 0; i--) { //remove enemies tags
             enemytags.erase(enemytags.begin() + i);
     }
@@ -112,6 +110,7 @@ Enemies::~Enemies() {
         selectSFX = nullptr;
     }
 
+    std::cout << "aaaaaaaa enemies end" << std::endl;
 }
 
 void Enemies::Update(float dt) {
@@ -232,7 +231,7 @@ void Enemies::Update(float dt) {
                     }
 
                 }
-
+ 
                 // Check if the mouse is over the enemy and left mouse button is pressed
                 if (enemyHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y - Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){

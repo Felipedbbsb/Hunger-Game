@@ -28,7 +28,12 @@ void Protected::Start() {
 }   
   
 Protected::~Protected(){ 
+        std::cout << "aaaaaaaa protected start" << std::endl;
+
     HideReader();
+
+        std::cout << "aaaaaaaa protected end" << std::endl;
+
 } 
 
 void Protected::Update(float dt){  

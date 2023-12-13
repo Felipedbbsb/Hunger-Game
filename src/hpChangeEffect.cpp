@@ -21,6 +21,7 @@ hpChangeEffect::hpChangeEffect(GameObject& associated, std::string number, int l
 }
 
 hpChangeEffect::~hpChangeEffect() {
+    std::cout << "aaaaaaaa hpchange end" << std::endl;
 }
 
 void hpChangeEffect::Start() { 

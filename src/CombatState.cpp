@@ -46,15 +46,24 @@ toggleState(true),
 toggleStateNP(true){}
   
 CombatState::~CombatState(){
+    delete skillSelection;
     if(skillSelection != nullptr){
         skillSelection->RequestDelete();
         skillSelection = nullptr;
     }
+    delete papiro;
     if(papiro != nullptr){
         papiro->RequestDelete();
         papiro = nullptr;
     }
 
+    for (int i = Enemies::enemiesArray.size() - 1; i >= 0; i--) { //remove skills
+            Enemies::enemiesArray.erase(Enemies::enemiesArray.begin() + i);
+    }
+
+    Enemies::enemiesArray.clear();
+
+     std::cout << "cgegou aq22io" << std::endl;
         
 }
 
@@ -86,6 +95,9 @@ void CombatState::Update(float dt){
     if ((input.KeyPress(ESCAPE_KEY)) || input.QuitRequested()){
         quitRequested = true;
     }
+    if (input.KeyPress(SPACEBAR_KEY)){
+        popRequested = true;
+    }
  
 
     //============================ Checks whether to delete objects and updates ========================================
@@ -112,6 +124,8 @@ void CombatState::Update(float dt){
                 if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
                     popRequested = true;
                     skillSelectionEnd.Restart();
+                    std::cout << "end combat" << std::endl; 
+                    return; 
                 }
             }
         }
@@ -119,7 +133,11 @@ void CombatState::Update(float dt){
 
         UpdateArray(dt); 
         Camera::Update(dt);
-        papiro = nullptr; 
+        if(papiro != nullptr){
+            papiro->RequestDelete();
+            papiro = nullptr; 
+        }
+        
     }
     else{
         if(toggleState){
@@ -179,13 +197,13 @@ void CombatState::LoadAssets(){
         NP_UI->AddComponent(std::shared_ptr<NP>(NP_behaviour));
         
 
-        Game::GetInstance().GetCurrentState().AddObject(NP_UI); 
+        Game::GetInstance().GetCurrentState().AddObject(NP_UI);  
      
     Music combatMusic;
     combatMusic.Open("assets/audio/songCombat.mp3");
     combatMusic.Play();    
 
-}  
+}   
  
 void CombatState::CreateEnemies(){
     //============================ Enemies ========================================
@@ -203,8 +221,7 @@ void CombatState::CreateEnemies(){
 void CombatState::CreatePlayers(){
     //============================ Mother ========================================
     GameObject *mom = new GameObject(MOTHER_POS);
-    Mother* mom_behaviour= new Mother(*mom);
-    mom->AddComponent((std::shared_ptr<Mother>)mom_behaviour);
+    new Mother(*mom);
     std::weak_ptr<GameObject> weak_mother = AddObject(mom);
     Mother::motherInstance = weak_mother;
 
