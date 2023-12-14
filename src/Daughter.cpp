@@ -40,7 +40,6 @@ ScaleIndicator(1){
 
 void Daughter::Start() 
 {   
-    std::cout << "aqq4 daughter start" << std::endl;  
     new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
 
     associated.box.y -= associated.box.h;
@@ -82,7 +81,6 @@ Daughter::~Daughter()
 
 void Daughter::Update(float dt)
 {   
-        std::cout << "aqq4" << std::endl;  
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
 
@@ -94,7 +92,6 @@ void Daughter::Update(float dt)
     auto skillBack = Skill::skillBackToDaughter;
 
     //=============================//=============================//=============================//=============================
-    std::cout << "aqq4" << std::endl;  
     // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0 ) {
 
@@ -120,7 +117,6 @@ void Daughter::Update(float dt)
         return;
     }
 
-    std::cout << "aqq4" << std::endl;  
     //ENEMY TURN
     if(GameData::playerTurn == false){
         DeleteIntention();

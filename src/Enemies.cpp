@@ -59,14 +59,14 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
 }
  
 void Enemies::Start() {
-    new Sprite(associated, iconPath, ENEMY_FC, ENEMY_FT/ ENEMY_FC); 
-
-    associated.box.y -= associated.box.h;
+    new Sprite(associated, iconPath, ENEMY_FC, ENEMY_FT/ENEMY_FC); 
+  
+    associated.box.y -= associated.box.h; 
 
     //===================================Hitbox==================================
     enemyHitbox = Rect(associated.box.x, associated.box.y, 130, associated.box.h);
 
-    associated.box.x -= (associated.box.w - enemyHitbox.w )/2;
+    associated.box.x -= (associated.box.w/ENEMY_FC - enemyHitbox.w )/2;
 
     //==================================LifeBar====================================
     lifeBarEnemy = new LifeBar(associated, hp, hp, enemyHitbox.w, enemyHitbox.x); //width from hitbox
@@ -121,8 +121,8 @@ void Enemies::Update(float dt) {
 // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
-
+        Sprite *deadBody_spr = new Sprite(*deadBody, iconPath, ENEMY_FC, ENEMY_FT/ ENEMY_FC, 1.5); 
+        deadBody_spr->SetFrame(0); 
         Game::GetInstance().GetCurrentState().AddObject(deadBody);
 
 
@@ -805,91 +805,98 @@ void Enemies::InitializeEnemyInfoMap() {
 
     /*
     Cultista Verde (Debuffer):
-        10 HP
-        Cut: Deal 6 damage 
+        6 ~10 HP
+        Cut: Deal 6 damage
         Whip: Deal 3 damage; Apply 1 Frail to target.
         Evil Chant: Apply 2 weak to target
+
     */
     enemyInfoMap[CultistGreen] = { std::make_pair(6, 10), {}, "Green Cultist", CultistGreen_SPRITE, CultistGreen_SPRITE_ATK, CultistGreen_SPRITE_DFS, {Skill::E_Cut, Skill::E_Whip, Skill::E_Evil_Chant} };
     
     
     /*
     Cultista Vermelho (Debuffer):
-        15 HP
+        13 ~ 19 HP
         Shiv: Deal 9 damage 
         Whip: Deal 3 damage; Apply 2 Frail to target.
         Evil Chant: Apply 2 weak to target
 
+
     */
-    enemyInfoMap[CultistRed] = { std::make_pair(15, 18), {}, "Red Cultist", CultistRed_SPRITE, CultistRed_SPRITE_ATK, CultistRed_SPRITE_DFS, {Skill::E_Shiv, Skill::E_Whip, Skill::E_Evil_Chant} };
+    enemyInfoMap[CultistRed] = { std::make_pair(13, 19), {}, "Red Cultist", CultistRed_SPRITE, CultistRed_SPRITE_ATK, CultistRed_SPRITE_DFS, {Skill::E_Shiv, Skill::E_Whip, Skill::E_Evil_Chant} };
     
     /*
     Cultista Roxo (Damage Dealer):
-        20 HP
-        Tentacle Strike: Deal 12 damage
-        Bite: Deal 9 damage 
-        Whip: Deal 3 damage; Apply 2 Frail to target
+        18 ~ 28 HP
+        9 Tails: Deal 12 damage
+        Lash: Deal 9 damage
+        Deafening Whispers: Deal 3 damage; Apply 2 Frail to target
+
     */
-    enemyInfoMap[CultistPurple] = { std::make_pair(20, 25), {}, "Purple Cultist", CultistPurple_SPRITE, CultistPurple_SPRITE_ATK, CultistPurple_SPRITE_DFS, {Skill::E_Tentacle_Strike, Skill::E_Bite, Skill::E_Whip} };
+    enemyInfoMap[CultistPurple] = { std::make_pair(15, 28), {}, "Purple Cultist", CultistPurple_SPRITE, CultistPurple_SPRITE_ATK, CultistPurple_SPRITE_DFS, {Skill::E_Tentacle_Strike, Skill::E_Bite, Skill::E_Whip} };
     
     
    /*
     Pintinho (Offensive Support)
-        25HP
+        17 ~ 25HP
         Beak: Deal 3 damage
         Unnerving Presence: Apply 2 Weak and 2 Vulnerable to target
         Guttural Scream: Apply 2 rampage to all allies
 
+
     */
-    enemyInfoMap[Parakeet] = { std::make_pair(25, 30), {}, "Parakeet", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
+    enemyInfoMap[Parakeet] = { std::make_pair(17, 25), {}, "Parakeet", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
 
     /*
-    Rachorro (Brute):
-        15 HP
-        Claw: Deal 6 damage
-        Growl: Gain 2 resilience
-        Bark: Gain 2 provoke
+    Bicho da Lâmpada (Boss)
+        60HP
+        Infernal Scream: Apply 3 Weak and 3 Vulnerable to target
+        Infernal Skull: Deal 5 damage; Gain 3 Resilience
+        Enrage: Aplly 3 rampage to all allies
+        Impale: Deal 15 damage
+
 
     */
-    enemyInfoMap[Radog] = { std::make_pair(60, 60), {}, "Enemy 1", radog_SPRITE, radog_SPRITE_ATK, radog_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[Radog] = { std::make_pair(60, 60), {}, "Radog", radog_SPRITE, radog_SPRITE_ATK, radog_SPRITE_DFS, {Skill::E_Infernal_Scream, Skill::E_Infernal_Skull, Skill::E_Enrage, Skill::E_Impale} };
 
     /*    
-    Cat Stone (Glass Cannon)
-        20 HP
-        Trucidate: Deal 10 Damage
-        Enrage: Deal 3 damage; Gain 3 Rampage
+    Estátua Preta (Glass Cannon)
+        10 ~ 15 HP
+        Freezing Stare: Deal 8 Damage
+        Empower: Deal 3 damage; Gain 2 Rampage
+
+
     */
-    enemyInfoMap[CatStone] = { std::make_pair(20, 25), {}, "Cat Stone", CatStone_SPRITE, CatStone_SPRITE_ATK, CatStone_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[CatStone] = { std::make_pair(10, 15), {}, "Cat Stone", CatStone_SPRITE, CatStone_SPRITE_ATK, CatStone_SPRITE_DFS, {Skill::E_Freezing_Stare, Skill::E_Empower, Skill::E_Empower} };
     
     /*    
-    Gato Gold (Glass Cannon)
-        20 HP
-        Trucidate: Deal 10 Damage
-        Enrage: Deal 3 damage; Gain 3 Rampage
+    Estátua Dourada (Glass Cannon)
+        18 ~ 25 HP
+        Take Soul: Deal 15 Damage
+        Empower: Deal 3 damage; Gain 2 Rampage
+
     */
-    enemyInfoMap[CatGold] = { std::make_pair(20, 25), {}, "Cat Gold", CatGold_SPRITE, CatGold_SPRITE_ATK, CatGold_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[CatGold] = { std::make_pair(18, 25), {}, "Cat Gold", CatGold_SPRITE, CatGold_SPRITE_ATK, CatGold_SPRITE_DFS, {Skill::E_Take_Soul, Skill::E_Empower, Skill::E_Empower} };
     
 
     /*    
-    Sapo mãe (Defensive Support)
-        20HP
+    Sapo Verde Mae (Defensive Support)
+        7~12HP
         Bubble Shield: Apply 3 resilience to all allies
-        Tongue Strike: Deal 3 damage; Apply 3 weak to target
+        Tongue Strike: Deal 3 damage; Apply 3 weak to target and 2 curse
         Toxic Sludge: Apply 4 curse to one enemy
-
     */
-    enemyInfoMap[FrogMom] = { std::make_pair(7, 12), {}, "Frog Mom", frogMom_SPRITE, frogMom_SPRITE_ATK, frogMom_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[FrogMom] = { std::make_pair(7, 12), {}, "Frog Mom", frogMom_SPRITE, frogMom_SPRITE_ATK, frogMom_SPRITE_DFS, {Skill::E_Bubble_Shield, Skill::E_Tongue_Strike, Skill::E_Toxic_Sludge} };
     
 
     /*    
-    Sapo PAI (Defensive Support)
-        20HP
-        Bubble Shield: Apply 3 resilience to all allies
-        Tongue Strike: Deal 3 damage; Apply 3 weak to target
-        Toxic Sludge: Apply 4 curse to one enemy
-
+    Sapo Vermelho PAI(Brute):
+        20 ~ 30 HP
+        Lick: Deal 6 damage
+        Digest: Gain 3 resilience
+        Inflate: Gain 3 provoke
     */
-    enemyInfoMap[FrogDad] = { std::make_pair(15, 20), {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill1, Skill::E1_Skill1} };
+    enemyInfoMap[FrogDad] = { std::make_pair(20, 30), {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E_Lick, Skill::E_Digest, Skill::E_Inflate} };
     
 
     /*    

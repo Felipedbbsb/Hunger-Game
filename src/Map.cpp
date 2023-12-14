@@ -397,7 +397,7 @@ void Map::DrawLineMap(int x1, int y1, int x2, int y2) {
 // Function to draw a dashed line between two points
 void Map::DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gapLength) {
     SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black color (R, G, B, A)
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Black color (R, G, B, A)
 
     // Calculate the length and direction of the line
     float length = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
@@ -417,7 +417,7 @@ void Map::DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gap
         currentLength += dashLength + gapLength;
         drawDash = !drawDash;
     }
-
+ 
     // Restore the original color (optional, depending on the context)
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color (R, G, B, A)
 }

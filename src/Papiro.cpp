@@ -42,11 +42,11 @@ void Papiro::Start() {
     if (movingRight) {
         // Move Papiro to the left initially
         associated.box.x -= RESOLUTION_WIDTH;
-        papiroVelocity = 2*(RESOLUTION_WIDTH  / (INTERACTION_COOLDOWN * 0.25));
+        papiroVelocity = (2*(RESOLUTION_WIDTH + PAPIRO_OFFSET) / (INTERACTION_COOLDOWN * 0.25));
     } else {
         // Move Papiro to the right initially
         associated.box.x += RESOLUTION_WIDTH ;
-        papiroVelocity = 2*(RESOLUTION_WIDTH  / (INTERACTION_COOLDOWN * 0.25)) ;
+        papiroVelocity = (2*(RESOLUTION_WIDTH + PAPIRO_OFFSET) / (INTERACTION_COOLDOWN * 0.25)) ;
     }
     papiro_obj->box.x = associated.box.x-Camera::pos.x;
     papiro_obj->box.y = -Camera::pos.y;
@@ -68,12 +68,12 @@ void Papiro::Start() {
     Game::GetInstance().GetCurrentState().AddObject(background);  
  
 
-    //offeset precisely made by sprite reference   
-    backgroundOffsetX = 50;  
+    //offeset precisely made by sprite reference    
+    backgroundOffsetX = -840;  
     if (!movingRight){ 
-        backgroundOffsetX = 170;
+        backgroundOffsetX = 1025;
     }  
-
+ 
 
     //Processing relation between objects
     if(movingRight){
@@ -106,7 +106,6 @@ void Papiro::Start() {
             centralized = true;
         }
         else{
-            
             CreatePlayerObject(whoReceives, Skill::TargetType::IRR);
             CreateEnemyObject(true);
             objectsMovesRight = false;
@@ -114,7 +113,7 @@ void Papiro::Start() {
         }
     }
 
-
+ 
     Game::GetInstance().GetCurrentState().AddObject(papiro_obj); //last layer
 
 }   
@@ -126,7 +125,6 @@ void Papiro::CreateEnemyObject(bool acting){
             new InteractionObject(*interactionObj, attackType, Skill::TargetType::IRR, enemyId, acting);
             
             interactionObj->box.x -= interactionObj->box.w;
-
 
             std::weak_ptr<GameObject> go_obj = Game::GetInstance().GetCurrentState().AddObject(interactionObj);
             interactionObjects.push_back(go_obj);
@@ -142,7 +140,7 @@ void Papiro::CreatePlayerObject(Skill::TargetType targetType,  Skill::TargetType
         tempRight = !tempRight;
     }
     new InteractionObject(*interactionObjP, attackType, targetType, Enemies::EnemyId::INVALID_ENEMY, tempRight);   
-    interactionObjP->box.x -= interactionObjP->box.w;
+    interactionObjP->box.x -= interactionObjP->box.w; 
 
 
     std::weak_ptr<GameObject> go_objP = Game::GetInstance().GetCurrentState().AddObject(interactionObjP);
@@ -197,11 +195,11 @@ void Papiro::Update(float dt) {
  
     if (movingRight) {
         // Mother or Daughter is attacking, move Papiro to the right 
-         if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25 && associated.box.x <= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET) {
+         if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25 && associated.box.x != RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET -Camera::pos.x) {
             associated.box.x += papiroVelocity * dt;
             papiroVelocity -= papiroAc * dt;
-            if(associated.box.x >= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET){
-                associated.box.x = RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET;
+            if(associated.box.x >= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET -Camera::pos.x){
+                associated.box.x = RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET -Camera::pos.x;
             }
         }
         
@@ -219,13 +217,13 @@ void Papiro::Update(float dt) {
        
     } else { 
         // Other characters are attacking, move Papiro to the left
-        if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25  && associated.box.x >= -PAPIRO_OFFSET) {
+        if (interactionTime.Get() < INTERACTION_COOLDOWN * 0.25  && associated.box.x != -PAPIRO_OFFSET -Camera::pos.x) {
             associated.box.x -= papiroVelocity * dt;
-            papiroVelocity -= papiroAc * dt;
-            if(associated.box.x <= -PAPIRO_OFFSET){
-                associated.box.x = -PAPIRO_OFFSET;
+            papiroVelocity -= papiroAc * dt; 
+            if(associated.box.x <= -PAPIRO_OFFSET -Camera::pos.x){ 
+                associated.box.x = -PAPIRO_OFFSET -Camera::pos.x;
             }
-        }
+        } 
         else{
             if(interactionTime.Get() >= INTERACTION_COOLDOWN * 0.75){
                 associated.box.x -= papiroVelocity * dt;
@@ -237,10 +235,11 @@ void Papiro::Update(float dt) {
             }
         } 
    
-    }
+    } 
 
-    background->box.x = associated.box.x + backgroundOffsetX -Camera::pos.x;
-    papiro_obj->box.x = associated.box.x -Camera::pos.x;
+    
+    background->box.x = associated.box.x + backgroundOffsetX;
+    papiro_obj->box.x = associated.box.x;
 
     if(objectsMovesRight){
         objectsMoves += OBJECT_VELOCITY * dt;

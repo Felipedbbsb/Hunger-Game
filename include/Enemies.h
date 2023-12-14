@@ -71,8 +71,8 @@
     #define radog_SPRITE_DFS "assets/img/enemies/radogDamage.png"
 
 
-#define ENEMY_FT 1
-#define ENEMY_FC 1
+#define ENEMY_FT 1.25f
+#define ENEMY_FC 14
 
 #define INTENTION_COOLDOWN 1.5
 

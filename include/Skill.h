@@ -309,6 +309,19 @@ class Skill : public Component {
             E_Beak,
             E_Unnerving_Presence,
             E_Guttural_Scream,
+            E_Infernal_Scream,
+            E_Infernal_Skull,
+            E_Enrage,
+            E_Impale,
+            E_Freezing_Stare,
+            E_Empower,
+            E_Take_Soul,
+            E_Bubble_Shield,
+            E_Tongue_Strike,
+            E_Toxic_Sludge,
+            E_Lick,
+            E_Digest,
+            E_Inflate,
 
             INVALID_SKILL
         };

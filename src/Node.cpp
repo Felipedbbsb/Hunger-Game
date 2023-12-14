@@ -10,6 +10,7 @@
 #include "Mural.h"
 #include "CombatState.h"
 #include "Enemies.h"
+#include "Rest.h"
 
 std::vector<std::pair<int, int>> Node::currentNeighbors = {};
 
@@ -81,8 +82,8 @@ void Node::Update(float dt){
             canVisited = true; 
         }
         else{
-            canVisited = false;
-        }
+            canVisited = false; 
+        } 
     }
 
 
@@ -283,13 +284,7 @@ void Node::CreateMural(){
 }
 
 void Node::CreateRest(){
-    int randomValue = std::rand() % 2 + 1;
-
-    // Append the random value to the sprite path
-    std::string spriteBg = MAP_MURAL_BACKGROUND;
-    spriteBg.insert(spriteBg.find_last_of('.'), std::to_string(randomValue));
-
-    Mural* new_stage = new Mural(spriteBg); 
+    Rest* new_stage = new Rest(); 
     Game::GetInstance().Push(new_stage);  
 } 
 
@@ -331,7 +326,7 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
     //Test release version 70%
     //encounters from 1-5
     encounterMap[1] = { Enemies::CultistGreen, Enemies::CultistGreen};
-    encounterMap[2] = { Enemies::CultistGreen, Enemies::FrogDad };
+    encounterMap[2] = { Enemies::FrogDad, Enemies::CultistGreen };
     encounterMap[3] = { Enemies::CultistGreen, Enemies::FrogMom };
     encounterMap[4] = { Enemies::FrogDad, Enemies::FrogMom};
     encounterMap[5] = { Enemies::CultistGreen, Enemies::FrogDad, Enemies::FrogMom };
@@ -339,18 +334,18 @@ std::vector<Enemies::EnemyId> Node::GetRandomEncounter(int floorPostion){
     //encounters from 6-10
     encounterMap[6] = { Enemies::FrogDad, Enemies::CatStone};
     encounterMap[7] = { Enemies::CultistRed, Enemies::CatStone };
-    encounterMap[8] = { Enemies::CultistRed, Enemies::CultistGreen, Enemies::CatStone };
+    encounterMap[8] = { Enemies::CultistGreen, Enemies::CatGold, Enemies::CatStone };
     encounterMap[9] = { Enemies::CatGold, Enemies::CatStone};
-    encounterMap[10] = { Enemies::CultistRed, Enemies::FrogDad, Enemies::CatGold }; 
+    encounterMap[10] = { Enemies::CultistRed, Enemies::FrogDad, Enemies::CatStone }; 
     
     //encounters from 11-15 
-    encounterMap[11] = { Enemies::CultistPurple, Enemies::Parakeet };
-    encounterMap[12] = { Enemies::CultistPurple, Enemies::CultistRed, Enemies::Parakeet };
-    encounterMap[13] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
-    encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple, Enemies::CultistPurple};
-    encounterMap[15] = { Enemies::CultistGreen, Enemies::CultistRed, Enemies::CultistPurple };
+    encounterMap[11] = { Enemies::CultistPurple, Enemies::FrogDad, Enemies::Parakeet};
+    encounterMap[12] = { Enemies::CatGold, Enemies::CultistPurple, Enemies::Parakeet };
+    encounterMap[13] = { Enemies::CultistPurple, Enemies::CultistRed, Enemies::CultistGreen };
+    encounterMap[14] = { Enemies::CultistPurple, Enemies::CultistPurple, Enemies::CatStone};
+    encounterMap[15] = { Enemies::CultistPurple, Enemies::CatGold, Enemies::FrogDad };
 
-    encounterMap[16] = { Enemies::Radog, Enemies::CultistPurple, Enemies::CultistPurple };
+    encounterMap[16] = { Enemies::Radog, Enemies::CultistRed, Enemies::CultistRed };
 
 
     int randomValue = std::rand() % 5 + 1;
