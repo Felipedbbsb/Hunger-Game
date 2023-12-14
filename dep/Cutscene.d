@@ -1,4 +1,4 @@
-dep/MenuState.d bin/MenuState.o: src/MenuState.cpp include/MenuState.h \
+dep/Cutscene.d bin/Cutscene.o: src/Cutscene.cpp include/Cutscene.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\c++config.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\os_defines.h \
@@ -211,9 +211,9 @@ dep/MenuState.d bin/MenuState.o: src/MenuState.cpp include/MenuState.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/GameData.h \
- include/Map.h include/Mother.h include/Daughter.h include/Cutscene.h
+ include/Map.h include/Mother.h include/Daughter.h
 
-include/MenuState.h:
+include/Cutscene.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:
 
@@ -742,5 +742,3 @@ include/Map.h:
 include/Mother.h:
 
 include/Daughter.h:
-
-include/Cutscene.h:

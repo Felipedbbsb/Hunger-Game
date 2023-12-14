@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "Mother.h"
 #include "Daughter.h"
-
+#include "Cutscene.h"
 
 
 MenuState::MenuState() 
@@ -49,14 +49,14 @@ void MenuState::Update(float dt){
           GameData::npLevel = 0; //init 
          
 
-        Map* initialState = new Map();    
+        Cutscene* initialState = new Cutscene();    
         Game::GetInstance().Push(initialState); 
         popRequested = true;
 
         GameObject* selectedSFX = new GameObject();
         Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
          selectSFX_sound->Play(1);
-
+        
 
     }
         
