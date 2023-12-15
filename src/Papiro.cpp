@@ -231,7 +231,7 @@ void Papiro::Update(float dt) {
                 associated.box.x -= papiroVelocity * dt;
                 papiroVelocity -= papiroAc * dt;
                 if(interactionTime.Get() >= INTERACTION_COOLDOWN){
-                    associated.RequestDelete(); // Remove when it disappears
+                    associated.RequestDelete(); // Remove when it disappears 
                     CombatState::InteractionSCreenActivate = false; 
                 }
             }
@@ -256,7 +256,7 @@ void Papiro::Update(float dt) {
     int spacingEnemies = 0; 
     for (int i = interactionObjects.size() - 1; i >= 0; i--) {
         
-        interactionObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - interactionObjects[i].lock()->box.w/2 + objectsMoves + SPACING_ENEMIES * spacingEnemies + 50;
+        interactionObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - interactionObjects[i].lock()->box.w/2 + objectsMoves + SPACING_ENEMIES * spacingEnemies;
 
         if(!centralized){
            interactionObjects[i].lock()->box.x += PAPIRO_SCREEN.x/6 ;

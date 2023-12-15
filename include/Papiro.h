@@ -20,8 +20,8 @@
 #define PAPIRO_ENEMY_SPRITE "assets/img/UI/PapiroEnemy.png"
 #define PAPIRO_PLAYER_SPRITE "assets/img/UI/PapiroPlayer.png"
 
-#define OFFESET_ENEMIES  Vec2(500, -50)
-#define SPACING_ENEMIES  150
+#define OFFESET_ENEMIES  Vec2(400, -50)
+#define SPACING_ENEMIES  125
 
 #define SPACING_PLAYERS  150
 

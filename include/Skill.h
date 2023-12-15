@@ -57,15 +57,15 @@
 
 #define NS_RecklessSlash "Reckless Slash"
 #define I_RecklessSlash "assets/img/UI/skills/readers/readerRecklessSlash.png"
-#define SPR_RecklessSlash "assets/img/UI/uiSkillNormal.png"
+#define SPR_RecklessSlash "assets/img/UI/skills/RecklessSlash.png"
 
 #define NS_CautiousStrike "Cautious Strike"
 #define I_CautiousStrike "assets/img/UI/skills/readers/readerCautiousStrike.png"
-#define SPR_CautiousStrike "assets/img/UI/uiSkillNormal.png"
+#define SPR_CautiousStrike "assets/img/UI/skills/CautiousStrike.png"
 
 #define NS_MotherlyLove "Motherly Love"
 #define I_MotherlyLove "assets/img/UI/skills/readers/readerMotherlyLove.png"
-#define SPR_MotherlyLove "assets/img/UI/uiSkillNormal.png"
+#define SPR_MotherlyLove "assets/img/UI/skills/MotherlyLove.png"
 
 
 #define NS_PocketSand "Pocket Sand"
@@ -78,7 +78,7 @@
 
 #define NS_RiskyManeuver "Risky Maneuver"
 #define I_RiskyManeuver "assets/img/UI/skills/readers/readerRiskyManeuver.png"
-#define SPR_RiskyManeuver "assets/img/UI/skill/RiskyManeuver.png"
+#define SPR_RiskyManeuver "assets/img/UI/skills/RiskyManeuver.png"
 
 #define NS_BattleHymn "Battle Hymn"
 #define I_BattleHymn "assets/img/UI/skills/readers/readerBattleHymn.png"
@@ -116,11 +116,11 @@
 
 #define NS_TrickorTreat "Trick or Treat"
 #define I_TrickorTreat "assets/img/UI/skills/readers/readerTrickorTreat.png"
-#define SPR_TrickorTreat "assets/img/UI/uiSkillNormal.png"
+#define SPR_TrickorTreat "assets/img/UI/skills/TrickorTreat.png"
 
 #define NS_SweetTreats "Sweet Treats"
 #define I_SweetTreats "assets/img/UI/skills/readers/readerSweetTreats.png"
-#define SPR_SweetTreats "assets/img/UI/skill/SweetTreats.png"
+#define SPR_SweetTreats "assets/img/UI/skills/SweetTreats.png"
 
 #define NS_AroundtheRosie "Around the Rosie"
 #define I_AroundtheRosie "assets/img/UI/skills/readers/readerAroundtheRosie.png"
@@ -191,11 +191,11 @@
 
 #define NS_MasterofPuppets "Master of Puppets"
 #define I_MasterofPuppets "assets/img/UI/skills/readers/readerMasterofPuppets.png"
-#define SPR_MasterofPuppets "assets/img/UI/uiSkillDjinn.png"
+#define SPR_MasterofPuppets "assets/img/UI/skills/MasterofPuppets.png"
 
 #define NS_IronMaiden "Iron Maiden"
 #define I_IronMaiden "assets/img/UI/skills/readers/readerIronMaiden.png"
-#define SPR_IronMaiden "assets/img/UI/uiSkillDjinn.png"
+#define SPR_IronMaiden "assets/img/UI/skills/IronMaiden.png"
 
 #define NS_DeafeningWhisper "Deafening Whisper"
 #define I_DeafeningWhisper "assets/img/UI/skills/readers/readerDeafeningWhisper.png"

@@ -530,7 +530,7 @@ void Skill::InitializeSkillInfoMap() {
     // Populate the map with skill information during initialization.
     //Use for example               Skill::SkillInfo tempSkillInfo = skillInfoMap[selectedSkill->GetId()];
     //                              tempSkillInfo.damage to catch damage by the id
-
+  
     //==================================MOTHER SKILLS==================================
     //Helmbreaker (2AP): Deal 6 damage; Apply 2 Vulnerable. 
     skillInfoMap.insert({Helmbreaker, {2, Skill::StateProtected::NOCHANGES,      6, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE}, 0, {},   NS_Helmbreaker, I_Helmbreaker, SPR_Helmbreaker,  ATTACK_INDIVIDUAL, MOTHER,        NONE, IRR}});
