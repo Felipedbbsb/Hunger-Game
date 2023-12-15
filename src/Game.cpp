@@ -9,7 +9,7 @@
 #define AUDIO_FREQUENCY MIX_DEFAULT_FREQUENCY
 #define AUDIO_FORMAT MIX_DEFAULT_FORMAT
 #define AUDIO_CHANNELS MIX_DEFAULT_CHANNELS 
-#define SOUND_RESOLUTION 64
+#define SOUND_RESOLUTION 64 
 
 
 
@@ -29,7 +29,7 @@ float Game::resizer  = 1;
 Game::Game(std::string title, int width, int height) : 
     frameStart(0), 
     dt(0.0),
-    storedState(nullptr){
+    storedState(nullptr){ 
 
     if (Game::instance != nullptr) {
         throw std::runtime_error("Something's Wrong!");
@@ -201,41 +201,61 @@ void Game::Run() {
 	}
 
     while (!stateStack.empty() && !stateStack.top()->QuitRequested() ) {
-        
-        
-        // Check if the top state wants to pop
-        if (stateStack.top()->PopRequested()) {
-            stateStack.top()->Pause();
-            stateStack.pop();
 
-            Resources::ClearImages();
-			Resources::ClearSounds();
-			Resources::ClearMusics();
-            Resources::ClearFonts();
-
-            if (!stateStack.empty()) {
-                stateStack.top()->Resume();
-            }
-
-            
+        bool popAll;
+        if (!stateStack.empty()) {
+            popAll = stateStack.top()->PopRequestAll();
         }
- 
+
+        // Check if the top state wants to pop
+        if(!stateStack.empty()){
+            if (stateStack.top()->PopRequested()) {
+                stateStack.top()->Pause();
+                stateStack.pop();
+                Resources::ClearImages();
+                Resources::ClearSounds();
+                Resources::ClearMusics();
+                Resources::ClearFonts();
+
+                if (!stateStack.empty()) {
+                    stateStack.top()->Resume();
+                }
+
+            }
+        }
+
+        // Check if the top state wants to pop, made all for do for all states but due to time made only for a "double" pop
+        if(!stateStack.empty()){
+            if (popAll) {
+                stateStack.top()->Pause();
+                stateStack.pop();
+                Resources::ClearImages();
+                Resources::ClearSounds();
+                Resources::ClearMusics();
+                Resources::ClearFonts();
+
+                if (!stateStack.empty()) {
+                    stateStack.top()->Resume();
+                }
+            }
+        }
+
         // Check if there's a stored state to push
         if (storedState != nullptr) { 
             if (!stateStack.empty()) {
                 stateStack.top()->Pause();
             } 
-            stateStack.push((std::unique_ptr<State>)storedState); // Use std::move to transfer ownership
+            stateStack.emplace((std::unique_ptr<State>)storedState); // Use std::move to transfer ownership
             stateStack.top()->Start();
             storedState = nullptr;
         }  
         else if (stateStack.empty()) {
 			break;
 		}
-
+        
         CalculateDeltaTime();
         InputManager::GetInstance().Update();
-        auto& currentTopState = stateStack.top(); 
+        auto& currentTopState = stateStack.top();
         currentTopState->Update(dt);
         currentTopState->Render(); 
         SDL_RenderPresent(Game::GetInstance().GetRenderer());
@@ -259,7 +279,7 @@ void Game::CalculateDeltaTime(){
     frameStart = time_delta;
 }
 
-float Game::GetDeltaTime(){return dt;} 
+float Game::GetDeltaTime(){return dt;}  
 
 
 

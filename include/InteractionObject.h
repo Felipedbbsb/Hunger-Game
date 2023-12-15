@@ -5,12 +5,22 @@
 #include "Timer.h"
 #include "Component.h"
 #include "Papiro.h"
+#include "Sound.h"
+#include "Music.h"
 
 #define EFFECT_COOLDOWN 3
 
 #define MOTHER_SPRITE_ATK "assets/img/mom/momMeleeAttack.png"
+#define MOTHER_SPRITE_ATK_NP1 "assets/img/mom/momMeleeNP1.png"
+#define MOTHER_SPRITE_ATK_NP2 "assets/img/mom/momMeleeNP2.png"
+
 #define MOTHER_SPRITE_DFS "assets/img/mom/momDamage.png"
+#define MOTHER_SPRITE_DFS_NP1 "assets/img/mom/momDamageNP1.png"
+#define MOTHER_SPRITE_DFS_NP2 "assets/img/mom/momDamageNP2.png"
+
 #define MOTHER_SPRITE_BUFF "assets/img/mom/momBuff.png"
+#define MOTHER_SPRITE_BUFF_NP1 "assets/img/mom/momBuffNP1.png"
+#define MOTHER_SPRITE_BUFF_NP2 "assets/img/mom/momBuffNP2.png"
  
 #define DAUGHTER_SPRITE_ATK "assets/img/daughter/daughterMeleeAttack.png"
 #define DAUGHTER_SPRITE_DFS "assets/img/daughter/daughterDamage.png"
@@ -23,6 +33,10 @@
 #define ATK_SPRITE_R "assets/img/UI/effectDamageR.png"
 #define DEBUFF_SPRITE_R "assets/img/UI/effectDebuff.png" 
 #define BUFF_SPRITE_R "assets/img/UI/effectBuffR.png"
+
+#define ATK_SOUND "assets/audio/sfxAttack.mp3" 
+#define DEBUFF_SOUND "assets/audio/sfxDebuff.mp3"
+#define BUFF_SOUND "assets/audio/sfxBuff.mp3"
 
 class InteractionObject : public Component {
     public:

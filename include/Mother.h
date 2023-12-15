@@ -12,16 +12,23 @@
 #include "LifeBar.h"
 #include "Skill.h"
 #include "Rect.h"
+#include "Timer.h"
 
 #define MOTHER_INDICATOR_SPRITE "assets/img/UI/uiIndicatorPlayer.png"
 
 #define MOTHER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 
 #define MOTHER_SPRITE "assets/img/mom/momIdle.png"
-#define MOTHER_FC 7
-#define MOTHER_FT 1.0
+#define MOTHER_SPRITE_NP1 "assets/img/mom/momIdleNP1.png"
+#define MOTHER_SPRITE_NP2 "assets/img/mom/momIdleNP2.png"
+#define MOTHER_FC 14
+#define MOTHER_FT 1.25
 
-#define MOTHER_HP 50
+#define MOTHER_HP 60
+
+#define MOTHER_DEATH_TIME 3
+
+#define MOTHER_NP_SOUND "assets/audio/sfxNP.mp3"
 
 class Mother : public Component{
 
@@ -47,6 +54,8 @@ class Mother : public Component{
     bool HasTag(Tag::Tags tagToCheck);
     void ActivateTag(Tag::Tags tag); 
 
+    std::string GetSpriteMother();
+
     void RemoveOneTagAll();
     void RecreateTagUI();
 
@@ -70,7 +79,8 @@ private:
 
     std::map<Tag::Tags, int> tagCountMap; // Map to track tag counts, separated from mothertags
 
-    
+    Timer deathTransitionTime;
+
     void IntentionAnimation(float dt);
     int ScaleIntention; //If 1 is growing, -1 the opposite
     void IndicatorAnimation(float dt);

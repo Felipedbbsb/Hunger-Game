@@ -14,6 +14,12 @@
 #include "CameraParallax.h"
 #include "Protected.h"
 #include "Mural.h"
+#include "GameData.h"
+#include "NP.h"
+#include "EndState.h"
+#include "Protected.h"
+#include "Music.h"
+
 
 bool CombatState::InteractionSCreenActivate = false;
 
@@ -27,23 +33,71 @@ Skill::TargetType CombatState::whoReceives = Skill::TargetType::IRR; //if IRR pr
 
 bool CombatState::ChangingSides = false;
 
+bool CombatState::motherTransition = false;
+
+bool CombatState::popRequestedEndState = false;
+
 CombatState::CombatState(std::vector<Enemies::EnemyId> enemiesArray, std::string spriteBackground) 
 : State::State(),
 enemiesArray(enemiesArray),
 papiro(nullptr),
 skillSelection(nullptr),
 spriteBackground(spriteBackground),
-toggleState(true){}
+toggleState(true),
+toggleStateNP(true),
+sandParticles(new SandParticles(Game::GetInstance().GetRenderer(), RESOLUTION_WIDTH, RESOLUTION_HEIGHT - RESOLUTION_HEIGHT * 1/3, 8, 35, 1, 3)){}
   
-CombatState::~CombatState(){}
+CombatState::~CombatState(){
+    delete skillSelection;
+    if(skillSelection != nullptr){
+        skillSelection->RequestDelete();
+        skillSelection = nullptr;
+    }
+    delete papiro;
+    if(papiro != nullptr){
+        papiro->RequestDelete(); 
+        papiro = nullptr;
+    }
+
+    for (int i = Enemies::enemiesArray.size() - 1; i >= 0; i--) { //remove skills
+            Enemies::enemiesArray.erase(Enemies::enemiesArray.begin() + i);
+    }
+
+    Enemies::enemiesArray.clear();
+
+    delete sandParticles;     
+}
 
 void CombatState::Update(float dt){   
+
+    if(CombatState::popRequestedEndState){
+        CombatState::popRequestedEndState = false;
+        CombatState::motherTransition = false;
+        EndState* new_stage = new EndState(); 
+        Game::GetInstance().Push(new_stage); 
+        popRequested = true;
+    }
+
+    if(CombatState::motherTransition && toggleStateNP){
+        State::FadeScreen(true, 0.0f);
+        State::SetFadeTime(0.5f);
+        toggleStateNP = false;
+    }
+    else if(!CombatState::motherTransition && !toggleStateNP){
+        State::FadeScreen(false, 1.0f);
+        State::SetFadeTime(0.5f);
+        toggleStateNP = true;
+    }
+
     InputManager& input = InputManager::GetInstance();
  
  
     // If the event is quit, set the termination flag
     if ((input.KeyPress(ESCAPE_KEY)) || input.QuitRequested()){
         quitRequested = true;
+    }
+    if (input.KeyPress(SPACEBAR_KEY)){
+        popRequested = true;
     }
  
 
@@ -59,10 +113,8 @@ void CombatState::Update(float dt){
             skillSelectionStart.Update(dt);
             if(skillSelectionStart.Get() >= SKILL_SELECTION_COOLDOWN_START){
                 if(skillSelection == nullptr){
-                    // Create a new skillSelection object for skillSelection Screen 
                     skillSelection = new GameObject();
-                    SkillSelection* skillSelection_behaviour = new SkillSelection(*skillSelection, false);
-                    skillSelection->AddComponent((std::shared_ptr<Component>)skillSelection_behaviour);
+                    new SkillSelection(*skillSelection, false);
                     AddObject(skillSelection);
                 }       
             }
@@ -70,17 +122,25 @@ void CombatState::Update(float dt){
             if(SkillSelection::endSkillSelection){
                 skillSelectionEnd.Update(dt);
                 if(skillSelectionEnd.Get() >= SKILL_SELECTION_COOLDOWN_START){
-                    Mural* new_stage = new Mural(spriteBackground);
-                    Game::GetInstance().Push(new_stage); 
                     popRequested = true;
+                    skillSelectionEnd.Restart();
+                    return; 
                 }
             }
         }
         
 
+        sandParticles->Update(dt);
+        //SDL_RenderClear(renderer);
+        
+
         UpdateArray(dt); 
         Camera::Update(dt);
-        papiro = nullptr; 
+        if(papiro != nullptr){
+            papiro->RequestDelete();
+            papiro = nullptr; 
+        }
+        
     }
     else{
         if(toggleState){
@@ -91,14 +151,12 @@ void CombatState::Update(float dt){
         if(papiro == nullptr){
             // Create a new Papiro object for Interaction Screen
             papiro = new GameObject();
-            Papiro* papiro_behaviour = new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
+            new Papiro(*papiro, spriteBackground , CombatState::enemiesArrayIS,
                                                         CombatState::attackType,
                                                         CombatState::whoAttacks,
                                                         CombatState::whoReceives);
 
-            //CameraFollower *papiro_cmfl = new CameraFollower(*papiro);
-            //papiro->AddComponent((std::shared_ptr<CameraFollower>)papiro_cmfl);
-            papiro->AddComponent((std::shared_ptr<Component>)papiro_behaviour);
+
             AddObject(papiro);
         }
         else{ 
@@ -112,37 +170,36 @@ void CombatState::Update(float dt){
 
 void CombatState::LoadAssets(){
     //============================ Background ========================================
-
     CreateBackground(spriteBackground);
 
     //============================ UI ========================================
     //UI takes up 1/3 of the box at the bottom
     GameObject *ui = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    UI* ui_behaviour = new UI(*ui); 
-    ui->AddComponent((std::shared_ptr<UI>)ui_behaviour); 
-    CameraFollower *bg_cmfl = new CameraFollower(*ui);
-    ui->AddComponent((std::shared_ptr<CameraFollower>)bg_cmfl);
+    new UI(*ui); 
+    new CameraFollower(*ui);
     AddObject(ui);
-
     //PROTECTED
-    GameObject* protected_UI = new GameObject(PROTECTED_POS);
-        Protected* protected_behaviour = new Protected(*protected_UI);
-        CameraFollower *protected_UI_cmfl = new CameraFollower(*protected_UI);
-        protected_UI->AddComponent((std::shared_ptr<CameraFollower>)protected_UI_cmfl);
-        protected_UI->AddComponent(std::shared_ptr<Protected>(protected_behaviour));
+    GameObject* protected_UI = new GameObject(DAUGHTER_POS);
+        new Protected(*protected_UI);
+        protected_UI->box.x -= protected_UI->box.w/4;
+        protected_UI->box.y -= protected_UI->box.h + 300;
         Game::GetInstance().GetCurrentState().AddObject(protected_UI);
-    
-
-}
-
+     //NP
+    GameObject* NP_UI = new GameObject(0, 0);
+        new NP(*NP_UI);
+        Game::GetInstance().GetCurrentState().AddObject(NP_UI);  
+    Music combatMusic;
+    combatMusic.Open("assets/audio/songCombat.mp3");
+    combatMusic.Play();    
+}   
+ 
 void CombatState::CreateEnemies(){
     //============================ Enemies ========================================
     for (int i = enemiesArray.size() - 1; i >= 0; i--) {
         int offsetArray = enemiesArray.size() - i - 1;
         GameObject* enemy = new GameObject(ENEMIES_POS1.x + 200 * offsetArray, ENEMIES_POS1.y);
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
-        Enemies* enemy_behaviour = new Enemies(*enemy, enemiesArray[i]);
-        enemy->AddComponent(std::shared_ptr<Enemies>(enemy_behaviour));
+        new Enemies(*enemy, enemiesArray[i]);
         std::weak_ptr<GameObject> weak_enemy = AddObject(enemy);
         Enemies::enemiesArray.push_back(weak_enemy);
     }
@@ -151,15 +208,13 @@ void CombatState::CreateEnemies(){
 void CombatState::CreatePlayers(){
     //============================ Mother ========================================
     GameObject *mom = new GameObject(MOTHER_POS);
-    Mother* mom_behaviour= new Mother(*mom);
-    mom->AddComponent((std::shared_ptr<Mother>)mom_behaviour);
+    new Mother(*mom);
     std::weak_ptr<GameObject> weak_mother = AddObject(mom);
     Mother::motherInstance = weak_mother;
 
     //============================ Daughter ========================================
     GameObject *daughter = new GameObject(DAUGHTER_POS);
-    Daughter* daughter_behaviour= new Daughter(*daughter);
-    daughter->AddComponent((std::shared_ptr<Daughter>)daughter_behaviour);
+    new Daughter(*daughter);
     std::weak_ptr<GameObject> weak_daughter = AddObject(daughter);
     Daughter::daughterInstance = weak_daughter;
 }
@@ -175,36 +230,34 @@ void CombatState::CreateBackground(std::string originalPath){
 
     //================================== thirdPathObj ==============================================
     GameObject *thirdPathObj = new GameObject();
-    Sprite* thirdPathSprite= new Sprite(*thirdPathObj, thirdPath);
-    thirdPathObj->AddComponent((std::shared_ptr<Component>)thirdPathSprite);
+    new Sprite(*thirdPathObj, thirdPath);
 
     thirdPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - thirdPathObj->box.w / 2;
 
-    CameraParallax *thirdPathObj_cmfl = new CameraParallax(*thirdPathObj, 0.75);
-    thirdPathObj->AddComponent((std::shared_ptr<CameraParallax>)thirdPathObj_cmfl);
+    new CameraParallax(*thirdPathObj, 0.75);
+
     AddObject(thirdPathObj);
 
     //================================== floorPathObj ==============================================
     GameObject *floorPathObj = new GameObject();
-    Sprite* floorPathSprite= new Sprite(*floorPathObj, floorPath);
-    floorPathObj->AddComponent((std::shared_ptr<Component>)floorPathSprite);
-
+    new Sprite(*floorPathObj, floorPath);
+   
     floorPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - floorPathObj->box.w / 2; 
 
-    CameraParallax *floorPathObj_cmfl = new CameraParallax(*floorPathObj, -0.10);
-    floorPathObj->AddComponent((std::shared_ptr<CameraParallax>)floorPathObj_cmfl);
+    new CameraParallax(*floorPathObj, -0.10);
+
     
     AddObject(floorPathObj);
     //================================== secondPathObj ==============================================
     GameObject *secondPathObj = new GameObject();
-    Sprite* secondPathSprite= new Sprite(*secondPathObj, secondPath);
-    secondPathObj->AddComponent((std::shared_ptr<Component>)secondPathSprite);
+    new Sprite(*secondPathObj, secondPath);
+    
     secondPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - secondPathObj->box.w / 2;
     
-    CameraParallax *secondPathObj_cmfl = new CameraParallax(*secondPathObj, 0.5);
-    secondPathObj->AddComponent((std::shared_ptr<CameraParallax>)secondPathObj_cmfl);
-
+    new CameraParallax(*secondPathObj, 0.5);
+ 
     AddObject(secondPathObj);
+
 
     //==================================
     //create combat components
@@ -212,23 +265,20 @@ void CombatState::CreateBackground(std::string originalPath){
     CreatePlayers();
     //==================================
 
-
     //================================== firstPathObj ==============================================
     GameObject *firstPathObj = new GameObject();
-    Sprite* firstPathSprite= new Sprite(*firstPathObj, firstPath);
-    firstPathObj->AddComponent((std::shared_ptr<Component>)firstPathSprite);
+    new Sprite(*firstPathObj, firstPath);
 
     firstPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - firstPathObj->box.w / 2;
 
-    CameraParallax *firstPathObj_cmfl = new CameraParallax(*firstPathObj, 0.25);
-    firstPathObj->AddComponent((std::shared_ptr<CameraParallax>)firstPathObj_cmfl);
+    new CameraParallax(*firstPathObj, 0.25);
 
     AddObject(firstPathObj);
- 
     GameObject* focusCamera =  new GameObject(-FOCUS_ENEMY, 0);
             Camera::Follow(focusCamera);
             CombatState::ChangingSides = true;
        
+ 
 } 
 
 std::string CombatState::GeneratePath(std::string originalPath, std::string suffix) {
@@ -245,7 +295,10 @@ std::string CombatState::GeneratePath(std::string originalPath, std::string suff
 
 void CombatState::Render(){     
     RenderArray();
+    sandParticles->Render();
     State::Render();
+    
+    
 }
 
 void CombatState::Start(){
@@ -253,6 +306,36 @@ void CombatState::Start(){
     StartArray();
     started = true;
 
+    CombatState::InteractionSCreenActivate = false;
+    CombatState::enemiesArrayIS.clear();
+    CombatState::attackType = Skill::AttackType::NONE;
+    CombatState::whoAttacks = Skill::TargetType::IRR;
+    CombatState::whoReceives = Skill::TargetType::IRR;
+    GameData::playerTurn = true;
+    CombatState::ChangingSides = false;
+    CombatState::popRequestedEndState = false;
+    CombatState::motherTransition = false;
+
+    Protected::isProtected = false;
+
+    Enemies::SkillAllenemies = 0;//how many left enemies to receive skill effects
+
+    Enemies::provokedEnemies = 0;//how many left enemies has provoke
+
+    Enemies::enemiesToAttack = 0;//how many left enemies to attack
+
+    Enemies::enemyAttacking = false;
+
+    SkillSelection::skillSelectionActivated = false;
+    SkillSelection::selectionSkillDjinnStyle = false;
+    SkillSelection::endSkillSelection = false;
+
+    Camera::Unfollow();
+    Camera::pos.x = -FOCUS_ENEMY;
+    Camera::pos.y = 0;
+
+    sandParticles->toggleParticles();
+    
 }
  
 void CombatState::Pause(){
@@ -267,7 +350,9 @@ void CombatState::Resume(){
     CombatState::attackType = Skill::AttackType::NONE;
     CombatState::whoAttacks = Skill::TargetType::IRR;
     CombatState::whoReceives = Skill::TargetType::IRR;
-
-
+    CombatState::popRequestedEndState = false;
+    CombatState::motherTransition = false;
+    
+    
 }
 

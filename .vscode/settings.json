@@ -73,6 +73,7 @@
         "component.h": "c",
         "sprite.h": "c",
         "enemies.h": "c",
-        "sound.h": "c"
+        "sound.h": "c",
+        "menustate.h": "c"
     }
 }

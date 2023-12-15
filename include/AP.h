@@ -39,7 +39,7 @@ class AP : public Component {
         void UpdateVisualRepresentation();
         bool Is(std::string type);
 
-        static std::vector<std::shared_ptr<GameObject>> apArray;
+        static std::vector<std::weak_ptr<GameObject>> apArray;
         static int apCount;
     private:
         Timer delayChangeSides;    

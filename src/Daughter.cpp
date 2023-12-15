@@ -27,17 +27,21 @@ Daughter::Daughter(GameObject &associated) :
 Component::Component(associated),
 indicator(nullptr),
 intention(nullptr), 
-lifeBarDaughter(nullptr),
+lifeBarDaughter(nullptr), 
 tagSpaceCount(0),
 ScaleIntention(1),
 ScaleIndicator(1){ 
- 
-} 
+    
+    Daughter::hp = GameData::life;  
+    Daughter::tags = {};
+    Daughter::activateRampage = false;
+    Daughter::activateWeak = false;
+}   
 
 void Daughter::Start() 
-{
-    Sprite *daughter_spr = new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
-    associated.AddComponent((std::shared_ptr<Sprite>)daughter_spr); 
+{   
+    new Sprite(associated, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC);
+
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
@@ -47,32 +51,36 @@ void Daughter::Start()
 
     //==================================LifeBar========= ===========================
     lifeBarDaughter = new LifeBar(associated, GameData::lifeMax, hp, daughterHitbox.w, daughterHitbox.x); //width from hitbox
-    associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarDaughter));
 
     //If enemies starts with tags
     ApplyTags(tags);   
  
     //lifeBarDaughter->SetCurrentHP(hp);   
+
+    
  
 } 
  
 Daughter::~Daughter()
 {
+
     for (int i = daughtertags.size() - 1; i >= 0; i--) { //remove enemies tags
             daughtertags.erase(daughtertags.begin() + i);
     }
-    
+
+    Daughter::tags.clear();
     DeleteIndicator();
     DeleteIntention();
+
+    delete indicator;
+    delete intention;
+
+    GameData::life = hp;
 
 }
 
 void Daughter::Update(float dt)
 {   
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
-        return;
-    }
-
     IntentionAnimation(dt);
     IndicatorAnimation(dt);
 
@@ -84,26 +92,30 @@ void Daughter::Update(float dt)
     auto skillBack = Skill::skillBackToDaughter;
 
     //=============================//=============================//=============================//=============================
-
-
     // Check if the enemy's HP is zero or below and request deletion
-    if (hp <= 0) {
-        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, DAUGHTER_SPRITE, DAUGHTER_FC, DAUGHTER_FT/ DAUGHTER_FC, 1.5);
+    if (hp <= 0 ) {
 
-        deadBody_spr->SetFrame(0);
+        if(deathTransitionTime.Get() == 0){
+            CombatState::motherTransition = true;    
+        }
+        else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
+            CombatState::popRequestedEndState = true;
+            CombatState::motherTransition = false;
+            deathTransitionTime.Restart();
+            return; //block this code
+            
+        }
+        
+        deathTransitionTime.Update(dt);
+    }   
+    else{
+        deathTransitionTime.Restart();
+    }
 
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
-        Game::GetInstance().GetCurrentState().AddObject(deadBody);
 
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
-
-    } 
-
-
-    
-
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
+        return;
+    }
 
     //ENEMY TURN
     if(GameData::playerTurn == false){
@@ -169,7 +181,7 @@ void Daughter::Update(float dt)
                     else{
                         auto objComponent = indicator->GetComponent("Sprite");
                         auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
-                        if (daughterHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                        if (daughterHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                             if (objComponentPtr) {
                                 objComponentPtr->SetAlpha(255);                          
                             }
@@ -184,7 +196,7 @@ void Daughter::Update(float dt)
 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
-                    if (daughterHitbox.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (daughterHitbox.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToDaughter(tempSkillInfo.damage, tempSkillInfo.tags);
                         Mother::damageDjinn = tempSkillInfo.damageBack;
@@ -283,14 +295,11 @@ void Daughter::IndicatorAnimation(float dt) {
 
 void Daughter::CreateIndicator() {
     indicator = new GameObject(daughterHitbox.x + daughterHitbox.w/2, daughterHitbox.y + daughterHitbox.h + LIFEBAROFFSET);
-    Sprite* indicator_spr = new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
+    new Sprite(*indicator, DAUGHTER_INDICATOR_SPRITE);
 
     indicator->box.x -= indicator->box.w/2;
     indicator->box.y -= indicator->box.h;
-    // Scale the enemy indicator
-    //float percentageEnemyWidth = daughterHitbox.w / indicator->box.w;
-    //indicator_spr->SetScale(percentageEnemyWidth, 1);
-    indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
+
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
 
@@ -344,8 +353,7 @@ void Daughter::IntentionAnimation(float dt) {
 
 void Daughter::CreateIntention() {
     intention = new GameObject(daughterHitbox.x+ daughterHitbox.w/2, daughterHitbox.y);
-    Sprite* intention_spr = new Sprite(*intention, DAUGHTER_INTENTON_SPRITE);
-    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    new Sprite(*intention, DAUGHTER_INTENTON_SPRITE);
     intention->box.x -= intention->box.w/2;
     intention->box.y -= intention->box.h/2;
     Game::GetInstance().GetCurrentState().AddObject(intention);
@@ -449,8 +457,8 @@ std::weak_ptr<GameObject>  Daughter::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
-    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
+    new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
+
 
     tagObject->box.x = daughterHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = daughterHitbox.y + daughterHitbox.h + TAGS_SPACING_Y;

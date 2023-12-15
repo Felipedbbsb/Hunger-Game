@@ -14,20 +14,22 @@ bool Protected::isProtected = false; //starts exposed
 Protected::Protected(GameObject &associated)
 : Component::Component(associated),
 isProtectedLocal(Protected::isProtected),
-reader(nullptr)
+reader(nullptr) 
 {     
-} 
-   
-void Protected::Start() {     
-    // Configure the sprites based on the value of isProtected
     std::string spritePath = (Protected::isProtected == true) ? PROTECTED_PROTECTED_SPRITE : PROTECTED_EXPOSED_SPRITE;
     Sprite *Protected_spr = new Sprite(associated, spritePath); 
     Protected_spr->SetScale(0.5, 0.5);
-    associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
+    Protected_spr->SetAlpha(150);
+
+} 
+   
+void Protected::Start() {     
+    
 }   
   
 Protected::~Protected(){ 
     HideReader();
+
 } 
 
 void Protected::Update(float dt){  
@@ -36,19 +38,20 @@ void Protected::Update(float dt){
         auto spriteComponent = associated.GetComponent("Sprite");
         auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
         if (spriteComponentPtr) {
-            associated.RemoveComponent(spriteComponentPtr);
+            associated.RemoveComponent(spriteComponentPtr.get());
         }
         std::string spritePath = (Protected::isProtected == true) ? PROTECTED_PROTECTED_SPRITE : PROTECTED_EXPOSED_SPRITE;
         Sprite *Protected_spr = new Sprite(associated, spritePath); // Use shared_ptr
         Protected_spr->SetScale(0.5, 0.5);
-        associated.AddComponent((std::shared_ptr<Sprite>)Protected_spr); 
+        Protected_spr->SetAlpha(150);
+
     }
  
     auto& inputManager = InputManager::GetInstance();
     Vec2 mousePos(inputManager.GetMouseX(), inputManager.GetMouseY());
  
 
-    if(associated.box.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+    if(associated.box.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
         ShowReader();
     } else {
         HideReader();
@@ -61,7 +64,7 @@ void Protected::Render(){
 
 void Protected::ShowReader(){
     if (!reader) {
-        reader = new GameObject(associated.box.x, associated.box.y);
+        reader = new GameObject(associated.box.x , associated.box.y);
         std::string message;
         if(Protected::isProtected){
             message = MESSAGE_PROTECTED;
@@ -70,9 +73,13 @@ void Protected::ShowReader(){
             message = MESSAGE_EXPOSED;
         }
 
-        Reader* reader_behaviour = new Reader(*reader, message);
-        reader->AddComponent(std::shared_ptr<Reader>(reader_behaviour));
+        new Reader(*reader, message);
+
         Game::GetInstance().GetCurrentState().AddObject(reader);
+
+        reader->box.x = associated.box.x + associated.box.w/2 - reader->box.w/2;
+        reader->box.y = associated.box.y + associated.box.h - reader->box.h;
+
     }
 }
 

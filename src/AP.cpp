@@ -10,11 +10,11 @@
 #include "CameraFollower.h"
 #include "SkillSelection.h"
 #include "CombatState.h"
-
+#include "UI.h"
 
 #include <algorithm> 
 
-std::vector<std::shared_ptr<GameObject>> AP::apArray;
+std::vector<std::weak_ptr<GameObject>> AP::apArray;
 
 int AP::apCount = AP_QUANTITY;
 
@@ -23,7 +23,7 @@ AP::AP(GameObject &associated)
 
 {   
     for (int i = 0; i < AP_QUANTITY; ++i) {
-        std::shared_ptr<GameObject> apObj = std::make_shared<GameObject>(associated.box.x, associated.box.y - 20); // Use shared_ptr
+        GameObject *apObj = new GameObject(associated.box.x, associated.box.y - 20); // Use shared_ptr
         
         if(i == 0){
             apObj->box.x += AP_POS1.x ;
@@ -40,15 +40,13 @@ AP::AP(GameObject &associated)
 
         // Configure the sprites based on the value of apCount
         std::string spritePath = (apCount > i) ? AP_FULL_SPRITE : AP_EMPTY_SPRITE;
-        std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apObj, spritePath); // Use shared_ptr
-        apObj->AddComponent(ap_spr);
+        new Sprite(*apObj, spritePath); // Use shared_ptr
 
-        std::shared_ptr<CameraFollower> ap_UI_cmfl = std::make_shared<CameraFollower>(*apObj);
-        apObj->AddComponent(ap_UI_cmfl);
+        new CameraFollower(*apObj);
 
-        Game::GetInstance().GetCurrentState().AddObject(apObj.get());
+        auto weak_ap = Game::GetInstance().GetCurrentState().AddObject(apObj);
 
-        apArray.push_back(apObj);
+        apArray.push_back(weak_ap);
         
     } 
         
@@ -56,11 +54,13 @@ AP::AP(GameObject &associated)
 } 
    
 void AP::Start() {     
-    
+    AP::apCount = AP_QUANTITY;
 }  
  
 AP::~AP(){ 
-    
+    for (int i = AP::apArray.size() - 1; i >= 0; i--) { //remove enemies tags
+            AP::apArray.erase(AP::apArray.begin() + i);
+    }
 } 
 
 void AP::Update(float dt){  
@@ -68,13 +68,15 @@ void AP::Update(float dt){
 
     if(!SkillSelection::skillSelectionActivated){
 
+
         //Change to enemy turn
-        if(apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
-        Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr){
+        if((apCount == 0 && GameData::playerTurn == true && Skill::selectedSkill == nullptr &&
+        Skill::skillBackToDaughter == nullptr && Skill::skillBackToMother == nullptr) || (UI::nextActivated && !SkillSelection::skillSelectionActivated)){
             
             delayChangeSides.Update(dt);
-            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES){
+            if((delayChangeSides.Get() > DELAY_CHANGE_SIDES || (UI::nextActivated && !SkillSelection::skillSelectionActivated)) && CombatState::ChangingSides == false){
                 GameData::playerTurn = false;
+                Skill::selectedSkill = nullptr;
                 if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
                     Enemies::enemiesToAttack = Enemies::enemiesCount;
                 } 
@@ -84,6 +86,8 @@ void AP::Update(float dt){
                 Camera::Follow(focusCamera);
                 CombatState::ChangingSides = true;
                 delayChangeSides.Restart();
+                UI::nextActivated = false;
+
             }
 
             
@@ -93,7 +97,7 @@ void AP::Update(float dt){
         if(Enemies::enemiesToAttack == 0 && GameData::playerTurn == false && !Enemies::enemyAttacking){ 
             
             delayChangeSides.Update(dt);
-            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES){
+            if(delayChangeSides.Get() > DELAY_CHANGE_SIDES && CombatState::ChangingSides == false){
                 GameData::playerTurn = true;
                 AP::apCount = AP_QUANTITY; //reset
                 SetAPCount(AP::apCount);
@@ -157,17 +161,17 @@ void AP::SetAPCount(int newAPCount) {
 void AP::UpdateVisualRepresentation() {
     int index = AP_QUANTITY;
     for (auto& apGameObject :apArray) {
-        if (apGameObject) {
+        if (apGameObject.lock()) {
         // Try to retrieve the "Sprite" component
-            auto spriteComponent = apGameObject->GetComponent("Sprite");
+            auto spriteComponent = apGameObject.lock()->GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                apGameObject->RemoveComponent(spriteComponentPtr);
+                apGameObject.lock()->RemoveComponent(spriteComponentPtr.get());
             }
 
             std::string spritePath = (apCount < index) ? AP_EMPTY_SPRITE : AP_FULL_SPRITE;
-            std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apGameObject, spritePath); // Use shared_ptr
-            apGameObject->AddComponent(ap_spr);
+            new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
+
             index--;
         }
     }            
@@ -178,19 +182,18 @@ void AP::MirrorAPCount(int mirrorAPCount) {
     int index = AP_QUANTITY; 
     
     for (auto& apGameObject : apArray) {
-        if (apGameObject) {
+        if (apGameObject.lock()) {
             // Try to retrieve the "Sprite" component
-            auto spriteComponent = apGameObject->GetComponent("Sprite");
+            auto spriteComponent = apGameObject.lock()->GetComponent("Sprite");
             auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
             if (spriteComponentPtr) {
-                apGameObject->RemoveComponent(spriteComponentPtr);
+                apGameObject.lock()->RemoveComponent(spriteComponentPtr.get());
             }
 
             std::string spritePath = (fullCount < index) ? AP_MIRROR_SPRITE : AP_FULL_SPRITE;
             spritePath = (apCount < index) ? AP_EMPTY_SPRITE : spritePath;
             
-            std::shared_ptr<Sprite> ap_spr = std::make_shared<Sprite>(*apGameObject, spritePath);
-            apGameObject->AddComponent(ap_spr);
+            new Sprite(*apGameObject.lock(), spritePath); // Use shared_ptr
             index--;
         }
     }       

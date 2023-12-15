@@ -14,9 +14,9 @@
 
 #define PROTECTED_PROTECTED_SPRITE "assets/img/UI/uiIndicatorProtected.png"
 
-#define MESSAGE_PROTECTED "Daughter is protected. \n Cannot be targeted by enemies"
+#define MESSAGE_PROTECTED "assets/img/UI/tagReaders/tagReaderProtected.png"
 
-#define MESSAGE_EXPOSED "Daughter is exposed. \n May be targeted by enemies"
+#define MESSAGE_EXPOSED "assets/img/UI/tagReaders/tagReaderExposed.png"
 
 class Protected : public Component {
     public:

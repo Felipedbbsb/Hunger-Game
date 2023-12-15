@@ -193,8 +193,8 @@ dep/Mother.d bin/Mother.o: src/Mother.cpp include/Mother.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
  include/Timer.h include/LifeBar.h include/Reader.h include/Skill.h \
- c:\mingw\include\time.h include/Tag.h include/AP.h include/GameData.h \
- c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
+ c:\mingw\include\time.h include/Tag.h include/AP.h include/Music.h \
+ include/GameData.h c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algo.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\algorithmfwd.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
@@ -211,7 +211,8 @@ dep/Mother.d bin/Mother.o: src/Mother.cpp include/Mother.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_deque.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\deque.tcc \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
- include/Protected.h include/CombatState.h
+ include/Protected.h include/CombatState.h include/SandParticles.h \
+ include/NP.h include/EndState.h include/MenuState.h
 
 include/Mother.h:
 
@@ -689,6 +690,8 @@ include/Tag.h:
 
 include/AP.h:
 
+include/Music.h:
+
 include/GameData.h:
 
 c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\algorithm:
@@ -736,3 +739,11 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h:
 include/Protected.h:
 
 include/CombatState.h:
+
+include/SandParticles.h:
+
+include/NP.h:
+
+include/EndState.h:
+
+include/MenuState.h:

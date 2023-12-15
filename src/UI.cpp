@@ -16,6 +16,8 @@ GameObject* UI::uiGO = nullptr;
 
 AP* UI::ap_behaviour = nullptr;
 
+bool UI::nextActivated = false;
+
 UI::UI(GameObject &associated)
     : Component(associated),
     nextArrow(nullptr),
@@ -26,9 +28,7 @@ UI::UI(GameObject &associated)
     //AP
     GameObject* ap_UI = new GameObject(associated.box.x , associated.box.y);
         ap_behaviour = new AP(*ap_UI);
-        CameraFollower *ap_UI_cmfl = new CameraFollower(*ap_UI);
-        ap_UI->AddComponent((std::shared_ptr<CameraFollower>)ap_UI_cmfl);
-        ap_UI->AddComponent(std::shared_ptr<AP>(ap_behaviour));
+        new CameraFollower(*ap_UI);
         Game::GetInstance().GetCurrentState().AddObject(ap_UI);
  
     
@@ -39,9 +39,22 @@ UI::UI(GameObject &associated)
 
 UI::~UI() 
 {
+    if(nextArrow != nullptr){
+        nextArrow->RequestDelete();
+        nextArrow = nullptr;
+    }
+
     for (int i = Skill::skillArrayObj.size() - 1; i >= 0; i--) { //remove skills
             Skill::skillArrayObj.erase(Skill::skillArrayObj.begin() + i);
     }
+
+    UI::ap_behaviour = nullptr;
+
+    if(UI::uiGO != nullptr){
+        UI::uiGO->RequestDelete();
+        UI::uiGO = nullptr;
+    }
+
 }
 
 void UI::CreateSkillsGO( AP* ap_behaviour) {
@@ -52,10 +65,8 @@ void UI::CreateSkillsGO( AP* ap_behaviour) {
     }
 
     uiGO = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    Sprite *ui_screen_spr = new Sprite(*uiGO, UI_SCREEN_SPRITE);
-    CameraFollower *ui_cmfl = new CameraFollower(*uiGO);
-    uiGO->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
-    uiGO->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
+    new Sprite(*uiGO, UI_SCREEN_SPRITE);
+    new CameraFollower(*uiGO);
 
     //resets
     for (const auto skillObj : Skill::skillArrayObj) { //remove skills
@@ -68,42 +79,35 @@ void UI::CreateSkillsGO( AP* ap_behaviour) {
 
     for (unsigned int i = 0; i < Skill::skillArray.size(); i++) {
         int offsetArray = i;
-        GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, uiGO->box.y + 123 );
+        GameObject* normalSkill = new GameObject(SKILL_SPACE * offsetArray + SKILL_N_OFFSET.x, uiGO->box.y + 123);
         // Acesse o Skill::SkillId a partir do std::shared_ptr<Skill>
         Skill::SkillId skillId = Skill::skillArray[i];
-        Skill* skill_behaviour = new Skill(*normalSkill, skillId, ap_behaviour);
-        CameraFollower *normalSkill_cmfl = new CameraFollower(*normalSkill);
-        normalSkill->AddComponent((std::shared_ptr<CameraFollower>)normalSkill_cmfl);
-        normalSkill->AddComponent(std::shared_ptr<Skill>(skill_behaviour));
+        new Skill(*normalSkill, skillId, ap_behaviour);
+        new CameraFollower(*normalSkill);
         auto weak_skill = Game::GetInstance().GetCurrentState().AddObject(normalSkill); 
         Skill::skillArrayObj.push_back(weak_skill);
     }  
 
     Game::GetInstance().GetCurrentState().AddObject(uiGO);
-
+    
 }
 
 
 void UI::Start() {  
     
     uiGO = new GameObject(0, RESOLUTION_HEIGHT * 2/3);
-    Sprite *ui_screen_spr = new Sprite(*uiGO, UI_SCREEN_SPRITE);
-    CameraFollower *ui_cmfl = new CameraFollower(*uiGO);
-    uiGO->AddComponent((std::shared_ptr<CameraFollower>)ui_cmfl);
-    uiGO->AddComponent((std::shared_ptr<Sprite>)ui_screen_spr);
+    new Sprite(*uiGO, UI_SCREEN_SPRITE);
+    new CameraFollower(*uiGO);
     Game::GetInstance().GetCurrentState().AddObject(uiGO);
 
 
 
     nextArrow = new GameObject();
-    Sprite *nextArrow_spr = new Sprite(*nextArrow, UI_NEXT_SPRITE);
+    new Sprite(*nextArrow, UI_NEXT_SPRITE);
 
     nextArrow->box.x = RESOLUTION_WIDTH - nextArrow->box.w * nextArrow_TIME_ANIMATION + 87.5;
     nextArrow->box.y = RESOLUTION_HEIGHT * 2/3 - nextArrow->box.h * nextArrow_TIME_ANIMATION;
 
-    //CameraFollower *nextArrow_cmfl = new CameraFollower(*nextArrow);
-    //nextArrow->AddComponent((std::shared_ptr<CameraFollower>)nextArrow_cmfl);
-    nextArrow->AddComponent((std::shared_ptr<Sprite>)nextArrow_spr);
     Game::GetInstance().GetCurrentState().AddObject(nextArrow);
 
 }
@@ -178,37 +182,29 @@ void UI::Update(float dt) {
         auto nextComponent = nextArrow->GetComponent("Sprite");
         auto nextComponentPtr = std::dynamic_pointer_cast<Sprite>(nextComponent);
         if(nextComponentPtr){
-           if (nextArrow->box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y) 
+           if (nextArrow->box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer) 
            && GameData::playerTurn == true){
                 nextComponentPtr->SetAlpha(255);
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON)){
-                    Skill::selectedSkill = nullptr; 
+                    //Skill::selectedSkill = nullptr; 
 
-                        std::cout << Mural::MuralState << std::endl;
                     //scenario of skill selection screen
                     if(!Mural::MuralState && !SkillSelection::skillSelectionActivated){
-                        GameData::playerTurn = false;
-                        if(Enemies::enemiesToAttack <= 0){//init enemies attack turn
-                            Enemies::enemiesToAttack = Enemies::enemiesCount;
-                        } 
-
-                        //Cameraa focus
-                        GameObject* focusCamera =  new GameObject(FOCUS_ENEMY, 0);
-                        Camera::Follow(focusCamera);
-                        CombatState::ChangingSides = true;
+                        UI::nextActivated = true;
                     }            
-
+ 
                     else if(Mural::MuralState && !SkillSelection::skillSelectionActivated){
                         Mural::MuralStateActivateReward = true;
                     }
 
                     else{
+                        Skill::skillFromReward = nullptr;
+                        Skill::skillToReward = nullptr;
                         SkillSelection::endSkillSelection = true;
-                        
                     }
                 }
             }else{
-                nextComponentPtr->SetAlpha(120);
+                nextComponentPtr->SetAlpha(120); 
             } 
         }
         

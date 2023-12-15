@@ -49,6 +49,7 @@ Sound::~Sound() {
         Mix_HaltChannel(channel);
         chunk = nullptr;
     }
+
 }
 
 bool Sound::Is(std::string type) {
@@ -56,9 +57,9 @@ bool Sound::Is(std::string type) {
 }
 
 void Sound::Update(float dt) {
-    // If there is any update logic needed for sounds, please add it here.
+    
 }
 
 void Sound::Render() {
-    // If there are any specific renders for sounds, please add them here.
+    
 }

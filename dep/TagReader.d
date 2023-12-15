@@ -192,7 +192,8 @@ dep/TagReader.d bin/TagReader.o: src/TagReader.cpp include/TagReader.h \
  C:/SDL2/include/SDL2/SDL_locale.h C:/SDL2/include/SDL2/SDL_misc.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Sprite.h \
  C:/SDL2/include/SDL2/SDL_image.h C:/SDL2/include/SDL2/SDL.h \
- include/Timer.h include/Tag.h include/Text.h \
+ include/Timer.h include/Skill.h c:\mingw\include\time.h include/Tag.h \
+ include/AP.h include/Music.h include/Text.h \
  C:/SDL2/include/SDL2/SDL_ttf.h include/Game.h include/State.h \
  include/InputManager.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\unordered_map \
@@ -670,7 +671,15 @@ C:/SDL2/include/SDL2/SDL.h:
 
 include/Timer.h:
 
+include/Skill.h:
+
+c:\mingw\include\time.h:
+
 include/Tag.h:
+
+include/AP.h:
+
+include/Music.h:
 
 include/Text.h:
 

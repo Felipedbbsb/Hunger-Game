@@ -12,14 +12,13 @@ readerPath(readerPath)
 {   
      // Adicione um sprite
     if(textSkill.find("assets/img") != 0){ 
-        Sprite *reader_spr = new Sprite(associated, READER_SPRITE);
-        associated.AddComponent(std::shared_ptr<Sprite>(reader_spr));    
-        CameraFollower *textSkillObj_cmfl = new CameraFollower(associated);
-        associated.AddComponent((std::shared_ptr<CameraFollower>)textSkillObj_cmfl);
+        new Sprite(associated, READER_SPRITE); 
+        new CameraFollower(associated);
+
     }
     else{
-        Sprite *reader_spr = new Sprite(associated, textSkill);
-        associated.AddComponent(std::shared_ptr<Sprite>(reader_spr));
+        new Sprite(associated, textSkill);
+
     }    
 }  
   
@@ -28,8 +27,8 @@ void Reader::Start() {
     // Create textSkillObj  
     if(textSkill.find("assets/img") != 0){
         textSkillObj = new GameObject();
-        Text *textSkillObjString = new Text(*textSkillObj, TEXT_SKILL_FONT, TEXT_SKILL_SIZE, Text::BLENDED, textSkill, TEXT_SKILL_FONT_COLOR, 0);;
-        textSkillObj->AddComponent(std::shared_ptr<Component>(textSkillObjString)); 
+        new Text(*textSkillObj, TEXT_SKILL_FONT, TEXT_SKILL_SIZE, Text::BLENDED, textSkill, TEXT_SKILL_FONT_COLOR, 0);;
+
         textSkillObj->box.x = associated.box.x + 10;
         textSkillObj->box.y = associated.box.y + 10;
 
@@ -40,10 +39,13 @@ void Reader::Start() {
 }  
  
 Reader::~Reader(){ 
+
     if (textSkillObj) {
         textSkillObj->RequestDelete(); // Delete  textSkillObj with exists
     }
-    
+
+    delete textSkillObj;
+
 } 
 
 void Reader::Update(float dt){  

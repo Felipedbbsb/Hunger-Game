@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define SKILL_SELECTION_COOLDOWN_START 2
 
 #define INTENTION_TIME_ANIMATION 1.2f
@@ -19,9 +20,11 @@
 
 #define OBJECT_STATS_OFFSET -75
  
-#define PLAYERSX_STATS_OFFSET -50
+#define PLAYERSX_STATS_OFFSET -50 
 
-#define FOCUS_ENEMY 175
+#define FOCUS_ENEMY 175 
+
+#define Combat_Music "assets/audio/songCombat.mp3"
 
 #include <iostream>
 #include <memory>
@@ -33,6 +36,7 @@
 #include "Sprite.h"
 #include "Component.h"
 #include "Enemies.h"
+#include "SandParticles.h"
 
 class CombatState : public State{
     public:
@@ -54,7 +58,9 @@ class CombatState : public State{
         static Skill::AttackType attackType;
         static Skill::TargetType whoAttacks ;
         static Skill::TargetType whoReceives;
-
+        static bool motherTransition;
+        static bool popRequestedEndState;
+        
         static bool ChangingSides;
 
     private:
@@ -63,7 +69,8 @@ class CombatState : public State{
         GameObject* skillSelection; 
         std::string spriteBackground;
         bool toggleState;
-
+        bool toggleStateNP;
         Timer skillSelectionStart;
         Timer skillSelectionEnd;
+        SandParticles* sandParticles;
 };

@@ -44,32 +44,33 @@ Enemies::Enemies(GameObject& associated, EnemyId id)
     thisEnemyAttacked(false),
     intentionTimer(),
     ScaleIntention(1),
-    ScaleIndicator(1)
+    ScaleIndicator(1),
+    selectSFX(nullptr) 
     {  
         EnemyInfo& enemyInfo = enemyInfoMap[id];
-        hp = enemyInfo.hp;
+        hp = enemyInfo.hp.first + rand() % (enemyInfo.hp.second - enemyInfo.hp.first + 1);
         tags = enemyInfo.tags;
         name = enemyInfo.name;
         iconPath = enemyInfo.iconPath;
-        skills = enemyInfo.skills;
+        skills = enemyInfo.skills; 
  
     
         enemiesCount += 1;    //one more enemy 
 }
  
 void Enemies::Start() {
-    Sprite* enemies_spr = new Sprite(associated, iconPath); 
-    associated.AddComponent(std::shared_ptr<Sprite>(enemies_spr)); 
-    associated.box.y -= associated.box.h;
+    new Sprite(associated, iconPath, ENEMY_FC, ENEMY_FT/ENEMY_FC); 
+  
+    associated.box.y -= associated.box.h; 
 
     //===================================Hitbox==================================
     enemyHitbox = Rect(associated.box.x, associated.box.y, 130, associated.box.h);
 
-    associated.box.x -= (associated.box.w - enemyHitbox.w )/2;
+    associated.box.x -= (associated.box.w/ENEMY_FC - enemyHitbox.w )/2;
 
     //==================================LifeBar====================================
     lifeBarEnemy = new LifeBar(associated, hp, hp, enemyHitbox.w, enemyHitbox.x); //width from hitbox
-    associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarEnemy));
+
 
     //If enemies starts with tags
     ApplyTags(tags);
@@ -95,6 +96,9 @@ Enemies::~Enemies() {
     DeleteEnemyIndicator();
     DeleteIntention();
 
+    delete intention;
+    delete enemyIndicator;
+    
     enemiesCount -= 1;
     enemiesToAttack-= 1;
 
@@ -104,16 +108,21 @@ Enemies::~Enemies() {
             return enemy.lock().get() == &associated;
         }), enemiesArray.end());
 
-    
+    if(selectSFX != nullptr){
+        selectSFX->RequestDelete();
+        selectSFX = nullptr;
+        
+    }
 
+    delete selectSFX ;
 }
 
 void Enemies::Update(float dt) {
 // Check if the enemy's HP is zero or below and request deletion
     if (hp <= 0) {
         GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, iconPath, 1, 1, 1.5); 
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
+        Sprite *deadBody_spr = new Sprite(*deadBody, iconPath, ENEMY_FC, ENEMY_FT/ ENEMY_FC, 1.5); 
+        deadBody_spr->SetFrame(0); 
         Game::GetInstance().GetCurrentState().AddObject(deadBody);
 
 
@@ -125,7 +134,7 @@ void Enemies::Update(float dt) {
 
 
 
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
         return;
     }
 
@@ -202,9 +211,14 @@ void Enemies::Update(float dt) {
                 if(enemyIndicator != nullptr){
                     auto objComponent = enemyIndicator->GetComponent("Sprite");
                     auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
-                    if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                    if (enemyHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                         if (objComponentPtr) {
-                            objComponentPtr->SetAlpha(255);                          
+                            objComponentPtr->SetAlpha(255);  
+                            if(selectSFX == nullptr){
+                                selectSFX = new GameObject();
+                                Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
+                                selectSFX_sound->Play(1);
+                            }     
                         }
                         else{
                             if (objComponentPtr) {
@@ -212,14 +226,24 @@ void Enemies::Update(float dt) {
                             }
                         }    
                     }
+                    else{
+                        if(selectSFX != nullptr){
+                            selectSFX->RequestDelete();
+                            selectSFX = nullptr;
+                        }
+                    }
 
                 }
-
+ 
                 // Check if the mouse is over the enemy and left mouse button is pressed
-                if (enemyHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y - Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                if (enemyHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y - Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                     if (!provokedEnemies ||  (provokedEnemies && HasTag(Tag::Tags::PROVOKE))){
                         //checks if any enemie has provoke
                         ApplySkillToEnemy();
+                        GameObject* selectedSFX = new GameObject();
+                        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+
+                        selectSFX_sound->Play(1);
 
                     }
                 } 
@@ -404,12 +428,12 @@ void Enemies::IndicatorAnimation(float dt) {
  
 void Enemies::CreateEnemyIndicator() {
     enemyIndicator = new GameObject(enemyHitbox.x + enemyHitbox.w/2, enemyHitbox.y + enemyHitbox.h+ LIFEBAROFFSET);
-    Sprite* enemyIndicator_spr = new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
+    new Sprite(*enemyIndicator, ENEMY_INDICATOR_SPRITE);
 
     enemyIndicator->box.x -= enemyIndicator->box.w/2;
     enemyIndicator->box.y -= enemyIndicator->box.h;
 
-    enemyIndicator->AddComponent(std::make_shared<Sprite>(*enemyIndicator_spr));
+
     Game::GetInstance().GetCurrentState().AddObject(enemyIndicator);
 }
 
@@ -466,8 +490,8 @@ void Enemies::IntentionAnimation(float dt) {
 
 void Enemies::CreateIntention() {
     intention = new GameObject(enemyHitbox.x+ enemyHitbox.w/2, enemyHitbox.y);
-    Sprite* intention_spr = new Sprite(*intention, ENEMY_INTENTON_SPRITE);
-    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    new Sprite(*intention, ENEMY_INTENTON_SPRITE);
+
     intention->box.x -= intention->box.w/2;
     intention->box.y -= intention->box.h/2;
     Game::GetInstance().GetCurrentState().AddObject(intention);
@@ -633,8 +657,8 @@ std::weak_ptr<GameObject>  Enemies::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
-    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
+    new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]); 
+
 
     tagObject->box.x = enemyHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = enemyHitbox.y + enemyHitbox.h + TAGS_SPACING_Y;
@@ -776,12 +800,115 @@ bool Enemies::Is(std::string type) {
     return (type == "Enemies"); 
 }
 
-// Implement the InitializeEnemyInfoMap function to populate enemy information
+// Implement the InitializeEnemyInfoMap function to populate enemy information 
 void Enemies::InitializeEnemyInfoMap() { 
-    // Populate the map with enemy information during initialization.
-    enemyInfoMap[ENEMY1] = { 5, {}, "Enemy 1", ENEMY1_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
-    enemyInfoMap[ENEMY2] = { 5, {}, "Enemy 2", ENEMY2_SPRITE, {Skill::E2_Skill1, Skill::E2_Skill2, Skill::E2_Skill3} };
-    enemyInfoMap[ENEMY3] = { 5, {}, "Enemy 1", ENEMY3_SPRITE, {Skill::E3_Skill1, Skill::E3_Skill2, Skill::E3_Skill1} };
-    enemyInfoMap[ENEMY4] = { 100, {}, "Enemy 2", ENEMY4_SPRITE, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+
+    /*
+    Cultista Verde (Debuffer):
+        6 ~10 HP
+        Cut: Deal 6 damage
+        Whip: Deal 3 damage; Apply 1 Frail to target.
+        Evil Chant: Apply 2 weak to target
+
+    */
+    enemyInfoMap[CultistGreen] = { std::make_pair(6, 10), {}, "Green Cultist", CultistGreen_SPRITE, CultistGreen_SPRITE_ATK, CultistGreen_SPRITE_DFS, {Skill::E_Cut, Skill::E_Whip, Skill::E_Evil_Chant} };
+    
+    
+    /*
+    Cultista Vermelho (Debuffer):
+        13 ~ 19 HP
+        Shiv: Deal 9 damage 
+        Whip: Deal 3 damage; Apply 2 Frail to target.
+        Evil Chant: Apply 2 weak to target
+
+
+    */
+    enemyInfoMap[CultistRed] = { std::make_pair(13, 19), {}, "Red Cultist", CultistRed_SPRITE, CultistRed_SPRITE_ATK, CultistRed_SPRITE_DFS, {Skill::E_Shiv, Skill::E_Whip, Skill::E_Evil_Chant} };
+    
+    /*
+    Cultista Roxo (Damage Dealer):
+        18 ~ 28 HP
+        9 Tails: Deal 12 damage
+        Lash: Deal 9 damage
+        Deafening Whispers: Deal 3 damage; Apply 2 Frail to target
+
+    */
+    enemyInfoMap[CultistPurple] = { std::make_pair(15, 28), {}, "Purple Cultist", CultistPurple_SPRITE, CultistPurple_SPRITE_ATK, CultistPurple_SPRITE_DFS, {Skill::E_Tentacle_Strike, Skill::E_Bite, Skill::E_Whip} };
+    
+    
+   /*
+    Pintinho (Offensive Support)
+        17 ~ 25HP
+        Beak: Deal 3 damage
+        Unnerving Presence: Apply 2 Weak and 2 Vulnerable to target
+        Guttural Scream: Apply 2 rampage to all allies
+
+
+    */
+    enemyInfoMap[Parakeet] = { std::make_pair(17, 25), {}, "Parakeet", Parakeet_SPRITE, Parakeet_SPRITE_ATK, Parakeet_SPRITE_DFS, {Skill::E_Beak, Skill::E_Unnerving_Presence, Skill::E_Guttural_Scream} };
+
+    /*
+    Bicho da Lâmpada (Boss)
+        60HP
+        Infernal Scream: Apply 3 Weak and 3 Vulnerable to target
+        Infernal Skull: Deal 5 damage; Gain 3 Resilience
+        Enrage: Aplly 3 rampage to all allies
+        Impale: Deal 15 damage
+
+
+    */
+    enemyInfoMap[Radog] = { std::make_pair(60, 60), {}, "Radog", radog_SPRITE, radog_SPRITE_ATK, radog_SPRITE_DFS, {Skill::E_Infernal_Scream, Skill::E_Infernal_Skull, Skill::E_Enrage, Skill::E_Impale} };
+
+    /*    
+    Estátua Preta (Glass Cannon)
+        10 ~ 15 HP
+        Freezing Stare: Deal 8 Damage
+        Empower: Deal 3 damage; Gain 2 Rampage
+
+
+    */
+    enemyInfoMap[CatStone] = { std::make_pair(10, 15), {}, "Cat Stone", CatStone_SPRITE, CatStone_SPRITE_ATK, CatStone_SPRITE_DFS, {Skill::E_Freezing_Stare, Skill::E_Empower, Skill::E_Empower} };
+    
+    /*    
+    Estátua Dourada (Glass Cannon)
+        18 ~ 25 HP
+        Take Soul: Deal 15 Damage
+        Empower: Deal 3 damage; Gain 2 Rampage
+
+    */
+    enemyInfoMap[CatGold] = { std::make_pair(18, 25), {}, "Cat Gold", CatGold_SPRITE, CatGold_SPRITE_ATK, CatGold_SPRITE_DFS, {Skill::E_Take_Soul, Skill::E_Empower, Skill::E_Empower} };
+    
+
+    /*    
+    Sapo Verde Mae (Defensive Support)
+        7~12HP
+        Bubble Shield: Apply 3 resilience to all allies
+        Tongue Strike: Deal 3 damage; Apply 3 weak to target and 2 curse
+        Toxic Sludge: Apply 4 curse to one enemy
+    */
+    enemyInfoMap[FrogMom] = { std::make_pair(7, 12), {}, "Frog Mom", frogMom_SPRITE, frogMom_SPRITE_ATK, frogMom_SPRITE_DFS, {Skill::E_Bubble_Shield, Skill::E_Tongue_Strike, Skill::E_Toxic_Sludge} };
+    
+
+    /*    
+    Sapo Vermelho PAI(Brute):
+        20 ~ 30 HP
+        Lick: Deal 6 damage
+        Digest: Gain 3 resilience 
+        Inflate: Gain 3 provoke
+    */
+    enemyInfoMap[FrogDad] = { std::make_pair(15, 25), {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E_Lick, Skill::E_Digest, Skill::E_Inflate} };
+    
+
+    /*    
+    Aranha (Boss)
+        60HP
+        Infernal Scream: Apply 3 Weak and 3 Vulnerable to target
+        Exoskeleton: Deal 5 damage; Gain 3 Resilience
+        Enrage: Gain 3 rampage
+        Impale: Deal 15 damage
+
+    */
+    enemyInfoMap[Spider] = { std::make_pair(60, 60), {}, "Enemy 2", ENEMY4_SPRITE, ENEMY4_SPRITE_ATK, ENEMY4_SPRITE_DFS, {Skill::E1_Skill1, Skill::E1_Skill2, Skill::E1_Skill3} };
+
 }
- 
+   

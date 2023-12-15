@@ -2,9 +2,10 @@
 #include <SDL2/SDL.h>
 #include "Game.h"
 #include "CombatState.h"
+#include "Map.h"
 #include "Enemies.h"
 #include "Skill.h"
-
+#include "MenuState.h"
 #include <iostream>
 #include <exception>
 
@@ -20,15 +21,17 @@ int main(int argc, char** argv) {
 
         // Populate the map with enemies information during initialization.
         Enemies::InitializeEnemyInfoMap();
-
+ 
         // ==========Enemies array==============
-        std::vector<Enemies::EnemyId> enemiesArray = { Enemies::ENEMY1, 
+        /*
+        std::vector<Enemies::EnemyId> enemiesArray = { Enemies::CultistGreen, 
                                                        Enemies::ENEMY2, 
                                                        Enemies::ENEMY3 };
  
         CombatState* initialState = new CombatState(enemiesArray, COMBAT_IMAGE); // Pass the enemiesArray
+        */
 
-        
+        MenuState* initialState = new MenuState();    
         game.Push(initialState);
  
         game.Run();

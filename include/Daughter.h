@@ -18,10 +18,10 @@
 #define DAUGHTER_INTENTON_SPRITE "assets/img/UI/uiIntentionPlayer.png"
 
 #define DAUGHTER_SPRITE "assets/img/daughter/daughterIdle.png"
-#define DAUGHTER_FC 7
-#define DAUGHTER_FT 1.0
+#define DAUGHTER_FC 14
+#define DAUGHTER_FT 1.25
 
-#define DAUGHTER_HP 27
+#define DAUGHTER_HP 30
 
 class Daughter : public Component{
 
@@ -75,4 +75,5 @@ private:
   void IndicatorAnimation(float dt);
   int ScaleIndicator; //If 1 is growing, -1 the opposite
 
+  Timer deathTransitionTime;
 };

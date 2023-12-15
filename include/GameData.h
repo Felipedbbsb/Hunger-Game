@@ -13,4 +13,6 @@ class GameData{
         static int  hpCorrupted; 
         static int  life; 
         static int  lifeMax; 
+        static int  npLevel; 
+
 }; 

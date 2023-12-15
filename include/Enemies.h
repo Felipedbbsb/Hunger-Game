@@ -18,10 +18,61 @@
 #define ENEMY_INTENTON_SPRITE "assets/img/UI/uiIntentionEnemy.png"
 
 #define ENEMY1_SPRITE "assets/img/enemies/enemyChickIdle.png"
-#define ENEMY2_SPRITE "assets/img/enemies/enemyDogIdle.png"
-#define ENEMY3_SPRITE "assets/img/enemies/enemyGhoulIdle.png"
-#define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
+    #define ENEMY1_SPRITE_ATK "assets/img/enemies/enemyChickAttack.png"
+    #define ENEMY1_SPRITE_DFS "assets/img/enemies/enemyChickDamage.png"
 
+#define ENEMY2_SPRITE "assets/img/enemies/enemyDogIdle.png"
+    #define ENEMY2_SPRITE_ATK "assets/img/enemies/enemyDogAttack.png"
+    #define ENEMY2_SPRITE_DFS "assets/img/enemies/enemyDogDamage.png"
+
+#define ENEMY3_SPRITE "assets/img/enemies/enemyGhoulIdle.png"
+    #define ENEMY3_SPRITE_ATK "assets/img/enemies/enemyGhoulAttack.png"
+    #define ENEMY3_SPRITE_DFS "assets/img/enemies/enemyGhoulDamage.png"
+
+#define ENEMY4_SPRITE "assets/img/enemies/enemySpiderIdle.png"
+    #define ENEMY4_SPRITE_ATK "assets/img/enemies/enemySpiderAttack.png"
+    #define ENEMY4_SPRITE_DFS "assets/img/enemies/enemySpiderDamage.png"
+
+
+#define CultistGreen_SPRITE "assets/img/enemies/birdCultistIdle.png"
+    #define CultistGreen_SPRITE_ATK "assets/img/enemies/birdCultistMeleeAttack.png"
+    #define CultistGreen_SPRITE_DFS "assets/img/enemies/birdCultistDamage.png"
+
+#define CultistRed_SPRITE "assets/img/enemies/cultistIdle.png"
+    #define CultistRed_SPRITE_ATK "assets/img/enemies/cultistMeleeAttack.png"
+    #define CultistRed_SPRITE_DFS "assets/img/enemies/cultistDamage.png"
+
+#define CultistPurple_SPRITE "assets/img/enemies/vizirCultistIdle.png"
+    #define CultistPurple_SPRITE_ATK "assets/img/enemies/vizirCultistMeleeAttack.png"
+    #define CultistPurple_SPRITE_DFS "assets/img/enemies/vizirCultistDamage.png"
+
+#define Parakeet_SPRITE "assets/img/enemies/piriquitoIdle.png"
+    #define Parakeet_SPRITE_ATK "assets/img/enemies/piriquitoMeleeAttack.png"
+    #define Parakeet_SPRITE_DFS "assets/img/enemies/piriquitoDamage.png"
+
+#define CatGold_SPRITE "assets/img/enemies/catGoldIdle.png"
+    #define CatGold_SPRITE_ATK "assets/img/enemies/catGoldAttack.png"
+    #define CatGold_SPRITE_DFS "assets/img/enemies/catGoldDamage.png"
+
+#define CatStone_SPRITE "assets/img/enemies/catStoneIdle.png"
+    #define CatStone_SPRITE_ATK "assets/img/enemies/catStoneAttack.png"
+    #define CatStone_SPRITE_DFS "assets/img/enemies/catStoneDamage.png"
+
+#define frogMom_SPRITE "assets/img/enemies/frogMomIdle.png"
+    #define frogMom_SPRITE_ATK "assets/img/enemies/frogMomAttack.png"
+    #define frogMom_SPRITE_DFS "assets/img/enemies/frogMomDamage.png"
+
+#define frogDad_SPRITE "assets/img/enemies/frogDadIdle.png"
+    #define frogDad_SPRITE_ATK "assets/img/enemies/frogDadAttack.png"
+    #define frogDad_SPRITE_DFS "assets/img/enemies/frogDadDamage.png"
+
+#define radog_SPRITE "assets/img/enemies/radogIdle.png"
+    #define radog_SPRITE_ATK "assets/img/enemies/radogAttack.png"
+    #define radog_SPRITE_DFS "assets/img/enemies/radogDamage.png"
+
+
+#define ENEMY_FT 1.25f
+#define ENEMY_FC 14
 
 #define INTENTION_COOLDOWN 1.5
 
@@ -31,17 +82,28 @@ class Enemies : public Component {
             ENEMY1,
             ENEMY2,
             ENEMY3,
-            ENEMY4,
 
+            CultistGreen,
+            CultistRed,
+            CultistPurple,
+            Parakeet,
+            Radog,
+            CatStone,
+            CatGold,
+            FrogMom,
+            FrogDad,
+            Spider,
             INVALID_ENEMY
         };
 
         // Structure to store enemy information
         struct EnemyInfo {
-            int hp;
+            std::pair< int, int> hp; // first:: min hp, second: max hp
             std::vector<Tag::Tags> tags;
             std::string name;
             std::string iconPath;
+            std::string iconPathATK;
+            std::string iconPathDFS;
             std::vector<Skill::SkillId> skills;
         };
 
@@ -127,4 +189,6 @@ class Enemies : public Component {
         int ScaleIntention; //If 1 is growing, -1 the opposite
         void IndicatorAnimation(float dt);
         int ScaleIndicator; //If 1 is growing, -1 the opposite
+
+        GameObject* selectSFX;
 };

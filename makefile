@@ -11,7 +11,7 @@ FLAGS = -std=c++11 -Wall -pedantic -Wextra -Wno-unused-parameter -Werror=init-se
 
 DFLAGS = -ggdb -O0 -DDEBUG
 
-RFLAGS = -O3 -mtune=native
+RFLAGS = -O3 -mtune=native  -O0 
 
 INC_PATH = include
 SRC_PATH = src

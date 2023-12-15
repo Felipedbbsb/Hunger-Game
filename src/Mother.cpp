@@ -5,6 +5,10 @@
 #include "Game.h"
 #include "Protected.h" 
 #include "CombatState.h"
+#include "NP.h"
+#include "EndState.h"
+#include "Sound.h"
+
 
 int Mother::hp = GameData::hp; 
 int Mother::damageDjinn = 0;
@@ -15,7 +19,7 @@ bool Mother::activateWeak = false;
 std::weak_ptr<GameObject> Mother::motherInstance;
 
 #ifdef DEBUG
-
+  
 #include <SDL2/SDL.h> 
 #endif //DEBUG
 
@@ -28,13 +32,18 @@ lifeBarMother(nullptr),
 tagSpaceCount(0),
 ScaleIntention(1),
 ScaleIndicator(1){
- 
+
+    Mother::hp = GameData::hp; 
+    Mother::damageDjinn = 0;
+    Mother::tags = {};
+    Mother::activateRampage = false;
+    Mother::activateWeak = false;
 }  
  
 void Mother::Start()  
 {  
-    Sprite *mother_spr = new Sprite(associated, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC);
-    associated.AddComponent((std::shared_ptr<Sprite>)mother_spr); 
+    new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+
     associated.box.y -= associated.box.h;
 
     //===================================Hitbox==================================
@@ -44,55 +53,124 @@ void Mother::Start()
 
     //==================================LifeBar====================================
     lifeBarMother = new LifeBar(associated, GameData::hpMax, hp, motherHitbox.w, motherHitbox.x); //width from hitbox
-    associated.AddComponent(std::shared_ptr<LifeBar>(lifeBarMother));
 
     //If enemies starts with tags
     ApplyTags(tags); 
-
+    
+    lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
     //lifeBarMother->SetCurrentHP(hp);  
 
-}
+}   
 
 Mother::~Mother()
 {
+
+    
     for (int i = mothertags.size() - 1; i >= 0; i--) { //remove enemies tags
             mothertags.erase(mothertags.begin() + i);
     }
 
+    Mother::tags.clear();
+
     DeleteIndicator();
     DeleteIntention();
+
+    delete indicator;
+    delete intention;
+
+    GameData::hp = hp;
+
 }  
  
 void Mother::Update(float dt) 
 {       
-
     if(damageDjinn != 0){
+
         GameData::hpCorrupted += damageDjinn;
+        if(GameData::hpCorrupted > GameData::hpMax){
+            GameData::hpCorrupted = GameData::hpMax;
+        }
+
         int corruptedDamage = lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
         damageDjinn = 0;
-        std::cout << corruptedDamage << std::endl;
 
-        if(corruptedDamage > 0){
+        if(corruptedDamage != 0 || GameData::hpCorrupted == GameData::hpMax){
            hp = corruptedDamage; 
+           GameData::hp = corruptedDamage; 
         }
         
-    }
-
-    if (hp <= 0) {
-        GameObject *deadBody  = new GameObject(associated.box.x, associated.box.y);
-        Sprite* deadBody_spr = new Sprite(*deadBody, MOTHER_SPRITE, MOTHER_FC, MOTHER_FT/ MOTHER_FC, 1.5);
-
-        deadBody_spr->SetFrame(0);
-
-        deadBody->AddComponent(std::shared_ptr<Sprite>(deadBody_spr)); 
-        Game::GetInstance().GetCurrentState().AddObject(deadBody);
-
-        associated.RequestDelete();
-        return; // Early exit if the enemy is no longer alive
-
     } 
 
-    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides){
+    
+    if (hp <= 0 && !(CombatState::InteractionSCreenActivate || CombatState::ChangingSides)) {
+
+        if(deathTransitionTime.Get() == 0){
+            CombatState::motherTransition = true;
+            
+             
+        }
+        else if(deathTransitionTime.Get() < MOTHER_DEATH_TIME * 0.1){
+            //play np sound
+            GameObject* selectedSFX = new GameObject();
+            Sound *selectSFX_sound = new Sound(*selectedSFX, MOTHER_NP_SOUND); 
+            selectSFX_sound->Play(1);
+            
+        }
+        else if(deathTransitionTime.Get() >= MOTHER_DEATH_TIME * 0.9 && CombatState::motherTransition){
+            //Increment np level
+            GameData::npLevel++;
+
+            
+
+            if(GameData::npLevel == 3){
+                CombatState::popRequestedEndState = true;
+                deathTransitionTime.Restart();
+                return; //block this code
+            }
+            
+            //Update life
+            float multiplerNP = 0;
+            if(GameData::npLevel == 1){
+                multiplerNP = 0.25f;
+                Skill::AddSkill(Skill::SkillId::EMPTY, Skill::SkillId::LOCKED1);
+            }
+            else if(GameData::npLevel == 2){
+                multiplerNP = 0.35f;
+                Skill::AddSkill(Skill::SkillId::EMPTY, Skill::SkillId::LOCKED2);
+            }
+
+            //Update NP_UI
+            NP::ChangeNPLevel();
+
+            GameData::hpCorrupted = GameData::hpMax * multiplerNP;
+            hp = GameData::hpMax - GameData::hpCorrupted;
+            GameData::hp = hp;
+            lifeBarMother->SetCurrentHP(hp);  
+            lifeBarMother->SetCorruptedHP(GameData::hpCorrupted);
+
+            associated.box.y += associated.box.h;
+
+            //PROCESS new sprite
+            auto spriteComponent = associated.GetComponent("Sprite");
+            auto spriteComponentPtr = std::dynamic_pointer_cast<Sprite>(spriteComponent);
+            if (spriteComponentPtr) {
+                associated.RemoveComponent(spriteComponentPtr.get()); 
+            }  
+            Sprite* deadBody_spr = new Sprite(associated, GetSpriteMother(), MOTHER_FC, MOTHER_FT/ MOTHER_FC);
+            deadBody_spr->SetFrame(0); 
+
+            associated.box.y -= associated.box.h; 
+
+           CombatState::motherTransition = false;
+        } 
+         
+        deathTransitionTime.Update(dt);
+    } 
+    else{
+        deathTransitionTime.Restart();
+    }
+
+    if(CombatState::InteractionSCreenActivate || CombatState::ChangingSides || CombatState::motherTransition){
         return;
     }
 
@@ -171,7 +249,7 @@ void Mother::Update(float dt)
                     else{
                         auto objComponent = indicator->GetComponent("Sprite");
                         auto objComponentPtr = std::dynamic_pointer_cast<Sprite>(objComponent);
-                        if (motherHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y)){
+                        if (motherHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)){
                             if (objComponentPtr) {
                                 objComponentPtr->SetAlpha(255);                          
                             }
@@ -182,10 +260,10 @@ void Mother::Update(float dt)
                             }    
                         } 
 
-                    }
+                    } 
                     // Check if the mouse is over the enemy and left mouse button is pressed
                     //TODO case of being buff_all
-                    if (motherHitbox.Contains(mousePos.x - Camera::pos.x, mousePos.y- Camera::pos.y) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
+                    if (motherHitbox.Contains(mousePos.x - Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer) && inputManager.MousePress(LEFT_MOUSE_BUTTON)) {
                         AP::apCount -= tempSkillInfo.apCost;
                         ApplySkillToMother(tempSkillInfo.damage, tempSkillInfo.tags);
                         Mother::damageDjinn = tempSkillInfo.damageBack;
@@ -283,14 +361,30 @@ void Mother::IndicatorAnimation(float dt) {
     }
 }  
 
+std::string Mother::GetSpriteMother() {
+    if(GameData::npLevel == 0){
+        return MOTHER_SPRITE;
+    }
+    else if(GameData::npLevel == 1){
+        return MOTHER_SPRITE_NP1;
+    }
+    else if(GameData::npLevel == 2){ 
+        return MOTHER_SPRITE_NP2;
+    }
+    else{
+        return MOTHER_SPRITE_NP2;
+    }
+
+}
+
 void Mother::CreateIndicator() {
     indicator = new GameObject(motherHitbox.x + motherHitbox.w/2, motherHitbox.y + motherHitbox.h + LIFEBAROFFSET);
-    Sprite* indicator_spr = new Sprite(*indicator, MOTHER_INDICATOR_SPRITE);
+    new Sprite(*indicator, MOTHER_INDICATOR_SPRITE);
 
     indicator->box.x -= indicator->box.w/2;
     indicator->box.y -= indicator->box.h;
 
-    indicator->AddComponent(std::make_shared<Sprite>(*indicator_spr));
+
     Game::GetInstance().GetCurrentState().AddObject(indicator);
 }
 
@@ -343,8 +437,8 @@ void Mother::IntentionAnimation(float dt) {
 
 void Mother::CreateIntention() { 
     intention = new GameObject(motherHitbox.x+ motherHitbox.w/2, motherHitbox.y); 
-    Sprite* intention_spr = new Sprite(*intention, MOTHER_INTENTON_SPRITE);
-    intention->AddComponent(std::make_shared<Sprite>(*intention_spr));
+    new Sprite(*intention, MOTHER_INTENTON_SPRITE);
+
     intention->box.x -= intention->box.w/2;
     intention->box.y -= intention->box.h/2;
     Game::GetInstance().GetCurrentState().AddObject(intention);
@@ -451,8 +545,7 @@ std::weak_ptr<GameObject>  Mother::AddObjTag(Tag::Tags tag){
     std::weak_ptr<GameObject> weak_enemy = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated);
 
     GameObject* tagObject = new GameObject();
-    Tag* tag_behaviour = new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
-    tagObject->AddComponent(std::shared_ptr<Tag>(tag_behaviour));
+    new Tag(*tagObject, tag, weak_enemy, tagCountMap[tag]);
 
     tagObject->box.x = motherHitbox.x + TAGS_SPACING_X * tagSpaceCount;
     tagObject->box.y = motherHitbox.y + motherHitbox.h + TAGS_SPACING_Y;

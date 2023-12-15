@@ -12,6 +12,8 @@
 #include "SkillSelection.h"
 #include "UI.h"
 #include "TagReader.h"
+#include "CombatState.h"
+
 
 Skill* Skill::skillFromReward = nullptr; //selection reward  
 Skill* Skill::skillToReward = nullptr; //selection reward  
@@ -40,20 +42,23 @@ Skill::Skill(GameObject& associated, SkillId id, AP* ap, bool createJewel)
     readerSkill(nullptr),
     apInstance(ap),
     jewelObj(nullptr),
-    tagCount(nullptr),
+    tagCount(nullptr), 
     toggleJewel(false),
     createJewel(createJewel),
-    skillSelected(nullptr) {
-
+    skillSelected(nullptr),
+    selectSFX(nullptr) {
+ 
     std::string spriteSkill;
     // Use skillInfoMap para obter informações da habilidade com base na ID
-    const SkillInfo& skillInfo = skillInfoMap[id];
+    const SkillInfo& skillInfo = skillInfoMap[id]; 
 
     spriteSkill = skillInfo.iconPath;
     textSkill = skillInfo.info;
  
-    Sprite* skillSprite = new Sprite(associated, spriteSkill);
-    associated.AddComponent(std::make_shared<Sprite>(*skillSprite));
+    new Sprite(associated, spriteSkill);
+
+
+    
     
 }
 
@@ -66,20 +71,17 @@ void Skill::Start() {
 
     if(jewelObj == nullptr && createJewel){
         jewelObj = new GameObject(associated.box.x, associated.box.y);
-        Sprite* jewelObj_behaviour;
         if(skillInfo.apCost != 0){
-            jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
+           new Sprite(*jewelObj, AP_FULL_SPRITE);
         }
         else{
-            jewelObj_behaviour = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+            new Sprite(*jewelObj, AP_EMPTY_SPRITE);
         }
-        jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
  
         jewelObj->box.x += associated.box.w - jewelObj->box.w/2;
         jewelObj->box.y += associated.box.h/2 - jewelObj->box.h/2;
         
-        CameraFollower *jewelObj_cmfl = new CameraFollower(*jewelObj);
-        jewelObj->AddComponent(std::make_shared<CameraFollower>(*jewelObj_cmfl));
+        new CameraFollower(*jewelObj);
         
         Game::GetInstance().GetCurrentState().AddObject(jewelObj);
 
@@ -99,12 +101,22 @@ Skill::~Skill() {
             tagCount = nullptr;
         }
     }
+    if(skillSelected != nullptr){
+        skillSelected->RequestDelete();
+        skillSelected = nullptr;
+    }
+
+    if(selectSFX != nullptr){
+        selectSFX->RequestDelete();
+        selectSFX = nullptr;
+    }
+
 }
 
 void Skill::Update(float dt) {
 
     //Creates border to sinalize selection of skill
-    if(Skill::skillFromReward == this || Skill::skillToReward == this || Skill::selectedSkill == this){
+    if(((Skill::skillFromReward == this || Skill::skillToReward == this || Skill::selectedSkill == this) &&  !CombatState::ChangingSides)){
         
         if(skillSelected == nullptr){
             skillSelected = new GameObject(associated.box.x + Camera::pos.x - 4, associated.box.y + Camera::pos.y -2);
@@ -117,11 +129,9 @@ void Skill::Update(float dt) {
                 haveJewel = SKILL_SELECTED_OBJ_REWARD;
             }
             
-            Sprite* skillSelected_behaviour = new Sprite(*skillSelected, haveJewel);
-            skillSelected->AddComponent(std::make_shared<Sprite>(*skillSelected_behaviour));
+            new Sprite(*skillSelected, haveJewel);
 
-            CameraFollower *skillSelected_cmfl = new CameraFollower(*skillSelected);
-            skillSelected->AddComponent(std::make_shared<CameraFollower>(*skillSelected_cmfl));
+            new CameraFollower(*skillSelected);
 
             Game::GetInstance().GetCurrentState().AddObject(skillSelected); 
 
@@ -154,13 +164,18 @@ void Skill::Update(float dt) {
         
     }
 
-    if (associated.box.Contains(mousePos.x- Camera::pos.x, mousePos.y- Camera::pos.y)){ 
+    if (associated.box.Contains(mousePos.x- Camera::pos.x * Game::resizer, mousePos.y- Camera::pos.y * Game::resizer)  &&  !CombatState::ChangingSides){ 
+            
+            if(selectSFX == nullptr && id != Skill::EMPTY){
+                selectSFX = new GameObject();
+                Sound *selectSFX_sound = new Sound(*selectSFX, SKILL_SELECTION); 
+                selectSFX_sound->Play(1);
+            }
 
             if (true) {
-                if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN) {
+                if (!readerSkill && skillClickTimer.Get() >= SKILL_CLICK_COOLDOWN && id != Skill::EMPTY) {
                     readerSkill = new GameObject(associated.box.x + associated.box.w/2 + Camera::pos.x, associated.box.y + associated.box.h/3 + Camera::pos.y);
-                    Reader* readerSkill_behaviour = new Reader(*readerSkill, textSkill);
-                    readerSkill->AddComponent(std::make_shared<Reader>(*readerSkill_behaviour));
+                    new Reader(*readerSkill, textSkill);
 
                     readerSkill->box.x -= readerSkill->box.w/2;
 
@@ -174,10 +189,7 @@ void Skill::Update(float dt) {
 
                     Skill::SkillInfo tempSkillInfo = skillInfoMap[id];
 
-                    bool auxExposedFeature = false;
-                    if(tempSkillInfo.isProtected != NOCHANGES){
-                        auxExposedFeature = true;
-                    }
+                    Skill::StateProtected auxExposedFeature = tempSkillInfo.isProtected;
 
                     std::vector<Tag::Tags> mergedTags;
                     mergedTags.reserve(tempSkillInfo.tags.size() + tempSkillInfo.tagsBack.size());
@@ -189,22 +201,21 @@ void Skill::Update(float dt) {
                     mergedTags.erase(std::unique(mergedTags.begin(), mergedTags.end()), mergedTags.end());
 
 
-                    TagReader* tagReader_behaviour = new TagReader(*readerSkill,
-                                                            auxExposedFeature,
-                                                            mergedTags,
-                                                            readerSkill->box,
-                                                            isReversed);
+                    new TagReader(*readerSkill,
+                                    auxExposedFeature,
+                                    mergedTags,
+                                    readerSkill->box,
+                                    isReversed);
 
-                    readerSkill->AddComponent(std::make_shared<TagReader>(*tagReader_behaviour)); 
+
 
                     //===================================================================================
 
-                    CameraFollower *readerSkill_cmfl = new CameraFollower(*readerSkill);
-                    readerSkill->AddComponent(std::make_shared<CameraFollower>(*readerSkill_cmfl));
+                    new CameraFollower(*readerSkill);
 
                     Game::GetInstance().GetCurrentState().AddObject(readerSkill);
 
-
+                      
                 }
 
                 
@@ -213,7 +224,7 @@ void Skill::Update(float dt) {
                     //Scenerio where combat its not alerady on skill selection
                     if(!SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
                         if (selectedSkill != nullptr && selectedSkill != this  ) {
-                        selectedSkill->Deselect(); 
+                            selectedSkill->Deselect(); 
                         }
                         selectedSkill = this;
 
@@ -226,6 +237,11 @@ void Skill::Update(float dt) {
                         } else {
                             selectedSkill->Deselect();
                         }
+
+                        GameObject* selectedSFX = new GameObject();
+                        Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                        selectSFX_sound->Play(1);
+
                     }
 
                     //Scenerio where combat its  alerady on skill selection
@@ -246,6 +262,11 @@ void Skill::Update(float dt) {
                                 skillToReward = this;
   
                             }
+
+                            GameObject* selectedSFX = new GameObject();
+                            Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+
+                            selectSFX_sound->Play(1);
                             
                             
                         }else{
@@ -253,12 +274,13 @@ void Skill::Update(float dt) {
                                 skillFromReward = nullptr;
                             } 
                             skillFromReward = this;
-                        }
-                        
-                    }
 
-                }
-                
+                            GameObject* selectedSFX = new GameObject();
+                            Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
+                            selectSFX_sound->Play(1); 
+                        }             
+                    }
+                }        
             }
 
     } else {
@@ -268,6 +290,11 @@ void Skill::Update(float dt) {
             readerSkill = nullptr;
 
         } 
+
+        if(selectSFX != nullptr){
+            selectSFX->RequestDelete();
+            selectSFX = nullptr;
+        }
     }
 
 
@@ -278,6 +305,23 @@ void Skill::Update(float dt) {
     if(SkillSelection::skillSelectionActivated){ // combat ended, no need for desaturation
         available = true;
     }
+
+    if(SkillSelection::skillSelectionActivated && (id != Skill::LOCKED1 && id != Skill::LOCKED2 && id != Skill::LOCKED3 && id != Skill::EMPTY)){
+        //Scenerio where skills its djiin style, rules you can only choose normal skills to change
+        if(SkillSelection::selectionSkillDjinnStyle){
+            if(id < Skill::InstantRegret || id == Skill::EMPTY){
+                available = true;
+            } 
+            else{
+                if(createJewel){
+                   available = false; 
+                }
+                else{
+                    available = true; 
+                }
+            }     
+        }
+    }    
 
 
     auto spriteComponent = associated.GetComponent("Sprite");
@@ -298,24 +342,21 @@ void Skill::Update(float dt) {
         if (spriteComponentPtr) {
             if (!available) {
                 if (!toggleJewel) {
-                    jewelObj->RemoveComponent(spriteComponentPtr);
-                    Sprite* jewelObj_behaviour2 = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
-                    jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour2));
+                    jewelObj->RemoveComponent(spriteComponentPtr.get());
+                    new Sprite(*jewelObj, AP_EMPTY_SPRITE);
                     toggleJewel = true;  
                     BlankTagCount(true);
                 }
             } else { 
                 if (toggleJewel) {
-                    jewelObj->RemoveComponent(spriteComponentPtr);
+                    jewelObj->RemoveComponent(spriteComponentPtr.get());
                     const SkillInfo& skillInfo = skillInfoMap[id];
-                    Sprite* jewelObj_behaviour;
                     if(skillInfo.apCost != 0){
-                        jewelObj_behaviour = new Sprite(*jewelObj, AP_FULL_SPRITE);
+                        new Sprite(*jewelObj, AP_FULL_SPRITE);
                     }
                     else{
-                        jewelObj_behaviour = new Sprite(*jewelObj, AP_EMPTY_SPRITE);
+                        new Sprite(*jewelObj, AP_EMPTY_SPRITE);
                     }
-                    jewelObj->AddComponent(std::make_shared<Sprite>(*jewelObj_behaviour));
                     toggleJewel = false;  
                     BlankTagCount(false);
                 } 
@@ -376,23 +417,23 @@ void Skill::BlankTagCount(bool isBlank) {
             auto textComponent = tagCount->GetComponent("Text");
             auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
             if(textComponentPtr){
-                tagCount->RemoveComponent(textComponentPtr);
+                tagCount->RemoveComponent(textComponentPtr.get());
             }
             std::string textNumber = std::to_string(skillInfo.apCost);
-            Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
-                                                                 TEXT_TAGCOUNT2_SIZE,
-                                                                 Text::OUTLINE3,
-                                                                 textNumber, 
-                                                                 TEXT_TAGCOUNT_FONT_COLOR,
-                                                                 0);  
-            tagCount->AddComponent(std::make_shared<Text>(*tagCountNumber_behaviour));                                                                 
+            new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                TEXT_TAGCOUNT2_SIZE,
+                                Text::OUTLINE3,
+                                textNumber, 
+                                TEXT_TAGCOUNT_FONT_COLOR,
+                                0);  
+                                                             
             
         }
         else if(tagCount != nullptr && isBlank){
             auto textComponent = tagCount->GetComponent("Text");
             auto textComponentPtr = std::dynamic_pointer_cast<Text>(textComponent);
             if(textComponentPtr){
-                tagCount->RemoveComponent(textComponentPtr);
+                tagCount->RemoveComponent(textComponentPtr.get());
             }    
         } 
     }
@@ -407,12 +448,12 @@ void Skill::CreateTagCount() {
         if(tagCount == nullptr){ 
             tagCount =  new GameObject(jewelObj->box.x , jewelObj->box.y); //posicao foi no olho...
             std::string textNumber = std::to_string(skillInfo.apCost);
-            Text* tagCountNumber_behaviour = new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
-                                                                TEXT_TAGCOUNT2_SIZE,
-                                                                Text::OUTLINE3,
-                                                                textNumber, 
-                                                                TEXT_TAGCOUNT_FONT_COLOR,
-                                                                0);   
+            new Text(*tagCount, TEXT_TAGCOUNT_FONT, 
+                                TEXT_TAGCOUNT2_SIZE,
+                                Text::OUTLINE3,
+                                textNumber, 
+                                TEXT_TAGCOUNT_FONT_COLOR,
+                                0);   
 
             //Centralize
             if(skillInfo.apCost == 1){
@@ -429,10 +470,8 @@ void Skill::CreateTagCount() {
             }
 
 
-            tagCount->AddComponent(std::make_shared<Text>(*tagCountNumber_behaviour));
 
-            CameraFollower *tagCountj_cmfl = new CameraFollower(*tagCount);
-            tagCount->AddComponent(std::make_shared<CameraFollower>(*tagCountj_cmfl));
+            new CameraFollower(*tagCount);
 
             Game::GetInstance().GetCurrentState().AddObject(tagCount);
         }
@@ -465,13 +504,15 @@ void Skill::AddSkill(Skill::SkillId id, Skill::SkillId skillIdToChange) {
 
 //Starter skills
 void Skill::InitializeSkills() {
+    skillArray.clear();
+
     //Adding skills
-        skillArray.push_back(Skill::HnS);
-        skillArray.push_back(Skill::FinalSacrifice);
-        skillArray.push_back(Skill::DeafeningWhisper);
-        skillArray.push_back(Skill::IntotheVoid);
-        skillArray.push_back(Skill::FearoftheDark);
-        skillArray.push_back(Skill::Elimination);
+        skillArray.push_back(Skill::RecklessSlash);
+        skillArray.push_back(Skill::CautiousStrike);
+        skillArray.push_back(Skill::MotherlyLove);
+        skillArray.push_back(Skill::PocketSand);
+        skillArray.push_back(Skill::NanaNanaNa);
+        skillArray.push_back(Skill::InstantRegret);
         
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
@@ -483,7 +524,7 @@ void Skill::InitializeSkillInfoMap() {
     //    ap cost;      
     //    damage; 
     //    tags;
-    //    name; 
+    //    name;  
     //    iconPath;
     //};
     // Populate the map with skill information during initialization.
@@ -540,7 +581,7 @@ void Skill::InitializeSkillInfoMap() {
 
     //Nana Nana Na [filha] (1AP): Apply 1 Vulnerable and 1 Weak to one enemy
     skillInfoMap[NanaNanaNa] =  {1, Skill::StateProtected::NOCHANGES,       0, {Tag::Tags::VULNERABLE, Tag::Tags::WEAK},     0, {},   NS_NanaNanaNa, I_NanaNanaNa, SPR_NanaNanaNa,        DEBUFF_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
-    
+     
     //Trick or Treat (1AP): Deal 1 damage; Gain 1 Dodge; Expose Daughter
     skillInfoMap[TrickorTreat] =  {1, Skill::StateProtected::EXPOSED,       1, {},     0, {Tag::Tags::DODGE},   NS_TrickorTreat, I_TrickorTreat, SPR_TrickorTreat,                        ATTACK_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, DAUGHTER} ;
 
@@ -557,9 +598,16 @@ void Skill::InitializeSkillInfoMap() {
     skillInfoMap[TagYoureIt] =  {2, Skill::StateProtected::EXPOSED,       1, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},   NS_TagYoureIt, I_TagYoureIt, SPR_TagYoureIt,                        ATTACK_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
     //Red Light (2AP): Protect Daughter; Deal 1 damage to all enemies; Apply 2 Weak to all enemies
+    skillInfoMap[RedLight] =  {2, Skill::StateProtected::PROTECTED,       1, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {},   NS_RedLight, I_RedLight, SPR_RedLight,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
+
     //Green Light (2AP): Expose Daughter; Deal 1 damage to all enemies; Apply 2 Vulnerable to all enemies
+    skillInfoMap[GreenLight] =  {2, Skill::StateProtected::EXPOSED,       1, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},   NS_GreenLight, I_GreenLight, SPR_GreenLight,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
+
     //Temper Tantrum (1AP): Expose Daughter; Gain 1 Rampage; Deal 3 Damage
+    skillInfoMap[TemperTantrum] =  {1, Skill::StateProtected::EXPOSED,       3, {},     0, {Tag::Tags::RAMPAGE},   NS_TemperTantrum, I_TemperTantrum, SPR_TemperTantrum,                        ATTACK_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, DAUGHTER} ;
+ 
     //Desperate Flailing (1AP): Expose Daughter; Deal 2 damage to all enemies
+    skillInfoMap[DesperateFlailing] =  {1, Skill::StateProtected::EXPOSED,       2, {},     0, {},   NS_DesperateFlailing, I_DesperateFlailing, SPR_DesperateFlailing,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
 
 
     //==================================DJINN SKILLS==================================
@@ -650,6 +698,77 @@ void Skill::InitializeSkillInfoMap() {
     //Apply Rampage in all allies 
     skillInfoMap[E3_Skill2] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
 
-    
+
+
+    // Cut: Deal 6 damage
+    skillInfoMap[E_Cut] = {0, Skill::StateProtected::NOCHANGES,   6, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Whip: Deal 3 damage; Apply 2 Frail to target.
+    skillInfoMap[E_Whip] = {0, Skill::StateProtected::NOCHANGES,   3, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+  
+    //Evil Chant: Apply 2 weak to target
+    skillInfoMap[E_Evil_Chant] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    // Shiv: Deal 9 damage 
+    skillInfoMap[E_Shiv] = {0, Skill::StateProtected::NOCHANGES,   9, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Tentacle Strike: Deal 8 damage 
+    skillInfoMap[E_Tentacle_Strike] = {0, Skill::StateProtected::NOCHANGES,   8, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Bite: Deal 9 damage 
+    skillInfoMap[E_Bite] = {0, Skill::StateProtected::NOCHANGES,   9, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+
+    //Beak: Deal 3 damage
+    skillInfoMap[E_Beak] = {0, Skill::StateProtected::NOCHANGES,   3, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
+
+    //Unnerving Presence: Apply 2 Weak and 2 Vulnerable to target
+    skillInfoMap[E_Unnerving_Presence] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE,},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Guttural Scream: Apply 2 rampage to all allies
+    skillInfoMap[E_Guttural_Scream] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
+
+    //Infernal Scream: Apply 3 Weak and 3 Vulnerable to target
+    skillInfoMap[E_Infernal_Scream] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Infernal Skull: Deal 5 damage; Gain 3 Resilience
+    skillInfoMap[E_Infernal_Skull] = {0, Skill::StateProtected::NOCHANGES,   5, {},     0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
+
+    //Enrage: Aplly 3 rampage to all allies
+    skillInfoMap[E_Enrage] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
+
+    //Impale: Deal 15 damage
+    skillInfoMap[E_Impale] = {0, Skill::StateProtected::NOCHANGES,   15, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Freezing Stare: Deal 8 Damage
+    skillInfoMap[E_Freezing_Stare] = {0, Skill::StateProtected::NOCHANGES,   8, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+
+    //Empower: Deal 3 damage; Gain 2 Rampage
+    skillInfoMap[E_Empower] = {0, Skill::StateProtected::NOCHANGES,   3, {},     0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
+
+    //Take Soul: Deal 10 Damage
+    skillInfoMap[E_Take_Soul] = {0, Skill::StateProtected::NOCHANGES,   10, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Bubble Shield: Apply 2 resilience to all allies
+    skillInfoMap[E_Bubble_Shield] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
+
+    //Tongue Strike: Deal 3 damage; Apply 3 weak to target and 2 curse
+    skillInfoMap[E_Tongue_Strike] = {0, Skill::StateProtected::NOCHANGES,   3, {Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Toxic Sludge: Apply 4 curse to one enemy
+    skillInfoMap[E_Toxic_Sludge] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          DEBUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Lick: Deal 6 damage
+    skillInfoMap[E_Lick] = {0, Skill::StateProtected::NOCHANGES,   6, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Digest: Gain 2 resilience
+    skillInfoMap[E_Digest] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+    //Inflate: Gain 3 provoke
+    skillInfoMap[E_Inflate] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::PROVOKE, Tag::Tags::PROVOKE, Tag::Tags::PROVOKE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+
+
 } 
        
