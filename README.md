@@ -44,13 +44,13 @@ All sound effects used in the game have been sourced from [OpenGameArt.org](http
 - **Left Mouse Button:** Use the left mouse button to select objects or interact with the environment.
 
 - **Right Mouse Button:** Press the right mouse button to deselect or cancel actions.
-- 
+  
 - **Arrow Keys; W and S keys:** Navigate the in-game map using the arrow keys.
 
 ### Installation:
 
 1. **Download the Latest Release:**
-   - Visit the [Releases](https://github.com/[seu-nome-de-usuario]/[seu-repositorio]/releases) section of this repository.
+   - Visit the [Releases](https://github.com/Felipedbbsb/Hunger-Game/releases) section of this repository.
    - Look for the latest version and download the associated ZIP file.
 
 2. **Extract the ZIP File:**
