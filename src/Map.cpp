@@ -406,13 +406,13 @@ void Map::DrawDashedLine(int x1, int y1, int x2, int y2, int dashLength, int gap
 
     // Draw the dashed line
     float currentLength = 0;
-    bool drawDash = true;
+    bool drawDash = true; 
     while (currentLength <= length) {
         if (drawDash) {
             SDL_RenderDrawLine(renderer, x1 + currentLength * dx, y1 + currentLength * dy,
                                x1 + fmin(currentLength + dashLength, length) * dx,
                                y1 + fmin(currentLength + dashLength, length) * dy);
-        }
+        } 
 
         currentLength += dashLength + gapLength;
         drawDash = !drawDash;

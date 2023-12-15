@@ -36,6 +36,7 @@
 #include "Sprite.h"
 #include "Component.h"
 #include "Enemies.h"
+#include "SandParticles.h"
 
 class CombatState : public State{
     public:
@@ -71,5 +72,5 @@ class CombatState : public State{
         bool toggleStateNP;
         Timer skillSelectionStart;
         Timer skillSelectionEnd;
-        
+        SandParticles* sandParticles;
 };

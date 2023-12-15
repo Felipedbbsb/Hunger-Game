@@ -214,7 +214,7 @@ dep/UI.d bin/UI.o: src/UI.cpp include/UI.h \
  include/Camera.h include/Protected.h include/CameraFollower.h \
  include/Enemies.h include/LifeBar.h include/Reader.h include/GameData.h \
  include/SkillSelection.h include/Mother.h include/Daughter.h \
- include/CombatState.h include/Mural.h
+ include/CombatState.h include/SandParticles.h include/Mural.h
 
 include/UI.h:
 
@@ -749,5 +749,7 @@ include/Mother.h:
 include/Daughter.h:
 
 include/CombatState.h:
+
+include/SandParticles.h:
 
 include/Mural.h:

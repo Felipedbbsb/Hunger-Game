@@ -212,7 +212,7 @@ dep/Mural.d bin/Mural.o: src/Mural.cpp include/Mural.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_stack.h \
  include/CameraFollower.h include/Camera.h include/Text.h include/UI.h \
  include/Papiro.h include/Mother.h include/Daughter.h \
- include/SkillSelection.h include/Protected.h
+ include/SkillSelection.h include/Protected.h include/CameraShake.h
 
 include/Mural.h:
 
@@ -749,3 +749,5 @@ include/Daughter.h:
 include/SkillSelection.h:
 
 include/Protected.h:
+
+include/CameraShake.h:

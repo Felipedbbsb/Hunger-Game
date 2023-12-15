@@ -21,7 +21,7 @@
 #define TAG_RAMPAGE_SPRITE "assets/img/UI/uiIconRampage.png"
 #define TAG_PROTECTED_SPRITE "assets/img/UI/uiIconProtected.png"
 #define TAG_EXPOSED_SPRITE "assets/img/UI/uiIconProtected.png"
-#define TAG_CURSE_SPRITE "assets/img/UI/uiIconProtected.png"
+#define TAG_CURSE_SPRITE "assets/img/UI/uiIconCursed.png"
 
 #define TAGS_SPACING_X 40.0f
 #define TAGS_SPACING_Y 35.0f

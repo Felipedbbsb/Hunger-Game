@@ -512,7 +512,7 @@ void Skill::InitializeSkills() {
         skillArray.push_back(Skill::MotherlyLove);
         skillArray.push_back(Skill::PocketSand);
         skillArray.push_back(Skill::NanaNanaNa);
-        skillArray.push_back(Skill::FinalSacrifice);
+        skillArray.push_back(Skill::InstantRegret);
         
         skillArray.push_back(Skill::LOCKED1);
         skillArray.push_back(Skill::LOCKED2);
@@ -598,9 +598,16 @@ void Skill::InitializeSkillInfoMap() {
     skillInfoMap[TagYoureIt] =  {2, Skill::StateProtected::EXPOSED,       1, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},   NS_TagYoureIt, I_TagYoureIt, SPR_TagYoureIt,                        ATTACK_INDIVIDUAL, DAUGHTER,        NONE, IRR} ;
 
     //Red Light (2AP): Protect Daughter; Deal 1 damage to all enemies; Apply 2 Weak to all enemies
+    skillInfoMap[RedLight] =  {2, Skill::StateProtected::PROTECTED,       1, {Tag::Tags::WEAK, Tag::Tags::WEAK},     0, {},   NS_RedLight, I_RedLight, SPR_RedLight,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
+
     //Green Light (2AP): Expose Daughter; Deal 1 damage to all enemies; Apply 2 Vulnerable to all enemies
+    skillInfoMap[GreenLight] =  {2, Skill::StateProtected::EXPOSED,       1, {Tag::Tags::VULNERABLE, Tag::Tags::VULNERABLE},     0, {},   NS_GreenLight, I_GreenLight, SPR_GreenLight,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
+
     //Temper Tantrum (1AP): Expose Daughter; Gain 1 Rampage; Deal 3 Damage
+    skillInfoMap[TemperTantrum] =  {1, Skill::StateProtected::EXPOSED,       3, {},     0, {Tag::Tags::RAMPAGE},   NS_TemperTantrum, I_TemperTantrum, SPR_TemperTantrum,                        ATTACK_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, DAUGHTER} ;
+
     //Desperate Flailing (1AP): Expose Daughter; Deal 2 damage to all enemies
+    skillInfoMap[DesperateFlailing] =  {1, Skill::StateProtected::EXPOSED,       2, {},     0, {},   NS_DesperateFlailing, I_DesperateFlailing, SPR_DesperateFlailing,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
 
 
     //==================================DJINN SKILLS==================================
@@ -706,8 +713,8 @@ void Skill::InitializeSkillInfoMap() {
     // Shiv: Deal 9 damage 
     skillInfoMap[E_Shiv] = {0, Skill::StateProtected::NOCHANGES,   9, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
 
-    //Tentacle Strike: Deal 12 damage
-    skillInfoMap[E_Tentacle_Strike] = {0, Skill::StateProtected::NOCHANGES,   12, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+    //Tentacle Strike: Deal 8 damage 
+    skillInfoMap[E_Tentacle_Strike] = {0, Skill::StateProtected::NOCHANGES,   8, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
 
     //Bite: Deal 9 damage 
     skillInfoMap[E_Bite] = {0, Skill::StateProtected::NOCHANGES,   9, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,        NONE, IRR} ;
@@ -741,11 +748,11 @@ void Skill::InitializeSkillInfoMap() {
     //Empower: Deal 3 damage; Gain 2 Rampage
     skillInfoMap[E_Empower] = {0, Skill::StateProtected::NOCHANGES,   3, {},     0, {Tag::Tags::RAMPAGE, Tag::Tags::RAMPAGE},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       BUFF_INDIVIDUAL, IRR} ;
 
-    //Take Soul: Deal 15 Damage
-    skillInfoMap[E_Take_Soul] = {0, Skill::StateProtected::NOCHANGES,   15, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
+    //Take Soul: Deal 10 Damage
+    skillInfoMap[E_Take_Soul] = {0, Skill::StateProtected::NOCHANGES,   10, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
 
-    //Bubble Shield: Apply 3 resilience to all allies
-    skillInfoMap[E_Bubble_Shield] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
+    //Bubble Shield: Apply 2 resilience to all allies
+    skillInfoMap[E_Bubble_Shield] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_ALL, IRR,       NONE, IRR} ;
 
     //Tongue Strike: Deal 3 damage; Apply 3 weak to target and 2 curse
     skillInfoMap[E_Tongue_Strike] = {0, Skill::StateProtected::NOCHANGES,   3, {Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::WEAK, Tag::Tags::CURSE, Tag::Tags::CURSE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
@@ -756,8 +763,8 @@ void Skill::InitializeSkillInfoMap() {
     //Lick: Deal 6 damage
     skillInfoMap[E_Lick] = {0, Skill::StateProtected::NOCHANGES,   6, {},     0, {},     NS_Generic, I_Generic, SPR_Generic,          ATTACK_INDIVIDUAL, IRR,       NONE, IRR} ;
 
-    //Digest: Gain 3 resilience
-    skillInfoMap[E_Digest] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
+    //Digest: Gain 2 resilience
+    skillInfoMap[E_Digest] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::RESILIENCE, Tag::Tags::RESILIENCE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;
 
     //Inflate: Gain 3 provoke
     skillInfoMap[E_Inflate] = {0, Skill::StateProtected::NOCHANGES,   0, {Tag::Tags::PROVOKE, Tag::Tags::PROVOKE, Tag::Tags::PROVOKE},     0, {},     NS_Generic, I_Generic, SPR_Generic,          BUFF_INDIVIDUAL, IRR,       NONE, IRR} ;

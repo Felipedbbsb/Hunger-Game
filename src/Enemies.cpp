@@ -893,10 +893,10 @@ void Enemies::InitializeEnemyInfoMap() {
     Sapo Vermelho PAI(Brute):
         20 ~ 30 HP
         Lick: Deal 6 damage
-        Digest: Gain 3 resilience
+        Digest: Gain 3 resilience 
         Inflate: Gain 3 provoke
     */
-    enemyInfoMap[FrogDad] = { std::make_pair(20, 30), {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E_Lick, Skill::E_Digest, Skill::E_Inflate} };
+    enemyInfoMap[FrogDad] = { std::make_pair(15, 25), {}, "Frog Dad", frogDad_SPRITE, frogDad_SPRITE_ATK, frogDad_SPRITE_DFS, {Skill::E_Lick, Skill::E_Digest, Skill::E_Inflate} };
     
 
     /*    

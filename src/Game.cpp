@@ -9,7 +9,7 @@
 #define AUDIO_FREQUENCY MIX_DEFAULT_FREQUENCY
 #define AUDIO_FORMAT MIX_DEFAULT_FORMAT
 #define AUDIO_CHANNELS MIX_DEFAULT_CHANNELS 
-#define SOUND_RESOLUTION 64
+#define SOUND_RESOLUTION 64 
 
 
 
@@ -29,7 +29,7 @@ float Game::resizer  = 1;
 Game::Game(std::string title, int width, int height) : 
     frameStart(0), 
     dt(0.0),
-    storedState(nullptr){
+    storedState(nullptr){ 
 
     if (Game::instance != nullptr) {
         throw std::runtime_error("Something's Wrong!");

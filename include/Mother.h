@@ -24,7 +24,7 @@
 #define MOTHER_FC 14
 #define MOTHER_FT 1.25
 
-#define MOTHER_HP 50
+#define MOTHER_HP 60
 
 #define MOTHER_DEATH_TIME 3
 

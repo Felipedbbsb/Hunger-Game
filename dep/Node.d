@@ -212,7 +212,7 @@ dep/Node.d bin/Node.o: src/Node.cpp include/Node.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_heap.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\uniform_int_dist.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits include/Mural.h \
- include/CombatState.h include/Rest.h
+ include/CombatState.h include/SandParticles.h include/Rest.h
 
 include/Node.h:
 
@@ -741,5 +741,7 @@ c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits:
 include/Mural.h:
 
 include/CombatState.h:
+
+include/SandParticles.h:
 
 include/Rest.h:

@@ -69,12 +69,12 @@ void Papiro::Start() {
  
 
     //offeset precisely made by sprite reference    
-    backgroundOffsetX = -840;  
+    backgroundOffsetX = 171;  
     if (!movingRight){ 
-        backgroundOffsetX = 1025;
+        backgroundOffsetX = 200;
     }  
  
-
+ 
     //Processing relation between objects
     if(movingRight){
         if(attackType == Skill::BUFF_INDIVIDUAL || attackType == Skill::BUFF_ALL){
@@ -200,6 +200,7 @@ void Papiro::Update(float dt) {
             papiroVelocity -= papiroAc * dt;
             if(associated.box.x >= RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET -Camera::pos.x){
                 associated.box.x = RESOLUTION_WIDTH  - papiro_obj->box.w + PAPIRO_OFFSET -Camera::pos.x;
+                papiroVelocity = 0;
             }
         }
         
@@ -222,6 +223,7 @@ void Papiro::Update(float dt) {
             papiroVelocity -= papiroAc * dt; 
             if(associated.box.x <= -PAPIRO_OFFSET -Camera::pos.x){ 
                 associated.box.x = -PAPIRO_OFFSET -Camera::pos.x;
+                papiroVelocity = 0;
             }
         } 
         else{

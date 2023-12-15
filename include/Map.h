@@ -25,15 +25,12 @@
 
 #define MAP_GRID_SIZE Vec2(1520, 3080)
 
-#define MAP_PORC_COMBAT  0.45
-#define MAP_PORC_MURAL  0.20
-#define MAP_PORC_UNKNOW  0.3
+#define MAP_PORC_COMBAT  0.40
+#define MAP_PORC_MURAL  0.3
+#define MAP_PORC_UNKNOW  0.25
 #define MAP_PORC_REST  0.1
 
-//#define MAP_PORC_COMBAT  0.0
-//#define MAP_PORC_MURAL  0.0
-//#define MAP_PORC_UNKNOW  0.3
-//#define MAP_PORC_REST  0.0
+
 
 #define LINE_DASH_LENGHT  8
 

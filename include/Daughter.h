@@ -21,7 +21,7 @@
 #define DAUGHTER_FC 14
 #define DAUGHTER_FT 1.25
 
-#define DAUGHTER_HP 27
+#define DAUGHTER_HP 30
 
 class Daughter : public Component{
 

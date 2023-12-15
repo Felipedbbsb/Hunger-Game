@@ -209,7 +209,7 @@ dep/Camera.d bin/Camera.o: src/Camera.cpp include/Camera.h include/Vec2.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_multimap.h \
  include/LifeBar.h include/Reader.h include/Sound.h \
  C:/SDL2/include/SDL2/SDL_mixer.h include/Skill.h c:\mingw\include\time.h \
- include/Tag.h include/AP.h include/Music.h
+ include/Tag.h include/AP.h include/Music.h include/SandParticles.h
 
 include/Camera.h:
 
@@ -730,3 +730,5 @@ include/Tag.h:
 include/AP.h:
 
 include/Music.h:
+
+include/SandParticles.h:

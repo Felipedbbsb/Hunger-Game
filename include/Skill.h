@@ -70,7 +70,7 @@
 
 #define NS_PocketSand "Pocket Sand"
 #define I_PocketSand "assets/img/UI/skills/readers/readerPocketSand.png"
-#define SPR_PocketSand "assets/img/UI/uiSkillNormal.png"
+#define SPR_PocketSand "assets/img/UI/skills/PocketSand.png"
 
 #define NS_HyperProtective "Hyper Protective"
 #define I_HyperProtective "assets/img/UI/skills/readers/readerHyperProtective.png"
@@ -104,7 +104,7 @@
 
 #define NS_NanaNanaNa "Nana Nana Na"
 #define I_NanaNanaNa "assets/img/UI/skills/readers/readerNanaNanaNa.png"
-#define SPR_NanaNanaNa "assets/img/UI/uiSkillNormal.png"
+#define SPR_NanaNanaNa "assets/img/UI/skills/NanaNanaNa.png"
 
 #define NS_PommelStrike "Pommel Strike"
 #define I_PommelStrike "assets/img/UI/skills/readers/readerPommelStrike.png"
@@ -124,11 +124,27 @@
 
 #define NS_AroundtheRosie "Around the Rosie"
 #define I_AroundtheRosie "assets/img/UI/skills/readers/readerAroundtheRosie.png"
-#define SPR_AroundtheRosie "assets/img/UI/uiSkillNormal.png"
+#define SPR_AroundtheRosie "assets/img/UI/skills/AroudtheRosie.png"
 
 #define NS_TagYoureIt "Tag! You are It"
 #define I_TagYoureIt "assets/img/UI/skills/readers/readerTagYoureIt.png"
-#define SPR_TagYoureIt "assets/img/UI/uiSkillNormal.png"
+#define SPR_TagYoureIt "assets/img/UI/skills/TagYoureIt.png"
+
+#define NS_RedLight "Red Light"
+#define I_RedLight "assets/img/UI/skills/readers/readerRedLight.png"
+#define SPR_RedLight "assets/img/UI/skills/RedLight.png"
+
+#define NS_GreenLight "Green Light"
+#define I_GreenLight "assets/img/UI/skills/readers/readerGreenLight.png"
+#define SPR_GreenLight "assets/img/UI/skills/GreenLight.png"
+
+#define NS_TemperTantrum "Temper Tantrum"
+#define I_TemperTantrum "assets/img/UI/skills/readers/readerTemperTantrum.png"
+#define SPR_TemperTantrum "assets/img/UI/skills/TemperTantrum.png"
+
+#define NS_DesperateFlailing "Desperate Flailing"
+#define I_DesperateFlailing "assets/img/UI/skills/readers/readerDesperateFlailing.png"
+#define SPR_DesperateFlailing "assets/img/UI/skills/DesperateFlailing.png"
 
 
 
@@ -155,7 +171,7 @@
 
 #define NS_Combustion "Combustion"
 #define I_Combustion "assets/img/UI/skills/readers/readerCombustion.png"
-#define SPR_Combustion "assets/img/UI/uiSkillDjinn.png"
+#define SPR_Combustion "assets/img/UI/skills/Combustion.png"
 
 #define NS_DevilsTears "Devil's Tears"
 #define I_DevilsTears "assets/img/UI/skills/readers/readerDevilsTears.png"
@@ -262,8 +278,10 @@ class Skill : public Component {
             SweetTreats,
             AroundtheRosie,
             TagYoureIt,
-
-            
+            RedLight,
+            GreenLight,
+            TemperTantrum,
+            DesperateFlailing,
 
             InstantRegret,
             AMillionStabs,

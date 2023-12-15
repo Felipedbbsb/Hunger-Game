@@ -10,6 +10,7 @@
 #include "SkillSelection.h" 
 #include "Protected.h"
 #include "Music.h"
+#include "CameraShake.h"
 
 bool Mural::MuralStateActivateReward = false;
 bool Mural::MuralState = false;
@@ -98,7 +99,7 @@ void Mural::CreateBackground(std::string originalPath){
     GameObject *bg = new GameObject();
     new Sprite(*bg, originalPath);
     new CameraFollower(*bg);
-
+    //new CameraShake(*bg);
 
     bg->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - bg->box.w / 2;
 

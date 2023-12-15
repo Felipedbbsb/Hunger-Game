@@ -20,6 +20,7 @@
 #include "Protected.h"
 #include "Music.h"
 
+
 bool CombatState::InteractionSCreenActivate = false;
 
 std::vector<Enemies::EnemyId> CombatState::enemiesArrayIS = {};
@@ -43,7 +44,8 @@ papiro(nullptr),
 skillSelection(nullptr),
 spriteBackground(spriteBackground),
 toggleState(true),
-toggleStateNP(true){}
+toggleStateNP(true),
+sandParticles(new SandParticles(Game::GetInstance().GetRenderer(), RESOLUTION_WIDTH, RESOLUTION_HEIGHT - RESOLUTION_HEIGHT * 1/3, 5, 25, 1, 3)){}
   
 CombatState::~CombatState(){
     delete skillSelection;
@@ -53,7 +55,7 @@ CombatState::~CombatState(){
     }
     delete papiro;
     if(papiro != nullptr){
-        papiro->RequestDelete();
+        papiro->RequestDelete(); 
         papiro = nullptr;
     }
 
@@ -63,7 +65,7 @@ CombatState::~CombatState(){
 
     Enemies::enemiesArray.clear();
 
-        
+    delete sandParticles;     
 }
 
 void CombatState::Update(float dt){   
@@ -126,6 +128,10 @@ void CombatState::Update(float dt){
                 }
             }
         }
+        
+
+        sandParticles->Update(dt);
+        //SDL_RenderClear(renderer);
         
 
         UpdateArray(dt); 
@@ -289,7 +295,10 @@ std::string CombatState::GeneratePath(std::string originalPath, std::string suff
 
 void CombatState::Render(){     
     RenderArray();
+    sandParticles->Render();
     State::Render();
+    
+    
 }
 
 void CombatState::Start(){
@@ -325,6 +334,8 @@ void CombatState::Start(){
     Camera::pos.x = -FOCUS_ENEMY;
     Camera::pos.y = 0;
 
+    sandParticles->toggleParticles();
+    
 }
  
 void CombatState::Pause(){

@@ -213,7 +213,7 @@ dep/Skill.d bin/Skill.o: src/Skill.cpp include/Skill.h \
  c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\limits \
  include/CameraFollower.h include/SkillSelection.h include/Mother.h \
  include/LifeBar.h include/Daughter.h include/Enemies.h include/UI.h \
- include/TagReader.h include/CombatState.h
+ include/TagReader.h include/CombatState.h include/SandParticles.h
 
 include/Skill.h:
 
@@ -750,3 +750,5 @@ include/UI.h:
 include/TagReader.h:
 
 include/CombatState.h:
+
+include/SandParticles.h:

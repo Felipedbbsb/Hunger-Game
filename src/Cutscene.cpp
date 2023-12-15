@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "Mother.h"
 #include "Daughter.h"
-
+#include "CameraShake.h"
 
 
 Cutscene::Cutscene() 
@@ -90,10 +90,13 @@ void Cutscene::LoadAssets(){
 
     frameCut = new GameObject();
     new Sprite(*frameCut, GetFrameSprite());
-    new CameraFollower(*frameCut);
-
 
     frameCut->box.x = RESOLUTION_WIDTH  / 2 - frameCut->box.w / 2;
+
+    new CameraFollower(*frameCut);
+    
+
+    
 
     AddObject(frameCut);
 
