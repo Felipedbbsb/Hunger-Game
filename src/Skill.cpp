@@ -524,7 +524,7 @@ void Skill::InitializeSkillInfoMap() {
     //    ap cost;      
     //    damage; 
     //    tags;
-    //    name; 
+    //    name;  
     //    iconPath;
     //};
     // Populate the map with skill information during initialization.
@@ -605,7 +605,7 @@ void Skill::InitializeSkillInfoMap() {
 
     //Temper Tantrum (1AP): Expose Daughter; Gain 1 Rampage; Deal 3 Damage
     skillInfoMap[TemperTantrum] =  {1, Skill::StateProtected::EXPOSED,       3, {},     0, {Tag::Tags::RAMPAGE},   NS_TemperTantrum, I_TemperTantrum, SPR_TemperTantrum,                        ATTACK_INDIVIDUAL, DAUGHTER,        BUFF_INDIVIDUAL, DAUGHTER} ;
-
+ 
     //Desperate Flailing (1AP): Expose Daughter; Deal 2 damage to all enemies
     skillInfoMap[DesperateFlailing] =  {1, Skill::StateProtected::EXPOSED,       2, {},     0, {},   NS_DesperateFlailing, I_DesperateFlailing, SPR_DesperateFlailing,                        ATTACK_ALL, DAUGHTER,        NONE, IRR} ;
 

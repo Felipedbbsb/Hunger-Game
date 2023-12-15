@@ -21,6 +21,8 @@
  
 #define COMBAT_IMAGE_PRISON "assets/img/Backgrounds/prison/background.png"
 
+#define COMBAT_IMAGE_SEWER "assets/img/Backgrounds/temple/background.png"
+
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 

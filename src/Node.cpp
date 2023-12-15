@@ -290,9 +290,27 @@ void Node::CreateRest(){
 
 void Node::CreateCombat(){
     std::vector<Enemies::EnemyId> enemiesArray = GetRandomEncounter(Map::mapPosition.first);                                               
-    
 
-    CombatState* new_stage = new CombatState(enemiesArray, COMBAT_IMAGE); 
+    std::string spriteCombatBackground;
+
+    //encounters from 1-5
+    if(Map::mapPosition.first < 6){
+        spriteCombatBackground = COMBAT_IMAGE_SEWER;
+    }
+    //encounters from 6-10
+    else if(Map::mapPosition.first < 11){
+        spriteCombatBackground = COMBAT_IMAGE_PRISON;
+    }
+    //encounters from 11-15
+    else if(Map::mapPosition.first < 16){
+        spriteCombatBackground = COMBAT_IMAGE_TEMPLE;
+    }
+    //encounter BOSS
+    else{
+        spriteCombatBackground = COMBAT_IMAGE_TEMPLE;
+    }
+
+    CombatState* new_stage = new CombatState(enemiesArray, spriteCombatBackground); 
     Game::GetInstance().Push(new_stage);  
 }
 

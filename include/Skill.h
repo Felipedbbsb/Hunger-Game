@@ -74,31 +74,31 @@
 
 #define NS_HyperProtective "Hyper Protective"
 #define I_HyperProtective "assets/img/UI/skills/readers/readerHyperProtective.png"
-#define SPR_HyperProtective "assets/img/UI/uiSkillNormal.png"
+#define SPR_HyperProtective "assets/img/UI/skills/HyperProtective.png"
 
 #define NS_RiskyManeuver "Risky Maneuver"
 #define I_RiskyManeuver "assets/img/UI/skills/readers/readerRiskyManeuver.png"
-#define SPR_RiskyManeuver "assets/img/UI/uiSkillNormal.png"
+#define SPR_RiskyManeuver "assets/img/UI/skill/RiskyManeuver.png"
 
 #define NS_BattleHymn "Battle Hymn"
 #define I_BattleHymn "assets/img/UI/skills/readers/readerBattleHymn.png"
-#define SPR_BattleHymn "assets/img/UI/uiSkillNormal.png"
+#define SPR_BattleHymn "assets/img/UI/skills/BattleHymn.png"
 
 #define NS_SwiftFooted "Swift Footed"
 #define I_SwiftFooted "assets/img/UI/skills/readers/readerSwiftFooted.png"
-#define SPR_SwiftFooted "assets/img/UI/uiSkillNormal.png"
+#define SPR_SwiftFooted "assets/img/UI/skills/SwiftFooted.png"
 
 #define NS_BlindedbyFear "Blinded by Fear"
 #define I_BlindedbyFear "assets/img/UI/skills/readers/readerBlindedbyFear.png"
-#define SPR_BlindedbyFear "assets/img/UI/uiSkillNormal.png"
+#define SPR_BlindedbyFear "assets/img/UI/skills/BlindedbyFear.png"
 
 #define NS_Solitude "Solitude"
 #define I_Solitude "assets/img/UI/skills/readers/readerSolitude.png"
-#define SPR_Solitude "assets/img/UI/uiSkillNormal.png"
+#define SPR_Solitude "assets/img/UI/skills/Solitude.png"
 
 #define NS_MaternalInstincts "Maternal Instincts"
 #define I_MaternalInstincts "assets/img/UI/skills/readers/readerMaternalInstincts.png"
-#define SPR_MaternalInstincts "assets/img/UI/uiSkillNormal.png"
+#define SPR_MaternalInstincts "assets/img/UI/skills/MaternalInstincts.png"
 
 //=================Daughter=================
 
@@ -108,7 +108,7 @@
 
 #define NS_PommelStrike "Pommel Strike"
 #define I_PommelStrike "assets/img/UI/skills/readers/readerPommelStrike.png"
-#define SPR_PommelStrike "assets/img/UI/uiSkillNormal.png"
+#define SPR_PommelStrike "assets/img/UI/skills/PommelStrike.png"
 
 #define NS_HnS "Hide and Seek"
 #define I_HnS "assets/img/UI/skills/readers/readerHideandSeek.png"
@@ -120,7 +120,7 @@
 
 #define NS_SweetTreats "Sweet Treats"
 #define I_SweetTreats "assets/img/UI/skills/readers/readerSweetTreats.png"
-#define SPR_SweetTreats "assets/img/UI/uiSkillNormal.png"
+#define SPR_SweetTreats "assets/img/UI/skill/SweetTreats.png"
 
 #define NS_AroundtheRosie "Around the Rosie"
 #define I_AroundtheRosie "assets/img/UI/skills/readers/readerAroundtheRosie.png"
@@ -155,19 +155,19 @@
 
 #define NS_AMillionStabs "A Million Stabs"
 #define I_AMillionStabs "assets/img/UI/skills/readers/readerAMillionStabs.png"
-#define SPR_AMillionStabs "assets/img/UI/uiSkillDjinn.png"
+#define SPR_AMillionStabs "assets/img/UI/skills/AMillionStabs.png"
 
 #define NS_DanseMacabre "Danse Macabre"
 #define I_DanseMacabre "assets/img/UI/skills/readers/readerDanseMacabre.png"
-#define SPR_DanseMacabre "assets/img/UI/uiSkillDjinn.png"
+#define SPR_DanseMacabre "assets/img/UI/skills/DanseMacabre.png"
 
 #define NS_Hellfire "Hellfire"
 #define I_Hellfire "assets/img/UI/skills/readers/readerHellfire.png"
-#define SPR_Hellfire "assets/img/UI/uiSkillDjinn.png"
+#define SPR_Hellfire "assets/img/UI/skills/Hellfire.png"
 
 #define NS_Gravedigger "Gravedigger"
 #define I_Gravedigger "assets/img/UI/skills/readers/readerGravedigger.png"
-#define SPR_Gravedigger "assets/img/UI/uiSkillDjinn.png"
+#define SPR_Gravedigger "assets/img/UI/skills/Gravedigger.png"
 
 #define NS_Combustion "Combustion"
 #define I_Combustion "assets/img/UI/skills/readers/readerCombustion.png"
@@ -175,19 +175,19 @@
 
 #define NS_DevilsTears "Devil's Tears"
 #define I_DevilsTears "assets/img/UI/skills/readers/readerDevilsTears.png"
-#define SPR_DevilsTears "assets/img/UI/uiSkillDjinn.png"
+#define SPR_DevilsTears "assets/img/UI/skills/DevilsTears.png"
 
 #define NS_FinalSacrifice "Final Sacrifice"
 #define I_FinalSacrifice "assets/img/UI/skills/readers/readerFinalSacrifice.png"
-#define SPR_FinalSacrifice "assets/img/UI/uiSkillDjinn.png"
+#define SPR_FinalSacrifice "assets/img/UI/skills/FinalSacrifice.png"
 
 #define NS_TormentedSoul "Tormented Soul"
 #define I_TormentedSoul "assets/img/UI/skills/readers/readerTormentedSoul.png"
-#define SPR_TormentedSoul "assets/img/UI/uiSkillDjinn.png"
+#define SPR_TormentedSoul "assets/img/UI/skills/TormentedSoul.png"
 
 #define NS_RainingBlood "Raining Blood"
 #define I_RainingBlood "assets/img/UI/skills/readers/readerRainingBlood.png"
-#define SPR_RainingBlood "assets/img/UI/uiSkillDjinn.png"
+#define SPR_RainingBlood "assets/img/UI/skills/RainingBlood.png"
 
 #define NS_MasterofPuppets "Master of Puppets"
 #define I_MasterofPuppets "assets/img/UI/skills/readers/readerMasterofPuppets.png"
@@ -199,19 +199,19 @@
 
 #define NS_DeafeningWhisper "Deafening Whisper"
 #define I_DeafeningWhisper "assets/img/UI/skills/readers/readerDeafeningWhisper.png"
-#define SPR_DeafeningWhisper "assets/img/UI/uiSkillDjinn.png"
+#define SPR_DeafeningWhisper "assets/img/UI/skills/DeafeningWhisper.png"
 
 #define NS_IntotheVoid "Into the Void"
 #define I_IntotheVoid "assets/img/UI/skills/readers/readerIntotheVoid.png"
-#define SPR_IntotheVoid "assets/img/UI/uiSkillDjinn.png"
+#define SPR_IntotheVoid "assets/img/UI/skills/IntotheVoid.png"
 
 #define NS_FearoftheDark "Fear of the Dark"
 #define I_FearoftheDark "assets/img/UI/skills/readers/readerFearoftheDark.png"
-#define SPR_FearoftheDark "assets/img/UI/uiSkillDjinn.png"
+#define SPR_FearoftheDark "assets/img/UI/skills/FearoftheDark.png"
 
 #define NS_Elimination "Elimination"
 #define I_Elimination "assets/img/UI/skills/readers/readerElimination.png"
-#define SPR_Elimination "assets/img/UI/uiSkillDjinn.png"
+#define SPR_Elimination "assets/img/UI/skills/Elimination.png"
 
 
 //=================Enemies=================

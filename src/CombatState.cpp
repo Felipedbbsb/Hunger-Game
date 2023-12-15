@@ -45,7 +45,7 @@ skillSelection(nullptr),
 spriteBackground(spriteBackground),
 toggleState(true),
 toggleStateNP(true),
-sandParticles(new SandParticles(Game::GetInstance().GetRenderer(), RESOLUTION_WIDTH, RESOLUTION_HEIGHT - RESOLUTION_HEIGHT * 1/3, 5, 25, 1, 3)){}
+sandParticles(new SandParticles(Game::GetInstance().GetRenderer(), RESOLUTION_WIDTH, RESOLUTION_HEIGHT - RESOLUTION_HEIGHT * 1/3, 8, 35, 1, 3)){}
   
 CombatState::~CombatState(){
     delete skillSelection;
@@ -255,7 +255,7 @@ void CombatState::CreateBackground(std::string originalPath){
     secondPathObj->box.x = RESOLUTION_WIDTH * Game::resizer / 2 - secondPathObj->box.w / 2;
     
     new CameraParallax(*secondPathObj, 0.5);
-
+ 
     AddObject(secondPathObj);
 
 
