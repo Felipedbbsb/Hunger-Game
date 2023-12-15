@@ -41,7 +41,7 @@ private:
     int screenWidth;
     int screenHeight;
     std::vector<Particle> particles;
-    SDL_Color particleColor = {205, 180, 70, 255}; // Branco por padrão
+    SDL_Color particleColor = {200, 165, 65, 200}; // Branco por padrão
     bool particlesActive;
 
     float maxParticleLife;

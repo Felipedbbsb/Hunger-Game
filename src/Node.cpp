@@ -6,7 +6,7 @@
 #include "Reader.h"
 #include "Camera.h"
 #include <algorithm> 
-#include "Map.h"
+#include "Map.h" 
 #include "Mural.h"
 #include "CombatState.h"
 #include "Enemies.h"

@@ -8,10 +8,10 @@ SandParticles::SandParticles(SDL_Renderer* renderer, int screenWidth, int screen
 }
 
 SandParticles::~SandParticles() {
-    // Cleans particles
+    // Cleans particles 
     particles.clear();
 }
-
+ 
 void SandParticles::toggleParticles() {
     particlesActive = !particlesActive;
 }
@@ -33,7 +33,7 @@ void SandParticles::Update(float dt) {
             // Restarts the particle when it reaches the edge or the lifetime is zero
             if (particle.x < 0 || particle.life <= 0) {
                 particle.x = rand() % screenWidth;
-                particle.y = rand() % screenHeight;
+                particle.y = rand() % screenHeight; 
 
                 // Adjust speed range as needed
                 int velocityRange = static_cast<int>((MAX_VELOCITY - MIN_VELOCITY) * 1000.0);
@@ -42,7 +42,7 @@ void SandParticles::Update(float dt) {
                 // Adjust size range as needed
                 particle.size = rand() % (maxParticleSize - minParticleSize) + minParticleSize;
                 particle.life = maxParticleLife; // Reset the lifetime
-                particle.alpha = 150;  // Reset the alpha channel
+                particle.alpha = 255;  // Reset the alpha channel
             }
         } 
     } 
@@ -72,7 +72,7 @@ void SandParticles::initializeParticles() {
         particle.speed = rand() % 3 + 1; // Adjust speed range as needed
         particle.size = rand() % (maxParticleSize - minParticleSize) + minParticleSize; // Adjust size range as needed
         particle.life = static_cast<float>(rand() % static_cast<int>(maxParticleLife * 1000)) / 1000.0f; // Random initial lifetime
-        particle.alpha = 150;  // Initialize the alpha channel
+        particle.alpha = 255;  // Initialize the alpha channel
         particles.push_back(particle); 
     }
 }

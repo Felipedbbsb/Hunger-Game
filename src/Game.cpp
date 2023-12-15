@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "InputManager.h"
 
- 
+  
 #define AUDIO_CHUNKSIZE 1024
 #define AUDIO_FREQUENCY MIX_DEFAULT_FREQUENCY
 #define AUDIO_FORMAT MIX_DEFAULT_FORMAT

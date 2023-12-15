@@ -278,7 +278,7 @@ void Papiro::Update(float dt) {
     
     //=================================Players update position=============================
     int spacingplayers = 0; 
-    for (int i = PLayerObjects.size() - 1; i >= 0; i--) {
+    for (int i = PLayerObjects.size() - 1; i >= 0; i--) { 
         
         PLayerObjects[i].lock()->box.x = background->box.x + PAPIRO_SCREEN.x/2 - PLayerObjects[i].lock()->box.w/2 + objectsMoves + SPACING_PLAYERS * spacingplayers;
         
