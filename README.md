@@ -1,9 +1,13 @@
-# README
+<p align="center">
+<img src="assets/img/Backgrounds/Logo.png" height=300>
+</p>
+
+
+
+## Game Title: Hunger
 
 This game has been developed using a proprietary engine, leveraging the power of SDL2. The project emerged from coursework in game development at the University of Brasília (UNB).
 - **Graphics Library:** SDL2 (Simple DirectMedia Layer)
-
-## Game Title: Hunger
 
 ### Credits:
 
