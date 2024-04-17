@@ -60,6 +60,7 @@ class Map : public State{
         std::map<std::vector<std::pair<int, int>>, bool> banned_edge;
         std::vector<std::vector<std::pair<int, int>>> created_edges;
         std::vector<std::pair<int, int>> created_nodes;
+        static std::map<std::vector<std::pair<int, int>>, bool> visited_nodes;
         static std::pair<int, int> mapPosition;
         void CreateNodeObj(std::pair<int, int> v1, NodeType type); 
         std::vector<std::pair<int, int>> GetUpperNeighbors(const std::pair<int, int>& v);

@@ -1,6 +1,7 @@
 #include "Resources.h"
+#include <algorithm> // Include for std::for_each
+#include <iostream> // Include for std::cout
 
-#include <iostream>
 std::unordered_map<std::string, SDL_Texture*> Resources::imageTable;
 std::unordered_map<std::string, Mix_Music*> Resources::musicTable;
 std::unordered_map<std::string, Mix_Chunk*> Resources::soundTable;
@@ -35,11 +36,10 @@ SDL_Texture* Resources::GetImage(std::string file) {
 }
 
 void Resources::ClearImages() {
-    int i = 0;
-    for (auto it = imageTable.begin(); it != imageTable.end(); ++i) {
-        std::cout << "Cleaning image memory -> (" << i + 1 << ") File: " << it->first << std::endl;
-        it = imageTable.erase(it); // Correção aqui
-    }
+    std::for_each(imageTable.begin(), imageTable.end(),
+        [](std::unordered_map<std::string, SDL_Texture*>::value_type& pair) {
+            SDL_DestroyTexture(pair.second);
+        });
     imageTable.clear();
     std::cout << "---All images erased---" << std::endl;
 }
@@ -72,11 +72,10 @@ Mix_Music* Resources::GetMusic(std::string file) {
 }
 
 void Resources::ClearMusics() {
-    int i = 0;
-    for (auto it = musicTable.begin(); it != musicTable.end(); ++i) {
-        std::cout << "Cleaning music memory -> (" << i + 1 << ") File: " << it->first << std::endl;
-        it = musicTable.erase(it);
-    }
+    std::for_each(musicTable.begin(), musicTable.end(),
+        [](std::unordered_map<std::string, Mix_Music*>::value_type& pair) {
+            Mix_FreeMusic(pair.second);
+        });
     musicTable.clear();
     std::cout << "---All musics erased---" << std::endl;
 }
@@ -108,14 +107,12 @@ Mix_Chunk* Resources::GetSound(std::string file) {
 }
 
 void Resources::ClearSounds() {
-    int i = 0;
-    for (auto it = soundTable.begin(); it != soundTable.end(); ++i) {
-        std::cout << "Cleaning sound memory -> (" << i + 1 << ") File: " << it->first << std::endl;
-        it = soundTable.erase(it);
-    }
+    std::for_each(soundTable.begin(), soundTable.end(),
+        [](std::unordered_map<std::string, Mix_Chunk*>::value_type& pair) {
+            Mix_FreeChunk(pair.second);
+        });
     soundTable.clear();
     std::cout << "---All sounds erased---" << std::endl;
-
 }
 
 TTF_Font* Resources::GetFont(std::string file, int fontSize) {
@@ -147,11 +144,10 @@ TTF_Font* Resources::GetFont(std::string file, int fontSize) {
 }
 
 void Resources::ClearFonts() {
-    int i = 0;
-    for (auto it = fontTable.begin(); it != fontTable.end(); ++i) {
-        std::cout << "Cleaning font memory -> (" << i + 1 << ") File: " << it->first << std::endl;
-        it = fontTable.erase(it);
-    }
+    std::for_each(fontTable.begin(), fontTable.end(),
+        [](const std::pair<std::string, TTF_Font*>& pair) {
+            TTF_CloseFont(pair.second);
+        });
     fontTable.clear();
     std::cout << "---All fonts erased---" << std::endl;
 }

@@ -8,20 +8,21 @@
 #include <algorithm> 
 #include "Map.h" 
 #include "Mural.h"
-#include "CombatState.h"
+#include "CombatState.h" 
 #include "Enemies.h"
 #include "Rest.h"
 
 std::vector<std::pair<int, int>> Node::currentNeighbors = {};
 
-Node::Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors)
+Node::Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors, bool visited)
 : Component::Component(associated),
 type(type),
 canVisited(false),
-wasVisited(false),
+wasVisited(visited),
 floor(v1.first),
 column(v1.second),
 neighbors(neighbors),
+_v1(v1),
 ScaleNode(1),
 iconVisited(nullptr),
 selectSFX(nullptr)
@@ -106,12 +107,13 @@ void Node::Update(float dt){
                 if(inputManager.MousePress(LEFT_MOUSE_BUTTON) && canVisited){ 
                     GameObject* selectedSFX = new GameObject();
                     Sound *selectSFX_sound = new Sound(*selectedSFX, SKILL_SELECTION_CONFIRMED); 
-                    selectSFX_sound->Play(1);
+                    selectSFX_sound->Play(1);   
+                    SetWasVisited(true);
 
                     //If can be visited go to state of node
                     Map::mapPosition = std::make_pair(floor, column);
                     SetNewStage(type);
-
+                    
                    
                 }
             }else{
@@ -186,7 +188,8 @@ void Node::SetCanVisit(bool canVisited){
 }
 
 void Node::SetWasVisited(bool wasVisited){
-    this->wasVisited = wasVisited;
+    std::vector<std::pair<int, int>> key{_v1}; // Constructing a vector with _v1 as its only element
+    Map::visited_nodes[key] = wasVisited;
 }
 
 int Node::GetFloor(){
@@ -195,7 +198,6 @@ int Node::GetFloor(){
 
 void Node::SetNewStage(NodeType node){
 
-    wasVisited = true;
 
 
     switch (node) {

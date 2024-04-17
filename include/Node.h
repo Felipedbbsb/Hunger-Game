@@ -25,7 +25,7 @@
 
 class Node : public Component {
     public:
-        Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors);
+        Node(GameObject &associated, NodeType type, std::pair<int, int> v1, std::vector<std::pair<int, int>> neighbors, bool visited);
         ~Node();
         void Update(float dt);
         void Render();
@@ -50,6 +50,7 @@ class Node : public Component {
         int floor;
         int column;
         std::vector<std::pair<int, int>> neighbors;
+        std::pair<int, int> _v1;
         int ScaleNode;
         GameObject* iconVisited;
         GameObject* selectSFX; 

@@ -10,7 +10,7 @@
 #include "Enemies.h" 
 #include "Skill.h" 
 #include "Papiro.h" 
-#include "SkillSelection.h" 
+#include "SkillSelection.h"  
 #include "CameraParallax.h"
 #include "Protected.h"
 #include "Mural.h"
@@ -20,6 +20,7 @@
 #include "EndState.h" 
 
 std::pair<int, int> Map::mapPosition = std::make_pair(0, 0); 
+std::map<std::vector<std::pair<int, int>>, bool> Map::visited_nodes;
 
 Map::Map() : State::State(){  
     Map::mapPosition = std::make_pair(0, 0); 
@@ -89,7 +90,7 @@ void Map::LoadAssets() {
 
     //====================================BOSS===============================
     GameObject *new_node = new GameObject();
-    new Node(*new_node, NodeType::BOSS, std::make_pair(MAP_FLOORS + 1, 1), {});
+    new Node(*new_node, NodeType::BOSS, std::make_pair(MAP_FLOORS + 1, 1), {}, false);
 
 
     new_node->box.x = RESOLUTION_WIDTH / 2; //Centralized
@@ -139,6 +140,12 @@ void Map::CreateMap(){
 
         }
     } 
+
+    for (const auto& edge : created_edges) {
+        for (const auto& node : edge) {
+            visited_nodes[{std::vector<std::pair<int, int>>{node}}] = false;
+        }
+    }
 }
 
 int Map::CheckCorners(int current_column, int next_column, int current_floor) {     
@@ -200,13 +207,16 @@ bool Map::GenerateNode(std::pair<int, int> v1, std::pair<int, int> v2){
             created_nodes.push_back(v1); //pushes to array 
         }
         
+        
+
         return true;
     }
 }
 
 void Map::CreateNodeObj(std::pair<int, int> v1, NodeType type) {     
     GameObject *new_node = new GameObject();
-    new Node(*new_node, type, v1, GetUpperNeighbors(v1));
+    std::vector<std::pair<int, int>> key_vector = {v1};
+    new Node(*new_node, type, v1, GetUpperNeighbors(v1), visited_nodes[key_vector]);
 
     new_node->box.x = RESOLUTION_WIDTH / 2 - MAP_GRID_SIZE.x / 2; //Centralized
     new_node->box.x += v1.second * MAP_GRID_SIZE.x / (MAP_COLUMNS + 1);
@@ -359,7 +369,6 @@ void Map::Pause() {
  
 void Map::Resume() {
     State::Resume();
-
     Camera::Unfollow();
     Camera::pos.x = 0;
 
@@ -373,7 +382,7 @@ void Map::Resume() {
     }
 
     //noncombatMusic.Play();
-
+    LoadAssets();
 
 }
 
